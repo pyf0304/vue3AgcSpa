@@ -1,0 +1,585 @@
+﻿/**
+ * 类名:ViewIdGCVariableRela_Edit(界面:ViewIdGCVariableRelaCRUD,00050339)
+ * 表名:ViewIdGCVariableRela(00050631)
+ * 版本:2025.05.03.1(服务器:WIN-SRV103-116)
+ * 日期:2025/05/08 11:51:29
+ * 生成者:
+ 工程名称:AGC(0005)
+ CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
+ * 相关数据库:103.116.76.183,8433AGC_CS12
+ * PrjDataBaseId:0005
+ * 模块中文名:生成代码(GeneCode)
+ * 框架-层名:Vue_编辑区后台_TS(TS)(Vue_ViewScript_EditCS_TS,0257)
+ * 编程语言:TypeScript
+ **/
+import $ from 'jquery';
+import {
+  ViewIdGCVariableRela_CheckPropertyNew,
+  ViewIdGCVariableRela_IsExistAsync,
+  ViewIdGCVariableRela_AddNewRecordAsync,
+  ViewIdGCVariableRela_GetObjByKeyLstAsync,
+  ViewIdGCVariableRela_CheckProperty4Update,
+  ViewIdGCVariableRela_UpdateRecordAsync,
+} from '@/ts/L3ForWApi/GeneCode/clsViewIdGCVariableRelaWApi';
+import {
+  divVarSet,
+  refViewIdGCVariableRela_Edit,
+} from '@/views/GeneCode/ViewIdGCVariableRelaVueShare';
+import { clsViewIdGCVariableRelaEN } from '@/ts/L0Entity/GeneCode/clsViewIdGCVariableRelaEN';
+import { Format } from '@/ts/PubFun/clsString';
+import { IShowList } from '@/ts/PubFun/IShowList';
+import { enumPageDispMode } from '@/ts/PubFun/enumPageDispMode';
+/** ViewIdGCVariableRela_Edit 的摘要说明。其中Q代表查询,U代表修改
+ * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:GeneCode)
+ **/
+export abstract class ViewIdGCVariableRela_Edit {
+  protected _className = 'Unknown'; // 基类中的实际字段
+  // 定义虚拟属性
+  get className(): string {
+    return this._className;
+  }
+  public static times4TestShowDialog = 0;
+  public opType = '';
+  public keyId = '';
+  public isShowMsg = true; //编辑记录时是否显示提示信息
+  public tag = ''; //编辑对象的标志，用于存放或者标志一些信息
+  public static strPageDispModeId = '01'; //PopupBox(弹出框)
+  public static objPageEdit: ViewIdGCVariableRela_Edit;
+  public static objPageEdit2: ViewIdGCVariableRela_Edit;
+  public static objPageEdit3: ViewIdGCVariableRela_Edit;
+  public iShowList: IShowList | null;
+  public bolIsLoadEditRegion = false; //记录是否导入编辑区的变量
+  public divName4Edit = 'divEditLayout'; //编辑区的Id
+  /**
+   * 获取当前组件的divEdit的层对象
+   **/
+  public get thisDivEdit(): HTMLDivElement {
+    return divVarSet.refDivEdit;
+  }
+  /**
+   * 获取当前组件的divEdit的层对象
+   **/
+  public get thisDivLayout(): HTMLDivElement {
+    return divVarSet.refDivEdit;
+  }
+  constructor(strClassName: string, objShowList: IShowList | null) {
+    this._className = strClassName;
+    this.iShowList = objShowList;
+    if (ViewIdGCVariableRela_Edit.SetPageEdit(this, 1) == true) return;
+    if (ViewIdGCVariableRela_Edit.SetPageEdit(this, 2) == true) return;
+    if (ViewIdGCVariableRela_Edit.SetPageEdit(this, 3) == true) return;
+  }
+  public static SetPageEdit(objDataLst: any, intIndex: number): boolean {
+    const strNewClassName = objDataLst.className;
+    switch (intIndex) {
+      case 1:
+        if (ViewIdGCVariableRela_Edit.objPageEdit == null) {
+          ViewIdGCVariableRela_Edit.objPageEdit = objDataLst;
+          return true;
+        } else {
+          const strClassNameOld = ViewIdGCVariableRela_Edit.objPageEdit.className;
+          if (strClassNameOld == strNewClassName) {
+            ViewIdGCVariableRela_Edit.objPageEdit = objDataLst;
+            return true;
+          } else return false;
+        }
+        break;
+      case 2:
+        if (ViewIdGCVariableRela_Edit.objPageEdit2 == null) {
+          ViewIdGCVariableRela_Edit.objPageEdit2 = objDataLst;
+          return true;
+        } else {
+          const strClassNameOld = ViewIdGCVariableRela_Edit.objPageEdit2.className;
+          if (strClassNameOld == strNewClassName) {
+            ViewIdGCVariableRela_Edit.objPageEdit2 = objDataLst;
+            return true;
+          } else return false;
+        }
+        break;
+      case 3:
+        if (ViewIdGCVariableRela_Edit.objPageEdit3 == null) {
+          ViewIdGCVariableRela_Edit.objPageEdit3 = objDataLst;
+          return true;
+        } else {
+          const strClassNameOld = ViewIdGCVariableRela_Edit.objPageEdit3.className;
+          if (strClassNameOld == strNewClassName) {
+            ViewIdGCVariableRela_Edit.objPageEdit3 = objDataLst;
+            return true;
+          } else return false;
+        }
+        break;
+      default:
+        return false;
+      // break;
+    }
+  }
+  public static GetPageEditObj(strClassName: string): any {
+    if (ViewIdGCVariableRela_Edit.objPageEdit != null) {
+      const strClassNameOld = ViewIdGCVariableRela_Edit.objPageEdit.className;
+      if (strClassNameOld == strClassName) return ViewIdGCVariableRela_Edit.objPageEdit;
+    }
+    if (ViewIdGCVariableRela_Edit.objPageEdit2 != null) {
+      const strClassNameOld = ViewIdGCVariableRela_Edit.objPageEdit2.className;
+      if (strClassNameOld == strClassName) return ViewIdGCVariableRela_Edit.objPageEdit2;
+    }
+    if (ViewIdGCVariableRela_Edit.objPageEdit3 != null) {
+      const strClassNameOld = ViewIdGCVariableRela_Edit.objPageEdit3.className;
+      if (strClassNameOld == strClassName) return ViewIdGCVariableRela_Edit.objPageEdit3;
+    }
+    return null;
+  }
+
+  /**
+   * 隐藏对话框
+   * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_TS_HideDialog)
+   **/
+  public HideDialog_ViewIdGCVariableRela() {
+    if (ViewIdGCVariableRela_Edit.strPageDispModeId == enumPageDispMode.PopupBox_01) {
+      refViewIdGCVariableRela_Edit.value.hideDialog();
+    }
+  }
+
+  /**
+   * 显示对话框
+   * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_TS_ShowDialog)
+   **/
+  public async ShowDialog_ViewIdGCVariableRela(strOp: string): Promise<boolean> {
+    const strThisFuncName = this.ShowDialog_ViewIdGCVariableRela.name;
+    if (ViewIdGCVariableRela_Edit.strPageDispModeId == enumPageDispMode.PopupBox_01) {
+      if (refViewIdGCVariableRela_Edit.value == null) {
+        const strMsg = Format(
+          '当前编辑区的EditObj为空，请检查！(in {0}.{1})',
+          this.className,
+          strThisFuncName,
+        );
+        console.error(strMsg);
+        alert(strMsg);
+        return false;
+      }
+      await refViewIdGCVariableRela_Edit.value.showDialog(this);
+    }
+    if (strOp === 'Add' || strOp === 'AddWithMaxId') {
+      this.btnSubmitViewIdGCVariableRela = '确认添加';
+      this.btnCancelViewIdGCVariableRela = '取消添加';
+    } else if (strOp === 'Update') {
+      this.btnSubmitViewIdGCVariableRela = '确认修改';
+      this.btnCancelViewIdGCVariableRela = '取消修改';
+    }
+    return true;
+  }
+
+  /** 添加新记录
+   * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_btnAddNewRecord_Click)
+   **/
+  public async btnAddNewRecord_Click() {
+    const strThisFuncName = this.btnAddNewRecord_Click.name;
+    try {
+      this.opType = 'Add';
+      const bolIsSuccess = await this.ShowDialog_ViewIdGCVariableRela(this.opType);
+      if (bolIsSuccess == false) return;
+      if (['02', '03', '06'].indexOf(clsViewIdGCVariableRelaEN.PrimaryTypeId) > -1) {
+        await this.AddNewRecordWithMaxId();
+      } else {
+        await this.AddNewRecord();
+      }
+    } catch (e) {
+      const strMsg = Format(
+        '添加新记录初始化不成功,{0}.(in {1}.{2})',
+        e,
+        this.className,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+    }
+  }
+
+  /** 在数据表里修改记录
+   * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_btnUpdateRecordInTab_Click)
+   **/
+  public async btnUpdateRecordInTab_Click(strVarId: string, strViewId: string) {
+    const strThisFuncName = this.btnUpdateRecordInTab_Click.name;
+    try {
+      this.opType = 'Update';
+      const bolIsSuccess = await this.ShowDialog_ViewIdGCVariableRela(this.opType);
+      if (bolIsSuccess == false) return;
+      this.UpdateRecord(strVarId, strViewId);
+    } catch (e) {
+      const strMsg = Format(
+        '(errid: WiTsCs0034)在修改记录时出错!请联系管理员!{0}.(in {1}.{2})',
+        e,
+        this.className,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+    }
+  }
+
+  /** 修改记录
+   * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_btnUpdateRecord_Click)
+   **/
+  public async btnUpdateRecord_Click(strVarId: string, strViewId: string) {
+    const strThisFuncName = this.btnUpdateRecord_Click.name;
+    try {
+      this.opType = 'Update';
+      const bolIsSuccess = await this.ShowDialog_ViewIdGCVariableRela(this.opType);
+      if (bolIsSuccess == false) return;
+      this.bolIsLoadEditRegion = true; //
+      const update = await this.UpdateRecord(strVarId, strViewId);
+      if (update == false) {
+        const strMsg = Format('在修改记录时,显示记录数据不成功!');
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+    } catch (e) {
+      const strMsg = Format(
+        '(errid: WiTsCs0034)在修改记录时出错!请联系管理员!{0}.(in {1}.{2})',
+        e,
+        this.className,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+    }
+  }
+
+  /** 函数功能:事件函数,当单击<确定修改>时发生的事件函数,
+   * 具体功能为把界面内容同步数据库中,把界面内容保存到数据库中
+   * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_btnOKUpd_Click)
+   **/
+  public async btnSubmit_Click() {
+    const strThisFuncName = this.btnSubmit_Click.name;
+    const strCommandText: string = this.btnSubmitViewIdGCVariableRela;
+    try {
+      let returnBool = false;
+      let strInfo = '';
+      let strMsg = '';
+      switch (strCommandText) {
+        case '添加':
+          this.btnSubmitViewIdGCVariableRela = '确认添加';
+          this.btnCancelViewIdGCVariableRela = '取消添加';
+          await this.AddNewRecord();
+          break;
+        case '确认添加':
+          //这是一个单表的插入的代码,由于逻辑层太简单,
+          //就把逻辑层合并到控制层,
+          returnBool = await this.AddNewRecordSave();
+          if (returnBool == true) {
+            if (ViewIdGCVariableRela_Edit.strPageDispModeId == enumPageDispMode.PopupBox_01) {
+              refViewIdGCVariableRela_Edit.value.hideDialog();
+            }
+            if (this.iShowList != null)
+              this.iShowList.BindGv(clsViewIdGCVariableRelaEN._CurrTabName, this.keyId);
+          }
+          break;
+        case '确认修改':
+          //这是一个单表的修改的代码,由于逻辑层太简单,
+          returnBool = await this.UpdateRecordSave();
+          strInfo = returnBool ? '修改成功!' : '修改不成功!';
+          strInfo += '(In ViewIdGCVariableRela_Edit.btnSubmit_Click)';
+          //显示信息框
+          //console.log(strInfo);
+          alert(strInfo);
+          if (returnBool == true) {
+            if (ViewIdGCVariableRela_Edit.strPageDispModeId == enumPageDispMode.PopupBox_01) {
+              refViewIdGCVariableRela_Edit.value.hideDialog();
+            }
+            if (this.iShowList != null)
+              this.iShowList.BindGv(clsViewIdGCVariableRelaEN._CurrTabName, this.keyId);
+          }
+          break;
+        default:
+          strMsg = Format(
+            'strCommandText:{0}在switch中没有处理!(In btnSubmit_Click())',
+            strCommandText,
+          );
+          console.error(strMsg);
+          alert(strMsg);
+          break;
+      }
+    } catch (e) {
+      const strMsg = Format(
+        '(errid: WiTsCs0033)在保存记录时({3})时出错!请联系管理员!{0}.(in {1}.{2})',
+        e,
+        this.className,
+        strThisFuncName,
+        strCommandText,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+    }
+  }
+
+  /**
+   *  在用户自定义控件中,设置关键字的值,是否只读
+   * (AutoGCLib.WA_ViewScript_EditCS_TS4TypeScript:Gen_WApi_Ts_SetKeyReadOnly)
+   * @param bolReadonly:是否只读
+   **/
+  public SetKeyReadOnly(bolReadonly: boolean) {
+    $('#ddlVarId').attr('ReadOnly', bolReadonly.toString());
+  }
+
+  /** 为插入记录做准备工作
+   * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_AddNewRecord)
+   **/
+  public async AddNewRecord() {
+    const strThisFuncName = this.AddNewRecord.name;
+    console.log('strThisFuncName1', strThisFuncName);
+    refViewIdGCVariableRela_Edit.value.Clear();
+    //wucViewIdGCVariableRelaB1.varId = ViewIdGCVariableRelaGetMaxStrId_S();
+  }
+
+  /** 为插入记录做准备工作
+   * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_AddNewRecordWithMaxId)
+   **/
+  public async AddNewRecordWithMaxId() {
+    this.SetKeyReadOnly(false);
+    refViewIdGCVariableRela_Edit.value.Clear();
+
+    //this.varId = await ViewIdGCVariableRela_GetMaxStrIdAsync();
+  }
+
+  /** 添加新记录,保存函数
+   * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_AddNewRecordSave)
+   **/
+  public async AddNewRecordSave(): Promise<boolean> {
+    const strThisFuncName = this.AddNewRecordSave.name;
+    let objViewIdGCVariableRelaEN;
+    try {
+      objViewIdGCVariableRelaEN =
+        await refViewIdGCVariableRela_Edit.value.GetEditDataViewIdGCVariableRelaObj();
+    } catch (e) {
+      const strMsg = Format(
+        '从界面获取数据不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+      return false; //一定要有一个返回值,否则会出错!
+    }
+    try {
+      ViewIdGCVariableRela_CheckPropertyNew(objViewIdGCVariableRelaEN);
+    } catch (e) {
+      const strMsg = Format(
+        '检查数据不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+      return false; //一定要有一个返回值,否则会出错!
+    }
+    try {
+      //检查唯一性条件
+      let returnBool = false;
+      const bolIsExist = await ViewIdGCVariableRela_IsExistAsync(
+        objViewIdGCVariableRelaEN.varId,
+        objViewIdGCVariableRelaEN.viewId,
+      );
+      if (bolIsExist == true) {
+        const strMsg = Format('添加记录时,关键字：{0}已经存在!', objViewIdGCVariableRelaEN.varId);
+        console.error(strMsg);
+        alert(strMsg);
+        return false; //一定要有一个返回值,否则会出错!
+      }
+      returnBool = await ViewIdGCVariableRela_AddNewRecordAsync(objViewIdGCVariableRelaEN);
+      if (returnBool == true) {
+        //ViewIdGCVariableRela_ReFreshCache();
+        const strInfo = `添加[界面变量关系(ViewIdGCVariableRela)]记录成功!`;
+        //显示信息框
+        if (this.isShowMsg == true) alert(strInfo);
+      } else {
+        const strInfo = `添加[界面变量关系(ViewIdGCVariableRela)]记录不成功!`;
+        //显示信息框
+        alert(strInfo);
+      }
+      return returnBool; //一定要有一个返回值,否则会出错!
+    } catch (e) {
+      const strMsg = Format(
+        '添加记录不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+      return false; //一定要有一个返回值,否则会出错!
+    }
+  }
+
+  /** 函数功能:把以该关键字的记录内容显示在界面上,
+   * 在这里是把值传到表控件中
+   * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_ShowData)
+   * @param strVarId: 表记录的关键字,显示该表关键字的内容
+   **/
+  public async ShowData(strVarId: string, strViewId: string) {
+    const strThisFuncName = this.ShowData.name;
+    //操作步骤:
+    //1、检查关键字是否为空；
+    //2、检查该关键字的记录是否存在,如果不存在就返回不显示；
+    //3、用提供的关键字初始化一个类对象；
+    //4、获取类对象的所有属性；
+    //5、把该对象的所有属性显示在界面上,在这里显示在表控件中
+    //2、检查该关键字的记录是否存在,如果不存在就返回不显示；
+    let objViewIdGCVariableRelaEN = new clsViewIdGCVariableRelaEN();
+    try {
+      const returnBool = await ViewIdGCVariableRela_IsExistAsync(strVarId, strViewId);
+      if (returnBool == false) {
+        const strInfo = Format('关键字:[{0}] 的记录不存在!', strVarId);
+        //显示信息框
+        alert(strInfo);
+      }
+    } catch (e) {
+      const strMsg = Format(
+        '检查相应关键字的记录存在不成功, {0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+    }
+    try {
+      const objViewIdGCVariableRelaENConst = await ViewIdGCVariableRela_GetObjByKeyLstAsync(
+        strVarId,
+        strViewId,
+      );
+      if (objViewIdGCVariableRelaENConst == null) {
+        const strMsg = Format(
+          '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
+          this.constructor.name,
+          strThisFuncName,
+        );
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      objViewIdGCVariableRelaEN = objViewIdGCVariableRelaENConst;
+    } catch (e) {
+      const strMsg = Format(
+        '根据关键字获取相应的记录的对象不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+    }
+    //3、用提供的关键字初始化一个类对象；
+    refViewIdGCVariableRela_Edit.value.ShowDataFromViewIdGCVariableRelaObj(
+      objViewIdGCVariableRelaEN,
+    );
+  }
+
+  /** 根据关键字获取相应的记录的对象
+   * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_UpdateRecord)
+   * @param sender">参数列表</param>
+   **/
+  public async UpdateRecord(strVarId: string, strViewId: string): Promise<boolean> {
+    const strThisFuncName = this.UpdateRecord.name;
+    this.keyId = strVarId;
+    try {
+      const objViewIdGCVariableRelaEN = await ViewIdGCVariableRela_GetObjByKeyLstAsync(
+        strVarId,
+        strViewId,
+      );
+      if (objViewIdGCVariableRelaEN == null) {
+        const strMsg = Format(
+          '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
+          this.className,
+          strThisFuncName,
+        );
+        console.error(strMsg);
+        alert(strMsg);
+        return false;
+      }
+      await refViewIdGCVariableRela_Edit.value.ShowDataFromViewIdGCVariableRelaObj(
+        objViewIdGCVariableRelaEN,
+      );
+      console.log('完成UpdateRecord!');
+      return true;
+    } catch (e) {
+      const strMsg = Format(
+        '修改记录时，显示信息出错,{0}.(in {1}.{2})',
+        e,
+        this.className,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+      return false;
+    }
+  }
+
+  /** 修改记录
+   * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_UpdateRecordSave)
+   **/
+  public async UpdateRecordSave(): Promise<boolean> {
+    const strThisFuncName = this.UpdateRecordSave.name;
+    const objViewIdGCVariableRelaEN =
+      await refViewIdGCVariableRela_Edit.value.GetEditDataViewIdGCVariableRelaObj();
+    objViewIdGCVariableRelaEN.SetVarId(this.keyId);
+    objViewIdGCVariableRelaEN.sfUpdFldSetStr = objViewIdGCVariableRelaEN.updFldString; //设置哪些字段被修改(脏字段)
+    if (objViewIdGCVariableRelaEN.varId == '' || objViewIdGCVariableRelaEN.varId == undefined) {
+      console.error('关键字不能为空!');
+      throw '关键字不能为空!';
+    }
+    try {
+      ViewIdGCVariableRela_CheckProperty4Update(objViewIdGCVariableRelaEN);
+    } catch (e) {
+      const strMsg = Format(
+        '检查数据不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+      return false; //一定要有一个返回值,否则会出错!
+    }
+    try {
+      //检查唯一性条件
+      const returnBool = await ViewIdGCVariableRela_UpdateRecordAsync(objViewIdGCVariableRelaEN);
+      if (returnBool == true) {
+        //ViewIdGCVariableRela_ReFreshCache();
+        //ViewIdGCVariableRela_DeleteKeyIdCache(this.keyId);
+      }
+      return returnBool;
+    } catch (e) {
+      const strMsg = Format(
+        '修改记录不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+      return false;
+    }
+  }
+
+  /**
+   * 设置取消按钮的标题(Used In AddNewRecord())
+   **/
+  public set btnCancelViewIdGCVariableRela(value: string) {
+    refViewIdGCVariableRela_Edit.value.strCancelButtonText = value;
+  }
+  /**
+   * 获取按钮的标题
+   **/
+  public get btnSubmitViewIdGCVariableRela(): string {
+    const strValue = refViewIdGCVariableRela_Edit.value.strSubmitButtonText;
+    return strValue;
+  }
+  /**
+   * 设置确定按钮的标题(Used In AddNewRecord())
+   **/
+  public set btnSubmitViewIdGCVariableRela(value: string) {
+    refViewIdGCVariableRela_Edit.value.strSubmitButtonText = value;
+  }
+}

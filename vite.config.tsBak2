@@ -1,0 +1,124 @@
+import { resolve } from 'node:path';
+import { defineConfig, loadEnv } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import vueJsx from '@vitejs/plugin-vue-jsx';
+import legacy from '@vitejs/plugin-legacy';
+import checker from 'vite-plugin-checker';
+import { viteMockServe } from 'vite-plugin-mock';
+import Components from 'unplugin-vue-components/vite';
+import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
+import Unocss from 'unocss/vite';
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
+import DefineOptions from 'unplugin-vue-define-options/vite';
+import dayjs from 'dayjs';
+import pkg from './package.json';
+import type { UserConfig, ConfigEnv } from 'vite';
+
+const CWD = process.cwd();
+const __APP_INFO__ = {
+  pkg,
+  lastBuildTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+};
+
+export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
+  const env = loadEnv(mode, CWD);
+  const isBuild = command === 'build';
+
+  return {
+    base: env.VITE_BASE_URL,
+    define: {
+      __APP_INFO__: JSON.stringify(__APP_INFO__),
+    },
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, './src'),
+        'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
+      },
+    },
+    plugins: [
+      vue(),
+      Unocss(),
+      DefineOptions(),
+      vueJsx(),
+      legacy({
+        targets: ['defaults', 'not IE 11', 'chrome 79'],
+        additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
+        modernPolyfills: ['es.promise.finally', 'es/array', 'es/map', 'es/set'],
+      }),
+      createSvgIconsPlugin({
+        iconDirs: [resolve(CWD, 'src/assets/icons')],
+        symbolId: 'svg-icon-[dir]-[name]',
+      }),
+      viteMockServe({
+        ignore: /^_/,
+        mockPath: 'mock',
+        localEnabled: !isBuild,
+        prodEnabled: isBuild,
+        logger: true,
+        injectCode: `import { setupProdMockServer } from '../mock/_createProductionServer'; setupProdMockServer();`,
+      }),
+      Components({
+        resolvers: [AntDesignVueResolver()],
+        apply: 'build',
+      }),
+      checker({
+        typescript: true,
+        eslint: {
+          lintCommand: 'eslint "./src/**/*.{vue,ts,tsx}"',
+        },
+      }),
+    ],
+    css: {
+      preprocessorOptions: {
+        less: {
+          javascriptEnabled: true,
+          modifyVars: {},
+          additionalData: `
+            @import "ant-design-vue/lib/style/themes/default.less";
+            @import "@/styles/variables.less";
+          `,
+        },
+      },
+    },
+    server: {
+      host: '0.0.0.0',
+      port: 8099,
+      proxy: {
+        '/api': {
+          target: 'https://www.sh-tz.com/AgcWAVue',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+      },
+    },
+    optimizeDeps: {
+      include: [
+        '@vue/runtime-core',
+        '@vue/shared',
+        'lodash-es',
+        'ant-design-vue/es/locale/zh_CN',
+        'ant-design-vue/es/locale/en_US',
+        'jquery',
+      ],
+    },
+    esbuild: {
+      pure: env.VITE_DROP_CONSOLE ? ['console.log', 'debugger'] : [],
+      supported: {
+        'top-level-await': true,
+      },
+    },
+    build: {
+      target: 'es2017',
+      minify: 'esbuild',
+      cssTarget: 'chrome79',
+      chunkSizeWarningLimit: 4000,
+      outDir: 'dist',
+      assetsDir: 'assets',
+      rollupOptions: {
+        output: {
+          manualChunks: undefined,
+        },
+      },
+    },
+  };
+});
