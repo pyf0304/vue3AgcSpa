@@ -51,16 +51,6 @@ const routes: Array<RouteRecordRaw> = [
     children: [],
   },
   {
-    path: '/TestGraph3',
-    name: 'TestGraph3',
-    // redirect: '/dashboard/welcome',
-    component: () => import(/* webpackChunkName: "layout" */ '@/views/TestGraph/Test3.vue'),
-    meta: {
-      title: 'TestGraph3',
-    },
-    children: [],
-  },
-  {
     path: '/TestGraph4',
     name: 'TestGraph4',
     // redirect: '/dashboard/welcome',
