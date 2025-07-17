@@ -6,6 +6,10 @@ export interface HookModalProps extends Partial<ModalProps> {
   isAppChild?: boolean;
   content?: string | JSX.Element | (() => JSX.Element);
   closeModal?: () => void;
+  onCancel?: (e: MouseEvent) => void;
+  onOk?: () => void;
+  destroyOnClose?: boolean;
+  [key: string]: any;
 }
 
 // 表单模态框

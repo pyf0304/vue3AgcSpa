@@ -1,5 +1,6 @@
 import type { ExportModalResult } from './typing';
 import type { FormSchema } from '@/components/core/schema-form/';
+import type { FormModalProps } from '@/hooks/useModal/types';
 import { useI18n } from '@/hooks/useI18n';
 
 import { useFormModal } from '@/hooks/useModal/useFormModal';
@@ -64,7 +65,7 @@ export const useExportExcelModal = () => {
             bookType,
           });
         },
-      },
+      } as FormModalProps<ExportModalResult>,
       formProps: {
         labelWidth: 100,
         schemas: getSchemas(t),

@@ -167,7 +167,7 @@ export const schemas: FormSchema[] = [
       },
       {
         validator(_, value = '') {
-          return new Promise((resolve, reject) => {
+          return new Promise<void>((resolve, reject) => {
             setTimeout(() => {
               if (value.includes('admin')) {
                 reject('该字段不能包含admin关键字');

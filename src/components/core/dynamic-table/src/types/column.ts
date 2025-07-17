@@ -9,7 +9,13 @@ export type ColumnType<T> = ColumnsType<T>[number];
 export type CustomRenderParams<T = any> = Omit<
   Parameters<NonNullable<ColumnType<T>['customRender']>>[number],
   'column'
-> & { column: TableColumn<T> };
+> & {
+  column: TableColumn<T>;
+  text?: any;
+  value?: any;
+  record: T;
+  index: number;
+};
 
 // export type EditableConfig<T = any> = {
 //   /** 可编辑表格的类型，`单行编辑` | `多行编辑` | `可编辑单元格` */

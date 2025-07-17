@@ -17,6 +17,13 @@ export type UseTableMethodsContext = {
   emit: DynamicTableEmitFn;
 };
 
+interface PaginationConfig {
+  current?: number;
+  pageSize?: number;
+  total?: number;
+  [key: string]: any;
+}
+
 let retryFetchCount = 2;
 
 export const useTableMethods = ({ state, props, emit }: UseTableMethodsContext) => {
@@ -64,9 +71,10 @@ export const useTableMethods = ({ state, props, emit }: UseTableMethodsContext) 
         ...params,
       };
       if (enablePagination) {
+        const paginationConfig = _pagination as PaginationConfig;
         Object.assign(queryParams, {
-          page: _pagination.current,
-          limit: _pagination.pageSize,
+          page: paginationConfig.current,
+          limit: paginationConfig.pageSize,
           ...queryParams,
         });
       }
@@ -78,10 +86,14 @@ export const useTableMethods = ({ state, props, emit }: UseTableMethodsContext) 
       if (data?.pagination) {
         const { page, size, total } = data.pagination;
 
-        if (enablePagination && _pagination?.current && retryFetchCount-- > 0) {
+        if (
+          enablePagination &&
+          (_pagination as PaginationConfig)?.current &&
+          retryFetchCount-- > 0
+        ) {
           // 有分页时,删除当前页最后一条数据时 自动往前一页查询
           if (data?.list.length === 0 && total > 0 && page > 1) {
-            _pagination.current--;
+            (_pagination as PaginationConfig).current!--;
             return reload();
           }
         }
@@ -115,7 +127,7 @@ export const useTableMethods = ({ state, props, emit }: UseTableMethodsContext) 
   const reload = async (resetPageIndex = false) => {
     const pagination = unref(paginationRef);
     if (Object.is(resetPageIndex, true) && isObject(pagination)) {
-      pagination.current = 1;
+      (pagination as PaginationConfig).current = 1;
     }
     return await fetchData();
   };
