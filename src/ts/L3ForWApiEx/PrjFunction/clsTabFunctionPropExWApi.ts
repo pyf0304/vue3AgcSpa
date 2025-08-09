@@ -243,7 +243,7 @@ export function TabFunctionPropEx_FuncMapByFldName(
   const strThisFuncName = TabFunctionPropEx_FuncMapByFldName.name;
   let strMsg = '';
   //如果是本表中字段，不需要映射
-  const arrFldName = clsTabFunctionPropEN.AttributeName;
+  const arrFldName = clsTabFunctionPropEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
