@@ -1155,7 +1155,7 @@ export abstract class TabFunctionPropCRUD implements clsOperateList {
     arrTabFunctionPropExObjLst: Array<clsTabFunctionPropENEx>,
     arrDataColumn: Array<clsDataColumn>,
   ) {
-    const arrFldName = clsTabFunctionPropEN.AttributeName;
+    const arrFldName = clsTabFunctionPropEN._AttributeName;
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;
