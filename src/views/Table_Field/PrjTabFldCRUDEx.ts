@@ -2391,7 +2391,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     try {
       let strFldId = await FieldTabEx_IsExistSameFldName(strPrjId, strFldName, strDataTypeId);
       if (IsNullOrEmpty(strFldId) == true) {
-        //如果strDataTypeId为25，04中的一个，还可以换一个数字查一下-2026-3-8-2
+        //如果strDataTypeId为25，04中的一个，还可以换一个数字查一下-2026-3-8-3
         if (strDataTypeId === '25') {
           strFldId = await FieldTabEx_IsExistSameFldName(strPrjId, strFldName, '04');
         } else if (strDataTypeId === '04') {
