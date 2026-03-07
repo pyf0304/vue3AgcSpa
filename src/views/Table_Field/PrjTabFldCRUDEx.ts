@@ -68,7 +68,10 @@ import {
 } from '@/ts/L3ForWApiEx/SqlViewMan/clsSqlViewExWApi';
 import { SqlViewFldEx_GetObjLstBySqlViewIdCache } from '@/ts/L3ForWApiEx/SqlViewMan/clsSqlViewFldExWApi';
 import { DataTypeAbbrEx_GetDataTypeIdByName } from '@/ts/L3ForWApiEx/SysPara/clsDataTypeAbbrExWApi';
-import { FieldTabEx_AddNewRec } from '@/ts/L3ForWApiEx/Table_Field/clsFieldTabExWApi';
+import {
+  FieldTabEx_AddNewRec,
+  FieldTabEx_IsExistSameFldName,
+} from '@/ts/L3ForWApiEx/Table_Field/clsFieldTabExWApi';
 import {
   PrjTabEx_AlterTab4AddField,
   PrjTabEx_AlterTab4DropColumn,
@@ -191,7 +194,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
 
   BindGv(strType: string, strPara: string) {
     console.log(strType, strPara);
-    this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+    this.BindGv_PrjTabFld4Func();
   }
   BindGvCache(strType: string, strPara: string) {
     const prjTabFldStore = usePrjTabFldStore();
@@ -200,11 +203,11 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
         PrjTabFld_ReFreshCache(TabId_Static.value);
         prjTabFldStore.delObjLstByTabId(TabId_Static.value);
         //vFieldTab_Sim2_ReFreshThisCache()
-        this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        this.BindGv_PrjTabFld4Func();
         break;
       case 'PrjTabFld':
         //alert('该类没有绑定该函数：[this.BindGv_vPrjTabFldCache]！');
-        this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        this.BindGv_PrjTabFld4Func();
         break;
       case DnPath_SelEx.con_SetFldDnPathInTab:
         //alert(strPara);
@@ -215,7 +218,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
         this.btnSubmitClearDnPath_Click(PrjTabFldCRUDEx.mId4SetDnPath_Static);
         break;
       case clsFieldTab4CodeConvEN._CurrTabName:
-        this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        this.BindGv_PrjTabFld4Func();
         break;
       case 'CheckConsistency':
         this.BindGv_PrjTabFld4Func_CheckConsistency(divVarSet.refDivList);
@@ -604,7 +607,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
           this.btnCheckConsistency_Click();
           break;
         case 'TabFldEdit':
-          await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+          await this.BindGv_PrjTabFld4Func();
           break;
         default:
           strMsg = `操作类型：${this.GetOp}不正确，请检查！`;
@@ -1257,12 +1260,6 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
           objA.innerText = Format('{0}', vPrjTab_Sim_TabName);
           objA.title = '编辑表字段信息。';
           objA.className = 'link-info text-info font-weight-bold';
-          // const strLinkFile0 = Format(
-          //   '../T1able_Field/PrjTabFldCRUD?tabId={0}&Op=TabFldEdit',
-          //   SqlViewRelaTab_TabId,
-          // );
-          // const strHref = `${strLinkFile0}`;
-          // objA.href = strHref;
 
           (function (strTabId1) {
             objA.onclick = function () {
@@ -1309,6 +1306,428 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     this.objPager.ShowPagerV2(divContainer, this, this.divName4Pager);
   }
 
+  /** 显示PrjTabFld对象的所有属性值
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_BindTab4Func)
+   * @param divContainer:显示容器
+   * @param arrPrjTabFldExObjLst:需要绑定的对象列表
+   **/
+  public async BindTab_PrjTabFld4Func_MptCPmsost(
+    divContainer: HTMLDivElement,
+    arrPrjTabFldExObjLst: Array<clsPrjTabFldENEx>,
+  ) {
+    const strThisFuncName = this.BindTab_PrjTabFld4Func.name;
+
+    const arrDataColumn: Array<clsDataColumn> = [
+      {
+        fldName: '',
+        sortBy: '',
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'CheckBox',
+        orderNum: 1,
+        funcName: (strKey: string, strText: string) => {
+          strKey = strText;
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: 'sequenceNumber',
+        sortBy: 'sequenceNumber',
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '顺序号',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 2,
+        funcName: (strKey: string, strText: string) => {
+          strKey = strText;
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: 'fldId',
+        sortBy: 'fldId',
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '字段Id',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'a',
+        orderNum: 3,
+        funcName: async (strKey: string, strText: string) => {
+          const lngMid = Number(strKey);
+          const arrPrjTabFldExObjLst_Sel = arrPrjTabFldExObjLst.filter((x) => x.mId == lngMid);
+          const objA = <HTMLAnchorElement>document.createElement('a');
+
+          if (arrPrjTabFldExObjLst_Sel.length == 0) {
+            return objA;
+          }
+          const strFldId = arrPrjTabFldExObjLst_Sel[0].fldId;
+          objA.innerText = strText;
+          objA.innerText = strFldId;
+          objA.title = '编辑字段信息，注意：会影响所有引用该字段的表。';
+          objA.className = 'link-success text-success font-weight-bold';
+          (function (strFldId) {
+            objA.onclick = function () {
+              PrjTabFldCRUDEx.UpdateFieldTab(strFldId);
+            };
+          })(strFldId);
+          return objA;
+        },
+      },
+      {
+        fldName: clsPrjTabFldENEx.con_FldNameEx,
+        sortBy: clsPrjTabFldENEx.con_FldNameEx,
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '字段名',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'a',
+        orderNum: 4,
+        funcName: async (strKey: string, strText: string) => {
+          const lngMid = Number(strKey);
+          const arrPrjTabFldExObjLst_Sel = arrPrjTabFldExObjLst.filter((x) => x.mId == lngMid);
+          const objA = <HTMLAnchorElement>document.createElement('a');
+
+          if (arrPrjTabFldExObjLst_Sel.length == 0) {
+            return objA;
+          }
+          // const strFldId = arrPrjTabFldExObjLst_Sel[0].fldId;
+          // const obj = await vFieldTab_Sim_GetObjByFldIdCache(strFldId);
+          const objPrjTabFldEx = arrPrjTabFldExObjLst_Sel[0];
+          PrjTabFldEx_FuncMap_FldNameEx(objPrjTabFldEx);
+          objA.innerText = strText;
+          objA.innerHTML = Format('{0}', objPrjTabFldEx.fldNameEx);
+          objA.title = '编辑表字段信息。';
+          objA.className = 'link-info text-info font-weight-bold';
+          (function (lngMid) {
+            objA.onclick = function () {
+              PrjTabFldCRUDEx.UpdatePrjTabFld(lngMid);
+            };
+          })(lngMid);
+          return objA;
+        },
+      },
+      {
+        fldName: 'caption',
+        sortBy: 'caption',
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '标题',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 5,
+        funcName: (strKey: string, strText: string) => {
+          strKey = strText;
+          return new HTMLElement();
+        },
+      },
+
+      {
+        fldName: 'fieldTypeName',
+        sortBy: 'fieldTypeName',
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '字段类型',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 7,
+        funcName: (strKey: string, strText: string) => {
+          strKey = strText;
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: 'dataTypeName',
+        sortBy: 'dataTypeName',
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '数据类型',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'LabelOrDiv',
+        orderNum: 8,
+        funcName: async (strKey: string, strText: string) => {
+          const lngMid = Number(strKey);
+          const objPrjTabFld = await PrjTabFld_GetObjBymIdCache(lngMid, TabId_Static.value);
+          if (objPrjTabFld == null) {
+            const div1 = document.createElement('div');
+            return div1;
+          } else {
+            if (objPrjTabFld.isForExtendClass == false) {
+              const div1 = document.createElement('div');
+              return div1;
+            }
+            if (objPrjTabFld.fieldTypeId == enumFieldType.DisplayUnit_20) {
+              if (IsNullOrEmpty(objPrjTabFld.fldDispUnitStyleId)) {
+                const div1 = document.createElement('div');
+                div1.innerHTML = '还未设置显示格式!';
+                return div1;
+              } else {
+                const divFldDispUnitStyle = await css_FldDispUnitStyleEx_CreateDiv4FldDispUnit(
+                  objPrjTabFld.fldDispUnitStyleId,
+                  '标题',
+                  '内容',
+                );
+                return divFldDispUnitStyle;
+              }
+            } else if (IsNullOrEmpty(objPrjTabFld.dnPathId) == true) {
+              const div2 = document.createElement('div');
+
+              const objEx = new clsPrjTabFldENEx();
+              ObjectAssign(objEx, objPrjTabFld);
+
+              await PrjTabFldEx_FuncMapByFldName(clsPrjTabFldENEx.con_TabName, objEx);
+              div2.innerHTML = objEx.tabName;
+              return div2;
+            } else {
+              const divPath = await DnPathEx_CreateGraph4DnPathCache(objPrjTabFld.dnPathId);
+              strKey = strText;
+              return divPath;
+            }
+          }
+        },
+      },
+      {
+        fldName: 'fldLength',
+        sortBy: 'fldLength',
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '长度',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 9,
+        funcName: (strKey: string, strText: string) => {
+          strKey = strText;
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: 'isTabNullable',
+        sortBy: 'isTabNullable',
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '可空',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label4Bool',
+        orderNum: 10,
+        funcName: (strKey: string, strText: string) => {
+          strKey = strText;
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: 'isTabUnique',
+        sortBy: 'isTabUnique',
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '唯一',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label4Bool',
+        orderNum: 11,
+        funcName: (strKey: string, strText: string) => {
+          strKey = strText;
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: 'isTabForeignKey',
+        sortBy: 'isTabForeignKey',
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '外键',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label4Bool',
+        orderNum: 12,
+        funcName: (strKey: string, strText: string) => {
+          strKey = strText;
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: 'isParentObj',
+        sortBy: 'isParentObj',
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '父对象',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label4Bool',
+        orderNum: 13,
+        funcName: (strKey: string, strText: string) => {
+          strKey = strText;
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: 'convFldName',
+        sortBy: 'convFldName',
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '转换',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 9,
+        funcName: (strKey: string, strText: string) => {
+          strKey = strText;
+          return new HTMLElement();
+        },
+      },
+
+      {
+        fldName: clsPrjTabFldENEx.con_ForeignKeyTabName,
+        sortBy: clsPrjTabFldENEx.con_ForeignKeyTabName,
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '外键表0',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'a',
+        orderNum: 14,
+        funcName: async (strKey: string, strText: string) => {
+          const lngMid = Number(strKey);
+          const arrPrjTabFldExObjLst_Sel = arrPrjTabFldExObjLst.filter((x) => x.mId == lngMid);
+          const objA = <HTMLAnchorElement>document.createElement('a');
+
+          if (arrPrjTabFldExObjLst_Sel.length == 0) {
+            return objA;
+          }
+          const foreignTabId = arrPrjTabFldExObjLst_Sel[0].foreignKeyTabId;
+          if (IsNullOrEmpty(foreignTabId) == true || foreignTabId == '0') {
+            return objA;
+          }
+          const vPrjTab_Sim_TabName = await vPrjTab_SimEx_func(
+            clsvPrjTab_SimEN.con_TabId,
+            clsvPrjTab_SimEN.con_TabName,
+            foreignTabId,
+          );
+          objA.innerText = strText;
+          objA.innerText = Format('{0}', vPrjTab_Sim_TabName);
+          objA.title = '编辑表字段信息。';
+          objA.className = 'link-info text-info font-weight-bold';
+
+          // const strLinkFile0 = Format(
+          //   '../T1able_Field/PrjTabFldCRUD?tabId={0}&Op=TabFldEdit&currTabId={1}',
+          //   foreignTabId,
+          //   TabId_Static.value,
+          // );
+          // const strHref = `${strLinkFile0}`;
+          // objA.href = strHref;
+
+          (function (strTabId1) {
+            objA.onclick = function () {
+              EditPrjTab(strTabId1);
+            };
+          })(foreignTabId);
+
+          return objA;
+        },
+      },
+      {
+        fldName: 'sourceTabName',
+        sortBy: 'sourceTabName',
+        sortFun: clsPubVar4Web.SortFun,
+        getDataSource: '',
+        colHeader: '源表',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'a',
+        orderNum: 14,
+        funcName: async (strKey: string, strText: string) => {
+          const lngMid = Number(strKey);
+          const arrPrjTabFldExObjLst_Sel = arrPrjTabFldExObjLst.filter((x) => x.mId == lngMid);
+          const objA = <HTMLAnchorElement>document.createElement('a');
+
+          if (arrPrjTabFldExObjLst_Sel.length == 0) {
+            return objA;
+          }
+          const strFldId = arrPrjTabFldExObjLst_Sel[0].fldId;
+          const strSqlViewId = await SqlViewEx_GetSqlViewIdByTabIdCache(
+            TabId_Static.value,
+            clsPrivateSessionStorage.currSelPrjId,
+          );
+          if (IsNullOrEmpty(strSqlViewId) == true) return;
+          const arrSqlViewFld = await SqlViewFldEx_GetObjLstBySqlViewIdCache(
+            strSqlViewId,
+            clsPrivateSessionStorage.currSelPrjId,
+          );
+          const objSqlViewFld_Sel = arrSqlViewFld.find((x) => x.fldId == strFldId);
+          if (objSqlViewFld_Sel == null) {
+            return objA;
+          }
+          const SqlViewRelaTab_TabId = await SqlViewRelaTab_func(
+            clsSqlViewRelaTabEN.con_RelaTabId,
+            clsSqlViewRelaTabEN.con_TabId,
+            objSqlViewFld_Sel.relaTabId,
+            clsPrivateSessionStorage.currSelPrjId,
+          );
+
+          const vPrjTab_Sim_TabName = await vPrjTab_SimEx_func(
+            clsvPrjTab_SimEN.con_TabId,
+            clsvPrjTab_SimEN.con_TabName,
+            SqlViewRelaTab_TabId,
+          );
+          objA.innerText = strText;
+          objA.innerText = Format('{0}', vPrjTab_Sim_TabName);
+          objA.title = '编辑表字段信息。';
+          objA.className = 'link-info text-info font-weight-bold';
+
+          (function (strTabId1) {
+            objA.onclick = function () {
+              EditPrjTab(strTabId1);
+            };
+          })(SqlViewRelaTab_TabId);
+
+          return objA;
+        },
+      },
+    ];
+    if (PrjTabFldCRUDEx.SqlDsTypeId_Static == enumSQLDSType.SqlTab_01) {
+      const intIndex = arrDataColumn.findIndex((x) => x.fldName == 'sourceTabName');
+      if (intIndex >= 0) {
+        arrDataColumn.splice(intIndex, 1);
+      }
+    }
+    try {
+      await this.ExtendFldFuncMap(arrPrjTabFldExObjLst, arrDataColumn);
+    } catch (e) {
+      const strMsg = Format(
+        '扩展字段值的映射出错,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+      return;
+    }
+    for (const objInFor of arrPrjTabFldExObjLst) {
+      await PrjTabFldEx_GetDnPath(objInFor);
+    }
+    // console.log(arrPrjTabFldExObjLst);
+    arrPrjTabFldExObjLst.forEach((x) => {
+      if (x.errMsg == null) x.errMsg = '';
+    });
+    await PrjTabFldCRUDEx.ShowLst(arrPrjTabFldExObjLst);
+    // await BindTab(divDataLst, arrPrjTabFldExObjLst, arrDataColumn, 'mId', this);
+    // this.SetTdHeadButton(divContainer);
+    // this.SetTdProperty(divContainer, arrPrjTabFldExObjLst);
+    this.objPager.recCount = this.recCount;
+    this.objPager.pageSize = this.pageSize;
+    this.objPager.ShowPagerV2(divContainer, this, this.divName4Pager);
+  }
   /** 显示PrjTabFld对象的所有属性值
    * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_BindTab4Func)
    * @param divContainer:显示容器
@@ -1827,7 +2246,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
         prjTabFldStore.delObjLstByTabId(objPrjTabFld.tabId);
       }
       if (bolIsSuccess) {
-        this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        this.BindGv_PrjTabFld4Func();
       }
     } catch (e) {
       console.error(e);
@@ -1970,16 +2389,27 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     const strPrjId = clsPrivateSessionStorage.currSelPrjId;
     const strUpdUser = clsPubLocalStorage.userId;
     try {
-      const strFldId = await FieldTabEx_AddNewRec(
-        strFldName,
-        strCaption,
-        strDataTypeId,
-        intFldLength,
-        intFldPrecision,
-        bolIsNull,
-        strPrjId,
-        strUpdUser,
-      );
+      let strFldId = await FieldTabEx_IsExistSameFldName(strPrjId, strFldName, strDataTypeId);
+      if (IsNullOrEmpty(strFldId) == true) {
+        //如果strDataTypeId为25，04中的一个，还可以换一个数字查一下-2026-3-8-2
+        if (strDataTypeId === '25') {
+          strFldId = await FieldTabEx_IsExistSameFldName(strPrjId, strFldName, '04');
+        } else if (strDataTypeId === '04') {
+          strFldId = await FieldTabEx_IsExistSameFldName(strPrjId, strFldName, '25');
+        }
+      }
+      if (IsNullOrEmpty(strFldId) == true) {
+        strFldId = await FieldTabEx_AddNewRec(
+          strFldName,
+          strCaption,
+          strDataTypeId,
+          intFldLength,
+          intFldPrecision,
+          bolIsNull,
+          strPrjId,
+          strUpdUser,
+        );
+      }
       if (IsNullOrEmpty(strFldId) == false) {
         const bolIsSuccess = await PrjTabFldEx_AddNewRec(
           strTabId,
@@ -1991,6 +2421,12 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
           PrjTabFld_ReFreshCache(strTabId);
           prjTabFldStore.delObjLstByTabId(strTabId);
         }
+      } else {
+        //备注：添加字段不成功
+        const strMsg = `添加字段[${strFldName}]失败，请检查字段信息是否正确。(in ${this.constructor.name}.btnAddNewFieldTab_Click)`;
+        console.error(strMsg);
+        alert(strMsg);
+        return false;
       }
       await PrjTabFldCRUD.objPageCRUD.BindInDiv(divList);
     } catch (e) {
@@ -2197,11 +2633,24 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       }
     }
   }
+
   /** 根据条件获取相应的对象列表
    * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_BindGv4Func)
    **/
-  public async BindGv_PrjTabFld4Func(divList: HTMLDivElement) {
-    const strThisFuncName = this.BindGv_PrjTabFld4Func.name;
+  public async BindGv_PrjTabFld4Func() {
+    // const strThisFuncName = this.BindGv_PrjTabFld4Func.name;
+    if (PrjTabFldCRUDEx.ShowMode == 'CheckConsistency') {
+      await this.BindGv_PrjTabFld4Func_CheckConsistency(divVarSet.refDivList);
+    } else {
+      await this.BindGv_PrjTabFld4Func_NotCheckConsistency(divVarSet.refDivList);
+    }
+  }
+
+  /** 根据条件获取相应的对象列表
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_BindGv4Func)
+   **/
+  public async BindGv_PrjTabFld4Func_NotCheckConsistency(divList: HTMLDivElement) {
+    const strThisFuncName = this.BindGv_PrjTabFld4Func_NotCheckConsistency.name;
     if (this.Op == 'CheckConsistency') {
       this.BindGv_PrjTabFld4Func_CheckConsistency(divVarSet.refDivList);
     }
@@ -2274,7 +2723,6 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       alert(strMsg);
     }
   }
-
   public ShowErrMsg(divContainer: HTMLDivElement, arrPrjTabFldEx: Array<clsPrjTabFldENEx>) {
     const objLst = divContainer.getElementsByTagName('tr');
 
@@ -2386,7 +2834,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     // const strThisFuncName = this.btnEditTabFld_Click.name;
     PrjTabFldCRUDEx.ShowMode = 'EditTabFld';
     this.SetCurrPageIndex(1);
-    await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+    await this.BindGv_PrjTabFld4Func();
     const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
       TabId_Static.value,
       clsPrivateSessionStorage.currSelPrjId,
@@ -2416,7 +2864,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     );
     if (bolIsExist == false) {
       ShowButtonInDivObj(divVarSet.refDivFunction, 'btnGenNewTabInSQL');
-      await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+      await this.BindGv_PrjTabFld4Func();
     } else {
       //console.log("arrColumns:", arrColumns);
       await this.BindGv_PrjTabFld4Func_CheckConsistency(divVarSet.refDivList);
@@ -2465,7 +2913,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       alert(strMsg);
       return;
     }
-    await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+    await this.BindGv_PrjTabFld4Func();
   }
 
   public async btnCreateView4Sql_Click() {
@@ -2528,7 +2976,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       alert(strMsg);
       return;
     }
-    await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+    await this.BindGv_PrjTabFld4Func();
   }
   public async btnImportSqlViewFromSqlServer_Click() {
     const strThisFuncName = this.btnImportSqlViewFromSqlServer_Click.name;
@@ -2567,7 +3015,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
         clsPrivateSessionStorage.currPrjDataBaseId,
         clsPubLocalStorage.userId,
       );
-      await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+      await this.BindGv_PrjTabFld4Func();
       alert('导入Sql视图并分析字段成功！');
     } catch (e) {
       const strMsg = Format(
@@ -2632,7 +3080,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
           clsPubLocalStorage.userId,
         );
       }
-      await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+      await this.BindGv_PrjTabFld4Func();
       alert('分析字段成功！');
     } catch (e) {
       const strMsg = Format(
@@ -2678,7 +3126,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       alert(strMsg);
       return;
     }
-    await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+    await this.BindGv_PrjTabFld4Func();
   }
 
   /**
@@ -2719,7 +3167,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       alert(strMsg);
       return;
     }
-    await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+    await this.BindGv_PrjTabFld4Func();
     const strListDiv = divVarSet.refDivList;
     arrKeyIds.forEach((e) => SetCheckedItem4KeyId(strListDiv, e));
   }
@@ -2760,7 +3208,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       alert(strMsg);
       return;
     }
-    await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+    await this.BindGv_PrjTabFld4Func();
     const strListDiv = divVarSet.refDivList;
     arrKeyIds.forEach((e) => SetCheckedItem4KeyId(strListDiv, e));
   }
@@ -2801,7 +3249,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       alert(strMsg);
       return;
     }
-    await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+    await this.BindGv_PrjTabFld4Func();
     const strListDiv = divVarSet.refDivList;
     arrKeyIds.forEach((e) => SetCheckedItem4KeyId(strListDiv, e));
   }
@@ -2842,7 +3290,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       alert(strMsg);
       return;
     }
-    await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+    await this.BindGv_PrjTabFld4Func();
     const strListDiv = divVarSet.refDivList;
     arrKeyIds.forEach((e) => SetCheckedItem4KeyId(strListDiv, e));
   }
@@ -2888,7 +3336,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
         prjTabFldStore.delObjLstByTabId(TabId_Static.value);
         vFieldTab_Sim2Store.delObj(strFldId);
         vFieldTab_Sim_ReFreshThisCache(clsPrivateSessionStorage.currSelPrjId);
-        await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        await this.BindGv_PrjTabFld4Func();
         alert('设置新标题成功！');
       }
     } catch (e) {
@@ -2936,7 +3384,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
         prjTabFldStore.delObjLstByTabId(TabId_Static.value);
         vFieldTab_Sim2Store.delObj(strFldId);
         vFieldTab_Sim_ReFreshThisCache(clsPrivateSessionStorage.currSelPrjId);
-        await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        await this.BindGv_PrjTabFld4Func();
       }
     } catch (e) {
       const strMsg = Format(
@@ -2995,7 +3443,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       if (bolIsSuccess && intCount > 0) {
         PrjTabFld_ReFreshCache(strTabId);
         prjTabFldStore.delObjLstByTabId(strTabId);
-        this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        this.BindGv_PrjTabFld4Func();
         alert('设置是否生成属性成功!');
       } else {
         alert('设置是否生成属性不成功!');
@@ -3056,7 +3504,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       if (bolIsSuccess && intCount > 0) {
         PrjTabFld_ReFreshCache(strTabId);
         prjTabFldStore.delObjLstByTabId(strTabId);
-        this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        this.BindGv_PrjTabFld4Func();
         alert('设置扩展字段成功!');
       } else {
         alert('设置扩展字段不成功!');
@@ -3114,7 +3562,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       if (bolIsSuccess && intCount > 0) {
         PrjTabFld_ReFreshCache(strTabId);
         prjTabFldStore.delObjLstByTabId(strTabId);
-        this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        this.BindGv_PrjTabFld4Func();
         alert('取消扩展字段成功!');
       } else {
         alert('取消扩展字段不成功!');
@@ -3212,7 +3660,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       if (bolIsSuccess && intCount > 0) {
         PrjTabFld_ReFreshCache(strTabId);
         prjTabFldStore.delObjLstByTabId(strTabId);
-        this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        this.BindGv_PrjTabFld4Func();
         alert('设置默认路径成功!');
       } else {
         alert('设置默认路径不成功!');
@@ -3392,7 +3840,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
         );
         PrjTabFld_ReFreshCache(strTabId);
         prjTabFldStore.delObjLstByTabId(strTabId);
-        this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        this.BindGv_PrjTabFld4Func();
       }
       if (intSetDnPathCount > 0 && arrErrMsg.length == 0) {
         alert(Format('设置默认路径成功!共设置了:[{0}]个字段。', intSetDnPathCount));
@@ -3575,7 +4023,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
         );
         PrjTabFld_ReFreshCache(strTabId);
         prjTabFldStore.delObjLstByTabId(strTabId);
-        this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        this.BindGv_PrjTabFld4Func();
       }
       if (intSetDnPathCount > 0 && arrErrMsg.length == 0) {
         alert(Format('设置默认路径成功!共设置了:[{0}]个字段。', intSetDnPathCount));
@@ -3662,7 +4110,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
         message.success('改变序号成功！');
         PrjTabFld_ReFreshCache(TabId_Static.value);
         prjTabFldStore.delObjLstByTabId(TabId_Static.value);
-        await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        await this.BindGv_PrjTabFld4Func();
       }
     } catch (e) {
       const strMsg = Format(
@@ -3711,7 +4159,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
 
         PrjTabFld_ReFreshCache(strTabId);
         prjTabFldStore.delObjLstByTabId(strTabId);
-        await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        await this.BindGv_PrjTabFld4Func();
       }
     } catch (e) {
       const strMsg = Format(
@@ -3758,7 +4206,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
         );
         PrjTabFld_ReFreshCache(strTabId);
         prjTabFldStore.delObjLstByTabId(strTabId);
-        this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        this.BindGv_PrjTabFld4Func();
         alert('取消路径成功!');
       } else {
         alert('取消路径不成功!');
@@ -3817,7 +4265,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
 
         PrjTabFld_ReFreshCache(strTabId);
         prjTabFldStore.delObjLstByTabId(strTabId);
-        this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        this.BindGv_PrjTabFld4Func();
         alert('设置路径成功!');
       } else {
         alert('设置路径不成功!');
@@ -3889,7 +4337,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     }
   }
 
-  /** 替换标题btnRefreshList_Click
+  /** 替换标题btnSetInFldId_Click
    *
    **/
   public async btnSetInFldId_Click() {
@@ -3931,7 +4379,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
         prjTabFldStore.delObjLstByTabId(TabId_Static.value);
         vFieldTab_Sim2Store.delObj(objPrjTabFld.fldId);
         await PrjTabEx_SetUpdDate(objPrjTabFld.tabId, clsPrivateSessionStorage.userId);
-        await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        await this.BindGv_PrjTabFld4Func();
       }
     } catch (e) {
       const strMsg = Format(
@@ -3976,7 +4424,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
         prjTabFldStore.delObjLstByTabId(TabId_Static.value);
         vFieldTab_Sim2Store.delObj(objPrjTabFld.fldId);
         await PrjTabEx_SetUpdDate(objPrjTabFld.tabId, clsPrivateSessionStorage.userId);
-        await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        await this.BindGv_PrjTabFld4Func();
       }
     } catch (e) {
       const strMsg = Format(
@@ -4001,7 +4449,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       if (PrjTabFldCRUDEx.ShowMode == 'CheckConsistency') {
         await this.BindGv_PrjTabFld4Func_CheckConsistency(divVarSet.refDivList);
       } else {
-        await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+        await this.BindGv_PrjTabFld4Func();
       }
     } catch (e) {
       const strMsg = Format(
@@ -4033,7 +4481,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     viewVarSet.sortPrjTabFldBy = Format('{0} {1}', sortColumnKey, sortDirection);
     // PrjTabCRUD.ascOrDesc4SortFun = sortDirection;
     // PrjTabCRUD.sortFunStatic = sortFun;
-    await this.BindGv_PrjTabFld4Func(divVarSet.refDivList);
+    await this.BindGv_PrjTabFld4Func();
   }
 }
 

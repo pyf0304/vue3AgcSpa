@@ -357,6 +357,7 @@ export default class PrjConstraintCRUDEx extends PrjConstraintCRUD implements IS
         objPrjConstraint.SetPrjId(clsPrivateSessionStorage.currSelPrjId);
         objPrjConstraint.SetUpdDate(clsDateTime.getTodayDateTimeStr(0));
         objPrjConstraint.SetUpdUser(clsPrivateSessionStorage.userId);
+        objPrjConstraint.SetInUse(true);
         const returnBool = await PrjConstraint_UpdateRecordAsync(objPrjConstraint);
         if (returnBool == false) {
           alert('设置标准约束名出错！');

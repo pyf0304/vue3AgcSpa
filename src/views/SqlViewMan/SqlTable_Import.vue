@@ -34,19 +34,14 @@
             />
           </td> -->
           <td class="text-right">
-            <label
-              id="lblTableName_q"
-              name="lblTableName_q"
-              class="col-form-label text-right"
-              style="width: 60px"
-            >
+            <label id="lblTableName_q" class="col-form-label text-right" style="width: 60px">
               表名
             </label>
           </td>
           <td class="text-left">
             <input
               id="txtTableName_q"
-              name="txtTableName_q"
+              v-model="tableName_q"
               class="form-control form-control-sm"
               style="width: 120px"
             />
@@ -64,7 +59,7 @@
           <td class="text-left">
             <input
               id="txtxtype_q"
-              name="txtxtype_q"
+              v-model="xtype_q"
               class="form-control form-control-sm"
               style="width: 120px"
             />
@@ -145,6 +140,11 @@
     refDivQuery,
     refDivFunction,
     refDivList,
+    sqlTableId_q,
+    tableName_q,
+    xtype_q,
+    crDate_q,
+    updUserId_q,
   } from '@/views/SqlViewMan/SqlTableVueShare';
   export default defineComponent({
     name: 'SqlTableCRUD',
@@ -176,6 +176,11 @@
         refDivFunction,
         refDivList,
         refDivDataLst,
+        sqlTableId_q,
+        tableName_q,
+        xtype_q,
+        crDate_q,
+        updUserId_q,
       };
     },
     watch: {

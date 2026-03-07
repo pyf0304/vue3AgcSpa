@@ -662,6 +662,64 @@ export async function PrjTabFldEx_SynchFieldFromColumnObj(
   }
 }
 
+export async function PrjTabFldEx_GetSourceTabName(
+  strPrjId: string,
+  strTabId: string,
+  strFldName: string,
+): Promise<string> {
+  const strThisFuncName = PrjTabFldEx_GetSourceTabName.name;
+  const strAction = 'GetSourceTabName';
+  const strUrl = GetWebApiUrl(prjTabFldEx_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strPrjId,
+      strTabId,
+      strFldName,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnStr;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        prjTabFldEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        prjTabFldEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
 /**
  * 根据fldId获取相关的tabId列表
  * (AGC.BusinessLogicEx.clsFunction4CodeBLEx:GeneCodeV2)
@@ -1258,7 +1316,7 @@ export async function PrjTabFldEx_FuncMapByFldName(
       return PrjTabFldEx_FuncMap_DataTypeId(objPrjTabFldEx);
 
     case clsPrjTabFldENEx.con_SourceTabName:
-      return PrjTabFldEx_FuncMap_SourceTabName(objPrjTabFldEx);
+      return PrjTabFldEx_FuncMapSourceTabName(objPrjTabFldEx);
 
     case clsPrjTabFldENEx.con_FldPrecision:
       return PrjTabFldEx_FuncMap_FldPrecision(objPrjTabFldEx);
@@ -1998,6 +2056,45 @@ export async function PrjTabFldEx_FuncMapForeignKeyTabName(objPrjTabFld: clsPrjT
   } catch (e) {
     const strMsg = Format(
       '(errid:Watl001011)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      prjTabFldEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objPrjTabFldS:源对象
+ **/
+export async function PrjTabFldEx_FuncMapSourceTabName(objPrjTabFld: clsPrjTabFldENEx) {
+  const strThisFuncName = PrjTabFldEx_FuncMapSourceTabName.name;
+  try {
+    if (IsNullOrEmpty(objPrjTabFld.sourceTabName) == true) {
+      if (IsNullOrEmpty(objPrjTabFld.fldName) == true) {
+        await PrjTabFldEx_FuncMap_FldName(objPrjTabFld);
+      }
+      const strPrjId =
+        IsNullOrEmpty(objPrjTabFld.prjId) == true
+          ? clsPrivateSessionStorage.currSelPrjId
+          : objPrjTabFld.prjId;
+      if (IsNullOrEmpty(strPrjId) == true) return;
+      if (IsNullOrEmpty(objPrjTabFld.tabId) == true) return;
+      if (IsNullOrEmpty(objPrjTabFld.fldName) == true) return;
+
+      const strSourceTabName = await PrjTabFldEx_GetSourceTabName(
+        strPrjId,
+        objPrjTabFld.tabId,
+        objPrjTabFld.fldName,
+      );
+      objPrjTabFld.sourceTabName = strSourceTabName;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001012)函数映射表对象数据出错,{0}.(in {1}.{2})',
       e,
       prjTabFldEx_ConstructorName,
       strThisFuncName,

@@ -247,6 +247,70 @@ export async function FieldTabEx_AddNewRec(
     }
   }
 }
+export async function FieldTabEx_IsExistSameFldName(
+  strPrjId: string,
+  strFldName: string,
+  strDataTypeId: string,
+): Promise<string> {
+  const strThisFuncName = FieldTabEx_AddNewRec.name;
+  const strAction = 'IsExistSameFldName';
+  const strUrl = GetWebApiUrl(fieldTabEx_Controller, strAction);
+  // const mapParam: Dictionary = new Dictionary();
+  // mapParam.add('strFldName', strFldName);
+  // mapParam.add('strDataTypeId', strDataTypeId);
+  // mapParam.add('strPrjId', strPrjId);
+
+  // const strData = mapParam.getParamText(); // "例如: strIdentityID =01";
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  //console.error('token:', token);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strPrjId,
+      strFldName,
+      strDataTypeId,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnStr;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        fieldTabEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        fieldTabEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
 
 /**
  * 根据分页条件从缓存中获取分页对象列表，只获取一页.
