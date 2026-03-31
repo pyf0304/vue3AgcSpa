@@ -1514,6 +1514,10 @@ export async function vFieldTab_SimEx_func(
   if (IsNullOrEmpty(strInValue) == true) {
     return '';
   }
+  if (strFldId == '00140446') {
+    const strMsg = Format('输入字段值:[{0}]的转换不正确！', strFldId);
+    console.error(strMsg);
+  }
   const objvFieldTab_Sim = await vFieldTab_Sim2Store.getObj(strFldId);
   if (objvFieldTab_Sim == null) return '';
   return vFieldTab_Sim2Store.GetFldValue(objvFieldTab_Sim, strOutFldName).toString();

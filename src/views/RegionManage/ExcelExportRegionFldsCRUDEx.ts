@@ -850,7 +850,7 @@ export default class ExcelExportRegionFldsCRUDEx
     }
     // const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
     //   objViewRegion.tabId,
-    //   clsPrivateSessionStorage.cmPrjId,
+    //   clsPrivateSessionStorage.currSelPrjId,
     // );
     //console.log("1objViewRegion", objViewRegion);
     const objDiv: HTMLDivElement = document.createElement('div');

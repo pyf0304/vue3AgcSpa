@@ -44,7 +44,7 @@ export async function UserPrjGrantEx_GetUserLoginInfoAsync(mId: number): Promise
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: `Bearer ${token}`,
     },
     params: {
       mId,
@@ -107,7 +107,7 @@ export async function UserPrjGrantEx_GetUserLoginInfoByUserId(
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: `Bearer ${token}`,
     },
     params: {
       strUserId,
@@ -483,7 +483,7 @@ export async function UserPrjGrantEx_GetFirstObjByUserId(
   console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: `Bearer ${token}`,
     },
     params: {
       strUserId,

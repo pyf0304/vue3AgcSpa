@@ -515,7 +515,7 @@ export default class DetailRegionFldsCRUDEx extends DetailRegionFldsCRUD impleme
     if (IsNullOrEmpty(objViewInfo.keyId4Test) == false) {
       const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
         objViewRegion.tabId,
-        clsPrivateSessionStorage.cmPrjId,
+        clsPrivateSessionStorage.currSelPrjId,
       );
       if (objPrjTab == null) {
         const strMsg = Format(

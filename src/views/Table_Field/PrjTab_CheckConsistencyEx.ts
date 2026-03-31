@@ -1302,7 +1302,7 @@ export class PrjTab_CheckConsistencyEx extends PrjTabCRUD implements IShowList {
     let arrPrjConstraintExObjLst = arrPrjConstraintObjLst_Sel.map(vPrjConstraint_SimEx_CopyToEx);
     // const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
     //   strTabId,
-    //   clsPrivateSessionStorage.cmPrjId,
+    //   clsPrivateSessionStorage.currSelPrjId,
     // );
     for (const objInFor of arrPrjConstraintExObjLst) {
       await vPrjConstraint_SimEx_FuncMapByFldName(
@@ -1397,7 +1397,7 @@ export class PrjTab_CheckConsistencyEx extends PrjTabCRUD implements IShowList {
     let arrTabFeatureExObjLst = arrTabFeatureObjLst_Sel.map(vTabFeature_SimEx_CopyToEx);
     // const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
     //   strTabId,
-    //   clsPrivateSessionStorage.cmPrjId,
+    //   clsPrivateSessionStorage.currSelPrjId,
     // );
     for (const objInFor of arrTabFeatureExObjLst) {
       await vTabFeature_SimEx_FuncMapByFldName(clsTabFeatureENEx.con_TabFeatureName, objInFor);
@@ -1487,7 +1487,7 @@ export class PrjTab_CheckConsistencyEx extends PrjTabCRUD implements IShowList {
     let arrTabFunctionPropExObjLst = arrTabFunctionPropObjLst_Sel.map(TabFunctionPropEx_CopyToEx);
     // const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
     //   strTabId,
-    //   clsPrivateSessionStorage.cmPrjId,
+    //   clsPrivateSessionStorage.currSelPrjId,
     // );
     for (const objInFor of arrTabFunctionPropExObjLst) {
       await TabFunctionPropEx_FuncMapByFldName(clsTabFunctionPropENEx.con_FuncName, objInFor);
@@ -1576,7 +1576,7 @@ export class PrjTab_CheckConsistencyEx extends PrjTabCRUD implements IShowList {
     let arrPrjTabFldExObjLst = arrPrjTabFldObjLst_Sel.map(PrjTabFldEx_CopyToEx);
     // const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
     //   strTabId,
-    //   clsPrivateSessionStorage.cmPrjId,
+    //   clsPrivateSessionStorage.currSelPrjId,
     // );
     for (const objInFor of arrPrjTabFldExObjLst) {
       await PrjTabFldEx_FuncMapByFldName(clsPrjTabFldENEx.con_FldName, objInFor);
@@ -1766,7 +1766,7 @@ export class PrjTab_CheckConsistencyEx extends PrjTabCRUD implements IShowList {
       if (confirm_del(0) == false) {
         return;
       }
-      const responseBool = await PrjTabEx_DelRecordEx(strTabId);
+      const responseBool = await PrjTabEx_DelRecordEx(strTabId, clsPrivateSessionStorage.userId);
       if (responseBool == true) {
         //PrjTabReFreshCache(clsPrivateSessionStorage.currSelPrjId);
         //PrjTabReFreshCache(clsPrivateSessionStorage.currSelPrjId);
@@ -1881,7 +1881,11 @@ export class PrjTab_CheckConsistencyEx extends PrjTabCRUD implements IShowList {
       if (confirm_del(0) == false) {
         return;
       }
-      const responseBool = await PrjTabFldEx_DelRecordEx(strTabId, strFldId);
+      const responseBool = await PrjTabFldEx_DelRecordEx(
+        strTabId,
+        strFldId,
+        clsPrivateSessionStorage.userId,
+      );
       if (responseBool == true) {
         //PrjTabReFreshCache(clsPrivateSessionStorage.currSelPrjId);
         PrjTabFld_ReFreshCache(strTabId);

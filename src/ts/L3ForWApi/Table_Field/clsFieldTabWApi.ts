@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsFieldTabWApi
  * 表名:FieldTab(00050021)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:47:04
+ * 版本:2026.03.27.1(服务器:PYF-AI)
+ * 日期:2026/03/27 10:56:11
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:字段、表维护(Table_Field)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * 工程字段(FieldTab)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年06月14日.
+ * Created by pyf on 2026年03月27日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -133,7 +133,7 @@ export async function FieldTab_GetObjByFldIdAsync(strFldId: string): Promise<cls
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-03-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -145,7 +145,7 @@ export function FieldTab_SortFunDefa(a: clsFieldTabEN, b: clsFieldTabEN): number
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-03-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -159,7 +159,7 @@ export function FieldTab_SortFunDefa2Fld(a: clsFieldTabEN, b: clsFieldTabEN): nu
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-03-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -457,7 +457,7 @@ export function FieldTab_SortFunByKey(strKey: string, AscOrDesc: string) {
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-03-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -1337,7 +1337,7 @@ export function FieldTab_CopyToEx(objFieldTabENS: clsFieldTabEN): clsFieldTabENE
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-03-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -1348,7 +1348,7 @@ export function FieldTab_FuncMapByFldName(strFldName: string, objFieldTabEx: cls
   strFldName = strFldName.replace('|Ex', '');
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsFieldTabEN.AttributeName;
+  const arrFldName = clsFieldTabEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -1369,7 +1369,7 @@ export function FieldTab_FuncMapByFldName(strFldName: string, objFieldTabEx: cls
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-03-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -3262,7 +3262,7 @@ export function FieldTab_CheckProperty4Update(pobjFieldTabEN: clsFieldTabEN) {
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-03-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3283,7 +3283,7 @@ export function FieldTab_GetJSONStrByObj(pobjFieldTabEN: clsFieldTabEN): string 
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-03-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -3304,7 +3304,7 @@ export function FieldTab_GetObjLstByJSONStr(strJSON: string): Array<clsFieldTabE
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-03-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrFieldTabObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -3324,7 +3324,7 @@ export function FieldTab_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-03-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3740,12 +3740,14 @@ export function FieldTab_GetCombineCondition(objFieldTabCond: clsFieldTabEN): st
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_GetUniquenessConditionString)
  * @param strFldName: 字段名(要求唯一的字段)
  * @param strPrjId: 工程Id(要求唯一的字段)
+ * @param strDataTypeId: 数据类型Id(要求唯一的字段)
  * @returns 条件串(strWhereCond)
  **/
 export function FieldTab_GetUniCondStr(objFieldTabEN: clsFieldTabEN): string {
   let strWhereCond = ' 1 = 1 ';
   strWhereCond += Format(" and FldName = '{0}'", objFieldTabEN.fldName);
   strWhereCond += Format(" and PrjId = '{0}'", objFieldTabEN.prjId);
+  strWhereCond += Format(" and DataTypeId = '{0}'", objFieldTabEN.dataTypeId);
   return strWhereCond;
 }
 
@@ -3754,6 +3756,7 @@ export function FieldTab_GetUniCondStr(objFieldTabEN: clsFieldTabEN): string {
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_GetUniquenessConditionString4Update)
  * @param strFldName: 字段名(要求唯一的字段)
  * @param strPrjId: 工程Id(要求唯一的字段)
+ * @param strDataTypeId: 数据类型Id(要求唯一的字段)
  * @returns 条件串(strWhereCond)
  **/
 export function FieldTab_GetUniCondStr4Update(objFieldTabEN: clsFieldTabEN): string {
@@ -3761,6 +3764,7 @@ export function FieldTab_GetUniCondStr4Update(objFieldTabEN: clsFieldTabEN): str
   strWhereCond += Format(" and FldId <> '{0}'", objFieldTabEN.fldId);
   strWhereCond += Format(" and FldName = '{0}'", objFieldTabEN.fldName);
   strWhereCond += Format(" and PrjId = '{0}'", objFieldTabEN.prjId);
+  strWhereCond += Format(" and DataTypeId = '{0}'", objFieldTabEN.dataTypeId);
   return strWhereCond;
 }
 

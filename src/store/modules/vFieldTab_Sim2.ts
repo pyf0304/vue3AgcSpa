@@ -11,6 +11,10 @@ import { Format } from '@/ts/PubFun/clsString';
 import { ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsvFieldTab_Sim2EN } from '@/ts/L0Entity/Table_Field/clsvFieldTab_Sim2EN';
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
+import {
+  FieldTab_GetObjByFldIdAsync,
+  FieldTab_UpdateObjSave,
+} from '@/ts/L3ForWApi/Table_Field/clsFieldTabWApi';
 
 export function vFieldTab_SimEx_CopyTo(
   objvFieldTab_SimENS: clsvFieldTab_Sim2EN,
@@ -82,8 +86,18 @@ export const usevFieldTab_Sim2Store = defineStore({
 
       const objvFieldTab_Sim = this.fieldTabLst.find((x) => x.fldId === strFldId);
       if (objvFieldTab_Sim != null) return objvFieldTab_Sim;
-      const objvFieldTab_SimEN = await vFieldTab_Sim2_GetObjByFldIdAsync(strFldId);
-      if (objvFieldTab_SimEN == null) return null;
+      let objvFieldTab_SimEN = await vFieldTab_Sim2_GetObjByFldIdAsync(strFldId);
+      if (objvFieldTab_SimEN == null) {
+        const objFieldTab = await FieldTab_GetObjByFldIdAsync(strFldId);
+        if (objFieldTab == null) return null;
+        objFieldTab.SetInUse(true);
+        objFieldTab.SetFldId(strFldId);
+        await FieldTab_UpdateObjSave(objFieldTab);
+        objvFieldTab_SimEN = await vFieldTab_Sim2_GetObjByFldIdAsync(strFldId);
+      }
+      if (objvFieldTab_SimEN == null) {
+        return null;
+      }
       const objvFieldTab_Sim1 = vFieldTab_SimEx_CopyTo(objvFieldTab_SimEN);
       this.fieldTabLst.push(objvFieldTab_Sim1);
       return objvFieldTab_Sim1;

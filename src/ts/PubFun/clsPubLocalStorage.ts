@@ -26,6 +26,34 @@
       throw strMsg;
     }
   }
+
+  //获取行政班Id
+  public static get id_AdminCls(): string {
+    const strKey = 'id_AdminCls';
+    let strIdCurrEduCls = '';
+    if (Object.prototype.hasOwnProperty.call(localStorage, strKey)) {
+      //缓存存在，直接返回
+      strIdCurrEduCls = localStorage.getItem(strKey) as string;
+    } else {
+      console.log('缓存idAdminCls为空！');
+    }
+    return strIdCurrEduCls;
+  }
+
+  //设置行政班Id
+  public static set id_AdminCls(strId_AdminCls: string) {
+    try {
+      //清空本类缓存
+      const strKey = 'id_AdminCls';
+      localStorage.removeItem(strKey);
+      //把值存入session
+      localStorage.setItem(strKey, strId_AdminCls);
+    } catch (e) {
+      console.error(e);
+      const strMsg = `存入缓存出错,${e}.`;
+      throw strMsg;
+    }
+  }
   //////////////////////////////////////////////////////////课程Id/////////////////////////////////////////////////////////////
   //获取课程Id
   public static get courseId(): string {

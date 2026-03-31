@@ -1222,7 +1222,7 @@ export default class ViewInfoCRUD_EditEx extends ViewInfoCRUD implements IShowLi
     let arrViewRegionRelaExObjLst = arrViewRegionRelaObjLst_Sel.map(ViewRegionRelaEx_CopyToEx);
     const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
       strMainTabId,
-      clsPrivateSessionStorage.cmPrjId,
+      clsPrivateSessionStorage.currSelPrjId,
     );
     for (const objInFor of arrViewRegionRelaExObjLst) {
       await ViewRegionRelaEx_FuncMap4OrderNum(objInFor);

@@ -44,6 +44,7 @@ import { TabType_func } from '@/ts/L3ForWApi/Table_Field/clsTabTypeWApi';
 
 import { GetSortExpressInfo, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsDateTime, DateTime_GetDateTimeSim } from '@/ts/PubFun/clsDateTime';
+import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 // import { Dictionary } from '@/ts/PubFun/tzDictionary';
@@ -90,7 +91,10 @@ export function PrjTabEx_SortFunByTabName(a: clsPrjTabEN, b: clsPrjTabEN): numbe
 /// </summary>
 /// <param name = "strTabId">表Id</param>
 /// <returns>获取的相应对象列表</returns>
-export async function PrjTabEx_DelRecordEx(strTabId: string): Promise<boolean> {
+export async function PrjTabEx_DelRecordEx(
+  strTabId: string,
+  strUpdUserId: string,
+): Promise<boolean> {
   const strThisFuncName = PrjTabEx_DelRecordEx.name;
   const strAction = 'DelRecordEx';
   const strUrl = GetWebApiUrl(prjTabEx_Controller, strAction);
@@ -106,6 +110,7 @@ export async function PrjTabEx_DelRecordEx(strTabId: string): Promise<boolean> {
     },
     params: {
       strTabId,
+      strUpdUserId,
     },
   };
   try {
@@ -2209,4 +2214,81 @@ export async function PrjTabEx_SetIsShare(
       throw error.statusText;
     }
   }
+}
+
+/**
+ * 统计并记录某TabId的字段数(FldNum)
+ * 调用方法: Get /api/PrjTabExApiController/SetFldNumByTabId?strTabId=value&strPrjId=value
+ * @param strTabId: 表Id
+ * @param strPrjId: 工程Id
+ * @returns 返回是否成功
+ */
+export async function PrjTabEx_SetFldNumByTabId(
+  strTabId: string,
+  strPrjId: string,
+): Promise<boolean> {
+  const strThisFuncName = PrjTabEx_SetFldNumByTabId.name;
+  const strAction = 'SetFldNumByTabId';
+  const strUrl = PrjTabEx_GetWebApiUrl(prjTabEx_Controller, strAction);
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  //console.error('token:', token);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strTabId,
+      strPrjId,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnBool;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        prjTabEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        prjTabEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 按表Id检查单个表字段。
+ * 从当前会话中获取 CM工程Id、工程数据库Id 与操作用户Id。
+ * @param strTabId: 表Id
+ * @returns 是否检查成功
+ */
+export async function PrjTabEx_CheckTabFldByTabId(strTabId: string): Promise<boolean> {
+  const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
+  const strPrjDataBaseId = clsPrivateSessionStorage.currPrjDataBaseId;
+  const strOpUserId = clsPubLocalStorage.userId;
+
+  return await PrjTabEx_CheckTabFlds(strTabId, strPrjDataBaseId, strCmPrjId, strOpUserId);
 }

@@ -35,6 +35,18 @@
             </td>
             <td class="text-right">
               <label
+                id="lblFldId_q"
+                name="lblFldId_q"
+                class="col-form-label text-right"
+                style="width: 90px"
+                >字段名
+              </label>
+            </td>
+            <td class="text-left">
+              <input id="txtFldName_q" class="form-control form-control-sm" style="width: 120px" />
+            </td>
+            <td class="text-right">
+              <label
                 id="lblCodeTabId_q"
                 name="lblCodeTabId_q"
                 class="col-form-label text-right"

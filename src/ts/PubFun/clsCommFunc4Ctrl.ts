@@ -1951,6 +1951,24 @@ export function GetDivObjInDivObj(
   }
   return objElement;
 }
+
+export function IsExistDivObjInDivObj(objDiv: HTMLDivElement | null, strDivIdIn: string): boolean {
+  if (objDiv == null) {
+    const strMsg = Format('提供的层对象为空(null), 请检查！');
+    console.error(strMsg);
+    throw strMsg;
+  }
+  const arrElements0 = objDiv.getElementsByTagName('div');
+  // const arrElements0 = findAllDivs(objDiv);
+  const arrElements = GetArray(arrElements0);
+
+  const objElement: HTMLDivElement = <HTMLDivElement>arrElements.find((x) => x.id == strDivIdIn);
+  if (objElement == null) {
+    return false;
+  }
+  return true;
+}
+
 export function GetDivObjInDivObjN(
   objDiv: HTMLDivElement | null,
   strDivIdIn: string,

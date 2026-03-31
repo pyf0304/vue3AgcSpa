@@ -32,6 +32,7 @@ import {
   PrjTabEx_DelRecordEx,
   PrjTabEx_FuncMapByFldName,
   PrjTabEx_GetObjExLstByPagerAsync,
+  PrjTabEx_SetFldNumByTabId,
   PrjTabEx_GetTabRecNum,
   PrjTabEx_SetIsShare,
 } from '@/ts/L3ForWApiEx/Table_Field/clsPrjTabExWApi';
@@ -111,10 +112,10 @@ export default class PrjTabCRUDEx extends PrjTabCRUD implements IShowList {
   //public static mstrListDiv=  "divDataLst";
   //public static mstrSortvPrjTabBy=  "tabId";
   /*
-   * 每页记录数，在扩展类可以修改
+   * 每页记录数，在扩展类可以修改；用户通过分页下拉框修改后动态更新
    */
   public get pageSize(): number {
-    return 10;
+    return this._pageSize ?? 10;
   }
   BindGv(strType: string, strPara: string) {
     console.log(strType, strPara);
@@ -165,6 +166,9 @@ export default class PrjTabCRUDEx extends PrjTabCRUD implements IShowList {
     switch (strCommandName) {
       case 'GetTabRecNum':
         objPage.btnGetTabRecNum_Click();
+        break;
+      case 'SetFldNumByTabId':
+        objPage.btnSetFldNumByTabId_Click();
         break;
       case 'Query': //查询记录
         objPage.btnQuery_Click();
@@ -1502,7 +1506,7 @@ export default class PrjTabCRUDEx extends PrjTabCRUD implements IShowList {
       }
       for (const strTabId of arrKeyIds) {
         //   await this.DelMultiRecord(arrKeyIds);
-        const responseBool = await PrjTabEx_DelRecordEx(strTabId);
+        const responseBool = await PrjTabEx_DelRecordEx(strTabId, clsPrivateSessionStorage.userId);
         if (responseBool == true) {
           vPrjTab_Sim_ReFreshThisCache(clsPrivateSessionStorage.currSelPrjId);
           PrjTabFld_ReFreshCache(strTabId);
@@ -1839,6 +1843,34 @@ export default class PrjTabCRUDEx extends PrjTabCRUD implements IShowList {
     } catch (e) {
       const strMsg = Format(
         '获取表记录数不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+    }
+  }
+
+  /** 计算并回写字段数(FldNum)
+   * (自定义按钮功能)
+   **/
+  public async btnSetFldNumByTabId_Click() {
+    const strThisFuncName = this.btnSetFldNumByTabId_Click.name;
+    try {
+      const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+      if (arrKeyIds.length == 0) {
+        alert('请选择需要计算字段数的表！');
+        return '';
+      }
+
+      for (const strTabId of arrKeyIds) {
+        await PrjTabEx_SetFldNumByTabId(strTabId, clsPrivateSessionStorage.currSelPrjId);
+      }
+      await this.BindGv_PrjTab4Func(divVarSet.refDivList);
+    } catch (e) {
+      const strMsg = Format(
+        '计算字段数不成功,{0}.(in {1}.{2})',
         e,
         this.constructor.name,
         strThisFuncName,

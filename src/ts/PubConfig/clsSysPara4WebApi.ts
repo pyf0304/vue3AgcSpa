@@ -7,14 +7,14 @@
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 
 export class clsSysPara4WebApi {
-  public static bolIsLocalHost = false; //true,,,false
+  public static bolIsLocalHost = true; //true,,,false
 
   //const CurrIPAddressAndPort = "http://Localhost:2408";
   //    public static CurrIPAddressAndPort:string = getHostAddressweb();// "http://Localhost:2408";
   // public static CurrPrx = 'AgcWAVue';
   //  public static CurrPrx = 'AgcWA';
-  public static CurrPrx = 'AgcWAV3';
-  // public static CurrPrx = '';
+  // public static CurrPrx = 'AgcWAV3';
+  public static CurrPrx = '';
 
   public static CurrPrx_GP = 'GpWATz';
   //public static CurrPrx: string = VirtualRootPath + "/WebApi";
@@ -24,6 +24,11 @@ export class clsSysPara4WebApi {
   //public static CurrIPAddressAndPort = "http://192.168.1.15";// getHostAddressweb();// "http://Localhost:2408";
   //public static CurrIPAddressAndPort_GP = "http://192.168.1.15";// getHostAddressweb();// "http://Localhost:2408";
   //public static CurrIPAddressAndPort_Local_GP = "http://192.168.1.15";// getHostAddressweb();// "http://Localhost:2408";
+
+  //192.168.1.20
+  // public static CurrIPAddressAndPort = 'http://192.168.1.20'; // getHostAddressweb();// "http://Localhost:2408";
+  // public static CurrIPAddressAndPort_GP = "http://192.168.1.20";// getHostAddressweb();// "http://Localhost:2408";
+  // public static CurrIPAddressAndPort_Local_GP = "http://192.168.1.20:7109";// getHostAddressweb();// "http://Localhost:2408";
 
   //tzar.tpddns.net:5080
   //public static CurrIPAddressAndPort = "http://tzar.tpddns.cn:5080";// getHostAddressweb();// "http://Localhost:2408";

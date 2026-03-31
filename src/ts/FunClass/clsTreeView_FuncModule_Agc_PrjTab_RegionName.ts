@@ -35,7 +35,7 @@ export class clsTreeView_FuncModule_Agc_PrjTabRegionName {
     arrFuncModule_AgcObjLst = arrFuncModule_AgcObjLst
       .filter((x) => x.useStateId == enumUseState.InUse_0001)
       .sort((x, y) => x.orderNum - y.orderNum);
-    arrPrjTabObjLst = await vPrjTab_Sim_GetObjLstCache(clsPrivateSessionStorage.cmPrjId);
+    arrPrjTabObjLst = await vPrjTab_Sim_GetObjLstCache(clsPrivateSessionStorage.currSelPrjId);
     arrPrjTabObjLst = arrPrjTabObjLst.filter((x) => x.tabStateId == enumTabState.Normal_01);
 
     const strWhere = `${clsViewRegionEN.con_RegionId} in (select ${clsViewRegionEN.con_RegionId} from ${clsViewRegionCmPrjIdRelaEN._CurrTabName} where ${clsViewRegionCmPrjIdRelaEN.con_CmPrjId}) = '${strCmPrjId}'`;

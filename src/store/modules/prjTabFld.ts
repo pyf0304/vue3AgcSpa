@@ -153,10 +153,10 @@ export const usePrjTabFldStore = defineStore({
       this.prjTabFldLst = this.prjTabFldLst.filter((item) => item.tabId !== strTabId);
 
       if (intIndex > -1) {
-        console.log(`映射Id:${strTabId}在映射列表中已经移除！`);
+        console.log(`表Id:${strTabId}在映射列表中已经移除！`);
         // return true;
       } else {
-        console.error(`映射Id:${strTabId}在映射列表中不存在！`);
+        console.error(`表Id:${strTabId}在映射列表中不存在！`);
         // return false;
       }
 
@@ -164,10 +164,10 @@ export const usePrjTabFldStore = defineStore({
       this.tabIdLst = this.tabIdLst.filter((item) => item !== strTabId);
 
       if (intIndex > -1) {
-        console.log(`映射Id:${strTabId}在映射列表中已经移除！`);
+        console.log(`表Id:${strTabId}在映射列表中已经移除！`);
         return true;
       } else {
-        console.error(`映射Id:${strTabId}在映射列表中不存在！`);
+        console.error(`表Id:${strTabId}在映射列表中不存在！`);
         return false;
       }
     },

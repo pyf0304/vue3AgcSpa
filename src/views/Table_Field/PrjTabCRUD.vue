@@ -300,9 +300,9 @@
             id="lblPrjTabList"
             name="lblPrjTabList"
             class="col-form-label-sm text-info"
-            style="width: 250px"
+            style="width: 150px"
           >
-            工程表列表
+            列表
           </label>
         </li>
         <li class="nav-item ml-1">
@@ -420,7 +420,7 @@
               name="btnSetTabStateId"
               class="btn btn-outline-info btn-sm text-nowrap"
               @click="btn_Click('SetTabStateId', '')"
-              >设置表状态</button
+              >设置状态</button
             >
           </div>
         </li>
@@ -430,16 +430,25 @@
             name="btnCheckTabFlds"
             class="btn btn-outline-info btn-sm text-nowrap"
             @click="btn_Click('CheckTabFlds', '')"
-            >检查表字段</button
+            >检查表</button
           >
         </li>
         <li class="nav-item ml-1">
           <button
-            id="btnCheckTabFlds"
-            name="btnCheckTabFlds"
+            id="btnGetTabRecNum"
+            name="btnGetTabRecNum"
             class="btn btn-outline-info btn-sm text-nowrap"
             @click="btn_Click('GetTabRecNum', '')"
-            >获取记录数</button
+            >获记录数</button
+          >
+        </li>
+        <li class="nav-item ml-1">
+          <button
+            id="btnSetFldNumByTabId"
+            name="btnSetFldNumByTabId"
+            class="btn btn-outline-info btn-sm text-nowrap"
+            @click="btn_Click('SetFldNumByTabId', '')"
+            >算字段数</button
           >
         </li>
       </ul>
@@ -448,6 +457,7 @@
     <div id="divList" ref="refDivList" class="div_List">
       <div id="divDataLst" ref="refDivDataLst" class="div_List">
         <PrjTab_LstCom
+          ref="refvPrjTab_List"
           :items="dataList"
           :show-error-message="showErrorMessage"
           :empty-rec-num-info="emptyRecNumInfo"
@@ -512,6 +522,7 @@
     TabId_Static,
     Bool_True_Default,
     CmPrjId_Local,
+    refvPrjTab_List,
   } from '@/views/Table_Field/PrjTabVueShare';
   import { clsvPrjFeatureSimEN } from '@/ts/L0Entity/PrjFunction/clsvPrjFeatureSimEN';
   import { clsFuncModule_AgcEN } from '@/ts/L0Entity/PrjManage/clsFuncModule_AgcEN';
@@ -643,6 +654,7 @@
         // alert('ShowLst in ViewInfoCRUD');
         dataList.value = arrObjLst;
         showErrorMessage.value = bolIsShowErrMsg;
+        if (refvPrjTab_List.value != null) refvPrjTab_List.value.selectAllChecked = false;
       };
       const ShowEmptyRecNumInfo = (strEmptyRecNumInfo: string): void => {
         dataList.value = new Array<clsPrjTabENEx>();
@@ -724,6 +736,7 @@
         EditTabRelaInfo,
         arrvFieldTab_Sim,
         includeFldId_q,
+        refvPrjTab_List,
       };
     },
     watch: {

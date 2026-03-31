@@ -179,7 +179,7 @@ export abstract class FieldTab_Edit {
       this.opType = 'Add';
       const bolIsSuccess = await this.ShowDialog_FieldTab(this.opType);
       if (bolIsSuccess == false) return;
-      if (['02', '03', '06'].indexOf(clsFieldTabEN.PrimaryTypeId) > -1) {
+      if (['02', '03', '06'].indexOf(clsFieldTabEN._PrimaryTypeId) > -1) {
         await this.AddNewRecordWithMaxId();
       } else {
         await this.AddNewRecord();
@@ -278,7 +278,7 @@ export abstract class FieldTab_Edit {
         case '确认添加':
           //这是一个单表的插入的代码,由于逻辑层太简单,
           //就把逻辑层合并到控制层,
-          if (['02', '03', '06'].indexOf(clsFieldTabEN.PrimaryTypeId) > -1) {
+          if (['02', '03', '06'].indexOf(clsFieldTabEN._PrimaryTypeId) > -1) {
             returnKeyId = await this.AddNewRecordWithMaxIdSave();
             if (IsNullOrEmpty(returnKeyId) == false) {
               if (FieldTab_Edit.strPageDispModeId == enumPageDispMode.PopupBox_01)

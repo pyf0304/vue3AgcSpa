@@ -12,6 +12,7 @@ import {
   PrjTab_AddNewRecordAsync,
   PrjTab_CheckProperty4Update,
   PrjTab_GetMaxStrIdByPrefixAsync,
+  PrjTab_GetObjByTabIdAsync,
   PrjTab_IsExistAsync,
   PrjTab_UpdateRecordAsync,
 } from '@/ts/L3ForWApi/Table_Field/clsPrjTabWApi';
@@ -32,6 +33,7 @@ import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
 import { divVarSet, refPrjTab_Edit } from '@/views/Table_Field/PrjTabVueShare';
+import { PrjTabEx_CheckTabFldByTabId } from '@/ts/L3ForWApiEx/Table_Field/clsPrjTabExWApi';
 
 /* PrjTab_EditEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScript_EditCSEx_TS4TypeScript:GeneCode)
@@ -305,6 +307,16 @@ export default class PrjTab_EditEx extends PrjTab_Edit {
     try {
       const returnBool = await PrjTab_UpdateRecordAsync(objPrjTabEN);
       if (returnBool == true) {
+        //添加一段如果修改成功并且该表原来就有错误，就调用检查表字段的函数，重新检查一下表字段
+
+        const objPrjTabEN0 = await PrjTab_GetObjByTabIdAsync(this.keyId);
+        if (objPrjTabEN0 != null) {
+          const bolHasErrBeforeUpd = IsNullOrEmpty(objPrjTabEN0.errMsg) == false;
+          if (bolHasErrBeforeUpd == true) {
+            await PrjTabEx_CheckTabFldByTabId(this.keyId);
+          }
+        }
+
         vPrjTab_Sim_ReFreshThisCache(clsPrivateSessionStorage.currSelPrjId);
         // prjTabStore
       }

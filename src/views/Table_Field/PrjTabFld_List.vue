@@ -119,10 +119,10 @@
         :id="'tr' + item.mId"
         :key="index"
         :class="{
-          'bg-danger': item.errMsg.length > 0,
+          'bg-danger': (item.errMsg?.length ?? 0) > 0,
           'text-secondary': true,
         }"
-        :title="item.errMsg.length > 0 ? item.errMsg : ''"
+        :title="(item.errMsg?.length ?? 0) > 0 ? item.errMsg : ''"
       >
         <td
           ><input
@@ -135,18 +135,18 @@
         </td>
         <td
           :class="{
-            'bg-danger': item.errMsg.length > 0,
+            'bg-danger': (item.errMsg?.length ?? 0) > 0,
             'text-secondary': true,
           }"
-          :title="item.errMsg.length > 0 ? item.errMsg : ''"
+          :title="(item.errMsg?.length ?? 0) > 0 ? item.errMsg : ''"
           v-html="item.sequenceNumber"
         ></td>
         <td
           :class="{
-            'bg-danger': item.errMsg.length > 0,
+            'bg-danger': (item.errMsg?.length ?? 0) > 0,
             'text-secondary': true,
           }"
-          :title="item.errMsg.length > 0 ? item.errMsg : ''"
+          :title="(item.errMsg?.length ?? 0) > 0 ? item.errMsg : ''"
         >
           <button
             class="btn btn-outline-info btn-sm text-nowrap"

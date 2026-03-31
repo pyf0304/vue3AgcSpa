@@ -90,7 +90,7 @@
       TabId_Static.value = '';
       FeatureTypeId_Static.value = enumPrjFeatureType.TabFeature_03;
       Bool_True_Default.value = true;
-      const strTitle = ref('工程表编辑1');
+      const strTitle = ref('工程表编辑-U');
 
       const refDivDataLst = ref();
       onMounted(async () => {

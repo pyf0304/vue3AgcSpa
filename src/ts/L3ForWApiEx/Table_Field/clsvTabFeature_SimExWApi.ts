@@ -737,7 +737,7 @@ export async function vTabFeature_SimEx_BindDdl_TabIdInDivCache(
     console.error(strMsg);
     throw strMsg;
   }
-  let arrObjLst_Sel = await vPrjTab_Sim_GetObjLstCache(clsPrivateSessionStorage.cmPrjId);
+  let arrObjLst_Sel = await vPrjTab_Sim_GetObjLstCache(clsPrivateSessionStorage.currSelPrjId);
   // const strPrjId = await CMProjectEx_GetPrjIdByCmPrjIdCache(strCmPrjId);
   const arrTabFeatureObjLst_Sel: Array<clsvTabFeature_SimEN> =
     await vTabFeature_SimEx_GetObjLstCache(strCmPrjId);

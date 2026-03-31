@@ -76,7 +76,7 @@ export class clsViewRegionBLEx {
     }
     const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
       objViewRegionEN.tabId,
-      clsPrivateSessionStorage.cmPrjId,
+      clsPrivateSessionStorage.currSelPrjId,
     );
     if (IsNullOrEmpty(objViewRegionEN.tabId) == true) return true;
     if (objPrjTab == null) {

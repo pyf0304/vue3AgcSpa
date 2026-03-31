@@ -141,7 +141,7 @@ export async function PrjTabFldEx_GetObjExObjBymIdExB(
 
     const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
       objPrjTabFldEN.tabId,
-      clsPrivateSessionStorage.cmPrjId,
+      clsPrivateSessionStorage.currSelPrjId,
     );
 
     if (objPrjTab != null) {
@@ -167,7 +167,7 @@ export async function PrjTabFldEx_GetObjExObjBymIdExB(
     const objPrjTabFldENEx = PrjTabFldEx_CopyToEx4GC(objPrjTabFldEN);
     const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
       objPrjTabFldEN.tabId,
-      clsPrivateSessionStorage.cmPrjId,
+      clsPrivateSessionStorage.currSelPrjId,
     );
     if (objPrjTab != null) {
       objPrjTabFldENEx.tabName = objPrjTab.tabName;
@@ -345,6 +345,7 @@ export async function PrjTabFldEx_IsHasNameObjByTabIdCache(strTabId: string): Pr
 export async function PrjTabFldEx_DelRecordEx(
   strTabId: string,
   strFldId: string,
+  strUpdUserId: string,
 ): Promise<boolean> {
   const strThisFuncName = PrjTabFldEx_DelRecordEx.name;
   const strAction = 'DelRecordEx';
@@ -363,6 +364,7 @@ export async function PrjTabFldEx_DelRecordEx(
     params: {
       strTabId,
       strFldId,
+      strUpdUserId,
     },
   };
   try {

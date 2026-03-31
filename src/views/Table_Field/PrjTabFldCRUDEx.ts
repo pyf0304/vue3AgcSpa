@@ -20,6 +20,7 @@ import { clsPrjTabFldEN } from '@/ts/L0Entity/Table_Field/clsPrjTabFldEN';
 import { clsPrjTabFldENEx } from '@/ts/L0Entity/Table_Field/clsPrjTabFldENEx';
 import { clsvPrjTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvPrjTab_SimEN';
 import { AutoGeneCode_GenNewTabInSQL } from '@/ts/L3ForWApiEx/GeneCode/AutoGeneCodeWApi';
+import { FuncModule_Agc_IsExistAsync } from '@/ts/L3ForWApi/PrjManage/clsFuncModule_AgcWApi';
 import { SqlViewRelaTab_func } from '@/ts/L3ForWApi/SqlViewMan/clsSqlViewRelaTabWApi';
 import { DataTypeAbbr_GetObjByDataTypeIdCache } from '@/ts/L3ForWApi/SysPara/clsDataTypeAbbrWApi';
 import {
@@ -76,6 +77,7 @@ import {
   PrjTabEx_AlterTab4AddField,
   PrjTabEx_AlterTab4DropColumn,
   PrjTabEx_AlterTab4UpdateField,
+  PrjTabEx_SetFldNumByTabId,
   PrjTabEx_SetFldOrderNum4ViewByRelaTabId,
   PrjTabEx_SetUpdDate,
 } from '@/ts/L3ForWApiEx/Table_Field/clsPrjTabExWApi';
@@ -154,6 +156,7 @@ import {
 } from '@/ts/L3ForWApi/Table_Field/clsvFieldTab_SimWApi';
 import { refFieldTab_Edit } from '@/views/Table_Field/FieldTabVueShare';
 import { PrjTabFld_Edit_ACEx } from '@/views/Table_Field/PrjTabFld_Edit_ACEx';
+import { vPrjTab_Sim_ReFreshThisCache } from '@/ts/L3ForWApi/Table_Field/clsvPrjTab_SimWApi';
 
 /** PrjTabFldCRUDEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -221,7 +224,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
         this.BindGv_PrjTabFld4Func();
         break;
       case 'CheckConsistency':
-        this.BindGv_PrjTabFld4Func_CheckConsistency(divVarSet.refDivList);
+        this.BindGv_PrjTabFld4Func_CheckConsistency();
         break;
 
       default:
@@ -607,6 +610,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
           this.btnCheckConsistency_Click();
           break;
         case 'TabFldEdit':
+          PrjTabFldCRUDEx.ShowMode = 'EditTabFld';
           await this.BindGv_PrjTabFld4Func();
           break;
         default:
@@ -675,7 +679,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     arrPrjTabFldExObjLst: Array<clsPrjTabFldENEx>,
     arrColumns: Array<clsColumns>,
   ) {
-    const strTabId = arrPrjTabFldExObjLst[0].tabId;
+    const strTabId = TabId_Static.value;
     // const strPrjId = arrPrjTabFldExObjLst[0].prjId;
     const objPrjTabEN = await vPrjTab_SimEx_GetObjByTabIdCache(
       strTabId,
@@ -750,7 +754,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     arrColumns: Array<clsColumns>,
   ) {
     const vFieldTab_Sim2Store = usevFieldTab_Sim2Store();
-    const strTabId = arrPrjTabFldExObjLst[0].tabId;
+    const strTabId = TabId_Static.value;
 
     const objPrjTabEN = await vPrjTab_SimEx_GetObjByTabIdCache(
       strTabId,
@@ -1740,9 +1744,9 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
   ) {
     const strThisFuncName = this.BindTab_PrjTabFld4Func.name;
 
-    if (arrPrjTabFldExObjLst.length == 0) return;
+    // if (arrPrjTabFldExObjLst.length == 0) return;
 
-    const strTabId = arrPrjTabFldExObjLst[0].tabId;
+    const strTabId = TabId_Static.value;
     // const strPrjId = arrPrjTabFldExObjLst[0].prjId;
     for (const objInFor of arrPrjTabFldExObjLst) {
       await PrjTabFldEx_FuncMapByFldName(clsPrjTabFldENEx.con_FldName, objInFor);
@@ -1755,11 +1759,11 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     //检查SQL数据库表字段与生成代码中的差异
 
     //获取Sql表信息
-    this.GetSqlTabInfo(arrPrjTabFldExObjLst, arrColumns);
+    await this.GetSqlTabInfo(arrPrjTabFldExObjLst, arrColumns);
     // const bolIsSameFldName = false; //字段名是否一致
     //检查生成代码中表字段与SQL数据库的差异
 
-    this.CheckTabInfoByGcAndSql(arrPrjTabFldExObjLst, arrColumns);
+    await this.CheckTabInfoByGcAndSql(arrPrjTabFldExObjLst, arrColumns);
 
     const arrDataColumn: Array<clsDataColumn> = [
       {
@@ -2418,6 +2422,8 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
           clsPubLocalStorage.userId,
         );
         if (bolIsSuccess == true) {
+          await PrjTabEx_SetUpdDate(strTabId, clsPubLocalStorage.userId);
+          vPrjTab_Sim_ReFreshThisCache(strPrjId);
           PrjTabFld_ReFreshCache(strTabId);
           prjTabFldStore.delObjLstByTabId(strTabId);
         }
@@ -2516,7 +2522,11 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     // const strPrjId = clsPrivateSessionStorage.currSelPrjId;
     // const strUpdUser = clsPubLocalStorage.userId;
     try {
-      const bolResult = await PrjTabFldEx_DelRecordEx(strTabId, strFldId);
+      const bolResult = await PrjTabFldEx_DelRecordEx(
+        strTabId,
+        strFldId,
+        clsPubLocalStorage.userId,
+      );
       if (bolResult == true) {
         prjTabFldStore.delObjLstByTabId(strTabId);
         await PrjTabFldCRUD.objPageCRUD.BindInDiv(divList);
@@ -2586,6 +2596,36 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     const strThisFuncName = this.ExtendFldFuncMap.name;
     const arrFldName = clsPrjTabFldEN.AttributeName;
     const arrExcludeFldName = ['isNullableSql', 'precisionSql', 'lengthSql', 'typeNameSql'];
+
+    // 兜底: 当生成代码字段为空且传入的是 SQL 列结构时，先补齐临时字段记录。
+    if (arrPrjTabFldExObjLst.length == 0) {
+      const arrSqlColumns = (arrDataColumn as Array<any>).filter(
+        (x) =>
+          x?.column_Name != undefined || x?.type_Name != undefined || x?.is_Nullable != undefined,
+      );
+      let intCount = 1;
+      for (const objSqlCol of arrSqlColumns) {
+        const strFldName = objSqlCol.column_Name;
+        if (IsNullOrEmpty(strFldName) == true) continue;
+
+        const objPrjTabFldENEx = new clsPrjTabFldENEx();
+        objPrjTabFldENEx.mId = intCount;
+        objPrjTabFldENEx.tabId = TabId_Static.value;
+        objPrjTabFldENEx.fldId = Format('temp-{0}', intCount++);
+        objPrjTabFldENEx.fldName = strFldName;
+        objPrjTabFldENEx.fldNameEx = strFldName;
+        objPrjTabFldENEx.typeNameSql = objSqlCol.type_Name;
+        objPrjTabFldENEx.lengthSql = objSqlCol.length;
+        objPrjTabFldENEx.precisionSql = objSqlCol.precision;
+        objPrjTabFldENEx.isNullableSql = objSqlCol.is_Nullable == 'YES';
+        objPrjTabFldENEx.errMsg = '在生成代码中不存在!';
+        objPrjTabFldENEx.tabCheckErrorTypeId = '08';
+        objPrjTabFldENEx.errorLevelId = 1;
+        objPrjTabFldENEx.trClass = 'bg-danger bg-opacity-10';
+        arrPrjTabFldExObjLst.push(objPrjTabFldENEx);
+      }
+    }
+
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;
@@ -2640,7 +2680,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
   public async BindGv_PrjTabFld4Func() {
     // const strThisFuncName = this.BindGv_PrjTabFld4Func.name;
     if (PrjTabFldCRUDEx.ShowMode == 'CheckConsistency') {
-      await this.BindGv_PrjTabFld4Func_CheckConsistency(divVarSet.refDivList);
+      await this.BindGv_PrjTabFld4Func_CheckConsistency();
     } else {
       await this.BindGv_PrjTabFld4Func_NotCheckConsistency(divVarSet.refDivList);
     }
@@ -2652,7 +2692,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
   public async BindGv_PrjTabFld4Func_NotCheckConsistency(divList: HTMLDivElement) {
     const strThisFuncName = this.BindGv_PrjTabFld4Func_NotCheckConsistency.name;
     if (this.Op == 'CheckConsistency') {
-      this.BindGv_PrjTabFld4Func_CheckConsistency(divVarSet.refDivList);
+      this.BindGv_PrjTabFld4Func_CheckConsistency();
     }
     if (viewVarSet.sortPrjTabFldBy == null) {
       const strMsg = Format(
@@ -2704,6 +2744,9 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       );
       const strMsg = Format('根据条件获取的记录数为0！(Key={0})', strKey);
       console.error('Error: ', strMsg);
+      //调用相关表计算字段数的方法，以便在没有字段时，仍然可以显示相关信息
+      await PrjTabEx_SetFldNumByTabId(TabId_Static.value, clsPrivateSessionStorage.currSelPrjId);
+
       //console.trace();
       ShowEmptyRecNumInfoByDiv(divDataLst, strMsg);
       this.objPager.Hide(divList, this.divName4Pager);
@@ -2745,7 +2788,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       }
     });
   }
-  public async BindGv_PrjTabFld4Func_CheckConsistency(divList: HTMLDivElement) {
+  public async BindGv_PrjTabFld4Func_CheckConsistency() {
     const strThisFuncName = this.BindGv_PrjTabFld4Func.name;
     if (viewVarSet.sortPrjTabFldBy == null) {
       const strMsg = Format(
@@ -2794,20 +2837,25 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       alert(strMsg);
       return;
     }
-    if (arrPrjTabFldExObjLst.length == 0) {
-      const strKey = Format(
-        '{0}_{1}_{2}',
-        clsPrjTabFldEN._CurrTabName,
-        clsPrivateSessionStorage.currSelPrjId,
-        TabId_Static.value,
-      );
-      const strMsg = Format('根据条件获取的记录数为0！(Key={0})', strKey);
-      console.error('Error: ', strMsg);
-      //console.trace();
-      ShowEmptyRecNumInfoByDiv(strListDiv, strMsg);
-      this.objPager.Hide(divList, this.divName4Pager);
-      return;
-    }
+    // if (arrPrjTabFldExObjLst.length == 0) {
+    //   const strKey = Format(
+    //     '{0}_{1}_{2}',
+    //     clsPrjTabFldEN._CurrTabName,
+    //     clsPrivateSessionStorage.currSelPrjId,
+    //     TabId_Static.value,
+    //   );
+    //   const strMsg = Format('根据条件获取的记录数为0！(Key={0})', strKey);
+    //   console.error('Error: ', strMsg);
+    //   //调用相关表计算字段数的方法，以便在没有字段时，仍然可以显示相关信息
+    //   await PrjTabEx_SetFldNumByTabId(TabId_Static.value, clsPrivateSessionStorage.currSelPrjId);
+
+    //   //console.trace();
+    //   ShowEmptyRecNumInfoByDiv(strListDiv, strMsg);
+    //   if (IsExistDivObjInDivObj(divList, this.divName4Pager)) {
+    //     this.objPager.Hide(divList, this.divName4Pager);
+    //   }
+    //   return;
+    // }
     try {
       await this.BindTab_PrjTabFld4Func_CheckConsistency(
         strListDiv,
@@ -2867,7 +2915,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       await this.BindGv_PrjTabFld4Func();
     } else {
       //console.log("arrColumns:", arrColumns);
-      await this.BindGv_PrjTabFld4Func_CheckConsistency(divVarSet.refDivList);
+      await this.BindGv_PrjTabFld4Func_CheckConsistency();
     }
     //SetLabelHtmlByIdInDivObj(PrjTabFldCRUD.divFunction, "lblPrjTabFldList", Format("检查一致性", objPrjTab.tabName, objPrjTab.tabId));
   }
@@ -2931,7 +2979,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       if (objSqlViewEN == null) {
         const objvPrjTab_Sim = await vPrjTab_SimEx_GetObjByTabIdCache(
           strTabId,
-          clsPrivateSessionStorage.cmPrjId,
+          clsPrivateSessionStorage.currSelPrjId,
         );
         if (objvPrjTab_Sim == null) return;
         const strMsg = Format(
@@ -2989,7 +3037,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       } catch (e) {
         const objvPrjTab_Sim = await vPrjTab_SimEx_GetObjByTabIdCache(
           strTabId,
-          clsPrivateSessionStorage.cmPrjId,
+          clsPrivateSessionStorage.currSelPrjId,
         );
         if (objvPrjTab_Sim == null) return;
         await SqlViewEx_ImportSqlViewBySqlViewName(
@@ -3043,7 +3091,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
       } catch (e) {
         const objvPrjTab_Sim = await vPrjTab_SimEx_GetObjByTabIdCache(
           strTabId,
-          clsPrivateSessionStorage.cmPrjId,
+          clsPrivateSessionStorage.currSelPrjId,
         );
         if (objvPrjTab_Sim == null) return;
         await SqlViewEx_ImportSqlViewBySqlViewName(
@@ -4047,6 +4095,38 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     const strThisFuncName = this.btnGenNewTabInSQL_Click.name;
     const prjTabFldStore = usePrjTabFldStore();
     try {
+      //检查该表对象是否存在模块（FuncModuleAgcId）
+      const objvPrjTab_Sim = await vPrjTab_SimEx_GetObjByTabIdCache(
+        TabId_Static.value,
+        clsPrivateSessionStorage.currSelPrjId,
+      );
+      if (objvPrjTab_Sim == null) {
+        alert('当前表对象不存在，请先刷新页面后再试！');
+        return;
+      }
+      if (IsNullOrEmpty(objvPrjTab_Sim.funcModuleAgcId) == true) {
+        const strMsg = Format(
+          '表:[{0}]未设置功能模块(FuncModuleAgcId)，请先维护后再生成新表！',
+          objvPrjTab_Sim.tabName,
+        );
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      const bolIsExistFuncModule = await FuncModule_Agc_IsExistAsync(
+        objvPrjTab_Sim.funcModuleAgcId,
+      );
+      if (bolIsExistFuncModule == false) {
+        const strMsg = Format(
+          '表:[{0}]关联的功能模块:[{1}]不存在，请先修正后再生成新表！',
+          objvPrjTab_Sim.tabName,
+          objvPrjTab_Sim.funcModuleAgcId,
+        );
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+
       const bolResult = await AutoGeneCode_GenNewTabInSQL(
         TabId_Static.value,
         clsPrivateSessionStorage.currSelPrjId,
@@ -4056,10 +4136,17 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
 
       if (bolResult == true) {
         alert('建立新表成功！');
+        //建表之后，重新检查表字段
+        await PrjTabFldEx_CheckTabFldsUp(
+          TabId_Static.value,
+          clsPrivateSessionStorage.currSelPrjId,
+          clsPubLocalStorage.userId,
+        );
+
         PrjTabFld_ReFreshCache(TabId_Static.value);
         prjTabFldStore.delObjLstByTabId(TabId_Static.value);
         await PrjTabEx_SetUpdDate(TabId_Static.value, clsPrivateSessionStorage.userId);
-        await this.BindGv_PrjTabFld4Func_CheckConsistency(divVarSet.refDivList);
+        await this.BindGv_PrjTabFld4Func_CheckConsistency();
       }
     } catch (e) {
       const strMsg = Format(
@@ -4445,9 +4532,18 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     const prjTabFldStore = usePrjTabFldStore();
     try {
       PrjTabFld_ReFreshCache(TabId_Static.value);
+      //添加检查表字段一致性的功能后，刷新列表时也检查一致性
+      if (IsNullOrEmpty(TabId_Static.value) == false) {
+        await PrjTabFldEx_CheckTabFldsUp(
+          TabId_Static.value,
+          clsPrivateSessionStorage.currSelPrjId,
+          clsPubLocalStorage.userId,
+        );
+      }
+
       prjTabFldStore.delObjLstByTabId(TabId_Static.value);
       if (PrjTabFldCRUDEx.ShowMode == 'CheckConsistency') {
-        await this.BindGv_PrjTabFld4Func_CheckConsistency(divVarSet.refDivList);
+        await this.BindGv_PrjTabFld4Func_CheckConsistency();
       } else {
         await this.BindGv_PrjTabFld4Func();
       }

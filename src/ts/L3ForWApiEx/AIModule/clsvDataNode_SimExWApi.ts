@@ -194,7 +194,6 @@ export async function vDataNode_SimEx_GetObjByTabIdAndFldIdByCreate(
   strTabId: string,
   strFldId: string,
   intVersionNo: number,
-  strCmPrjId: string,
 ): Promise<clsvDataNode_Sim | null> {
   const vDataNode_SimStore = usevDataNode_SimStore();
   const objPrjTabFld = await PrjTabFldEx_GetObjByFldIdCache(strTabId, strFldId);
@@ -227,7 +226,6 @@ export async function vDataNode_SimEx_GetObjByTabIdAndFldIdByCreate(
     strFldId,
     strDataNodeTypeId,
     intVersionNo,
-    strCmPrjId,
   );
   if (objDataNode == null) {
     const strMsg = Format(
@@ -250,7 +248,6 @@ export async function vDataNode_SimEx_GetObjByTabIdAndFldIdByCreateWithDataType(
   strFldId: string,
   strDataNodeTypeId: string,
   intVersionNo: number,
-  strCmPrjId: string,
 ): Promise<clsvDataNode_Sim | null> {
   const vDataNode_SimStore = usevDataNode_SimStore();
   let objvDataNode_Sim = await vDataNode_SimStore.getObjByTabIdFldId(
@@ -280,7 +277,6 @@ export async function vDataNode_SimEx_GetObjByTabIdAndFldIdByCreateWithDataType(
     strFldId,
     strDataNodeTypeId,
     intVersionNo,
-    strCmPrjId,
   );
   if (objDataNode == null) {
     const strMsg = Format(

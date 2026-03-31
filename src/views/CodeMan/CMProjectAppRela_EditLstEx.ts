@@ -6,6 +6,7 @@ import {
   CMProjectAppRela_IsExistRecordAsync,
   CMProjectAppRela_ReFreshCache,
 } from '@/ts/L3ForWApi/CodeMan/clsCMProjectAppRelaWApi';
+import { CMProject_ReFreshCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import {
   CMProjectAppRelaEx_DelCmProjectApp,
   CMProjectAppRelaEx_GetObjLstByCmPrjId_Cache,
@@ -22,6 +23,7 @@ import {
   refCMProjectAppRela_Edit,
   divVarSet,
 } from '@/views/CodeMan/CMProjectAppRelaVueShare';
+import { CMProject_DeleteKeyIdCache } from '@/views/CodeMan/CMProjectVueShare';
 import { CMProjectAppRela_Edit } from '@/viewsBase/CodeMan/CMProjectAppRela_Edit';
 
 /* CMProjectAppRela_EditLstEx 的摘要说明。其中Q代表查询,U代表修改
@@ -59,7 +61,7 @@ export class CMProjectAppRela_EditLstEx extends CMProjectAppRela_Edit {
           alert(strMsg);
           return;
         }
-
+        CmPrjId_Session.value = strKeyId;
         objPage.btnUpdateRecord_Click1();
 
         break;
@@ -310,6 +312,10 @@ export class CMProjectAppRela_EditLstEx extends CMProjectAppRela_Edit {
         alert(strMsg);
         return false;
       }
+    }
+    if (arrAppTypeId_Del.length > 0 || arrAppTypeId_Add.length > 0) {
+      CMProject_ReFreshCache();
+      CMProject_DeleteKeyIdCache(CmPrjId_Session.value);
     }
     return true;
   }

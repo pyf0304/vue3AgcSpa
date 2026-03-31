@@ -16,7 +16,7 @@ import { BindTab, SortFun } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
 import { clsFieldTab4CodeConvENEx } from '@/ts/L0Entity/Table_Field/clsFieldTab4CodeConvENEx';
 import { vPrjTab_SimEx_BindDdl_TabIdByCmPrjIdInDivCache4CodeTab } from '@/ts/L3ForWApiEx/Table_Field/clsvPrjTab_SimExWApi';
-import { GetCurrPageIndex, ShowEmptyRecNumInfoByDiv } from '@/ts/PubFun/clsOperateList';
+import { GetCurrPageIndex } from '@/ts/PubFun/clsOperateList';
 
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 import {
@@ -26,11 +26,14 @@ import {
 import { usevFieldTab_Sim2Store } from '@/store/modules/vFieldTab_Sim2';
 import { enumComparisonOp } from '@/ts/PubFun/enumComparisonOp';
 import {
+  BindTabByList,
+  dataColumn,
   divVarSet,
   PrjId_Session,
   qryVarSet,
   refFieldTab4CodeConv_Detail,
   refFieldTab4CodeConv_Edit,
+  refFieldTab4CodeConv_List,
   viewVarSet,
 } from '@/views/Table_Field/FieldTab4CodeConvVueShare';
 import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
@@ -270,7 +273,7 @@ export default class FieldTab4CodeConvCRUDEx extends FieldTab4CodeConvCRUD imple
       alert(Format('{0}不存在！', divContainer));
       return;
     }
-    const divDataLst = GetDivObjInDivObj(divContainer, 'divDataLst');
+
     const arrDataColumn: Array<clsDataColumn> = [
       {
         fldName: '',
@@ -466,13 +469,30 @@ export default class FieldTab4CodeConvCRUDEx extends FieldTab4CodeConvCRUD imple
       alert(strMsg);
       return;
     }
-    await BindTab(
-      divDataLst,
-      arrFieldTab4CodeConvExObjLst,
-      arrDataColumn,
-      clsFieldTab4CodeConvEN.con_FldId,
-      this,
-    );
+    if (refFieldTab4CodeConv_List.value != null) {
+      dataColumn.value = arrDataColumn;
+      await BindTabByList(arrFieldTab4CodeConvExObjLst, this.dispAllErrMsg_q);
+    } else {
+      const divDataLst = GetDivObjInDivObj(divContainer, 'divDataLst');
+      if (divDataLst == null) {
+        alert('在BindTab_FieldTab4CodeConv4Func函数中，divDataLst不存在!');
+        return;
+      }
+      await BindTab(
+        divDataLst,
+        arrFieldTab4CodeConvExObjLst,
+        arrDataColumn,
+        clsFieldTab4CodeConvEN.con_FldId,
+        this,
+      );
+    }
+    // await BindTab(
+    //   divDataLst,
+    //   arrFieldTab4CodeConvExObjLst,
+    //   arrDataColumn,
+    //   clsFieldTab4CodeConvEN.con_FldId,
+    //   this,
+    // );
     if (this.objPager.IsInit(divContainer, this.divName4Pager) == false)
       this.objPager.InitShow(divContainer, this.divName4Pager);
     this.objPager.recCount = this.recCount;
@@ -535,7 +555,7 @@ export default class FieldTab4CodeConvCRUDEx extends FieldTab4CodeConvCRUD imple
       alert(strMsg);
       return;
     }
-    const divDataLst = GetDivObjInDivObj(divList, 'divDataLst');
+
     const objFieldTab4CodeConvCond = await this.CombineFieldTab4CodeConvConditionObj();
     objFieldTab4CodeConvCond.SetCondFldValue(
       clsFieldTab4CodeConvEN.con_PrjId,
@@ -606,7 +626,6 @@ export default class FieldTab4CodeConvCRUDEx extends FieldTab4CodeConvCRUD imple
       const strMsg = Format('根据条件获取的记录数为0!(Key={0})', strKey);
       console.error('Error: ', strMsg);
       //console.trace();
-      ShowEmptyRecNumInfoByDiv(divDataLst, strMsg);
       this.objPager.Hide(divList, this.divName4Pager);
       return;
     }

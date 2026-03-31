@@ -99,7 +99,7 @@
                     v-model="isCurrTab1"
                     type="checkbox"
                     Text="当前表"
-                    @change="chkIsCurrTab_CheckChanged(refChkIsCurrTab1)"
+                    @change="chkIsCurrTab_CheckChanged('chkIsCurrTab1', $event)"
                   /><label for="chkIsCurrTab1">当前表</label>
                 </span>
               </td>
@@ -137,7 +137,7 @@
                     v-model="isCurrTab2"
                     type="checkbox"
                     Text="当前表"
-                    @change="chkIsCurrTab_CheckChanged(refChkIsCurrTab2)"
+                    @change="chkIsCurrTab_CheckChanged('chkIsCurrTab2', $event)"
                   /><label for="chkIsCurrTab2">当前表</label>
                 </span>
               </td>
@@ -958,33 +958,29 @@
       btnComboBox_Edit_Click(strCommandName: string, strKeyId: string) {
         ComboBox_EdtEx.btnEdit_Click(strCommandName, strKeyId);
       },
-      async chkIsCurrTab_CheckChanged(chkIsCurrTab: HTMLInputElement | null) {
-        //const thisCtrl = event;
-        //const ddlVarTypeId: HTMLSelectElement = <HTMLSelectElement>thisCtrl?.srcElement;
+      async chkIsCurrTab_CheckChanged(elemName: string, evt: Event) {
+        const chkIsCurrTab = evt?.target as HTMLInputElement | null;
         if (chkIsCurrTab == null) {
-          console.error('chkIsCurrTab_CheckChanged--chkIsCurrTab is null!');
+          console.error('chkIsCurrTab_CheckChanged--event.target is null!');
           return;
         }
-        const elemName = chkIsCurrTab.id;
-        console.error(chkIsCurrTab);
-        console.error(elemName);
-
-        console.log('chkIsCurrTab_SelectedIndexChanged--this.chkIsCurrTab:', chkIsCurrTab.checked);
         const strPrjId = clsPrivateSessionStorage.currSelPrjId;
         if (chkIsCurrTab.checked == true) {
           const strDsTabId = ComboBox_EdtEx.strTabId4ComboBox;
 
           switch (elemName) {
             case 'chkIsCurrTab1':
-              this.arrvFieldTab_Sim1 = await vFieldTab_SimEx_GetArrvFieldTab_SimByTabIdCache(
-                strDsTabId,
-              ); //编辑区域
+              this.arrvFieldTab_Sim1 = [
+                ...((await vFieldTab_SimEx_GetArrvFieldTab_SimByTabIdCache(strDsTabId)) ?? []),
+              ]; //编辑区域
+              this.fldIdCond1 = '0';
               // await this.SetDdl_FldIdCond1InDiv(strDsTabId);
               break;
             case 'chkIsCurrTab2':
-              this.arrvFieldTab_Sim2 = await vFieldTab_SimEx_GetArrvFieldTab_SimByTabIdCache(
-                strDsTabId,
-              ); //编辑区域
+              this.arrvFieldTab_Sim2 = [
+                ...((await vFieldTab_SimEx_GetArrvFieldTab_SimByTabIdCache(strDsTabId)) ?? []),
+              ]; //编辑区域
+              this.fldIdCond2 = '0';
               // await this.SetDdl_FldIdCond2InDiv(strDsTabId);
               break;
           }
@@ -992,9 +988,10 @@
           // const strTabId = '';
           switch (elemName) {
             case 'chkIsCurrTab1':
-              this.arrvFieldTab_Sim1 = await vFieldTab_SimEx_GetArrvFieldTab_SimByPrjIdCache(
-                strPrjId,
-              ); //编辑区域
+              this.arrvFieldTab_Sim1 = [
+                ...((await vFieldTab_SimEx_GetArrvFieldTab_SimByPrjIdCache(strPrjId)) ?? []),
+              ]; //编辑区域
+              this.fldIdCond1 = '0';
               // await vFieldTab_SimEx_BindDdl_FldIdInDivCache(
               //     ComboBox_EdtEx.d1ivEditComboBox,
               //     'ddlFldIdCond1',
@@ -1002,9 +999,10 @@
               //   );
               break;
             case 'chkIsCurrTab2':
-              this.arrvFieldTab_Sim2 = await vFieldTab_SimEx_GetArrvFieldTab_SimByPrjIdCache(
-                strPrjId,
-              ); //编辑区域
+              this.arrvFieldTab_Sim2 = [
+                ...((await vFieldTab_SimEx_GetArrvFieldTab_SimByPrjIdCache(strPrjId)) ?? []),
+              ]; //编辑区域
+              this.fldIdCond2 = '0';
               // await vFieldTab_SimEx_BindDdl_FldIdInDivCache(
               //   ComboBox_EdtEx.d1ivEditComboBox,
               //   'ddlFldIdCond2',

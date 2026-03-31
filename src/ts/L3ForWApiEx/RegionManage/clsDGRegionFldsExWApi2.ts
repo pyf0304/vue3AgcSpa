@@ -273,7 +273,7 @@ export async function DGRegionFldsEx_FuncMap_TabName(objDGRegionFlds: clsDGRegio
         } catch (objException) {
           const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
             ViewRegion_TabId,
-            clsPrivateSessionStorage.cmPrjId,
+            clsPrivateSessionStorage.currSelPrjId,
           );
           if (objPrjTab == null) return;
           const objFieldTab = await vFieldTab_Sim_GetObjByFldIdCache(

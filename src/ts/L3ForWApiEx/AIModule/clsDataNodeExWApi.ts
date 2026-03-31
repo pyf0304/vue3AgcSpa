@@ -28,6 +28,7 @@ import {
   DataNode_IsExistAsync,
   DataNode_IsExistRecordAsync,
   DataNode_SortFunByKey,
+  DataNode_UpdateRecordAsync,
 } from '@/ts/L3ForWApi/AIModule/clsDataNodeWApi';
 
 import {
@@ -191,21 +192,17 @@ export async function DataNodeEx_CreateObjByTabIdAndFldId(
   strFldId: string,
   strDataNodeTypeId: string,
   intVersionNo: number,
-  strCmPrjId: string,
 ): Promise<clsDataNodeEN | null> {
   const vDataNode_SimStore = usevDataNode_SimStore();
   const objDataNode = new clsDataNodeEN();
   // objDataNode.dataNodeId = await DataNode_GetMaxStrIdAsync(); // 数据结点Id
   objDataNode.tabId = strTabId; // 表
   objDataNode.fldId = strFldId; // 字段
-  const objCMProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
-  if (objCMProject == null) {
-    const strMsg = Format('CM项目Id:[{0}]，没有相应的CM项目，请检查！', strCmPrjId);
-    console.error(strMsg);
-    alert(strMsg);
-    return null;
-  }
-  const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(strTabId, objCMProject.prjId);
+
+  const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
+    strTabId,
+    clsPrivateSessionStorage.currSelPrjId,
+  );
   if (objPrjTab == null) {
     const strMsg = Format(
       '在项目:[{0}]中，表Id:[{1}]没有相应表，请检查！',
@@ -240,7 +237,7 @@ export async function DataNodeEx_CreateObjByTabIdAndFldId(
     objFieldTab.fldName,
     strVersionNo,
   ); // 结点名
-  objDataNode.prjId = objCMProject.prjId; // 工程ID
+  objDataNode.prjId = clsPrivateSessionStorage.currSelPrjId; // 工程ID
   objDataNode.dataNodeTypeId = strDataNodeTypeId; // 结点类型
   objDataNode.versionNo = intVersionNo; // 版本号
 
@@ -248,6 +245,45 @@ export async function DataNodeEx_CreateObjByTabIdAndFldId(
   objDataNode.updDate = clsDateTime.getTodayDateTimeStr(1); // 修改日期
   objDataNode.updUser = clsPubLocalStorage.userId; // 修改者
   try {
+    const objDataNodeCondByName = new clsDataNodeEN();
+    objDataNodeCondByName.SetCondFldValue(
+      clsDataNodeEN.con_DataNodeName,
+      objDataNode.dataNodeName,
+      '=',
+    );
+    objDataNodeCondByName.SetCondFldValue(clsDataNodeEN.con_PrjId, objDataNode.prjId, '=');
+
+    const strConditionByName = DataNode_GetCombineCondition(objDataNodeCondByName);
+    const objDataNodeExist = await DataNode_GetFirstObjAsync(strConditionByName);
+    if (objDataNodeExist != null) {
+      if (objDataNodeExist.tabId != strTabId) {
+        const strMsg = Format(
+          '数据结点名:[{0}]在工程:[{1}]中已经存在，且关联表已是:[{2}]，不能重复添加！',
+          objDataNode.dataNodeName,
+          clsPrivateSessionStorage.currSelPrjName,
+          objDataNodeExist.tabId,
+        );
+        console.error(strMsg);
+        //throw strMsg;
+      }
+
+      objDataNodeExist.SetTabId(strTabId);
+      objDataNodeExist.SetFldId(strFldId);
+      objDataNodeExist.SetVersionNo(intVersionNo);
+      objDataNodeExist.SetDataNodeTypeId(strDataNodeTypeId);
+      objDataNodeExist.SetMemo(objDataNode.memo);
+      objDataNodeExist.SetUpdDate(objDataNode.updDate);
+      objDataNodeExist.SetUpdUser(objDataNode.updUser);
+
+      const bolIsSuccess = await DataNode_UpdateRecordAsync(objDataNodeExist);
+      if (bolIsSuccess == true) {
+        vDataNode_SimStore.ReFreshByPrjId(clsPrivateSessionStorage.currSelPrjId);
+        vDataNode_Sim_ReFreshThisCache(clsPrivateSessionStorage.currSelPrjId);
+        return objDataNodeExist;
+      }
+      throw '更新已有数据结点不成功!';
+    }
+
     const objDataNodeCond = new clsDataNodeEN();
     objDataNodeCond.SetCondFldValue(clsDataNodeEN.con_TabId, strTabId, '=');
     objDataNodeCond.SetCondFldValue(clsDataNodeEN.con_FldId, strFldId, '=');

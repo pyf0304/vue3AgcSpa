@@ -177,7 +177,7 @@ export class DnFuncMap_DataTestEx extends DnFuncMap_Edit {
         this.AddNewRecordWithMaxId();
         const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
           strTabId,
-          clsPrivateSessionStorage.cmPrjId,
+          clsPrivateSessionStorage.currSelPrjId,
         );
         if (objPrjTab == null) {
           const strMsg = Format(
@@ -376,7 +376,6 @@ export class DnFuncMap_DataTestEx extends DnFuncMap_Edit {
         this.OutTabId,
         strOutFldId,
         intVersionNo,
-        clsPrivateSessionStorage.cmPrjId,
       );
       if (objOutDataNode == null) {
         const strMsg = Format(

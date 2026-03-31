@@ -37,7 +37,7 @@ service.interceptors.request.use(
     const token = Storage.get(ACCESS_TOKEN_KEY);
     if (token && config.headers) {
       // 请求头token信息，请根据实际情况进行修改
-      config.headers['Authorization'] = token;
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
   },

@@ -80,10 +80,15 @@ export abstract class PrjTabCRUD implements clsOperateList {
   public objPager: clsPager;
   public static objPageCRUD: PrjTabCRUD;
   public static sortFunStatic: (ascOrDesc: string) => (x: any, y: any) => number;
+  /** 保存用户通过下拉框选择的每页记录数，null 时由子类 getter 提供默认值 */
+  protected _pageSize: number | null = null;
   constructor() {
     this.listPara = new ListPara(divVarSet.refDivLayout, divVarSet.refDivList);
     PrjTabCRUD.objPageCRUD = this;
     this.objPager = new clsPager(this);
+    this.objPager.onPageSizeChange = (ps: number) => {
+      this._pageSize = ps;
+    };
   }
   /**
    * 获取当前组件的divList的层对象
@@ -104,10 +109,10 @@ export abstract class PrjTabCRUD implements clsOperateList {
     return clsPrjTabEN._CurrTabName;
   }
   /**
-   * 每页记录数,在扩展类可以修改
+   * 每页记录数,在扩展类可以修改；用户通过分页下拉框修改后会动态更新
    **/
   public get pageSize(): number {
-    return 5;
+    return this._pageSize ?? 5;
   }
   public recCount = 0;
 

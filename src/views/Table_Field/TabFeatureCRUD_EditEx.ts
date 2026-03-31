@@ -16,6 +16,7 @@ import { ValueGivingMode_BindDdl_ValueGivingModeIdInDivCache } from '@/ts/L3ForW
 import { vPrjFeatureSim_GetObjByFeatureIdCache } from '@/ts/L3ForWApi/PrjFunction/clsvPrjFeatureSimWApi';
 import { FieldType_BindDdl_FieldTypeIdInDivCache } from '@/ts/L3ForWApi/Table_Field/clsFieldTypeWApi';
 import {
+  TabFeature_GetObjByTabFeatureIdAsync,
   TabFeature_GetObjLstByTabFeatureIdLstAsync,
   TabFeature_GetRecCountByCondAsync,
   TabFeature_GetUniCondStr4Update,
@@ -159,6 +160,7 @@ export default class TabFeatureCRUD_EditEx extends TabFeatureCRUD implements ISh
 
     let strMsg = '';
     let arrKeyIds;
+    let objTabFeature;
     const strFeatureId = TabFeatureCRUD_EditEx.GetPropValue('featureId');
     switch (strCommandName) {
       case 'GetDefaNameProp': //查询记录
@@ -207,8 +209,17 @@ export default class TabFeatureCRUD_EditEx extends TabFeatureCRUD implements ISh
           alert(strMsg);
           return;
         }
+        objTabFeature = await TabFeature_GetObjByTabFeatureIdAsync(strKeyId);
 
-        objPageEdit.btnUpdateRecord_Click(strKeyId);
+        switch (objTabFeature.featureId) {
+          case enumPrjFeature.Tab_BindDdl_0173:
+          case enumPrjFeature.Tab_BindDdl_0221:
+            await TabFeatureCRUD_EditEx_Combo.btnEditComboBox(strKeyId);
+            break;
+          default:
+            objPageEdit.btnUpdateRecord_Click(strKeyId);
+            break;
+        }
         break;
       case 'UpdateRecordInTab': //修改记录InTab
         objPageEdit.btnUpdateRecordInTab_Click(strKeyId);

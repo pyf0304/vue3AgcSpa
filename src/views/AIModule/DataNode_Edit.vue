@@ -496,7 +496,7 @@
         const strFldId = this.fldId;
         const objPrjTab = await vPrjTab_SimEx_GetObjByTabIdCache(
           strTabId,
-          clsPrivateSessionStorage.cmPrjId,
+          clsPrivateSessionStorage.currSelPrjId,
         );
         if (objPrjTab == null) {
           const strMsg = Format(

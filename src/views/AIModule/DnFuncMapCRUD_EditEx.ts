@@ -2757,7 +2757,7 @@ async function ShowFunc4RelaTab(strTabId: string) {
     if (IsNullOrEmpty(strRelaTabId) == false) {
       const objPrjTabRelaTab = await vPrjTab_SimEx_GetObjByTabIdCache(
         strRelaTabId,
-        clsPrivateSessionStorage.cmPrjId,
+        clsPrivateSessionStorage.currSelPrjId,
       );
       if (objPrjTabRelaTab == null) return;
       //SetLabelHtmlByIdInDivObj(this.divName4Layout, "lblRelaTabName", Format("表:{0}({1})", objPrjTabRelaTab.tabName, objPrjTabRelaTab.tabId));
@@ -2782,7 +2782,7 @@ async function ShowFunc4RelaTab(strTabId: string) {
       if (IsNullOrEmpty(objPrjTabEN.relaTabId4View) == false) {
         const objPrjTabRelaTab = await vPrjTab_SimEx_GetObjByTabIdCache(
           objPrjTabEN.relaTabId4View,
-          clsPrivateSessionStorage.cmPrjId,
+          clsPrivateSessionStorage.currSelPrjId,
         );
         if (objPrjTabRelaTab == null) return;
         //SetLabelHtmlByIdInDivObj(this.divName4Layout, "lblRelaTabName", Format("表:{0}({1})", objPrjTabRelaTab.tabName, objPrjTabRelaTab.tabId));

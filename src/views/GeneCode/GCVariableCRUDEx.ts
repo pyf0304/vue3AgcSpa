@@ -1,6 +1,9 @@
 ﻿import GCVariable_EditEx from './GCVariable_EditEx';
 import {
+  GCVariable_AddNewRecordAsync,
   GCVariable_DelRecordAsync,
+  GCVariable_GetMaxStrIdAsync,
+  GCVariable_GetObjLstByVarIdLstAsync,
   GCVariable_ReFreshCache,
 } from '@/ts/L3ForWApi/GeneCode/clsGCVariableWApi';
 import {
@@ -449,6 +452,43 @@ export default class GCVariableCRUDEx extends GCVariableCRUD implements IShowLis
     this.objPager.ShowPagerV2(divContainer, this, this.divName4Pager);
   }
 
+  /** 复制记录
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_CopyRecord)
+   **/
+  public async CopyRecord(arrVarId: Array<string>) {
+    const strThisFuncName = this.CopyRecord.name;
+    try {
+      const arrGCVariableObjLst = await GCVariable_GetObjLstByVarIdLstAsync(arrVarId);
+      //console.log('responseText=');
+      //console.log(responseText);
+      let intCount = 0;
+      for (const objInFor of arrGCVariableObjLst) {
+        const strMaxStrId = await GCVariable_GetMaxStrIdAsync();
+        //console.log('strMaxStrId=' + strMaxStrId);
+        objInFor.varId = strMaxStrId;
+        objInFor.varName = `${objInFor.varName}_复制`;
+        const returnBool = await GCVariable_AddNewRecordAsync(objInFor);
+        //console.log('returnBool=');
+        //console.log(returnBool);
+        if (returnBool == true) {
+          GCVariable_ReFreshCache();
+          intCount++;
+        } else {
+          const strInfo = Format('克隆记录不成功!');
+          //显示信息框
+          alert(strInfo);
+        }
+      }
+      const strInfo = Format('共克隆了{0}条记录!', intCount);
+      alert(strInfo);
+      //console.log('完成!');
+    } catch (e) {
+      const strMsg = `复制记录不成功,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+      console.error('Error: ', strMsg);
+      //console.trace();
+      alert(strMsg);
+    }
+  }
   public async SortColumn(sortColumnKey: string, sortDirection: string) {
     viewVarSet.sortGCVariableBy = Format('{0} {1}', sortColumnKey, sortDirection);
     await this.BindGv_GCVariable4Func(divVarSet.refDivList);

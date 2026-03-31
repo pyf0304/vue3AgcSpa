@@ -297,9 +297,11 @@ export abstract class PrjTab_Edit {
             }
           }
           break;
-        case '确认修改':
+        case '确认修改': {
           //这是一个单表的修改的代码,由于逻辑层太简单,
+
           returnBool = await this.UpdateRecordSave();
+
           strInfo = returnBool ? '修改成功!' : '修改不成功!';
           strInfo += '(In PrjTab_Edit.btnSubmit_Click)';
           //显示信息框
@@ -312,6 +314,7 @@ export abstract class PrjTab_Edit {
             if (this.iShowList != null) this.iShowList.BindGv(clsPrjTabEN._CurrTabName, this.keyId);
           }
           break;
+        }
         default:
           strMsg = Format(
             'strCommandText:{0}在switch中没有处理!(In btnSubmit_Click())',
