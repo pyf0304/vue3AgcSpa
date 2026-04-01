@@ -35,6 +35,21 @@ export async function CmProjectPrjTabEx_GetTabIdLstByCmPrjId(
   return arrObjLst.map((x) => x.tabId);
 }
 
+/// <summary>
+/// 检查表Id是否属于指定CM工程
+/// </summary>
+/// <param name="strTabId"></param>
+/// <param name="strCmPrjId"></param>
+/// <returns>是否属于该CM工程</returns>
+export async function CmProjectPrjTabEx_IsTabIdInCmPrjId(
+  strTabId: string,
+  strCmPrjId: string,
+): Promise<boolean> {
+  if (IsNullOrEmpty(strTabId) == true || IsNullOrEmpty(strCmPrjId) == true) return false;
+  const arrTabId = await CmProjectPrjTabEx_GetTabIdLstByCmPrjId(strCmPrjId);
+  return arrTabId.indexOf(strTabId) > -1;
+}
+
 // /// <summary>
 // /// 根据CM工程Id获取相关表Id列表
 // /// </summary>

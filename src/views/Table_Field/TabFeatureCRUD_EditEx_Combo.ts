@@ -44,6 +44,7 @@ import {
   vTabFeature_SimEx_GetObjLstCache,
   vTabFeature_SimEx_SortFunByOrderNum,
 } from '@/ts/L3ForWApiEx/Table_Field/clsvTabFeature_SimExWApi';
+import { CmProjectPrjTabEx_IsTabIdInCmPrjId } from '@/ts/L3ForWApiEx/CodeMan/clsCmProjectPrjTabExWApi';
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
 import {
   CheckControlExistInDivObj,
@@ -298,6 +299,17 @@ export class TabFeatureCRUD_EditEx_Combo extends TabFeatureCRUD implements IShow
       alert(strMsg);
     }
   }
+
+  public static async CheckTabIdInCmPrjId(strTabId: string, strCmPrjId: string) {
+    if (IsNullOrEmpty(strTabId) == true) return;
+    const bolIsBelong = await CmProjectPrjTabEx_IsTabIdInCmPrjId(strTabId, strCmPrjId);
+    if (bolIsBelong == true) return;
+
+    const strMsg = Format('表Id:[{0}]不属于项目:[{1}]，请检查！', strTabId, strCmPrjId);
+    console.error(strMsg);
+    throw strMsg;
+  }
+
   public static async Get_TabFeatureLst(strTabId: string): Promise<Array<clsvTabFeature_SimEN>> {
     // const strPrjId = clsPrivateSessionStorage.currSelPrjId;
     let strKeyFldId_q = '';
@@ -305,6 +317,11 @@ export class TabFeatureCRUD_EditEx_Combo extends TabFeatureCRUD implements IShow
     if (IsExistDivObj(divQuery) == true) {
       strKeyFldId_q = TabFeatureCRUD_EditEx_Combo.keyFldIdS;
     }
+    //检查表Id(strTabId)是否属于clsPrivateSessionStorage.cmPrjId
+    await TabFeatureCRUD_EditEx_Combo.CheckTabIdInCmPrjId(
+      strTabId,
+      clsPrivateSessionStorage.cmPrjId,
+    );
 
     //const strNameFldId_q = this.nameFldId_q;
     //const strConditionFldId_q = this.conditionFldId_q;
