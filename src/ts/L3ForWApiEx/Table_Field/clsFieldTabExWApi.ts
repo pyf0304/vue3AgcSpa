@@ -247,6 +247,69 @@ export async function FieldTabEx_AddNewRec(
     }
   }
 }
+
+/**
+ * 扩展删除字段
+ * (AGC.BusinessLogicEx.clsFunction4CodeBLEx:GeneCodeV2)
+ * @param strFldId: 字段Id
+ * @param strUpdUserId: 修改用户Id
+ * @returns 是否删除成功
+ */
+export async function FieldTabEx_DelRecordEx(
+  strFldId: string,
+  strUpdUserId: string,
+): Promise<boolean> {
+  const strThisFuncName = FieldTabEx_DelRecordEx.name;
+  const strAction = 'DelRecordEx';
+  const strUrl = GetWebApiUrl(fieldTabEx_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strFldId,
+      strUpdUserId,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnBool;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        fieldTabEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        fieldTabEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
 export async function FieldTabEx_IsExistSameFldName(
   strPrjId: string,
   strFldName: string,

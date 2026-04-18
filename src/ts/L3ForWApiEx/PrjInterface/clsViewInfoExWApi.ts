@@ -146,8 +146,8 @@ export async function ViewInfoEx_ImportRegionAndFlds1(
     if (data.errorId == 0) {
       return data.returnBool;
     } else {
-      console.error(data.errorMsg);
-      throw data.errorMsg;
+      console.error(data.message);
+      throw data.message;
     }
   } catch (error: any) {
     console.error(error);
@@ -207,8 +207,8 @@ export async function ViewInfoEx_SetViewUpdDate(strViewId: string): Promise<numb
     if (data.errorId == 0) {
       return data.returnInt;
     } else {
-      console.error(data.errorMsg);
-      throw data.errorMsg;
+      console.error(data.message);
+      throw data.message;
     }
   } catch (error: any) {
     console.error(error);
@@ -822,8 +822,458 @@ export async function ViewInfoEx_SetCmPrjId(
     if (data.errorId == 0) {
       return data.returnBool;
     } else {
-      console.error(data.errorMsg);
-      throw data.errorMsg;
+      console.error(data.message);
+      throw data.message;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        viewInfoEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        viewInfoEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 把源工程中的一个界面复制到目标工程中
+ * @param strTarPrjId: 目标工程Id
+ * @param strSouViewId: 源界面Id
+ * @param strUserId: 用户Id
+ * @returns 是否复制成功
+ */
+export async function ViewInfoEx_CopyViewInfo(
+  strTarPrjId: string,
+  strSouViewId: string,
+  strUserId: string,
+): Promise<boolean> {
+  const strThisFuncName = ViewInfoEx_CopyViewInfo.name;
+  const strAction = 'CopyViewInfo';
+  const strUrl = GetWebApiUrl(viewInfoEx_Controller, strAction);
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strTarPrjId,
+      strSouViewId,
+      strUserId,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnBool;
+    } else {
+      console.error(data.message);
+      throw data.message;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        viewInfoEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        viewInfoEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+export type ViewInfoExCopyRegionStatus = {
+  sourceRegionId: string;
+  clsName: string;
+  targetRegionId: string;
+  copyStatus: string;
+  relationStatus: string;
+  errorMessage?: string;
+};
+
+export type ViewInfoExStartOrResumeCopyTaskResult = {
+  taskId: number;
+  isNewTask: boolean;
+  status: string;
+  currentStep: string;
+  message: string;
+};
+
+export type ViewInfoExCopyTaskStatusResult = {
+  taskId: number;
+  status: string;
+  currentStep: string;
+  message: string;
+  targetViewId: string;
+  targetViewName: string;
+  regionStatuses: Array<ViewInfoExCopyRegionStatus>;
+};
+
+export type ViewInfoExCopyViewWithRegionsResult = {
+  success: boolean;
+  message: string;
+  targetViewId: string;
+  targetViewName: string;
+  regionStatuses: Array<ViewInfoExCopyRegionStatus>;
+};
+
+function mapViewInfoExCopyRegionStatuses(value: any): Array<ViewInfoExCopyRegionStatus> {
+  return Array.isArray(value)
+    ? value.map((x: any) => ({
+        sourceRegionId: String(x.sourceRegionId ?? ''),
+        clsName: String(x.clsName ?? ''),
+        targetRegionId: String(x.targetRegionId ?? ''),
+        copyStatus: String(x.copyStatus ?? ''),
+        relationStatus: String(x.relationStatus ?? ''),
+        errorMessage: String(x.errorMessage ?? ''),
+      }))
+    : [];
+}
+
+function getViewInfoExApiMessage(data: any): string {
+  return String(
+    data?.message ??
+      data?.Message ??
+      data?.errorMsg ??
+      data?.ErrorMsg ??
+      data?.returnObj?.message ??
+      data?.returnObj?.Message ??
+      '',
+  ).trim();
+}
+
+function getViewInfoExApiTaskId(objRet: any, data?: any): number {
+  const arrCandidate = [
+    objRet?.taskId,
+    objRet?.TaskId,
+    objRet?.taskID,
+    objRet?.TaskID,
+    objRet?.lngTaskId,
+    objRet?.LngTaskId,
+    objRet?.copyTaskId,
+    objRet?.CopyTaskId,
+    objRet?.id,
+    objRet?.Id,
+    data?.taskId,
+    data?.TaskId,
+    data?.lngTaskId,
+    data?.LngTaskId,
+  ];
+  const value = arrCandidate.find((x) => x != null && String(x).trim() !== '');
+  return Number(value ?? 0);
+}
+
+function throwViewInfoExApiError(error: any, strUrl: string, strThisFuncName: string): never {
+  const serverMessage = getViewInfoExApiMessage(error?.response?.data);
+  if (!IsNullOrEmpty(serverMessage)) {
+    throw serverMessage;
+  }
+  const statusText = error?.statusText ?? error?.response?.statusText;
+  const statusCode = error?.response?.status;
+  if (statusText == null) {
+    if (statusCode === 404) {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        viewInfoEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    }
+    throw error ?? new Error('未知网络错误');
+  }
+  if (statusText == 'error') {
+    const strInfo = Format(
+      '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+      strUrl,
+      viewInfoEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strInfo);
+    throw strInfo;
+  } else if (statusText == 'Not Found') {
+    const strInfo = Format(
+      '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+      strUrl,
+      viewInfoEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strInfo);
+    throw strInfo;
+  } else {
+    throw statusText;
+  }
+}
+
+/**
+ * 启动或继续复制任务
+ * @param strTarPrjId 目标工程Id
+ * @param strSouViewId 源界面Id
+ * @param strUserId 用户Id
+ * @param strConflictStrategy 冲突策略(skip|overwrite|rename)
+ */
+export async function ViewInfoEx_StartOrResumeCopyTask(
+  strTarPrjId: string,
+  strSouViewId: string,
+  strUserId: string,
+  strConflictStrategy: string,
+): Promise<ViewInfoExStartOrResumeCopyTaskResult> {
+  const strThisFuncName = ViewInfoEx_StartOrResumeCopyTask.name;
+  const strAction = 'StartOrResumeCopyTask';
+  const strUrl = GetWebApiUrl(viewInfoEx_Controller, strAction);
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strTarPrjId,
+      strSouViewId,
+      strUserId,
+      strConflictStrategy,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      const objRet = data;
+      return {
+        taskId: getViewInfoExApiTaskId(objRet, data),
+        isNewTask: Boolean(objRet?.isNewTask ?? objRet?.IsNewTask),
+        status: String(objRet?.status ?? objRet?.Status ?? ''),
+        currentStep: String(objRet?.currentStep ?? objRet?.CurrentStep ?? ''),
+        message: String(objRet?.message ?? objRet?.Message ?? data?.message ?? data?.Message ?? ''),
+      };
+    } else {
+      const strApiMessage = getViewInfoExApiMessage(data);
+      console.error(strApiMessage || data);
+      throw strApiMessage || '启动或继续复制任务失败';
+    }
+  } catch (error: any) {
+    console.error(error);
+    throwViewInfoExApiError(error, strUrl, strThisFuncName);
+  }
+}
+
+/**
+ * 执行或继续执行复制任务
+ * @param lngTaskId 复制任务Id
+ */
+export async function ViewInfoEx_ExecuteCopyTask(lngTaskId: number): Promise<boolean> {
+  const strThisFuncName = ViewInfoEx_ExecuteCopyTask.name;
+  const strAction = 'ExecuteCopyTask';
+  const strUrl = GetWebApiUrl(viewInfoEx_Controller, strAction);
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      lngTaskId,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return Boolean(data.returnBool);
+    } else {
+      const strApiMessage = getViewInfoExApiMessage(data);
+      console.error(strApiMessage || data);
+      throw strApiMessage || '执行复制任务失败';
+    }
+  } catch (error: any) {
+    console.error(error);
+    throwViewInfoExApiError(error, strUrl, strThisFuncName);
+  }
+}
+
+/**
+ * 获取复制任务状态
+ * @param lngTaskId 复制任务Id
+ */
+export async function ViewInfoEx_GetCopyTaskStatus(
+  lngTaskId: number,
+): Promise<ViewInfoExCopyTaskStatusResult> {
+  const strThisFuncName = ViewInfoEx_GetCopyTaskStatus.name;
+  const strAction = 'GetCopyTaskStatus';
+  const strUrl = GetWebApiUrl(viewInfoEx_Controller, strAction);
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      lngTaskId,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      const objRet = data;
+      return {
+        taskId: getViewInfoExApiTaskId(objRet, data),
+        status: String(objRet?.status ?? objRet?.Status ?? ''),
+        currentStep: String(objRet?.currentStep ?? objRet?.CurrentStep ?? ''),
+        message: String(objRet?.message ?? objRet?.Message ?? data?.message ?? data?.Message ?? ''),
+        targetViewId: String(objRet?.targetViewId ?? objRet?.TargetViewId ?? ''),
+        targetViewName: String(objRet?.targetViewName ?? objRet?.TargetViewName ?? ''),
+        regionStatuses: mapViewInfoExCopyRegionStatuses(
+          objRet?.regionStatuses ?? objRet?.RegionStatuses,
+        ),
+      };
+    } else {
+      const strApiMessage = getViewInfoExApiMessage(data);
+      console.error(strApiMessage || data);
+      throw strApiMessage || '获取复制任务状态失败';
+    }
+  } catch (error: any) {
+    console.error(error);
+    throwViewInfoExApiError(error, strUrl, strThisFuncName);
+  }
+}
+
+/**
+ * 按目标工程Id+源界面Id获取复制任务状态
+ * @param strTarPrjId 目标工程Id
+ * @param strSouViewId 源界面Id
+ */
+export async function ViewInfoEx_GetCopyTaskStatusByView(
+  strTarPrjId: string,
+  strSouViewId: string,
+): Promise<ViewInfoExCopyTaskStatusResult> {
+  const strThisFuncName = ViewInfoEx_GetCopyTaskStatusByView.name;
+  const strAction = 'GetCopyTaskStatusByView';
+  const strUrl = GetWebApiUrl(viewInfoEx_Controller, strAction);
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strTarPrjId,
+      strSouViewId,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      const objRet = data.returnObj;
+      return {
+        taskId: getViewInfoExApiTaskId(objRet, data),
+        status: String(objRet?.status ?? objRet?.Status ?? ''),
+        currentStep: String(objRet?.currentStep ?? objRet?.CurrentStep ?? ''),
+        message: String(objRet?.message ?? objRet?.Message ?? data?.message ?? data?.Message ?? ''),
+        targetViewId: String(objRet?.targetViewId ?? objRet?.TargetViewId ?? ''),
+        targetViewName: String(objRet?.targetViewName ?? objRet?.TargetViewName ?? ''),
+        regionStatuses: mapViewInfoExCopyRegionStatuses(
+          objRet?.regionStatuses ?? objRet?.RegionStatuses,
+        ),
+      };
+    } else {
+      const strApiMessage = getViewInfoExApiMessage(data);
+      console.error(strApiMessage || data);
+      throw strApiMessage || '按界面获取复制任务状态失败';
+    }
+  } catch (error: any) {
+    console.error(error);
+    throwViewInfoExApiError(error, strUrl, strThisFuncName);
+  }
+}
+
+/**
+ * 事务复制：复制界面+相关区域+关系绑定
+ * @param strTarPrjId 目标工程Id
+ * @param strSouViewId 源界面Id
+ * @param strUserId 用户Id
+ * @param strConflictStrategy 冲突策略(skip|overwrite|rename)
+ */
+export async function ViewInfoEx_CopyViewWithRegions(
+  strTarPrjId: string,
+  strSouViewId: string,
+  strUserId: string,
+  strConflictStrategy: string,
+): Promise<ViewInfoExCopyViewWithRegionsResult> {
+  const strThisFuncName = ViewInfoEx_CopyViewWithRegions.name;
+  const strAction = 'CopyViewWithRegions';
+  const strUrl = GetWebApiUrl(viewInfoEx_Controller, strAction);
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strTarPrjId,
+      strSouViewId,
+      strUserId,
+      strConflictStrategy,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      const objRet = data.returnObj;
+      if (objRet != null) {
+        return {
+          success: Boolean(objRet.success),
+          message: String(objRet.message ?? ''),
+          targetViewId: String(objRet.targetViewId ?? ''),
+          targetViewName: String(objRet.targetViewName ?? ''),
+          regionStatuses: mapViewInfoExCopyRegionStatuses(objRet.regionStatuses),
+        };
+      }
+      // 兼容后端尚未返回returnObj时的旧结构
+      return {
+        success: Boolean(data.returnBool),
+        message: '',
+        targetViewId: '',
+        targetViewName: '',
+        regionStatuses: [],
+      };
+    } else {
+      console.error(data.message);
+      throw data.message;
     }
   } catch (error: any) {
     console.error(error);
@@ -890,8 +1340,8 @@ export async function ViewInfoEx_CheckRegionFlds(
     if (data.errorId == 0) {
       return data.returnBool;
     } else {
-      console.error(data.errorMsg);
-      throw data.errorMsg;
+      console.error(data.message);
+      throw data.message;
     }
   } catch (error: any) {
     console.error(error);
@@ -1062,8 +1512,8 @@ export async function ViewInfoEx_SynchInfoFromPrjTab(strPrjId: string): Promise<
     if (data.errorId == 0) {
       return data.returnInt;
     } else {
-      console.error(data.errorMsg);
-      throw data.errorMsg;
+      console.error(data.message);
+      throw data.message;
     }
   } catch (error: any) {
     console.error(error);

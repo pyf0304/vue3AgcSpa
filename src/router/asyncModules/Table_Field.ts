@@ -9,6 +9,7 @@ export default {
   'views/Table_Field/PrjTabCRUD_Edit': () => import('@/views/Table_Field/PrjTabCRUD_Edit.vue'),
   'views/SqlViewMan/SqlTable_Import': () => import('@/views/SqlViewMan/SqlTable_Import.vue'),
   'views/Table_Field/PrjTabCRUD': () => import('@/views/Table_Field/PrjTabCRUD.vue'),
+  'views/Table_Field/PrjTab_Copy': () => import('@/views/Table_Field/PrjTab_Copy.vue'),
   'views/Table_Field/FieldTabCRUD': () => import('@/views/Table_Field/FieldTabCRUD.vue'),
   'views/Table_Field/FieldTab4CodeConvCRUD': () =>
     import('@/views/Table_Field/FieldTab4CodeConvCRUD.vue'),

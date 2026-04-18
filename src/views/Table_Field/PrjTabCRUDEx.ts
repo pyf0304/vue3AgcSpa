@@ -29,12 +29,12 @@ import { FuncModule_AgcEx_BindDdl_FuncModuleAgcIdForPrjTabInDivCacheEx } from '@
 import {
   PrjTabEx_CheckTabFlds,
   PrjTabEx_CopyPrjTabInSameProject,
-  PrjTabEx_DelRecordEx,
   PrjTabEx_FuncMapByFldName,
   PrjTabEx_GetObjExLstByPagerAsync,
   PrjTabEx_SetFldNumByTabId,
   PrjTabEx_GetTabRecNum,
   PrjTabEx_SetIsShare,
+  PrjTabEx_DelRecordExByTabId,
 } from '@/ts/L3ForWApiEx/Table_Field/clsPrjTabExWApi';
 import { vPrjTab_SimEx_GetObjByTabIdCache } from '@/ts/L3ForWApiEx/Table_Field/clsvPrjTab_SimExWApi';
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
@@ -1506,7 +1506,10 @@ export default class PrjTabCRUDEx extends PrjTabCRUD implements IShowList {
       }
       for (const strTabId of arrKeyIds) {
         //   await this.DelMultiRecord(arrKeyIds);
-        const responseBool = await PrjTabEx_DelRecordEx(strTabId, clsPrivateSessionStorage.userId);
+        const responseBool = await PrjTabEx_DelRecordExByTabId(
+          strTabId,
+          clsPrivateSessionStorage.userId,
+        );
         if (responseBool == true) {
           vPrjTab_Sim_ReFreshThisCache(clsPrivateSessionStorage.currSelPrjId);
           PrjTabFld_ReFreshCache(strTabId);

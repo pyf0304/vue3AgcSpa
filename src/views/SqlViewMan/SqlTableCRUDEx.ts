@@ -207,7 +207,7 @@ export default class SqlTableCRUDEx extends SqlTableCRUD implements IShowList {
       alert(strMsg);
       return;
     }
-    const divDataLst = GetDivObjInDivObj(divList, 'divDataLst');
+
     const strWhereCond = await this.CombineSqlTableCondition();
     let intCurrPageIndex = GetCurrPageIndex(this.objPager.currPageIndex); //获取当前页
     let arrSqlTableObjLst: Array<clsSqlTableEN> = [];
@@ -226,10 +226,10 @@ export default class SqlTableCRUDEx extends SqlTableCRUD implements IShowList {
         const lblMsg: HTMLSpanElement = <HTMLSpanElement>document.createElement('span');
         lblMsg.innerHTML = Format('根据条件:[{0}]获取的对象列表数为0！', strWhereCond);
 
-        if (divDataLst != null) {
-          divDataLst.innerText = '';
-          divDataLst.appendChild(lblMsg);
-        }
+        // if (divDataLst != null) {
+        //   divDataLst.innerText = '';
+        //   divDataLst.appendChild(lblMsg);
+        // }
         const strMsg = Format('在绑定Gv过程中，根据条件:[{0}]获取的对象列表数为0！', strWhereCond);
         console.error('Error: ', strMsg);
         //console.trace();

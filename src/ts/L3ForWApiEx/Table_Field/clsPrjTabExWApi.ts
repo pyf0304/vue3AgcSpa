@@ -91,12 +91,12 @@ export function PrjTabEx_SortFunByTabName(a: clsPrjTabEN, b: clsPrjTabEN): numbe
 /// </summary>
 /// <param name = "strTabId">表Id</param>
 /// <returns>获取的相应对象列表</returns>
-export async function PrjTabEx_DelRecordEx(
+export async function PrjTabEx_DelRecordExByTabId(
   strTabId: string,
   strUpdUserId: string,
 ): Promise<boolean> {
-  const strThisFuncName = PrjTabEx_DelRecordEx.name;
-  const strAction = 'DelRecordEx';
+  const strThisFuncName = PrjTabEx_DelRecordExByTabId.name;
+  const strAction = 'DelRecordExByTabId';
   const strUrl = GetWebApiUrl(prjTabEx_Controller, strAction);
   // const mapParam: Dictionary = new Dictionary();
   // mapParam.add('strTabId', strTabId);
@@ -830,6 +830,73 @@ export async function PrjTabEx_CopyPrjTabInSameProject(
     const data = response.data;
     if (data.errorId == 0) {
       return data.returnStr;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        prjTabEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        prjTabEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 把源工程中的一个表复制到目标工程中
+ * (AGC.BusinessLogicEx.clsFunction4CodeBLEx:GeneCodeV2)
+ * @param strTarPrjId: 目标工程Id
+ * @param strSouTabId: 源表Id
+ * @param strUserId: 用户Id
+ * @returns 是否复制成功
+ */
+export async function PrjTabEx_CopyPrjTab(
+  strTarPrjId: string,
+  strSouTabId: string,
+  strUserId: string,
+): Promise<boolean> {
+  const strThisFuncName = PrjTabEx_CopyPrjTab.name;
+  const strAction = 'CopyPrjTab';
+  const strUrl = PrjTabEx_GetWebApiUrl(prjTabEx_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strTarPrjId,
+      strSouTabId,
+      strUserId,
+    },
+  };
+
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnBool;
     } else {
       console.error(data.errorMsg);
       throw data.errorMsg;

@@ -39,7 +39,7 @@ import {
 import { FuncModule_AgcEx_BindDdl_FuncModuleAgcIdCacheEx } from '@/ts/L3ForWApiEx/PrjManage/clsFuncModule_AgcExWApi';
 import { PrjConstraintEx_DelRecordEx } from '@/ts/L3ForWApiEx/Table_Field/clsPrjConstraintExWApi';
 import {
-  PrjTabEx_DelRecordEx,
+  PrjTabEx_DelRecordExByTabId,
   PrjTabEx_SortFunByTabName,
 } from '@/ts/L3ForWApiEx/Table_Field/clsPrjTabExWApi';
 import {
@@ -1737,7 +1737,10 @@ export default class PrjTabCRUD_EditEx extends PrjTabCRUD implements IShowList {
       if (confirm_del(0) == false) {
         return;
       }
-      const responseBool = await PrjTabEx_DelRecordEx(strTabId, clsPrivateSessionStorage.userId);
+      const responseBool = await PrjTabEx_DelRecordExByTabId(
+        strTabId,
+        clsPrivateSessionStorage.userId,
+      );
       if (responseBool == true) {
         //PrjTabReFreshCache(clsPrivateSessionStorage.currSelPrjId);
         //PrjTabReFreshCache(clsPrivateSessionStorage.currSelPrjId);

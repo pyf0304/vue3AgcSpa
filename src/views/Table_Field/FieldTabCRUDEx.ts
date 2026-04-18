@@ -2,6 +2,7 @@
 import { clsFieldTabENEx } from '@/ts/L0Entity/Table_Field/clsFieldTabENEx';
 import { FieldTab_GetRecCountByCondAsync } from '@/ts/L3ForWApi/Table_Field/clsFieldTabWApi';
 import {
+  FieldTabEx_DelRecordEx,
   FieldTabEx_CopyToPrjTab,
   FieldTabEx_GetObjExLstByPagerAsync,
 } from '@/ts/L3ForWApiEx/Table_Field/clsFieldTabExWApi';
@@ -162,7 +163,7 @@ export default class FieldTabCRUDEx extends FieldTabCRUD implements IShowList {
           alert('请选择需要删除的记录！');
           return;
         }
-        objPage.btnDelRecord_Click();
+        objPage.btnDelRecordEx_Click();
         break;
       case 'DelRecordInTab': //删除记录InTab
         objPage.btnDelRecordInTab_Click(strKeyId);
@@ -755,6 +756,36 @@ export default class FieldTabCRUDEx extends FieldTabCRUD implements IShowList {
     } catch (e) {
       const strMsg = Format(
         '复制到新表不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+    }
+  }
+
+  /** 删除记录(扩展接口)
+   * 调用 FieldTabExApi/DelRecordEx
+   **/
+  public async btnDelRecordEx_Click() {
+    const strThisFuncName = this.btnDelRecordEx_Click.name;
+    try {
+      const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+      if (arrKeyIds.length == 0) {
+        alert('请选择需要删除的记录！');
+        return '';
+      }
+      if (confirm(`确定要删除这${arrKeyIds.length}条记录吗?`) == false) {
+        return;
+      }
+      for (const strFldId of arrKeyIds) {
+        await FieldTabEx_DelRecordEx(strFldId, clsPubLocalStorage.userId);
+      }
+      await this.BindGv_FieldTab4Func(divVarSet.refDivList);
+    } catch (e) {
+      const strMsg = Format(
+        '删除记录不成功. {0}.(in {1}.{2})',
         e,
         this.constructor.name,
         strThisFuncName,

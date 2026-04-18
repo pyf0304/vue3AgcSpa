@@ -3,6 +3,7 @@
  */
 export default {
   'views/PrjInterface/ViewInfoCRUD': () => import('@/views/PrjInterface/ViewInfoCRUD.vue'),
+  'views/PrjInterface/ViewInfo_Copy': () => import('@/views/PrjInterface/ViewInfo_Copy.vue'),
   'views/PrjInterface/ViewMasterCRUD': () => import('@/views/PrjInterface/ViewMasterCRUD.vue'),
   'views/PrjInterface/CtlTypeCRUD': () => import('@/views/PrjInterface/CtlTypeCRUD.vue'),
   'views/RegionManage/ViewRegion_EditAllType': () =>
