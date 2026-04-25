@@ -552,6 +552,32 @@ export class TabFeatureCRUD_EditEx_SetFieldValue extends TabFeatureCRUD implemen
     btnUpdateteTabFeature.innerText = '编辑下拉框';
     return btnUpdateteTabFeature;
   }
+  public GetButton_EditSetFieldValue(strTabFeatureId: string): HTMLButtonElement {
+    const btn: HTMLButtonElement = document.createElement('button');
+    btn.id = Format('btnEditSetFieldValue{0}', strTabFeatureId);
+    btn.className = 'btn btn-outline-info btn-sm text-nowrap ml-1';
+    btn.title = '编辑设置字段';
+    (function (id) {
+      btn.onclick = function () {
+        TabFeatureCRUD_EditEx_SetFieldValue.btnEditSetFieldValue(id);
+      };
+    })(strTabFeatureId);
+    btn.innerText = '编辑字段';
+    return btn;
+  }
+
+  public static btnEditSetFieldValue(strTabFeatureId: string) {
+    const objPage: TabFeatureCRUD_EditEx_SetFieldValue = new TabFeatureCRUD_EditEx_SetFieldValue();
+    const objPageEdit: any = new (require('./SetFieldValue_EdtEx').SetFieldValue_EdtEx)(
+      'SetFieldValue_EdtEx',
+      objPage,
+    );
+    // set caches and open dialog
+    const SetFieldValue_EdtEx = require('./SetFieldValue_EdtEx').SetFieldValue_EdtEx;
+    SetFieldValue_EdtEx.PrjIdCache = clsPrivateSessionStorage.currSelPrjId;
+    SetFieldValue_EdtEx.strTabId4SetFieldValue = TabId_Static.value;
+    objPageEdit.btnUpdateRecord_Click(strTabFeatureId);
+  }
   public GetButton_GeneCode(strTabFeatureId: string): HTMLButtonElement {
     const btnGeneCode: HTMLButtonElement = document.createElement('button');
 
@@ -739,6 +765,9 @@ export class TabFeatureCRUD_EditEx_SetFieldValue extends TabFeatureCRUD implemen
     const btnEditComboBox: HTMLButtonElement = this.GetButton_EditComboBox(
       objTabFeature.tabFeatureId,
     );
+    const btnEditSetFieldValue: HTMLButtonElement = this.GetButton_EditSetFieldValue(
+      objTabFeature.tabFeatureId,
+    );
     const btnGeneCode: HTMLButtonElement = this.GetButton_GeneCode(objTabFeature.tabFeatureId);
 
     const arrButtonLst: Array<HTMLButtonElement> = [
@@ -746,6 +775,7 @@ export class TabFeatureCRUD_EditEx_SetFieldValue extends TabFeatureCRUD implemen
       btnDelNode,
       btnCopyNode,
       btnEditComboBox,
+      btnEditSetFieldValue,
       btnGeneCode,
     ];
     const spnField = await this.GetSpan_TabFeature(objTabFeature, arrButtonLst);

@@ -118,7 +118,16 @@ export class AdjustOrderNum_EdtEx extends TabFeature_Edit {
       return;
     }
     await refAdjustOrderNum_Edt.value.showDialog();
+    // set the edit div ref first so binding helpers can find the container
     divVarSet.refDivEdit = refAdjustOrderNum_Edt.value.$refs.refDivEditDialog_AdjustOrderNum;
+    // Ensure dropdowns inside the dialog are bound before accessing them
+    if (refAdjustOrderNum_Edt.value.BindDdl4EditRegionInDiv) {
+      try {
+        await refAdjustOrderNum_Edt.value.BindDdl4EditRegionInDiv();
+      } catch (e) {
+        console.warn('BindDdl4EditRegionInDiv failed:', e);
+      }
+    }
 
     AdjustOrderNum_EdtEx.TabFeatureIdCache = strKeyId.toString();
     if (this.bolIsLoadEditRegion == false) {
@@ -138,7 +147,7 @@ export class AdjustOrderNum_EdtEx extends TabFeature_Edit {
       this.btnSubmit_AdjustOrderNum = '确认修改';
       this.bolIsLoadEditRegion = true; //
       //const lngKeyId = Number(strKeyId);
-      this.UpdateRecordV2(strKeyId.toString());
+      await this.UpdateRecordV2(strKeyId.toString());
     } else {
       this.btnSubmit_AdjustOrderNum = '确认修改';
       // this.ShowDialog_AdjustOrderNum('Update');
@@ -520,7 +529,14 @@ export class AdjustOrderNum_EdtEx extends TabFeature_Edit {
       this.opType = 'Add';
       const bolIsSuccess = await this.ShowDialog_OrderFunc(this.opType);
       if (bolIsSuccess == false) return;
-      // await this.BindDdl4EditRegionInDiv();
+      // bind dropdowns in dialog before proceeding
+      if (refAdjustOrderNum_Edt.value && refAdjustOrderNum_Edt.value.BindDdl4EditRegionInDiv) {
+        try {
+          await refAdjustOrderNum_Edt.value.BindDdl4EditRegionInDiv();
+        } catch (e) {
+          console.warn('BindDdl4EditRegionInDiv failed during Add:', e);
+        }
+      }
 
       this.AddNewRecordWithMaxId();
     } catch (e) {
@@ -685,6 +701,35 @@ export class AdjustOrderNum_EdtEx extends TabFeature_Edit {
       if (bolIsExistCondV2 == false) {
         return '';
       }
+      // 优先调用后端集中接口来添加排序功能（如果后端已实现）
+      try {
+        // 延迟加载以避免循环依赖
+        const mod = await import('@/ts/L3ForWApiEx/Table_Field/clsTabFeatureExWApi');
+        if (mod && mod.TabFeatureEx_AddAdjustOrderNum) {
+          try {
+            const bol = await mod.TabFeatureEx_AddAdjustOrderNum(
+              objTabFeatureEN.tabId,
+              objTabFeatureEN.featureId,
+              objTabFeatureEN.prjId,
+              objTabFeatureEN.updUser,
+            );
+            if (bol === true) {
+              // 后端已完成插入，尝试刷新缓存并返回空字符串（因为后端没有返回新Id）
+              vTabFeature_Sim_ReFreshThisCache(clsPrivateSessionStorage.cmPrjId);
+              vTabFeatureFlds_Sim_ReFreshThisCache(clsPrivateSessionStorage.currSelPrjId);
+              alert('添加记录成功(由后端API完成)!');
+              return this.keyId_TabFeatureId;
+            }
+            // 如果后端返回false，则退回到客户端插入逻辑
+          } catch (e) {
+            console.warn('调用后端TabFeatureEx_AddAdjustOrderNum失败，继续使用客户端插入方式:', e);
+          }
+        }
+      } catch (e) {
+        console.warn('未找到后端AddAdjustOrderNum的客户端封装，将使用默认插入逻辑:', e);
+      }
+
+      // 后端接口不存在或调用失败，回退到原有前端新增逻辑
       const responseKeyId = await TabFeature_AddNewRecordWithMaxIdAsync(objTabFeatureEN);
       const returnKeyId: string = responseKeyId;
       if (IsNullOrEmpty(returnKeyId) == false) {

@@ -263,7 +263,7 @@
 
               <li class="nav-item ml-3">
                 <button class="layui-btn" @click="btn_Click('AddSortFunc', '')"
-                  ><i class="layui-icon"></i>添加新排序功能</button
+                  ><i class="layui-icon"></i>添加新排序功能0</button
                 >
               </li>
             </ul>
@@ -391,6 +391,16 @@
             >获取默认命名属性</button
           >
         </li>
+        <!-- 右端：添加新排序功能 -->
+        <li class="nav-item" style="float: right">
+          <button
+            id="btnAddSortFunc"
+            name="btnAddSortFunc"
+            class="btn btn-outline-info btn-sm text-nowrap"
+            @click="btn_Click('AddSortFunc', '')"
+            ><i class="layui-icon"></i>添加新排序功能1</button
+          >
+        </li>
       </ul>
     </div>
     <!--  列表层  -->
@@ -408,6 +418,7 @@
     <div id="divEdit" value="1"></div>
     <ComboBox_EdtCom ref="refComboBox_Edt"></ComboBox_EdtCom>
     <AdjustOrderNum_EdtCom ref="refAdjustOrderNum_Edt"></AdjustOrderNum_EdtCom>
+    <SetFieldValue_EdtCom ref="refSetFieldValue_Edt"></SetFieldValue_EdtCom>
 
     <div id="divEdit_TabFeature" value="1"></div>
 
@@ -427,6 +438,7 @@
 
   import ComboBox_EdtCom from '@/views/Table_Field/ComboBox_Edt.vue';
   import AdjustOrderNum_EdtCom from '@/views/Table_Field/AdjustOrderNum_Edt.vue';
+  import SetFieldValue_EdtCom from '@/views/Table_Field/SetFieldValue_Edt.vue';
 
   import { ComboBox_EdtEx } from '@/views/Table_Field/ComboBox_EdtEx';
   import { TabFeatureCRUD_EditEx_Combo } from '@/views/Table_Field/TabFeatureCRUD_EditEx_Combo';
@@ -449,6 +461,7 @@
   import {
     refAdjustOrderNum_Edt,
     refComboBox_Edt,
+    refSetFieldValue_Edt,
   } from '@/views/Table_Field/TabFeatureEditVueShare';
   // interface CodeTextSetter {
   //   SetCodeText: (strCodeText_Web: string, strCodeText_Ts: string) => void;
@@ -459,6 +472,7 @@
       // 组件注册
       ComboBox_EdtCom,
       AdjustOrderNum_EdtCom,
+      SetFieldValue_EdtCom,
       //   PrjTabRelation_DetailCom,
     },
     setup() {

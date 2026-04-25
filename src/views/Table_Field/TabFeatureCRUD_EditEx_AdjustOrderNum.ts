@@ -310,6 +310,65 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
     // const divUl: HTMLDivElement = <HTMLDivElement>document.getElementById(strDivName);
     divList.innerHTML = '';
 
+    // 在列表顶部显示一个“添加新排序功能”按钮，行为与页面右侧的全局按钮一致
+    let divTopLeft: HTMLDivElement | null = null;
+    try {
+      // 顶部容器：左/右两列，保证左右内容顶部对齐
+      const divTopContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+      divTopContainer.className = 'd-flex justify-content-between mb-2';
+      divTopContainer.style.alignItems = 'flex-start';
+
+      const divTopLeftInner: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+      divTopLeftInner.className = 'top-left';
+      // 左侧占70%
+      divTopLeftInner.style.flex = '0 0 70%';
+      divTopLeftInner.style.maxWidth = '70%';
+
+      const divTopRight: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+      divTopRight.className = 'top-right';
+      // 右侧占30%，内容左对齐
+      divTopRight.style.flex = '0 0 30%';
+      divTopRight.style.maxWidth = '30%';
+      divTopRight.style.textAlign = 'left';
+
+      const ulTop: HTMLUListElement = <HTMLUListElement>document.createElement('ul');
+      ulTop.className = 'nav';
+      ulTop.style.display = 'flex';
+      ulTop.style.justifyContent = 'flex-start';
+      const liTop: HTMLLIElement = <HTMLLIElement>document.createElement('li');
+      liTop.className = 'nav-item';
+      const btnAddSort: HTMLButtonElement = <HTMLButtonElement>document.createElement('button');
+      btnAddSort.className = 'layui-btn';
+      btnAddSort.title = '添加新排序功能';
+      btnAddSort.innerHTML = '<i class="layui-icon"></i>添加新排序功能';
+      btnAddSort.onclick = function () {
+        // 直接创建 AdjustOrderNum_EdtEx 实例并调用添加流程，避免循环依赖
+        try {
+          const objPage: TabFeatureCRUD_EditEx_AdjustOrderNum =
+            new TabFeatureCRUD_EditEx_AdjustOrderNum();
+          const objAdjustOrderNum_Edt: AdjustOrderNum_EdtEx = new AdjustOrderNum_EdtEx(
+            'AdjustOrderNum_EdtEx',
+            objPage,
+          );
+          AdjustOrderNum_EdtEx.PrjIdCache = clsPrivateSessionStorage.currSelPrjId;
+          AdjustOrderNum_EdtEx.strTabId4AdjustOrderNum = TabId_Static.value;
+          objAdjustOrderNum_Edt.btnAddNewRecord_OrderFunc_Click();
+        } catch (err) {
+          console.warn('调用添加排序功能失败:', err);
+        }
+      };
+      liTop.appendChild(btnAddSort);
+      ulTop.appendChild(liTop);
+      divTopRight.appendChild(ulTop);
+      divTopContainer.appendChild(divTopLeftInner);
+      divTopContainer.appendChild(divTopRight);
+      divList.appendChild(divTopContainer);
+      // 将左侧容器引用保存以便后续把功能条目放入其中
+      divTopLeft = divTopLeftInner;
+    } catch (e: any) {
+      console.warn('渲染添加新排序功能按钮失败:', e);
+    }
+
     //const ulTreeBind: HTMLUListElement = document.createElement("ul");
     //ulTreeBind.id = "ulTabFeature";
     //ulTreeBind.className = "st_tree"
@@ -324,10 +383,12 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
 
         //建立图For一个字段的一个版本，即一个结点
         const divField = await this.GetDiv_TabFeature(objTabFeature);
-        divList.appendChild(divField);
+        // 如果顶部左侧容器存在，则把内容放入左侧，否则放到根列表
+        const targetContainer: HTMLDivElement = divTopLeft ?? divList;
+        targetContainer.appendChild(divField);
 
         const objHr: HTMLHRElement = document.createElement('hr');
-        divList.appendChild(objHr);
+        targetContainer.appendChild(objHr);
       } catch (e: any) {
         console.error(e);
         alert(e);
@@ -346,7 +407,7 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
   public GetDiv_TabFeatureLeft(objTabFeature: clsvTabFeature_SimENEx): HTMLDivElement {
     const divLeft: HTMLDivElement = <HTMLDivElement>document.createElement('div');
     divLeft.innerHTML = '';
-    divLeft.className = 'col-5';
+    divLeft.className = 'col-7';
     divLeft.id = Format('left_{0}', objTabFeature.tabFeatureId);
     return divLeft;
   }

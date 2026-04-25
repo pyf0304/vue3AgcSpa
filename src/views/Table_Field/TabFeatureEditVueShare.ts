@@ -36,6 +36,7 @@ const refDivEdit = ref();
 const refDivDetail = ref();
 const refAdjustOrderNum_Edt = ref();
 const refComboBox_Edt = ref();
+const refSetFieldValue_Edt = ref();
 const divVarSet = reactive({
   refDivLayout,
   refDivQuery,
@@ -45,6 +46,7 @@ const divVarSet = reactive({
   refDivDetail,
   refAdjustOrderNum_Edt,
   refComboBox_Edt,
+  refSetFieldValue_Edt,
 });
 export {
   divVarSet,
@@ -56,6 +58,7 @@ export {
   refDivDetail,
   refAdjustOrderNum_Edt,
   refComboBox_Edt,
+  refSetFieldValue_Edt,
 };
 
 export const showErrorMessage = ref(false);

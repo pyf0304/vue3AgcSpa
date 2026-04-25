@@ -230,6 +230,68 @@ export async function TabFeatureEx_GetObjLstByPrjIdCache(strPrjId: string) {
     throw strMsg;
   }
 }
+/**
+ * 后端调用：为表添加“调整记录次序”功能（封装已有的 WebAPI）
+ * 调用示例：GET /api/TabFeatureExApi/AddAdjustOrderNum?strTabId=...&strFeatureId=...&strPrjId=...&strOpUserId=...
+ */
+export async function TabFeatureEx_AddAdjustOrderNum(
+  strTabId: string,
+  strFeatureId: string,
+  strPrjId: string,
+  strOpUserId: string,
+): Promise<boolean> {
+  const strThisFuncName = 'TabFeatureEx_AddAdjustOrderNum';
+  const strAction = 'AddAdjustOrderNum';
+  const strUrl = GetWebApiUrl(tabFeatureEx_Controller, strAction);
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strTabId,
+      strFeatureId,
+      strPrjId,
+      strOpUserId,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnBool;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        tabFeatureEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        tabFeatureEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
 export async function TabFeatureEx_GetSpan4TabFeature(
   objTabFeature: clsvTabFeature_SimEN,
   arrButtonLst: Array<HTMLButtonElement>,
@@ -255,111 +317,65 @@ export async function TabFeatureEx_GetSpan4TabFeature(
     strFuncNameJs = objFuncName.funcNameJs;
   }
 
-  const objSpan: HTMLSpanElement = document.createElement('span');
-  objSpan.setAttribute('class', 'text-primary');
-  let strEx = '';
-  let strExStr = '';
-  let strIsGC = '';
-  const objSpan_Ex: HTMLSpanElement = document.createElement('span');
-  if (objTabFeature.isExtendedClass == true) {
-    strEx = 'Ex';
-    strExStr = '扩展类实现 ';
-
-    objSpan_Ex.setAttribute('class', 'text-muted small ml-1');
-    objSpan_Ex.innerHTML = Format('{0}', strExStr);
-  }
-  const objSpan_IsGC: HTMLSpanElement = document.createElement('span');
-  if (objTabFeature.isNeedGC == true) {
-    strIsGC = '可生成代码 ';
-
-    objSpan_IsGC.setAttribute('class', 'text-muted small ml-1');
-    objSpan_IsGC.innerHTML = Format('{0}', strIsGC);
-  }
-
-  const objSpan_TabFeature: HTMLSpanElement = document.createElement('span');
-  objSpan_TabFeature.setAttribute('class', 'text-primary');
-  objSpan_TabFeature.innerHTML = Format('{0}', objTabFeature.tabFeatureName, strExStr, strIsGC);
-  objSpan_TabFeature.appendChild(objSpan_Ex);
-  objSpan_TabFeature.appendChild(objSpan_IsGC);
-  for (const objButton of arrButtonLst) {
-    objSpan_TabFeature.appendChild(objButton);
-  }
-  const objBr: HTMLBRElement = document.createElement('br');
-  // const objBr1: HTMLBRElement = document.createElement('br');
-  const objBr2: HTMLBRElement = document.createElement('br');
-  const objBr3: HTMLBRElement = document.createElement('br');
-  const objSpan_AspNet_Title: HTMLSpanElement = document.createElement('span');
-  const objSpan_AspNet: HTMLSpanElement = document.createElement('span');
-  if (objTabFeature.isForCSharp == true) {
-    objSpan_AspNet_Title.setAttribute('class', 'text-info');
-    objSpan_AspNet_Title.innerHTML = Format('Cs绑定函数:');
-    objSpan_AspNet.setAttribute('class', 'text-secondary font-weight-bold');
-    objSpan_AspNet.innerHTML = Format('cls{0}BL{2}.{1}', objPrjTab.tabName, strFuncNameCs, strEx);
-  } else {
-    objSpan_AspNet_Title.innerHTML = Format('无Cs绑定函数:');
-  }
-  const objSpan_Js_Title: HTMLSpanElement = document.createElement('span');
-  const objSpan_Js: HTMLSpanElement = document.createElement('span');
-  if (objTabFeature.isForTypeScript == true) {
-    objSpan_Js_Title.setAttribute('class', 'text-info');
-    objSpan_Js_Title.innerHTML = Format('Js绑定函数:');
-
-    objSpan_Js.setAttribute('class', 'text-secondary font-weight-bold');
-    objSpan_Js.innerHTML = Format('{0}{2}_{1}', objPrjTab.tabName, strFuncNameJs, strEx);
-  } else {
-    objSpan_Js_Title.innerHTML = Format('无Js绑定函数:');
-  }
-
-  const objSpan_toolTipText_Title: HTMLSpanElement = document.createElement('span');
-  const objSpan_toolTipText: HTMLSpanElement = document.createElement('span');
-  if (IsNullOrEmpty(objTabFeature.toolTipText) == false) {
-    objSpan_toolTipText_Title.setAttribute('class', 'text-info');
-    objSpan_toolTipText_Title.innerHTML = Format('提示文本:');
-
-    objSpan_toolTipText.setAttribute('class', 'text-secondary font-weight-bold');
-    objSpan_toolTipText.innerHTML = objTabFeature.toolTipText;
-  } else {
-    objSpan_toolTipText_Title.innerHTML = Format('无提示文本:');
-  }
-
-  objSpan.appendChild(objSpan_TabFeature);
-  objSpan.appendChild(objBr);
-  objSpan.appendChild(objSpan_AspNet_Title);
-  //objSpan.appendChild(objBr1);
-  objSpan.appendChild(objSpan_AspNet);
-  objSpan.appendChild(objBr2);
-  objSpan.appendChild(objSpan_Js_Title);
-  //objSpan.appendChild(objBr3);
-  objSpan.appendChild(objSpan_Js);
-
-  objSpan.appendChild(objBr3);
-  objSpan.appendChild(objSpan_toolTipText_Title);
-  //objSpan.appendChild(objBr3);
-  objSpan.appendChild(objSpan_toolTipText);
-
-  if (objTabFeature.isExtendedClass == true) {
-    const objSpan_GetDdlDataFuncName_Title: HTMLSpanElement = document.createElement('span');
-    const objSpan_GetDdlDataFuncName: HTMLSpanElement = document.createElement('span');
-    if (objTabFeature.isForTypeScript == true) {
-      objSpan_GetDdlDataFuncName_Title.setAttribute('class', 'text-info');
-      objSpan_GetDdlDataFuncName_Title.innerHTML = Format('DdlData获取函数:');
-
-      objSpan_GetDdlDataFuncName.setAttribute('class', 'text-secondary font-weight-bold');
-      objSpan_GetDdlDataFuncName.innerHTML = Format(
-        '{0}{2}_{1}',
-        objPrjTab.tabName,
-        objTabFeature.getDdlDataFuncName4Ex,
-        strEx,
+  // Dispatch to per-feature handlers for clarity
+  try {
+    // BindDdl features
+    if (
+      objTabFeature.featureId === enumPrjFeature.BindDdl_0152 ||
+      objTabFeature.featureId === enumPrjFeature.Tab_BindDdl_0173
+    ) {
+      const sp = await TabFeatureEx_GetSpan_ForBindDdl(
+        objTabFeature,
+        arrButtonLst,
+        objPrjTab,
+        strFuncNameCs,
+        strFuncNameJs,
       );
-    } else {
-      objSpan_GetDdlDataFuncName_Title.innerHTML = Format('无DdlData获取函数:');
+      if (sp) return sp;
     }
-    const objBr3: HTMLBRElement = document.createElement('br');
-    objSpan.appendChild(objBr3);
-    objSpan.appendChild(objSpan_GetDdlDataFuncName_Title);
-    objSpan.appendChild(objSpan_GetDdlDataFuncName);
+
+    // AdjustOrderNum
+    if (objTabFeature.featureId === enumPrjFeature.Tab_AdjustOrderNum_0167) {
+      const sp = await TabFeatureEx_GetSpan_AdjustOrderNum(objTabFeature);
+      if (sp) return sp;
+    }
+
+    // SetFieldValue
+    if (objTabFeature.featureId === enumPrjFeature.Tab_SetFieldValue_0170) {
+      const sp = await TabFeatureEx_GetSpan_SetFieldValue(
+        objTabFeature,
+        objPrjTab,
+        strFuncNameCs,
+        strFuncNameJs,
+        arrButtonLst,
+      );
+      if (sp) return sp;
+    }
+
+    // TransEvent
+    if (objTabFeature.featureId === enumPrjFeature.Tab_TransEvent_0172) {
+      const sp = await TabFeatureEx_GetSpan_TransEvent(
+        objTabFeature,
+        objPrjTab,
+        strFuncNameCs,
+        strFuncNameJs,
+        arrButtonLst,
+      );
+      if (sp) return sp;
+    }
+  } catch (e: any) {
+    console.warn('特定功能子渲染失败，回退到通用渲染:', e);
   }
-  return objSpan;
+
+  // 回退：只显示功能名和按钮，避免以前过度冗长的内容在非 BindDdl 场景重复出现
+  const fallbackSpan: HTMLSpanElement = document.createElement('span');
+  fallbackSpan.setAttribute('class', 'text-primary');
+  const spanTitle: HTMLSpanElement = document.createElement('span');
+  spanTitle.setAttribute('class', 'text-primary');
+  spanTitle.innerHTML = Format('{0}', objTabFeature.tabFeatureName);
+  fallbackSpan.appendChild(spanTitle);
+  for (const b of arrButtonLst) fallbackSpan.appendChild(b);
+  return fallbackSpan;
 }
 
 export async function TabFeatureEx_GetLi_TabName4TabFeature(
@@ -396,6 +412,238 @@ export async function TabFeatureEx_GetLi_TabName4TabFeature(
 
   objLi.appendChild(objSpan_TabName);
   return objLi;
+}
+/**
+ * Render helper: BindDdl feature
+ */
+export async function TabFeatureEx_GetSpan_ForBindDdl(
+  objTabFeature: clsvTabFeature_SimEN,
+  arrButtonLst: Array<HTMLButtonElement>,
+  objPrjTab: clsvPrjTab_SimEN,
+  strFuncNameCs: string,
+  strFuncNameJs: string,
+): Promise<HTMLSpanElement | null> {
+  // Use the full common rendering for BindDdl features (moved here)
+  try {
+    const objSpan: HTMLSpanElement = document.createElement('span');
+    objSpan.setAttribute('class', 'text-primary');
+    let strEx = '';
+    let strExStr = '';
+    let strIsGC = '';
+    const objSpan_Ex: HTMLSpanElement = document.createElement('span');
+    if (objTabFeature.isExtendedClass == true) {
+      strEx = 'Ex';
+      strExStr = '扩展类实现 ';
+
+      objSpan_Ex.setAttribute('class', 'text-muted small ml-1');
+      objSpan_Ex.innerHTML = Format('{0}', strExStr);
+    }
+    const objSpan_IsGC: HTMLSpanElement = document.createElement('span');
+    if (objTabFeature.isNeedGC == true) {
+      strIsGC = '可生成代码 ';
+
+      objSpan_IsGC.setAttribute('class', 'text-muted small ml-1');
+      objSpan_IsGC.innerHTML = Format('{0}', strIsGC);
+    }
+
+    const objSpan_TabFeature: HTMLSpanElement = document.createElement('span');
+    objSpan_TabFeature.setAttribute('class', 'text-primary');
+    objSpan_TabFeature.innerHTML = Format('{0}', objTabFeature.tabFeatureName, strExStr, strIsGC);
+    objSpan_TabFeature.appendChild(objSpan_Ex);
+    objSpan_TabFeature.appendChild(objSpan_IsGC);
+    for (const objButton of arrButtonLst) {
+      objSpan_TabFeature.appendChild(objButton);
+    }
+    const objBr: HTMLBRElement = document.createElement('br');
+    const objBr2: HTMLBRElement = document.createElement('br');
+    const objBr3: HTMLBRElement = document.createElement('br');
+    const objSpan_AspNet_Title: HTMLSpanElement = document.createElement('span');
+    const objSpan_AspNet: HTMLSpanElement = document.createElement('span');
+    if (objTabFeature.isForCSharp == true) {
+      objSpan_AspNet_Title.setAttribute('class', 'text-info');
+      objSpan_AspNet_Title.innerHTML = Format('Cs绑定函数:');
+      objSpan_AspNet.setAttribute('class', 'text-secondary font-weight-bold');
+      objSpan_AspNet.innerHTML = Format('cls{0}BL{2}.{1}', objPrjTab.tabName, strFuncNameCs, strEx);
+    } else {
+      objSpan_AspNet_Title.innerHTML = Format('无Cs绑定函数:');
+    }
+    const objSpan_Js_Title: HTMLSpanElement = document.createElement('span');
+    const objSpan_Js: HTMLSpanElement = document.createElement('span');
+    if (objTabFeature.isForTypeScript == true) {
+      objSpan_Js_Title.setAttribute('class', 'text-info');
+      objSpan_Js_Title.innerHTML = Format('Js绑定函数:');
+
+      objSpan_Js.setAttribute('class', 'text-secondary font-weight-bold');
+      objSpan_Js.innerHTML = Format('{0}{2}_{1}', objPrjTab.tabName, strFuncNameJs, strEx);
+    } else {
+      objSpan_Js_Title.innerHTML = Format('无Js绑定函数:');
+    }
+
+    const objSpan_toolTipText_Title: HTMLSpanElement = document.createElement('span');
+    const objSpan_toolTipText: HTMLSpanElement = document.createElement('span');
+    if (IsNullOrEmpty(objTabFeature.toolTipText) == false) {
+      objSpan_toolTipText_Title.setAttribute('class', 'text-info');
+      objSpan_toolTipText_Title.innerHTML = Format('提示文本:');
+
+      objSpan_toolTipText.setAttribute('class', 'text-secondary font-weight-bold');
+      objSpan_toolTipText.innerHTML = objTabFeature.toolTipText;
+    } else {
+      objSpan_toolTipText_Title.innerHTML = Format('无提示文本:');
+    }
+
+    objSpan.appendChild(objSpan_TabFeature);
+    objSpan.appendChild(objBr);
+    objSpan.appendChild(objSpan_AspNet_Title);
+    objSpan.appendChild(objSpan_AspNet);
+    objSpan.appendChild(objBr2);
+    objSpan.appendChild(objSpan_Js_Title);
+    objSpan.appendChild(objSpan_Js);
+    objSpan.appendChild(objBr3);
+    objSpan.appendChild(objSpan_toolTipText_Title);
+    objSpan.appendChild(objSpan_toolTipText);
+
+    // DdlData获取函数 (BindDdl 专用)
+    if (objTabFeature.isExtendedClass == true) {
+      const objSpan_GetDdlDataFuncName_Title: HTMLSpanElement = document.createElement('span');
+      const objSpan_GetDdlDataFuncName: HTMLSpanElement = document.createElement('span');
+      if (objTabFeature.isForTypeScript == true) {
+        objSpan_GetDdlDataFuncName_Title.setAttribute('class', 'text-info');
+        objSpan_GetDdlDataFuncName_Title.innerHTML = Format('DdlData获取函数:');
+
+        objSpan_GetDdlDataFuncName.setAttribute('class', 'text-secondary font-weight-bold');
+        objSpan_GetDdlDataFuncName.innerHTML = Format(
+          '{0}{2}_{1}',
+          objPrjTab.tabName,
+          objTabFeature.getDdlDataFuncName4Ex,
+          strEx,
+        );
+      } else {
+        objSpan_GetDdlDataFuncName_Title.innerHTML = Format('无DdlData获取函数:');
+      }
+      const objBr4: HTMLBRElement = document.createElement('br');
+      objSpan.appendChild(objBr4);
+      objSpan.appendChild(objSpan_GetDdlDataFuncName_Title);
+      objSpan.appendChild(objSpan_GetDdlDataFuncName);
+    }
+    return objSpan;
+  } catch (e: any) {
+    console.warn('BindDdl 渲染失败:', e);
+    return null;
+  }
+}
+
+/**
+ * Render helper: AdjustOrderNum feature minimal view
+ */
+export async function TabFeatureEx_GetSpan_AdjustOrderNum(
+  objTabFeature: clsvTabFeature_SimEN,
+): Promise<HTMLSpanElement | null> {
+  try {
+    const arrFlds = await TabFeatureFldsEx_GetObjLstByTabFeatureId(objTabFeature.tabFeatureId);
+    let orderFldName = '';
+    let classFldName = '';
+    for (const f of arrFlds) {
+      if (f.fieldTypeId === enumFieldType.OrderNumField_09) {
+        const vfield = await vFieldTab_Sim_GetObjByFldIdCache(
+          f.fldId,
+          clsPrivateSessionStorage.currSelPrjId,
+        );
+        orderFldName = vfield ? vfield.fldName : f.fldId || 'OrderNum';
+      }
+      if (f.fieldTypeId === enumFieldType.ClassificationField_10) {
+        const vfield2 = await vFieldTab_Sim_GetObjByFldIdCache(
+          f.fldId,
+          clsPrivateSessionStorage.currSelPrjId,
+        );
+        classFldName = vfield2 ? vfield2.fldName : f.fldId || '';
+      }
+    }
+    const objSpan_Order: HTMLSpanElement = document.createElement('span');
+    objSpan_Order.setAttribute('class', 'text-info');
+    objSpan_Order.innerHTML = Format('序号字段:{0}', orderFldName || 'OrderNum');
+    const br = document.createElement('br');
+    const objSpan_Class: HTMLSpanElement = document.createElement('span');
+    objSpan_Class.setAttribute('class', 'text-info');
+    objSpan_Class.innerHTML = Format('分类字段:{0}', classFldName || '');
+    const minimalSpan: HTMLSpanElement = document.createElement('span');
+    minimalSpan.appendChild(objSpan_Order);
+    minimalSpan.appendChild(br);
+    minimalSpan.appendChild(objSpan_Class);
+    return minimalSpan;
+  } catch (e: any) {
+    console.warn('AdjustOrderNum 渲染失败:', e);
+    return null;
+  }
+}
+
+/**
+ * Render helper: SetFieldValue feature
+ */
+export async function TabFeatureEx_GetSpan_SetFieldValue(
+  objTabFeature: clsvTabFeature_SimEN,
+  objPrjTab: clsvPrjTab_SimEN,
+  strFuncNameCs: string,
+  strFuncNameJs: string,
+  arrButtonLst: Array<HTMLButtonElement>,
+): Promise<HTMLSpanElement | null> {
+  try {
+    const objSpan: HTMLSpanElement = document.createElement('span');
+    objSpan.setAttribute('class', 'text-primary');
+    const objSpan_TabFeature: HTMLSpanElement = document.createElement('span');
+    objSpan_TabFeature.setAttribute('class', 'text-primary');
+    objSpan_TabFeature.innerHTML = Format('{0}', objTabFeature.tabFeatureName);
+    objSpan.appendChild(objSpan_TabFeature);
+    const objBr: HTMLBRElement = document.createElement('br');
+    objSpan.appendChild(objBr);
+    const objSpan_GetFuncTitle: HTMLSpanElement = document.createElement('span');
+    objSpan_GetFuncTitle.setAttribute('class', 'text-info');
+    objSpan_GetFuncTitle.innerHTML = Format('设置字段函数:');
+    const objSpan_GetFunc: HTMLSpanElement = document.createElement('span');
+    objSpan_GetFunc.setAttribute('class', 'text-secondary font-weight-bold');
+    objSpan_GetFunc.innerHTML = Format('{0}{2}_{1}', objPrjTab.tabName, strFuncNameJs, '');
+    objSpan.appendChild(objSpan_GetFuncTitle);
+    objSpan.appendChild(objSpan_GetFunc);
+    for (const b of arrButtonLst) objSpan.appendChild(b);
+    return objSpan;
+  } catch (e: any) {
+    console.warn('SetFieldValue 渲染失败:', e);
+    return null;
+  }
+}
+
+/**
+ * Render helper: TransEvent feature
+ */
+export async function TabFeatureEx_GetSpan_TransEvent(
+  objTabFeature: clsvTabFeature_SimEN,
+  objPrjTab: clsvPrjTab_SimEN,
+  strFuncNameCs: string,
+  strFuncNameJs: string,
+  arrButtonLst: Array<HTMLButtonElement>,
+): Promise<HTMLSpanElement | null> {
+  try {
+    const objSpan: HTMLSpanElement = document.createElement('span');
+    objSpan.setAttribute('class', 'text-primary');
+    const objSpan_TabFeature: HTMLSpanElement = document.createElement('span');
+    objSpan_TabFeature.setAttribute('class', 'text-primary');
+    objSpan_TabFeature.innerHTML = Format('{0}', objTabFeature.tabFeatureName);
+    objSpan.appendChild(objSpan_TabFeature);
+    const objBr: HTMLBRElement = document.createElement('br');
+    objSpan.appendChild(objBr);
+    const objSpan_FuncTitle: HTMLSpanElement = document.createElement('span');
+    objSpan_FuncTitle.setAttribute('class', 'text-info');
+    objSpan_FuncTitle.innerHTML = Format('事务处理函数:');
+    const objSpan_Func: HTMLSpanElement = document.createElement('span');
+    objSpan_Func.setAttribute('class', 'text-secondary font-weight-bold');
+    objSpan_Func.innerHTML = Format('{0}{2}_{1}', objPrjTab.tabName, strFuncNameJs, '');
+    objSpan.appendChild(objSpan_FuncTitle);
+    objSpan.appendChild(objSpan_Func);
+    for (const b of arrButtonLst) objSpan.appendChild(b);
+    return objSpan;
+  } catch (e: any) {
+    console.warn('TransEvent 渲染失败:', e);
+    return null;
+  }
 }
 export async function TabFeatureEx_GetSpan4FieldBak(
   objTabFeature: clsTabFeatureEN,
