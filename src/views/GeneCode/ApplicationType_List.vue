@@ -190,6 +190,7 @@
       const selectAllRows = () => {
         console.error(selectAllChecked.value);
       };
+
       return {
         btnClickInRow,
         sortColumn,

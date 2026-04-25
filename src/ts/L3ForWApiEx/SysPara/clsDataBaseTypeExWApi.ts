@@ -5,12 +5,9 @@
  * 注意:该类必须与调用界面处于同一个包，否则调用不成功!
  **/
 //import $ from "jquery";
-import { GetSortExpressInfo, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
-import {
-  DataBaseType_GetObjLstByPagerAsync,
-  DataBaseType_SortFunByKey,
-} from '@/ts/L3ForWApi/SysPara/clsDataBaseTypeWApi';
-import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
+import { ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
+import { DataBaseType_SortFunByKey } from '@/ts/L3ForWApi/SysPara/clsDataBaseTypeWApi';
+// import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 
 import { clsDataBaseTypeEN } from '@/ts/L0Entity/SysPara/clsDataBaseTypeEN';
 import { clsDataBaseTypeENEx } from '@/ts/L0Entity/SysPara/clsDataBaseTypeENEx';
@@ -75,57 +72,6 @@ export function DataBaseTypeEx_CopyToEx(
 }
 
 /**
- * 根据分页条件从缓存中获取分页对象列表，只获取一页.
- * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_GetObjExLstByPagerAsync)
- * @param objPagerPara:分页参数结构
- * @returns 对象列表
- */
-export async function DataBaseTypeEx_GetObjExLstByPagerAsync(
-  objPagerPara: stuPagerPara,
-): Promise<Array<clsDataBaseTypeENEx>> {
-  const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrDataBaseTypeExObjLst = await DataBaseType_GetObjLstByPagerAsync(objPagerPara);
-  const objSortInfo = GetSortExpressInfo(objPagerPara);
-  if (
-    IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsDataBaseTypeEN.AttributeName.indexOf(objSortInfo.SortFld) == -1
-  ) {
-    for (const objInFor of arrDataBaseTypeExObjLst) {
-      await DataBaseTypeEx_FuncMapByFldName(objSortInfo.SortFld, objInFor);
-    }
-  }
-  if (arrDataBaseTypeExObjLst.length == 0) return arrDataBaseTypeExObjLst;
-  let arrDataBaseType_Sel: Array<clsDataBaseTypeENEx> = arrDataBaseTypeExObjLst;
-  try {
-    if (objPagerPara.orderBy != null && objPagerPara.orderBy.length > 0) {
-      const sstrSplit: string[] = objPagerPara.orderBy.split(' ');
-      let strSortType = 'asc';
-      const strSortFld = sstrSplit[0];
-      if (sstrSplit.length > 1) strSortType = sstrSplit[1];
-      arrDataBaseType_Sel = arrDataBaseType_Sel.sort(
-        DataBaseTypeEx_SortFunByKey(strSortFld, strSortType),
-      );
-    } else {
-      //如果排序字段名[OrderBy]为空，就调用排序函数
-      arrDataBaseType_Sel = arrDataBaseType_Sel.sort(objPagerPara.sortFun);
-    }
-
-    return arrDataBaseType_Sel;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据条件:[{1}]获取分页对象列表不成功!(In {2}.{3})',
-      e,
-      objPagerPara.whereCond,
-      dataBaseTypeEx_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return new Array<clsDataBaseTypeENEx>();
-}
-
-/**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
  * 日期:2022-04-05
@@ -166,7 +112,7 @@ export function DataBaseTypeEx_FuncMapByFldName(
   console.log(objDataBaseTypeEx);
   let strMsg = '';
   //如果是本表中字段，不需要映射
-  const arrFldName = clsDataBaseTypeEN.AttributeName;
+  const arrFldName = clsDataBaseTypeEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {

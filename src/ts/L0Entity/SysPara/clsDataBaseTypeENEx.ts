@@ -1,15 +1,15 @@
 ﻿/**
  * 类名:clsDataBaseTypeENEx
  * 表名:DataBaseType(00050159)
- * 版本:2023.10.12.1(服务器:WIN-SRV103-116)
- * 日期:2023/10/12 14:40:54
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/19 19:16:12
  * 生成者:pyf
  工程名称:AGC(0005)
- CM工程:AgcSpa前端(变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,9433AGC_CS12
+ CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:系统参数(SysPara)
- * 框架-层名:实体扩展层(TS)(EntityLayerEx)
+ * 框架-层名:实体扩展层(TS)(EntityLayerEx,0191)
  * 编程语言:TypeScript
  **/
 /**
@@ -44,5 +44,16 @@ export class clsDataBaseTypeENEx extends clsDataBaseTypeEN {
         strValue = super.GetFldValue(strFldName);
         return strValue;
     }
+  }
+
+  /**
+   * 判断一个字符串是否是类的属性
+   * @param propName: 属性名
+   * @returns 是否是属性
+   */
+  public static hasProperty(propName: string): boolean {
+    //return propName in new clsDataBaseTypeENEx();
+    const instance = new clsDataBaseTypeENEx();
+    return Object.prototype.hasOwnProperty.call(instance, propName);
   }
 }

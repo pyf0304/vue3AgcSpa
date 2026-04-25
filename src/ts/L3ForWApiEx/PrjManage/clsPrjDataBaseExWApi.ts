@@ -104,7 +104,7 @@ export async function PrjDataBaseEx_GetObjExLstByPagerAsync(
   const objSortInfo = GetSortExpressInfo(objPagerPara);
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsPrjDataBaseEN.AttributeName.indexOf(objSortInfo.SortFld) == -1
+    clsPrjDataBaseEN._AttributeName.indexOf(objSortInfo.SortFld) == -1
   ) {
     for (const objInFor of arrPrjDataBaseExObjLst) {
       await PrjDataBaseEx_FuncMapByFldName(objSortInfo.SortFld, objInFor);
@@ -181,7 +181,7 @@ export function PrjDataBaseEx_FuncMapByFldName(
   console.log(objPrjDataBaseEx);
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsPrjDataBaseEN.AttributeName;
+  const arrFldName = clsPrjDataBaseEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {

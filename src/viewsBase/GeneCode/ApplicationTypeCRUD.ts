@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:ApplicationTypeCRUD(界面:ApplicationTypeCRUD,00050315)
  * 表名:ApplicationType(00050127)
- * 版本:2025.05.12.1(服务器:WIN-SRV103-116)
- * 日期:2025/05/15 01:34:32
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/04/21 16:30:50
  * 生成者:
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  * 模块中文名:生成代码(GeneCode)
  * 框架-层名:Vue_界面后台_TS(TS)(Vue_ViewScriptCS_TS,0254)
@@ -23,17 +23,19 @@ import {
   ApplicationType_DelRecordAsync,
   ApplicationType_ReFreshCache,
   ApplicationType_GetObjByApplicationTypeIdAsync,
+  ApplicationType_FuncMapByFldName,
   ApplicationType_GetRecCountByCondCache,
   ApplicationType_GetObjExLstByPagerCache,
   ApplicationType_GetObjLstByApplicationTypeIdLstAsync,
   ApplicationType_AddNewRecordAsync,
+  ApplicationType_UpdateRecordAsync,
   ApplicationType_DelApplicationTypesAsync,
 } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 import { clsApplicationTypeENEx } from '@/ts/L0Entity/GeneCode/clsApplicationTypeENEx';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
-import { ApplicationTypeEx_FuncMapByFldName } from '@/ts/L3ForWApiEx/GeneCode/clsApplicationTypeExWApi';
 import {
   CombineApplicationTypeConditionObj,
+  ApplicationType_DeleteKeyIdCache,
   divVarSet,
   viewVarSet,
   dataColumn,
@@ -70,10 +72,15 @@ export abstract class ApplicationTypeCRUD implements clsOperateList {
   public objPager: clsPager;
   public static objPageCRUD: ApplicationTypeCRUD;
   public static sortFunStatic: (ascOrDesc: string) => (x: any, y: any) => number;
+  /** 保存用户通过下拉框选择的每页记录数，null 时由子类 getter 提供默认值 */
+  protected _pageSize: number | null = null;
   constructor() {
     this.listPara = new ListPara(divVarSet.refDivLayout, divVarSet.refDivList);
     ApplicationTypeCRUD.objPageCRUD = this;
     this.objPager = new clsPager(this);
+    this.objPager.onPageSizeChange = (ps: number) => {
+      this._pageSize = ps;
+    };
   }
   /**
    * 获取当前组件的divList的层对象
@@ -97,7 +104,7 @@ export abstract class ApplicationTypeCRUD implements clsOperateList {
    * 每页记录数,在扩展类可以修改
    **/
   public get pageSize(): number {
-    return 5;
+    return this._pageSize ?? 10;
   }
   public recCount = 0;
 
@@ -139,6 +146,30 @@ export abstract class ApplicationTypeCRUD implements clsOperateList {
   public async btnQuery_Click() {
     this.SetCurrPageIndex(1);
     await this.BindGv_ApplicationType4Func(divVarSet.refDivList);
+  }
+
+  /** 设置字段值-IsVisible
+   * (AutoGCLib.Vue_ViewScriptCS_TS4TypeScript:Gen_Vue_Ts_btnSetFldValue_Click)
+   **/
+  public async btnSetIsVisible_Click() {
+    const strThisFuncName = this.btnSetIsVisible_Click.name;
+    try {
+      const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+      if (arrKeyIds.length == 0) {
+        alert(`请选择需要设置是否显示的${this.thisTabName}记录!`);
+        return '';
+      }
+      const bolIsVisible: boolean = $('#ddlbIsVisible_SetFldValue').prop('checked');
+      //console.log('bolIsVisible=' + bolIsVisible);
+      //console.log('arrKeyIds=');
+      //console.log(arrKeyIds);
+      await this.SetIsVisible(arrKeyIds, bolIsVisible);
+      await this.BindGv_ApplicationType4Func(divVarSet.refDivList);
+    } catch (e) {
+      const strMsg = `设置记录不成功,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+      console.error(strMsg);
+      alert(strMsg);
+    }
   }
 
   /**
@@ -762,18 +793,25 @@ export abstract class ApplicationTypeCRUD implements clsOperateList {
         },
       },
     ];
-    try {
-      await this.ExtendFldFuncMap(arrApplicationTypeExObjLst, arrDataColumn);
-    } catch (e) {
-      const strMsg = `扩展字段值的映射出错,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
-      console.error(strMsg);
-      alert(strMsg);
-      return;
-    }
     if (refApplicationType_List.value != null) {
-      dataColumn.value = arrDataColumn;
+      try {
+        await this.ExtendTdFldFuncMap(arrApplicationTypeExObjLst);
+      } catch (e) {
+        const strMsg = `扩展Td字段值的映射出错,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
       await BindTabByList(arrApplicationTypeExObjLst, this.dispAllErrMsg_q);
     } else {
+      try {
+        await this.ExtendFldFuncMap(arrApplicationTypeExObjLst, arrDataColumn);
+      } catch (e) {
+        const strMsg = `扩展字段值的映射出错,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
       const divDataLst = GetDivObjInDivObj(divContainer, 'divDataLst');
       if (divDataLst == null) {
         alert('在BindTab_ApplicationType4Func函数中，divDataLst不存在!');
@@ -803,12 +841,12 @@ export abstract class ApplicationTypeCRUD implements clsOperateList {
     arrApplicationTypeExObjLst: Array<clsApplicationTypeENEx>,
     arrDataColumn: Array<clsDataColumn>,
   ) {
-    const arrFldName = clsApplicationTypeEN.AttributeName;
+    const arrFldName = clsApplicationTypeEN._AttributeName;
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;
       for (const objInFor of arrApplicationTypeExObjLst) {
-        await ApplicationTypeEx_FuncMapByFldName(objDataColumn.fldName, objInFor);
+        await ApplicationType_FuncMapByFldName(objDataColumn.fldName, objInFor);
       }
     }
   }
@@ -984,6 +1022,23 @@ export abstract class ApplicationTypeCRUD implements clsOperateList {
     await this.BindGv_ApplicationType4Func(this.listPara.listDiv);
   }
 
+  /** 扩展Td字段值的函数映射
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_ExtendTdFldFuncMap)
+   * @param arrApplicationTypeExObjLst:需要映射的对象列表
+   * @param arrDataColumn:用于绑定表的数据列信息
+   **/
+  public async ExtendTdFldFuncMap(arrApplicationTypeExObjLst: Array<clsApplicationTypeENEx>) {
+    const arrFldName = clsApplicationTypeEN._AttributeName;
+    const tdFieldNames = refApplicationType_List.value?.tdFieldNames;
+    for (const strFldName of tdFieldNames) {
+      if (IsNullOrEmpty(strFldName) == true) continue;
+      if (arrFldName.indexOf(strFldName) > -1) continue;
+      for (const objInFor of arrApplicationTypeExObjLst) {
+        await ApplicationType_FuncMapByFldName(strFldName, objInFor);
+      }
+    }
+  }
+
   /** 复制记录
    * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_CopyRecord)
    **/
@@ -1014,6 +1069,60 @@ export abstract class ApplicationTypeCRUD implements clsOperateList {
       //console.log('完成!');
     } catch (e) {
       const strMsg = `复制记录不成功,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+      console.error('Error: ', strMsg);
+      //console.trace();
+      alert(strMsg);
+    }
+  }
+
+  /** 设置字段值-IsVisible
+   * (AutoGCLib.Vue_ViewScriptCS_TS4TypeScript:Gen_Vue_Ts_SetFieldValue)
+   **/
+  public async SetIsVisible(arrApplicationTypeId: Array<string>, bolIsVisible: boolean) {
+    const strThisFuncName = this.SetIsVisible.name;
+    if (arrApplicationTypeId.length == 0) {
+      const strMsg = '没有选择记录,不能设置字段值!';
+      console.error('Error: ', strMsg);
+      //console.trace();
+      alert(strMsg);
+      return '';
+    }
+    try {
+      const arrApplicationTypeObjLst = await ApplicationType_GetObjLstByApplicationTypeIdLstAsync(
+        arrApplicationTypeId,
+      );
+      let intCount = 0;
+      for (const objInFor of arrApplicationTypeObjLst) {
+        const objApplicationTypeEN = new clsApplicationTypeEN();
+        ObjectAssign(objApplicationTypeEN, objInFor);
+        objApplicationTypeEN.SetApplicationTypeId(objInFor.applicationTypeId);
+        objApplicationTypeEN.SetIsVisible(bolIsVisible);
+        let returnBool = false;
+        try {
+          objApplicationTypeEN.sfUpdFldSetStr = objApplicationTypeEN.updFldString; //设置哪些字段被修改(脏字段)
+          returnBool = await ApplicationType_UpdateRecordAsync(objApplicationTypeEN);
+        } catch (e) {
+          const strMsg = `设置记录不成功,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+          console.error(strMsg);
+          throw strMsg;
+        }
+        if (returnBool == true) {
+          ApplicationType_DeleteKeyIdCache(objInFor.applicationTypeId);
+          intCount++;
+        } else {
+          const strInfo = Format('设置记录不成功!');
+          //显示信息框
+          alert(strInfo);
+        }
+      }
+      const strInfo = Format('共设置了{0}条记录!', intCount);
+      alert(strInfo);
+      //console.log('完成!');
+      if (intCount > 0) {
+        ApplicationType_ReFreshCache();
+      }
+    } catch (e) {
+      const strMsg = `设置记录不成功,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
       console.error('Error: ', strMsg);
       //console.trace();
       alert(strMsg);

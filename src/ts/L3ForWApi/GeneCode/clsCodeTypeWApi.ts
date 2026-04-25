@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsCodeTypeWApi
  * 表名:CodeType(00050203)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:51:39
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/22 07:04:04
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:生成代码(GeneCode)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * 代码类型(CodeType)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年06月14日.
+ * Created by pyf on 2026年04月22日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -38,6 +38,7 @@ import { clsCodeTypeENEx } from '@/ts/L0Entity/GeneCode/clsCodeTypeENEx';
 import { clsCodeTypeEN } from '@/ts/L0Entity/GeneCode/clsCodeTypeEN';
 import { SQLDSType_func } from '@/ts/L3ForWApi/PrjInterface/clsSQLDSTypeWApi';
 import { clsSQLDSTypeEN } from '@/ts/L0Entity/PrjInterface/clsSQLDSTypeEN';
+import { clsOrderByData } from '@/ts/PubFun/clsOrderByData';
 import { AddRecordResult } from '@/ts/PubFun/AddRecordResult';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
@@ -135,7 +136,7 @@ export async function CodeType_GetObjByCodeTypeIdAsync(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-22
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -147,7 +148,7 @@ export function CodeType_SortFunDefa(a: clsCodeTypeEN, b: clsCodeTypeEN): number
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-22
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -161,7 +162,7 @@ export function CodeType_SortFunDefa2Fld(a: clsCodeTypeEN, b: clsCodeTypeEN): nu
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-22
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -581,7 +582,7 @@ export function CodeType_SortFunByKey(strKey: string, AscOrDesc: string) {
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-22
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -1505,7 +1506,7 @@ export function CodeType_CopyToEx(objCodeTypeENS: clsCodeTypeEN): clsCodeTypeENE
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-22
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -1516,7 +1517,7 @@ export function CodeType_FuncMapByFldName(strFldName: string, objCodeTypeEx: cls
   strFldName = strFldName.replace('|Ex', '');
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsCodeTypeEN.AttributeName;
+  const arrFldName = clsCodeTypeEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -1535,7 +1536,7 @@ export function CodeType_FuncMapByFldName(strFldName: string, objCodeTypeEx: cls
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-22
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -1796,6 +1797,191 @@ export async function CodeType_AddNewRecordWithMaxIdAsync(
   }
 }
 
+/**
+ * 把所给的关键字列表相关的记录移顶
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GoTopAsync)
+ * @param objCodeTypeEN:需要添加的对象
+ * @returns 获取相应的记录的对象
+ **/
+export async function CodeType_GoTopAsync(objOrderByData: clsOrderByData): Promise<boolean> {
+  const strThisFuncName = 'GoTopAsync';
+  let strMsg = '';
+  const strAction = 'GoTop';
+  if (objOrderByData.KeyIdLst.length == 0) {
+    strMsg = '根据关键字列表置顶时,给定的关键字值列表不能为空!';
+    throw strMsg;
+  }
+  const strUrl = GetWebApiUrl(codeType_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  //console.error('token:', token);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+  try {
+    const response = await axios.post(strUrl, objOrderByData, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnBool;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
+        strUrl,
+        codeType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
+        strUrl,
+        codeType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 把所给的关键字列表相关的记录上移
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_UpMoveAsync)
+ * @param objCodeTypeEN:需要添加的对象
+ * @returns 获取相应的记录的对象
+ **/
+export async function CodeType_UpMoveAsync(objOrderByData: clsOrderByData): Promise<boolean> {
+  const strThisFuncName = 'UpMoveAsync';
+  let strMsg = '';
+  const strAction = 'UpMove';
+  if (objOrderByData.KeyIdLst.length == 0) {
+    strMsg = '根据关键字列表上移时,给定的关键字值列表不能为空!';
+    throw strMsg;
+  }
+  //var strJSON = JSON.stringify(objCodeTypeEN);
+  const strUrl = GetWebApiUrl(codeType_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  //console.error('token:', token);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+  try {
+    const response = await axios.post(strUrl, objOrderByData, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnBool;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
+        strUrl,
+        codeType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
+        strUrl,
+        codeType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 把所给的关键字列表相关的记录下移
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_DownMoveAsync)
+ * @param objCodeTypeEN:需要添加的对象
+ * @returns 获取相应的记录的对象
+ **/
+export async function CodeType_DownMoveAsync(objOrderByData: clsOrderByData): Promise<boolean> {
+  const strThisFuncName = 'DownMoveAsync';
+  let strMsg = '';
+  const strAction = 'DownMove';
+  if (objOrderByData.KeyIdLst.length == 0) {
+    strMsg = '根据关键字列表下移时,给定的关键字值列表不能为空!';
+    throw strMsg;
+  }
+  //var strJSON = JSON.stringify(objCodeTypeEN);
+  const strUrl = GetWebApiUrl(codeType_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  //console.error('token:', token);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+  try {
+    const response = await axios.post(strUrl, objOrderByData, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnBool;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
+        strUrl,
+        codeType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
+        strUrl,
+        codeType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
 /** 添加新记录,保存函数
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_AddNewObjSave)
  **/
@@ -1905,6 +2091,125 @@ export async function CodeType_UpdateObjSave(objCodeTypeEN: clsCodeTypeEN): Prom
     const strMsg = `修改记录不成功,${e}.(in ${codeType_ConstructorName}.${strThisFuncName})`;
     console.error(strMsg);
     throw strMsg;
+  }
+}
+
+/**
+ * 把所给的关键字列表相关的记录移底
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GoBottomAsync)
+ * @param objCodeTypeEN:需要添加的对象
+ * @returns 获取相应的记录的对象
+ **/
+export async function CodeType_GoBottomAsync(objOrderByData: clsOrderByData): Promise<boolean> {
+  const strThisFuncName = 'GoBottomAsync';
+  let strMsg = '';
+  const strAction = 'GoBottom';
+  if (objOrderByData.KeyIdLst.length == 0) {
+    strMsg = '根据关键字列表置底时,给定的关键字值列表不能为空!';
+    throw strMsg;
+  }
+  //var strJSON = JSON.stringify(objCodeTypeEN);
+  const strUrl = GetWebApiUrl(codeType_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  //console.error('token:', token);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+  try {
+    const response = await axios.post(strUrl, objOrderByData, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnBool;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
+        strUrl,
+        codeType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
+        strUrl,
+        codeType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 把列表记录重序
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_ReOrderAsync)
+ * @param objCodeTypeEN:需要添加的对象
+ * @returns 获取相应的记录的对象
+ **/
+export async function CodeType_ReOrderAsync(objOrderByData: clsOrderByData): Promise<boolean> {
+  const strThisFuncName = 'ReOrderAsync';
+  const strAction = 'ReOrder';
+  //var strJSON = JSON.stringify(objCodeTypeEN);
+  const strUrl = GetWebApiUrl(codeType_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  //console.error('token:', token);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+  try {
+    const response = await axios.post(strUrl, objOrderByData, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnBool;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
+        strUrl,
+        codeType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
+        strUrl,
+        codeType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
   }
 }
 
@@ -3598,7 +3903,7 @@ export function CodeType_CheckProperty4Update(pobjCodeTypeEN: clsCodeTypeEN) {
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-22
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3619,7 +3924,7 @@ export function CodeType_GetJSONStrByObj(pobjCodeTypeEN: clsCodeTypeEN): string 
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-22
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -3640,7 +3945,7 @@ export function CodeType_GetObjLstByJSONStr(strJSON: string): Array<clsCodeTypeE
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-22
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrCodeTypeObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -3660,7 +3965,7 @@ export function CodeType_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-22
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

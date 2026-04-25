@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsApplicationTypeWApi
  * 表名:ApplicationType(00050127)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:51:45
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/21 16:05:33
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:生成代码(GeneCode)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * 应用程序类型(ApplicationType)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年06月14日.
+ * Created by pyf on 2026年04月21日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -270,7 +270,7 @@ export async function ApplicationType_UpdateObjInLstCache(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-21
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -285,7 +285,7 @@ export function ApplicationType_SortFunDefa(
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-21
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -303,7 +303,7 @@ export function ApplicationType_SortFunDefa2Fld(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-21
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -507,7 +507,7 @@ export async function ApplicationType_GetNameByApplicationTypeIdCache(
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-21
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -579,7 +579,7 @@ export async function ApplicationType_FilterFunByKey(strKey: string, value: any)
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-21
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -598,11 +598,11 @@ export async function ApplicationType_func(
     console.error(strMsg);
     throw new Error(strMsg);
   }
-  if (clsApplicationTypeEN.AttributeName.indexOf(strOutFldName) == -1) {
+  if (clsApplicationTypeEN._AttributeName.indexOf(strOutFldName) == -1) {
     const strMsg = Format(
       '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
       strOutFldName,
-      clsApplicationTypeEN.AttributeName.join(','),
+      clsApplicationTypeEN._AttributeName.join(','),
     );
     console.error(strMsg);
     throw new Error(strMsg);
@@ -622,7 +622,7 @@ export async function ApplicationType_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-21
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -977,11 +977,11 @@ export async function ApplicationType_GetObjLstClientCache() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsApplicationTypeEN._CurrTabName;
-  if (IsNullOrEmpty(clsApplicationTypeEN.WhereFormat) == false) {
-    strWhereCond = clsApplicationTypeEN.WhereFormat;
+  if (IsNullOrEmpty(clsApplicationTypeEN._WhereFormat) == false) {
+    strWhereCond = clsApplicationTypeEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsApplicationTypeEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsApplicationTypeEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsApplicationTypeEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsApplicationTypeEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1027,11 +1027,11 @@ export async function ApplicationType_GetObjLstlocalStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsApplicationTypeEN._CurrTabName;
-  if (IsNullOrEmpty(clsApplicationTypeEN.WhereFormat) == false) {
-    strWhereCond = clsApplicationTypeEN.WhereFormat;
+  if (IsNullOrEmpty(clsApplicationTypeEN._WhereFormat) == false) {
+    strWhereCond = clsApplicationTypeEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsApplicationTypeEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsApplicationTypeEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsApplicationTypeEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsApplicationTypeEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1171,11 +1171,11 @@ export async function ApplicationType_GetObjLstsessionStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsApplicationTypeEN._CurrTabName;
-  if (IsNullOrEmpty(clsApplicationTypeEN.WhereFormat) == false) {
-    strWhereCond = clsApplicationTypeEN.WhereFormat;
+  if (IsNullOrEmpty(clsApplicationTypeEN._WhereFormat) == false) {
+    strWhereCond = clsApplicationTypeEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsApplicationTypeEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsApplicationTypeEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsApplicationTypeEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsApplicationTypeEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1241,7 +1241,7 @@ export async function ApplicationType_GetObjLstCache(): Promise<Array<clsApplica
   //const strThisFuncName = "GetObjLst_Cache";
 
   let arrApplicationTypeObjLstCache;
-  switch (clsApplicationTypeEN.CacheModeId) {
+  switch (clsApplicationTypeEN._CacheModeId) {
     case '04': //sessionStorage
       arrApplicationTypeObjLstCache = await ApplicationType_GetObjLstsessionStorage();
       break;
@@ -1266,7 +1266,7 @@ export async function ApplicationType_GetObjLstCache(): Promise<Array<clsApplica
 export async function ApplicationType_GetObjLstPureCache() {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrApplicationTypeObjLstCache;
-  switch (clsApplicationTypeEN.CacheModeId) {
+  switch (clsApplicationTypeEN._CacheModeId) {
     case '04': //sessionStorage
       arrApplicationTypeObjLstCache = await ApplicationType_GetObjLstsessionStoragePureCache();
       break;
@@ -1985,7 +1985,7 @@ export async function ApplicationType_GetObjExLstByPagerCache(
   const bolIsFuncMap = isFuncMapCache[isFuncMapKey];
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsApplicationTypeEN.AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
+    clsApplicationTypeEN._AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
     (bolIsFuncMap == false || bolIsFuncMap == undefined)
   ) {
     for (const newObj of arrApplicationTypeExObjLst) {
@@ -2143,7 +2143,7 @@ export function ApplicationType_CopyToEx(
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-21
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -2157,7 +2157,7 @@ export function ApplicationType_FuncMapByFldName(
   strFldName = strFldName.replace('|Ex', '');
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsApplicationTypeEN.AttributeName;
+  const arrFldName = clsApplicationTypeEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -2176,7 +2176,7 @@ export function ApplicationType_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-21
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -3269,7 +3269,7 @@ export function ApplicationType_ReFreshCache(): void {
   console.trace(strMsg);
   // 静态的对象列表,用于清空相关缓存,针对记录较少,作为参数表可以使用
   const strKey = clsApplicationTypeEN._CurrTabName;
-  switch (clsApplicationTypeEN.CacheModeId) {
+  switch (clsApplicationTypeEN._CacheModeId) {
     case '04': //sessionStorage
       sessionStorage.removeItem(strKey);
       break;
@@ -3293,7 +3293,7 @@ export function ApplicationType_ReFreshCache(): void {
 export function ApplicationType_ReFreshThisCache(): void {
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = clsApplicationTypeEN._CurrTabName;
-    switch (clsApplicationTypeEN.CacheModeId) {
+    switch (clsApplicationTypeEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -3812,7 +3812,7 @@ export function ApplicationType_CheckProperty4Update(pobjApplicationTypeEN: clsA
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-21
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3835,7 +3835,7 @@ export function ApplicationType_GetJSONStrByObj(
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-21
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -3856,7 +3856,7 @@ export function ApplicationType_GetObjLstByJSONStr(strJSON: string): Array<clsAp
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-21
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrApplicationTypeObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -3876,7 +3876,7 @@ export function ApplicationType_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-21
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

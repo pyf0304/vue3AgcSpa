@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsApplicationTypeEN
  * 表名:ApplicationType(00050127)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:51:45
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/21 16:05:30
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:生成代码(GeneCode)
  * 框架-层名:实体层(TS)(EntityLayer,0121)
@@ -20,15 +20,15 @@ import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
 export class clsApplicationTypeEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
-  public static CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
-  public static CacheModeId = '03'; //localStorage
-  public static PrimaryTypeId = '02'; //identity
-  public static IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
-  public static WhereFormat = ''; //条件格式串
-  public static _CurrTabName = 'ApplicationType'; //当前表名,与该类相关的表名
-  public static _KeyFldName = 'ApplicationTypeId'; //当前表中的关键字名称,与该类相关的表中关键字名
-  public static mintAttributeCount = 13;
-  public static AttributeName = [
+  public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
+  public static readonly _CacheModeId: string = '03'; //localStorage
+  public static readonly _PrimaryTypeId: string = '02'; //identity
+  public static readonly _IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
+  public static readonly _WhereFormat = ''; //条件格式串
+  public static readonly _CurrTabName: string = 'ApplicationType'; //当前表名,与该类相关的表名
+  public static readonly _KeyFldName: string = 'ApplicationTypeId'; //当前表中的关键字名称,与该类相关的表中关键字名
+  public static readonly _AttributeCount = 13;
+  public static readonly _AttributeName = [
     'applicationTypeId',
     'applicationTypeName',
     'applicationTypeSimName',
@@ -371,105 +371,79 @@ export class clsApplicationTypeEN extends clsGeneralTab {
    * 常量:"ApplicationTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ApplicationTypeId(): string {
-    return 'applicationTypeId';
-  } //应用程序类型ID
+  public static readonly con_ApplicationTypeId = 'applicationTypeId'; //应用程序类型ID
 
   /**
    * 常量:"ApplicationTypeName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ApplicationTypeName(): string {
-    return 'applicationTypeName';
-  } //应用程序类型名称
+  public static readonly con_ApplicationTypeName = 'applicationTypeName'; //应用程序类型名称
 
   /**
    * 常量:"ApplicationTypeSimName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ApplicationTypeSimName(): string {
-    return 'applicationTypeSimName';
-  } //应用程序类型简称
+  public static readonly con_ApplicationTypeSimName = 'applicationTypeSimName'; //应用程序类型简称
 
   /**
    * 常量:"ApplicationTypeENName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ApplicationTypeENName(): string {
-    return 'applicationTypeENName';
-  } //应用类型英文名
+  public static readonly con_ApplicationTypeENName = 'applicationTypeENName'; //应用类型英文名
 
   /**
    * 常量:"ProgLangTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ProgLangTypeId(): string {
-    return 'progLangTypeId';
-  } //编程语言类型Id
+  public static readonly con_ProgLangTypeId = 'progLangTypeId'; //编程语言类型Id
 
   /**
    * 常量:"ProgLangTypeId2"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ProgLangTypeId2(): string {
-    return 'progLangTypeId2';
-  } //编程语言类型Id2
+  public static readonly con_ProgLangTypeId2 = 'progLangTypeId2'; //编程语言类型Id2
 
   /**
    * 常量:"ProgLangTypeId3"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ProgLangTypeId3(): string {
-    return 'progLangTypeId3';
-  } //编程语言类型Id3
+  public static readonly con_ProgLangTypeId3 = 'progLangTypeId3'; //编程语言类型Id3
 
   /**
    * 常量:"ProgLangTypeId4"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ProgLangTypeId4(): string {
-    return 'progLangTypeId4';
-  } //编程语言类型Id4
+  public static readonly con_ProgLangTypeId4 = 'progLangTypeId4'; //编程语言类型Id4
 
   /**
    * 常量:"ProgLangTypeId5"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ProgLangTypeId5(): string {
-    return 'progLangTypeId5';
-  } //编程语言类型Id5
+  public static readonly con_ProgLangTypeId5 = 'progLangTypeId5'; //编程语言类型Id5
 
   /**
    * 常量:"IsVisible"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsVisible(): string {
-    return 'isVisible';
-  } //是否显示
+  public static readonly con_IsVisible = 'isVisible'; //是否显示
 
   /**
    * 常量:"VisitedNum"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_VisitedNum(): string {
-    return 'visitedNum';
-  } //访问数
+  public static readonly con_VisitedNum = 'visitedNum'; //访问数
 
   /**
    * 常量:"OrderNum"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_OrderNum(): string {
-    return 'orderNum';
-  } //序号
+  public static readonly con_OrderNum = 'orderNum'; //序号
 
   /**
    * 常量:"Memo"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Memo(): string {
-    return 'memo';
-  } //说明
+  public static readonly con_Memo = 'memo'; //说明
 
   /**
    * 设置条件字段值.
@@ -488,6 +462,7 @@ export class clsApplicationTypeEN extends clsGeneralTab {
     }
     this.sfFldComparisonOp = JSON.stringify(this.dicFldComparisonOp);
   }
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名

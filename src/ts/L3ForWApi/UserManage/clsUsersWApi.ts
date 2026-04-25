@@ -1,16 +1,17 @@
 ﻿/**
  * 类名:clsUsersWApi
  * 表名:Users(00050001)
- * 版本:2023.10.12.1(服务器:WIN-SRV103-116)
- * 日期:2023/10/12 14:42:05
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/19 19:23:46
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
- CM工程:AgcSpa前端(变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,9433AGC_CS12
+ 应用类型:Vue应用InCore-TS(30)
+ CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:用户管理(UserManage)
- * 框架-层名:WA_访问层(TS)(WA_Access)
+ * 框架-层名:WA_访问层(TS)(WA_Access,0155)
  * 编程语言:TypeScript
  * 注意:1、需要数据底层(PubDataBase.dll)的版本:2019.03.07.01
    *      2、需要公共函数层(TzPubFunction.dll)的版本:2017.12.21.01
@@ -19,7 +20,7 @@
 /**
  * 用于用户管理(Users)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2023年10月12日.
+ * Created by pyf on 2026年04月19日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -28,8 +29,9 @@ import { Storage } from '@/utils/Storage';
 import { IsNullOrEmpty, GetStrLen, tzDataType, Format } from '@/ts/PubFun/clsString';
 import { enumComparisonOp } from '@/ts/PubFun/enumComparisonOp';
 import { CacheHelper } from '@/ts/PubFun/CacheHelper';
+import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
+import { AddRecordResult } from '@/ts/PubFun/AddRecordResult';
 import {
-  GetObjKeys,
   BindDdl_ObjLstInDivObj,
   GetExceptionStr,
   myShowErrorMsg,
@@ -39,7 +41,7 @@ import { clsUsersEN } from '@/ts/L0Entity/UserManage/clsUsersEN';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
 import { stuRangePara } from '@/ts/PubFun/stuRangePara';
-import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
+import { clsDateTime } from '@/ts/PubFun/clsDateTime';
 
 export const users_Controller = 'UsersApi';
 export const users_ConstructorName = 'users';
@@ -116,50 +118,6 @@ export async function Users_GetObjByUserIdAsync(strUserId: string): Promise<clsU
 }
 
 /**
- * 根据关键字获取相关对象, 从缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
- * @param strUserId:所给的关键字
- * @returns 对象
- */
-export async function Users_GetObjByUserIdCache(strUserId: string, bolTryAsyncOnce = true) {
-  const strThisFuncName = 'GetObjByUserIdCache';
-
-  if (IsNullOrEmpty(strUserId) == true) {
-    const strMsg = Format('参数:[strUserId]不能为空!(In clsUsersWApi.GetObjByUserIdCache)');
-    console.error(strMsg);
-    throw strMsg;
-  }
-  const arrUsersObjLstCache = await Users_GetObjLstCache();
-  try {
-    const arrUsersSel = arrUsersObjLstCache.filter((x) => x.userId == strUserId);
-    let objUsers: clsUsersEN;
-    if (arrUsersSel.length > 0) {
-      objUsers = arrUsersSel[0];
-      return objUsers;
-    } else {
-      if (bolTryAsyncOnce == true) {
-        const objUsersConst = await Users_GetObjByUserIdAsync(strUserId);
-        if (objUsersConst != null) {
-          Users_ReFreshThisCache();
-          return objUsersConst;
-        }
-      }
-      return null;
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
-      e,
-      strUserId,
-      users_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-  }
-  return null;
-}
-
-/**
  * 根据关键字获取相关对象, 从localStorage缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
  * @param strUserId:所给的关键字
@@ -208,6 +166,50 @@ export async function Users_GetObjByUserIdlocalStorage(strUserId: string) {
 }
 
 /**
+ * 根据关键字获取相关对象, 从缓存中获取.
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
+ * @param strUserId:所给的关键字
+ * @returns 对象
+ */
+export async function Users_GetObjByUserIdCache(strUserId: string, bolTryAsyncOnce = true) {
+  const strThisFuncName = 'GetObjByUserIdCache';
+
+  if (IsNullOrEmpty(strUserId) == true) {
+    const strMsg = Format('参数:[strUserId]不能为空!(In clsUsersWApi.GetObjByUserIdCache)');
+    console.error(strMsg);
+    throw strMsg;
+  }
+  const arrUsersObjLstCache = await Users_GetObjLstCache();
+  try {
+    const arrUsersSel = arrUsersObjLstCache.filter((x) => x.userId == strUserId);
+    let objUsers: clsUsersEN;
+    if (arrUsersSel.length > 0) {
+      objUsers = arrUsersSel[0];
+      return objUsers;
+    } else {
+      if (bolTryAsyncOnce == true) {
+        const objUsersConst = await Users_GetObjByUserIdAsync(strUserId);
+        if (objUsersConst != null) {
+          Users_ReFreshThisCache();
+          return objUsersConst;
+        }
+      }
+      return null;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
+      e,
+      strUserId,
+      users_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+  }
+  return null;
+}
+
+/**
  * 修改在缓存对象列表中的对象, 与后台数据库无关.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_UpdateObjInLstCache)
  * @param objUsers:所给的对象
@@ -237,81 +239,9 @@ export async function Users_UpdateObjInLstCache(objUsers: clsUsersEN) {
 }
 
 /**
- * 根据关键字获取相关对象的名称属性, 从缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
- * @param strUserId:所给的关键字
- * @returns 对象
- */
-export async function Users_GetNameByUserIdCache(strUserId: string) {
-  if (IsNullOrEmpty(strUserId) == true) {
-    const strMsg = Format('参数:[strUserId]不能为空!(In clsUsersWApi.GetNameByUserIdCache)');
-    console.error(strMsg);
-    throw strMsg;
-  }
-  const arrUsersObjLstCache = await Users_GetObjLstCache();
-  if (arrUsersObjLstCache == null) return '';
-  try {
-    const arrUsersSel = arrUsersObjLstCache.filter((x) => x.userId == strUserId);
-    let objUsers: clsUsersEN;
-    if (arrUsersSel.length > 0) {
-      objUsers = arrUsersSel[0];
-      return objUsers.userName;
-    } else {
-      return '';
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象名称属性不成功!',
-      e,
-      strUserId,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-  }
-  return '';
-}
-
-/**
- * 映射函数。根据表映射把输入字段值,映射成输出字段值
- * 作者:pyf
- * 日期:2023-10-12
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
- * @param strInFldName:输入字段名
- * @param strOutFldName:输出字段名
- * @param strInValue:输入字段值
- * @returns 返回一个输出字段值
- */
-export async function Users_func(strInFldName: string, strOutFldName: string, strInValue: string) {
-  //const strThisFuncName = "func";
-
-  if (strInFldName != clsUsersEN.con_UserId) {
-    const strMsg = Format('输入字段名:[{0}]不正确!', strInFldName);
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  if (clsUsersEN.AttributeName.indexOf(strOutFldName) == -1) {
-    const strMsg = Format(
-      '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
-      strOutFldName,
-      clsUsersEN.AttributeName.join(','),
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  const strUserId = strInValue;
-  if (IsNullOrEmpty(strInValue) == true) {
-    return '';
-  }
-  const objUsers = await Users_GetObjByUserIdCache(strUserId);
-  if (objUsers == null) return '';
-  if (objUsers.GetFldValue(strOutFldName) == null) return '';
-  return objUsers.GetFldValue(strOutFldName).toString();
-}
-
-/**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -323,7 +253,7 @@ export function Users_SortFunDefa(a: clsUsersEN, b: clsUsersEN): number {
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -337,7 +267,7 @@ export function Users_SortFunDefa2Fld(a: clsUsersEN, b: clsUsersEN): number {
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -602,9 +532,44 @@ export function Users_SortFunByKey(strKey: string, AscOrDesc: string) {
 }
 
 /**
+ * 根据关键字获取相关对象的名称属性, 从缓存中获取.
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
+ * @param strUserId:所给的关键字
+ * @returns 对象
+ */
+export async function Users_GetNameByUserIdCache(strUserId: string) {
+  if (IsNullOrEmpty(strUserId) == true) {
+    const strMsg = Format('参数:[strUserId]不能为空!(In clsUsersWApi.GetNameByUserIdCache)');
+    console.error(strMsg);
+    throw strMsg;
+  }
+  const arrUsersObjLstCache = await Users_GetObjLstCache();
+  if (arrUsersObjLstCache == null) return '';
+  try {
+    const arrUsersSel = arrUsersObjLstCache.filter((x) => x.userId == strUserId);
+    let objUsers: clsUsersEN;
+    if (arrUsersSel.length > 0) {
+      objUsers = arrUsersSel[0];
+      return objUsers.userName;
+    } else {
+      return '';
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象名称属性不成功!',
+      e,
+      strUserId,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+  return '';
+}
+
+/**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -712,7 +677,44 @@ export async function Users_FilterFunByKey(strKey: string, value: any) {
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
+ * @param strInFldName:输入字段名
+ * @param strOutFldName:输出字段名
+ * @param strInValue:输入字段值
+ * @returns 返回一个输出字段值
+ */
+export async function Users_func(strInFldName: string, strOutFldName: string, strInValue: string) {
+  //const strThisFuncName = "func";
+
+  if (strInFldName != clsUsersEN.con_UserId) {
+    const strMsg = Format('输入字段名:[{0}]不正确!', strInFldName);
+    console.error(strMsg);
+    throw new Error(strMsg);
+  }
+  if (clsUsersEN._AttributeName.indexOf(strOutFldName) == -1) {
+    const strMsg = Format(
+      '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
+      strOutFldName,
+      clsUsersEN._AttributeName.join(','),
+    );
+    console.error(strMsg);
+    throw new Error(strMsg);
+  }
+  const strUserId = strInValue;
+  if (IsNullOrEmpty(strUserId) == true) {
+    return '';
+  }
+  const objUsers = await Users_GetObjByUserIdCache(strUserId);
+  if (objUsers == null) return '';
+  if (objUsers.GetFldValue(strOutFldName) == null) return '';
+  return objUsers.GetFldValue(strOutFldName).toString();
+}
+
+/**
+ * 映射函数。根据表映射把输入字段值,映射成输出字段值
+ * 作者:pyf
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -792,6 +794,70 @@ export async function Users_funcKey(
   }
   if (arrUsersSel.length == 0) return [];
   return arrUsersSel.map((x) => x.userId);
+}
+
+/**
+ * 根据条件获取满足条件的第一条记录
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetFldValueAsync)
+ * @param strWhereCond:条件
+ * @returns 返回的第一条记录的关键字值
+ **/
+export async function Users_GetFldValueAsync(
+  strFldName: string,
+  strWhereCond: string,
+): Promise<Array<string>> {
+  const strThisFuncName = 'GetFldValueAsync';
+  const strAction = 'GetFldValue';
+  const strUrl = GetWebApiUrl(users_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  //console.error('token:', token);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strFldName,
+      strWhereCond,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      const arrId = data.returnStrLst.split(',');
+      return arrId;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
+        strUrl,
+        users_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
+        strUrl,
+        users_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
 }
 
 /**
@@ -987,8 +1053,11 @@ export async function Users_GetObjLstClientCache() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsUsersEN._CurrTabName;
-  if (IsNullOrEmpty(clsUsersEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsUsersEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsUsersEN._WhereFormat) == false) {
+    strWhereCond = clsUsersEN._WhereFormat;
+  }
+  if (IsNullOrEmpty(clsUsersEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsUsersEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1032,8 +1101,11 @@ export async function Users_GetObjLstlocalStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsUsersEN._CurrTabName;
-  if (IsNullOrEmpty(clsUsersEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsUsersEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsUsersEN._WhereFormat) == false) {
+    strWhereCond = clsUsersEN._WhereFormat;
+  }
+  if (IsNullOrEmpty(clsUsersEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsUsersEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1169,8 +1241,11 @@ export async function Users_GetObjLstsessionStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsUsersEN._CurrTabName;
-  if (IsNullOrEmpty(clsUsersEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsUsersEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsUsersEN._WhereFormat) == false) {
+    strWhereCond = clsUsersEN._WhereFormat;
+  }
+  if (IsNullOrEmpty(clsUsersEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsUsersEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1234,7 +1309,7 @@ export async function Users_GetObjLstCache(): Promise<Array<clsUsersEN>> {
   //const strThisFuncName = "GetObjLst_Cache";
 
   let arrUsersObjLstCache;
-  switch (clsUsersEN.CacheModeId) {
+  switch (clsUsersEN._CacheModeId) {
     case '04': //sessionStorage
       arrUsersObjLstCache = await Users_GetObjLstsessionStorage();
       break;
@@ -1259,7 +1334,7 @@ export async function Users_GetObjLstCache(): Promise<Array<clsUsersEN>> {
 export async function Users_GetObjLstPureCache() {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrUsersObjLstCache;
-  switch (clsUsersEN.CacheModeId) {
+  switch (clsUsersEN._CacheModeId) {
     case '04': //sessionStorage
       arrUsersObjLstCache = await Users_GetObjLstsessionStoragePureCache();
       break;
@@ -1282,25 +1357,19 @@ export async function Users_GetObjLstPureCache() {
  * @param objstrUserIdCond:条件对象
  * @returns 对象列表子集
  */
-export async function Users_GetSubObjLstCache(objUsersCond: clsUsersEN) {
+export async function Users_GetSubObjLstCache(objUsersCond: ConditionCollection) {
   const strThisFuncName = 'GetSubObjLstCache';
   const arrUsersObjLstCache = await Users_GetObjLstCache();
   let arrUsersSel = arrUsersObjLstCache;
-  if (objUsersCond.sfFldComparisonOp == null || objUsersCond.sfFldComparisonOp == '')
-    return arrUsersSel;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objUsersCond.sfFldComparisonOp,
-  );
-  //console.log("clsUsersWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
+  if (objUsersCond.GetConditions().length == 0) return arrUsersSel;
   try {
-    const sstrKeys = GetObjKeys(objUsersCond);
     //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
+    for (const objCondition of objUsersCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
       arrUsersSel = arrUsersSel.filter((x) => x.GetFldValue(strKey) != null);
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objUsersCond.GetFldValue(strKey);
       const strType = typeof strValue;
       switch (strType) {
         case 'string':
@@ -1605,198 +1674,8 @@ export async function Users_GetObjLstByRangeAsync(
     }
   }
 }
-
-/**
- * 根据分页条件从缓存中获取分页对象列表,只获取一页.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerCache)
- * @param objPagerPara:分页参数结构
- * @returns 对象列表
- */
-export async function Users_GetObjLstByPagerCache(objPagerPara: stuPagerPara) {
-  const strThisFuncName = 'GetObjLstByPagerCache';
-  if (objPagerPara.pageIndex == 0) return new Array<clsUsersEN>();
-  const arrUsersObjLstCache = await Users_GetObjLstCache();
-  if (arrUsersObjLstCache.length == 0) return arrUsersObjLstCache;
-  let arrUsersSel = arrUsersObjLstCache;
-  const objCond = JSON.parse(objPagerPara.whereCond);
-  const objUsersCond = new clsUsersEN();
-  ObjectAssign(objUsersCond, objCond);
-  let dicFldComparisonOp: { [index: string]: string } = {};
-  if (objCond.sfFldComparisonOp != '') {
-    dicFldComparisonOp = JSON.parse(objCond.sfFldComparisonOp);
-  }
-  //console.log("clsUsersWApi->GetObjLstByPagerCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
-  try {
-    const sstrKeys = GetObjKeys(objCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
-      arrUsersSel = arrUsersSel.filter((x) => x.GetFldValue(strKey) != null);
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objUsersCond.GetFldValue(strKey);
-      const strType = typeof strValue;
-      switch (strType) {
-        case 'string':
-          if (strValue == null) continue;
-          if (strValue == '') continue;
-          if (strComparisonOp == '=') {
-            arrUsersSel = arrUsersSel.filter(
-              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
-            );
-          } else if (strComparisonOp == 'like') {
-            arrUsersSel = arrUsersSel.filter(
-              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
-            );
-          } else if (strComparisonOp == 'length greater') {
-            arrUsersSel = arrUsersSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not greater') {
-            arrUsersSel = arrUsersSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not less') {
-            arrUsersSel = arrUsersSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length less') {
-            arrUsersSel = arrUsersSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length equal') {
-            arrUsersSel = arrUsersSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'in') {
-            const arrValues = strValue.toString().split(',');
-            arrUsersSel = arrUsersSel.filter(
-              (x) => arrValues.indexOf(x.GetFldValue(strKey).toString()) != -1,
-            );
-          }
-          break;
-        case 'boolean':
-          if (strValue == null) continue;
-          if (strComparisonOp == '=') {
-            arrUsersSel = arrUsersSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          }
-          break;
-        case 'number':
-          if (Number(strValue) == 0) continue;
-          if (strComparisonOp == '=') {
-            arrUsersSel = arrUsersSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          } else if (strComparisonOp == '>=') {
-            arrUsersSel = arrUsersSel.filter((x) => x.GetFldValue(strKey) >= strValue);
-          } else if (strComparisonOp == '<=') {
-            arrUsersSel = arrUsersSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          } else if (strComparisonOp == '>') {
-            arrUsersSel = arrUsersSel.filter((x) => x.GetFldValue(strKey) > strValue);
-          } else if (strComparisonOp == '<') {
-            arrUsersSel = arrUsersSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          }
-          break;
-      }
-    }
-    if (arrUsersSel.length == 0) return arrUsersSel;
-    let intStart: number = objPagerPara.pageSize * (objPagerPara.pageIndex - 1);
-    if (intStart <= 0) intStart = 0;
-    const intEnd = intStart + objPagerPara.pageSize;
-    if (objPagerPara.orderBy != null && objPagerPara.orderBy.length > 0) {
-      const sstrSplit: string[] = objPagerPara.orderBy.split(' ');
-      let strSortType = 'asc';
-      const strSortFld = sstrSplit[0];
-      if (sstrSplit.length > 1) strSortType = sstrSplit[1];
-      arrUsersSel = arrUsersSel.sort(Users_SortFunByKey(strSortFld, strSortType));
-    } else {
-      //如果排序字段名[OrderBy]为空,就调用排序函数
-      arrUsersSel = arrUsersSel.sort(objPagerPara.sortFun);
-    }
-    arrUsersSel = arrUsersSel.slice(intStart, intEnd);
-    return arrUsersSel;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据条件:[{1}]获取分页对象列表不成功!(In {2}.{3})',
-      e,
-      objPagerPara.whereCond,
-      users_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return new Array<clsUsersEN>();
-}
-
-/**
- * 根据分页条件获取相应的记录对象列表,只获取一页
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerAsync)
- * @param objPagerPara:分页获取对象列表的参数对象
- * @returns 获取的相应记录对象列表
- **/
-export async function Users_GetObjLstByPagerAsync(
-  objPagerPara: stuPagerPara,
-): Promise<Array<clsUsersEN>> {
-  const strThisFuncName = 'GetObjLstByPagerAsync';
-  if (objPagerPara.pageIndex == 0) return new Array<clsUsersEN>();
-  const strAction = 'GetObjLstByPager';
-  const strUrl = GetWebApiUrl(users_Controller, strAction);
-
-  const token = Storage.get(ACCESS_TOKEN_KEY);
-  //console.error('token:', token);
-  const config = {
-    headers: {
-      Authorization: `${token}`,
-    },
-  };
-  try {
-    const response = await axios.post(strUrl, objPagerPara, config);
-    const data = response.data;
-    if (data.errorId == 0) {
-      const returnObjLst = data.returnObjLst;
-      if (returnObjLst == null) {
-        const strNullInfo = Format(
-          '获取数据为null, 请注意!(in {0}.{1})',
-          users_ConstructorName,
-          strThisFuncName,
-        );
-        console.error(strNullInfo);
-        throw strNullInfo;
-      }
-      //console.log(returnObjLst);
-      const arrObjLst = Users_GetObjLstByJSONObjLst(returnObjLst);
-      return arrObjLst;
-    } else {
-      console.error(data.errorMsg);
-      throw data.errorMsg;
-    }
-  } catch (error: any) {
-    console.error(error);
-    if (error.statusText == undefined) {
-      throw error;
-    }
-    if (error.statusText == 'error') {
-      const strInfo = Format(
-        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
-        strUrl,
-        users_ConstructorName,
-        strThisFuncName,
-      );
-      console.error(strInfo);
-      throw strInfo;
-    } else if (error.statusText == 'Not Found') {
-      const strInfo = Format(
-        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
-        strUrl,
-        users_ConstructorName,
-        strThisFuncName,
-      );
-      console.error(strInfo);
-      throw strInfo;
-    } else {
-      throw error.statusText;
-    }
-  }
-}
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerCache)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerAsync)
 
 /**
  * 调用WebApi来删除记录,根据关键字来删除记录
@@ -1910,6 +1789,11 @@ export async function Users_DelUserssAsync(arrUserId: Array<string>): Promise<nu
     }
   }
 }
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjExLstByPagerCache)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_CopyToEx)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
 
 /**
  * 根据条件删除记录
@@ -2086,6 +1970,75 @@ export async function Users_AddNewRecordWithMaxIdAsync(objUsersEN: clsUsersEN): 
   }
 }
 
+/** 添加新记录,保存函数
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_AddNewObjSave)
+ **/
+export async function Users_AddNewObjSave(objUsersEN: clsUsersEN): Promise<AddRecordResult> {
+  const strThisFuncName = 'AddNewObjSave';
+  try {
+    Users_CheckPropertyNew(objUsersEN);
+  } catch (e) {
+    const strMsg = `检查数据不成功,${e}.(in ${users_ConstructorName}.${strThisFuncName})`;
+    console.error(strMsg);
+    alert(strMsg);
+    return { keyword: '', success: false }; //一定要有一个返回值,否则会出错!
+  }
+  try {
+    //检查唯一性条件
+    let returnBool = false;
+    const bolIsExist = await Users_IsExistAsync(objUsersEN.userId);
+    if (bolIsExist == true) {
+      const strMsg = Format('添加记录时,关键字：{0}已经存在!', objUsersEN.userId);
+      console.error(strMsg);
+      throw strMsg;
+    }
+    returnBool = await Users_AddNewRecordAsync(objUsersEN);
+    if (returnBool == true) {
+      Users_ReFreshCache();
+    } else {
+      const strInfo = `添加[用于用户管理(Users)]记录不成功!`;
+      //显示信息框
+      throw strInfo;
+    }
+    return { keyword: objUsersEN.userId, success: returnBool }; //一定要有一个返回值,否则会出错!
+  } catch (e) {
+    const strMsg = `添加记录不成功,${e}.(in ${users_ConstructorName}.${strThisFuncName})`;
+    console.error(strMsg);
+    throw strMsg;
+  }
+}
+
+/** 修改记录
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_UpdateObjSave)
+ **/
+export async function Users_UpdateObjSave(objUsersEN: clsUsersEN): Promise<boolean> {
+  const strThisFuncName = 'UpdateObjSave';
+  objUsersEN.sfUpdFldSetStr = objUsersEN.updFldString; //设置哪些字段被修改(脏字段)
+  if (objUsersEN.userId == '' || objUsersEN.userId == undefined) {
+    console.error('关键字不能为空!');
+    throw '关键字不能为空!';
+  }
+  try {
+    Users_CheckProperty4Update(objUsersEN);
+  } catch (e) {
+    const strMsg = `检查数据不成功,${e}.(in ${users_ConstructorName}.${strThisFuncName})`;
+    console.error(strMsg);
+    throw strMsg;
+  }
+  try {
+    //检查唯一性条件
+    const returnBool = await Users_UpdateRecordAsync(objUsersEN);
+    if (returnBool == true) {
+      Users_ReFreshCache();
+    }
+    return returnBool;
+  } catch (e) {
+    const strMsg = `修改记录不成功,${e}.(in ${users_ConstructorName}.${strThisFuncName})`;
+    console.error(strMsg);
+    throw strMsg;
+  }
+}
+
 /**
  * 把表对象添加到数据库中,并且返回该记录的关键字(针对Identity关键字和自增关键字)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_AddNewRecordWithReturnKeyAsync)
@@ -2153,6 +2106,70 @@ export async function Users_AddNewRecordWithReturnKeyAsync(
 export async function Users_UpdateRecordAsync(objUsersEN: clsUsersEN): Promise<boolean> {
   const strThisFuncName = 'UpdateRecordAsync';
   const strAction = 'UpdateRecord';
+  if (
+    objUsersEN.sfUpdFldSetStr === undefined ||
+    objUsersEN.sfUpdFldSetStr === null ||
+    objUsersEN.sfUpdFldSetStr === ''
+  ) {
+    const strMsg = Format('对象(关键字: {0})的【修改字段集】为空,不能修改!', objUsersEN.userId);
+    throw strMsg;
+  }
+  const strUrl = GetWebApiUrl(users_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  //console.error('token:', token);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+  try {
+    const response = await axios.post(strUrl, objUsersEN, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnBool;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
+        strUrl,
+        users_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
+        strUrl,
+        users_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 调用WebApi来编辑记录（存在就修改，不存在就添加）,数据传递使用JSON串
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_EditRecordExAsync)
+ * @param objUsersEN:需要添加的对象
+ * @returns 获取修改是否成功？
+ **/
+export async function Users_EditRecordExAsync(objUsersEN: clsUsersEN): Promise<boolean> {
+  const strThisFuncName = 'EditRecordExAsync';
+  const strAction = 'EditRecordEx';
   if (
     objUsersEN.sfUpdFldSetStr === undefined ||
     objUsersEN.sfUpdFldSetStr === null ||
@@ -2283,25 +2300,18 @@ export async function Users_UpdateWithConditionAsync(
  * @param objstrUserIdCond:条件对象
  * @returns 对象列表子集
  */
-export async function Users_IsExistRecordCache(objUsersCond: clsUsersEN) {
+export async function Users_IsExistRecordCache(objUsersCond: ConditionCollection) {
   const strThisFuncName = 'IsExistRecordCache';
   const arrUsersObjLstCache = await Users_GetObjLstCache();
   if (arrUsersObjLstCache == null) return false;
   let arrUsersSel = arrUsersObjLstCache;
-  if (objUsersCond.sfFldComparisonOp == null || objUsersCond.sfFldComparisonOp == '')
-    return arrUsersSel.length > 0 ? true : false;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objUsersCond.sfFldComparisonOp,
-  );
-  //console.log("clsUsersWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
+  if (objUsersCond.GetConditions().length == 0) return arrUsersSel.length > 0 ? true : false;
   try {
-    const sstrKeys = GetObjKeys(objUsersCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objUsersCond.GetFldValue(strKey);
+    for (const objCondition of objUsersCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
       const strType = typeof strValue;
       switch (strType) {
         case 'string':
@@ -2591,26 +2601,19 @@ export async function Users_GetRecCountByCondAsync(strWhereCond: string): Promis
  * @param objUsersCond:条件对象
  * @returns 对象列表记录数
  */
-export async function Users_GetRecCountByCondCache(objUsersCond: clsUsersEN) {
+export async function Users_GetRecCountByCondCache(objUsersCond: ConditionCollection) {
   const strThisFuncName = 'GetRecCountByCondCache';
   const arrUsersObjLstCache = await Users_GetObjLstCache();
   if (arrUsersObjLstCache == null) return 0;
   let arrUsersSel = arrUsersObjLstCache;
-  if (objUsersCond.sfFldComparisonOp == null || objUsersCond.sfFldComparisonOp == '')
-    return arrUsersSel.length;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objUsersCond.sfFldComparisonOp,
-  );
-  //console.log("clsUsersWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
+  if (objUsersCond.GetConditions().length == 0) return arrUsersSel.length;
   try {
-    const sstrKeys = GetObjKeys(objUsersCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
+    for (const objCondition of objUsersCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
       arrUsersSel = arrUsersSel.filter((x) => x.GetFldValue(strKey) != null);
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objUsersCond.GetFldValue(strKey);
       const strType = typeof strValue;
       switch (strType) {
         case 'string':
@@ -2785,7 +2788,7 @@ export function Users_ReFreshCache(): void {
   console.trace(strMsg);
   // 静态的对象列表,用于清空相关缓存,针对记录较少,作为参数表可以使用
   const strKey = clsUsersEN._CurrTabName;
-  switch (clsUsersEN.CacheModeId) {
+  switch (clsUsersEN._CacheModeId) {
     case '04': //sessionStorage
       sessionStorage.removeItem(strKey);
       break;
@@ -2799,6 +2802,7 @@ export function Users_ReFreshCache(): void {
       CacheHelper.Remove(strKey);
       break;
   }
+  clsUsersEN._RefreshTimeLst.push(clsDateTime.getTodayDateTimeStr(0));
 }
 
 /**
@@ -2808,7 +2812,7 @@ export function Users_ReFreshCache(): void {
 export function Users_ReFreshThisCache(): void {
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = clsUsersEN._CurrTabName;
-    switch (clsUsersEN.CacheModeId) {
+    switch (clsUsersEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -2822,6 +2826,7 @@ export function Users_ReFreshThisCache(): void {
         CacheHelper.Remove(strKey);
         break;
     }
+    clsUsersEN._RefreshTimeLst.push(clsDateTime.getTodayDateTimeStr(0));
     const strMsg = Format('刷新缓存成功!');
     console.trace(strMsg);
   } else {
@@ -2829,10 +2834,18 @@ export function Users_ReFreshThisCache(): void {
     console.trace(strMsg);
   }
 }
+/**
+ * 获取最新的缓存刷新时间
+ * @returns 最新的缓存刷新时间，字符串型
+ **/
+export function Users_GetLastRefreshTime(): string {
+  if (clsUsersEN._RefreshTimeLst.length == 0) return '';
+  return clsUsersEN._RefreshTimeLst[clsUsersEN._RefreshTimeLst.length - 1];
+}
 
 /**
  * 绑定基于Web的下拉框,在某一层下的下拉框
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
 */
@@ -2854,8 +2867,28 @@ export async function Users_BindDdl_UserIdInDivCache(objDiv: HTMLDivElement, str
     arrObjLstSel,
     clsUsersEN.con_UserId,
     clsUsersEN.con_UserName,
-    '用于用户管理',
+    '用于用户管理...',
   );
+}
+
+/**
+ * 绑定基于Web的下拉框,在某一层下的下拉框
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_GetDdlData)-pyf
+ * @param objDDL:需要绑定当前表的下拉框
+
+*/
+export async function Users_GetArrUsers() {
+  //为数据源于表的下拉框设置内容
+  //console.log("开始：BindDdl_UserIdInDivCache");
+  const arrUsers = new Array<clsUsersEN>();
+  const arrObjLstSel = await Users_GetObjLstCache();
+  if (arrObjLstSel == null) return null;
+  const obj0 = new clsUsersEN();
+  obj0.userId = '0';
+  obj0.userName = '选用于用户管理...';
+  arrUsers.push(obj0);
+  arrObjLstSel.forEach((x) => arrUsers.push(x));
+  return arrUsers;
 }
 
 /**
@@ -2866,7 +2899,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
   //检查字段非空, 即数据表要求非常非空的字段,不能为空!
   if (IsNullOrEmpty(pobjUsersEN.userName) === true) {
     throw new Error(
-      '(errid:Watl000411)字段[用户名]不能为空(In 用于用户管理)!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000411)字段[用户名]不能为空(In 用于用户管理)!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -2874,38 +2907,38 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     pobjUsersEN.departmentId.toString() === '0'
   ) {
     throw new Error(
-      '(errid:Watl000411)字段[部门ID]不能为空(In 用于用户管理)!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000411)字段[部门ID]不能为空(In 用于用户管理)!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.password) === true) {
     throw new Error(
-      '(errid:Watl000411)字段[口令]不能为空(In 用于用户管理)!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000411)字段[口令]不能为空(In 用于用户管理)!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   //检查字段长度, 若字符型字段长度超出规定的长度,即非法!
   if (IsNullOrEmpty(pobjUsersEN.userId) == false && GetStrLen(pobjUsersEN.userId) > 18) {
     throw new Error(
-      '(errid:Watl000413)字段[用户Id(userId)]的长度不能超过18(In 用于用户管理(Users))!值:$(pobjUsersEN.userId)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[用户Id(userId)]的长度不能超过18(In 用于用户管理(Users))!值:${pobjUsersEN.userId}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.userName) == false && GetStrLen(pobjUsersEN.userName) > 30) {
     throw new Error(
-      '(errid:Watl000413)字段[用户名(userName)]的长度不能超过30(In 用于用户管理(Users))!值:$(pobjUsersEN.userName)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[用户名(userName)]的长度不能超过30(In 用于用户管理(Users))!值:${pobjUsersEN.userName}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.departmentId) == false && GetStrLen(pobjUsersEN.departmentId) > 6) {
     throw new Error(
-      '(errid:Watl000413)字段[部门ID(departmentId)]的长度不能超过6(In 用于用户管理(Users))!值:$(pobjUsersEN.departmentId)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[部门ID(departmentId)]的长度不能超过6(In 用于用户管理(Users))!值:${pobjUsersEN.departmentId}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.userStateId) == false && GetStrLen(pobjUsersEN.userStateId) > 2) {
     throw new Error(
-      '(errid:Watl000413)字段[用户状态号(userStateId)]的长度不能超过2(In 用于用户管理(Users))!值:$(pobjUsersEN.userStateId)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[用户状态号(userStateId)]的长度不能超过2(In 用于用户管理(Users))!值:${pobjUsersEN.userStateId}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.roleId) == false && GetStrLen(pobjUsersEN.roleId) > 8) {
     throw new Error(
-      '(errid:Watl000413)字段[角色ID(roleId)]的长度不能超过8(In 用于用户管理(Users))!值:$(pobjUsersEN.roleId)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[角色ID(roleId)]的长度不能超过8(In 用于用户管理(Users))!值:${pobjUsersEN.roleId}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (
@@ -2913,7 +2946,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     GetStrLen(pobjUsersEN.effectiveDate) > 8
   ) {
     throw new Error(
-      '(errid:Watl000413)字段[有效日期(effectiveDate)]的长度不能超过8(In 用于用户管理(Users))!值:$(pobjUsersEN.effectiveDate)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[有效日期(effectiveDate)]的长度不能超过8(In 用于用户管理(Users))!值:${pobjUsersEN.effectiveDate}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (
@@ -2921,7 +2954,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     GetStrLen(pobjUsersEN.effitiveBeginDate) > 14
   ) {
     throw new Error(
-      '(errid:Watl000413)字段[有效开始日期(effitiveBeginDate)]的长度不能超过14(In 用于用户管理(Users))!值:$(pobjUsersEN.effitiveBeginDate)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[有效开始日期(effitiveBeginDate)]的长度不能超过14(In 用于用户管理(Users))!值:${pobjUsersEN.effitiveBeginDate}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (
@@ -2929,22 +2962,22 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     GetStrLen(pobjUsersEN.effitiveEndDate) > 14
   ) {
     throw new Error(
-      '(errid:Watl000413)字段[有效结束日期(effitiveEndDate)]的长度不能超过14(In 用于用户管理(Users))!值:$(pobjUsersEN.effitiveEndDate)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[有效结束日期(effitiveEndDate)]的长度不能超过14(In 用于用户管理(Users))!值:${pobjUsersEN.effitiveEndDate}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.password) == false && GetStrLen(pobjUsersEN.password) > 20) {
     throw new Error(
-      '(errid:Watl000413)字段[口令(password)]的长度不能超过20(In 用于用户管理(Users))!值:$(pobjUsersEN.password)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[口令(password)]的长度不能超过20(In 用于用户管理(Users))!值:${pobjUsersEN.password}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.identityID) == false && GetStrLen(pobjUsersEN.identityID) > 2) {
     throw new Error(
-      '(errid:Watl000413)字段[身份编号(identityID)]的长度不能超过2(In 用于用户管理(Users))!值:$(pobjUsersEN.identityID)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[身份编号(identityID)]的长度不能超过2(In 用于用户管理(Users))!值:${pobjUsersEN.identityID}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.email) == false && GetStrLen(pobjUsersEN.email) > 50) {
     throw new Error(
-      '(errid:Watl000413)字段[电子邮箱(email)]的长度不能超过50(In 用于用户管理(Users))!值:$(pobjUsersEN.email)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[电子邮箱(email)]的长度不能超过50(In 用于用户管理(Users))!值:${pobjUsersEN.email}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (
@@ -2952,7 +2985,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     GetStrLen(pobjUsersEN.registerPassword) > 30
   ) {
     throw new Error(
-      '(errid:Watl000413)字段[注册密码(registerPassword)]的长度不能超过30(In 用于用户管理(Users))!值:$(pobjUsersEN.registerPassword)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[注册密码(registerPassword)]的长度不能超过30(In 用于用户管理(Users))!值:${pobjUsersEN.registerPassword}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (
@@ -2960,32 +2993,32 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     GetStrLen(pobjUsersEN.registerDate) > 14
   ) {
     throw new Error(
-      '(errid:Watl000413)字段[注册日期(registerDate)]的长度不能超过14(In 用于用户管理(Users))!值:$(pobjUsersEN.registerDate)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[注册日期(registerDate)]的长度不能超过14(In 用于用户管理(Users))!值:${pobjUsersEN.registerDate}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.auditUser) == false && GetStrLen(pobjUsersEN.auditUser) > 18) {
     throw new Error(
-      '(errid:Watl000413)字段[审核人(auditUser)]的长度不能超过18(In 用于用户管理(Users))!值:$(pobjUsersEN.auditUser)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[审核人(auditUser)]的长度不能超过18(In 用于用户管理(Users))!值:${pobjUsersEN.auditUser}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.auditDate) == false && GetStrLen(pobjUsersEN.auditDate) > 14) {
     throw new Error(
-      '(errid:Watl000413)字段[审核日期(auditDate)]的长度不能超过14(In 用于用户管理(Users))!值:$(pobjUsersEN.auditDate)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[审核日期(auditDate)]的长度不能超过14(In 用于用户管理(Users))!值:${pobjUsersEN.auditDate}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.updDate) == false && GetStrLen(pobjUsersEN.updDate) > 20) {
     throw new Error(
-      '(errid:Watl000413)字段[修改日期(updDate)]的长度不能超过20(In 用于用户管理(Users))!值:$(pobjUsersEN.updDate)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[修改日期(updDate)]的长度不能超过20(In 用于用户管理(Users))!值:${pobjUsersEN.updDate}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.updUser) == false && GetStrLen(pobjUsersEN.updUser) > 20) {
     throw new Error(
-      '(errid:Watl000413)字段[修改者(updUser)]的长度不能超过20(In 用于用户管理(Users))!值:$(pobjUsersEN.updUser)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[修改者(updUser)]的长度不能超过20(In 用于用户管理(Users))!值:${pobjUsersEN.updUser}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.memo) == false && GetStrLen(pobjUsersEN.memo) > 1000) {
     throw new Error(
-      '(errid:Watl000413)字段[说明(memo)]的长度不能超过1000(In 用于用户管理(Users))!值:$(pobjUsersEN.memo)(clsUsersBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[说明(memo)]的长度不能超过1000(In 用于用户管理(Users))!值:${pobjUsersEN.memo}(clsUsersBL:CheckPropertyNew)`,
     );
   }
   //检查字段的数据类型是否正确
@@ -2995,7 +3028,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.userId) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[用户Id(userId)]的值:[$(pobjUsersEN.userId)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[用户Id(userId)]的值:[${pobjUsersEN.userId}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3004,7 +3037,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.userName) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[用户名(userName)]的值:[$(pobjUsersEN.userName)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[用户名(userName)]的值:[${pobjUsersEN.userName}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3013,7 +3046,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.departmentId) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[部门ID(departmentId)]的值:[$(pobjUsersEN.departmentId)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[部门ID(departmentId)]的值:[${pobjUsersEN.departmentId}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3022,7 +3055,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.userStateId) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[用户状态号(userStateId)]的值:[$(pobjUsersEN.userStateId)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[用户状态号(userStateId)]的值:[${pobjUsersEN.userStateId}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3031,7 +3064,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.roleId) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[角色ID(roleId)]的值:[$(pobjUsersEN.roleId)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[角色ID(roleId)]的值:[${pobjUsersEN.roleId}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3040,7 +3073,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isNumber(pobjUsersEN.qxdj) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[权限等级(qxdj)]的值:[$(pobjUsersEN.qxdj)], 非法,应该为数值型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[权限等级(qxdj)]的值:[${pobjUsersEN.qxdj}], 非法,应该为数值型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3049,7 +3082,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.effectiveDate) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[有效日期(effectiveDate)]的值:[$(pobjUsersEN.effectiveDate)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[有效日期(effectiveDate)]的值:[${pobjUsersEN.effectiveDate}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3058,7 +3091,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.effitiveBeginDate) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[有效开始日期(effitiveBeginDate)]的值:[$(pobjUsersEN.effitiveBeginDate)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[有效开始日期(effitiveBeginDate)]的值:[${pobjUsersEN.effitiveBeginDate}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3067,7 +3100,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.effitiveEndDate) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[有效结束日期(effitiveEndDate)]的值:[$(pobjUsersEN.effitiveEndDate)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[有效结束日期(effitiveEndDate)]的值:[${pobjUsersEN.effitiveEndDate}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3076,7 +3109,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.password) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[口令(password)]的值:[$(pobjUsersEN.password)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[口令(password)]的值:[${pobjUsersEN.password}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3085,7 +3118,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.identityID) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[身份编号(identityID)]的值:[$(pobjUsersEN.identityID)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[身份编号(identityID)]的值:[${pobjUsersEN.identityID}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3094,7 +3127,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.email) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[电子邮箱(email)]的值:[$(pobjUsersEN.email)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[电子邮箱(email)]的值:[${pobjUsersEN.email}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3103,7 +3136,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isBoolean(pobjUsersEN.isGpUser) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[是否平台用户(isGpUser)]的值:[$(pobjUsersEN.isGpUser)], 非法,应该为布尔型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[是否平台用户(isGpUser)]的值:[${pobjUsersEN.isGpUser}], 非法,应该为布尔型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3112,7 +3145,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.registerPassword) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[注册密码(registerPassword)]的值:[$(pobjUsersEN.registerPassword)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[注册密码(registerPassword)]的值:[${pobjUsersEN.registerPassword}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3121,7 +3154,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isBoolean(pobjUsersEN.isRegister) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[是否注册(isRegister)]的值:[$(pobjUsersEN.isRegister)], 非法,应该为布尔型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[是否注册(isRegister)]的值:[${pobjUsersEN.isRegister}], 非法,应该为布尔型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3130,7 +3163,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.registerDate) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[注册日期(registerDate)]的值:[$(pobjUsersEN.registerDate)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[注册日期(registerDate)]的值:[${pobjUsersEN.registerDate}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3139,7 +3172,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isBoolean(pobjUsersEN.isAudit) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[是否审核(isAudit)]的值:[$(pobjUsersEN.isAudit)], 非法,应该为布尔型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[是否审核(isAudit)]的值:[${pobjUsersEN.isAudit}], 非法,应该为布尔型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3148,7 +3181,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.auditUser) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[审核人(auditUser)]的值:[$(pobjUsersEN.auditUser)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[审核人(auditUser)]的值:[${pobjUsersEN.auditUser}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3157,7 +3190,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.auditDate) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[审核日期(auditDate)]的值:[$(pobjUsersEN.auditDate)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[审核日期(auditDate)]的值:[${pobjUsersEN.auditDate}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3166,7 +3199,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.updDate) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[修改日期(updDate)]的值:[$(pobjUsersEN.updDate)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[修改日期(updDate)]的值:[${pobjUsersEN.updDate}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3175,7 +3208,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.updUser) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[修改者(updUser)]的值:[$(pobjUsersEN.updUser)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[修改者(updUser)]的值:[${pobjUsersEN.updUser}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3184,7 +3217,7 @@ export function Users_CheckPropertyNew(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.memo) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[说明(memo)]的值:[$(pobjUsersEN.memo)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[说明(memo)]的值:[${pobjUsersEN.memo}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckPropertyNew0)`,
     );
   }
   //检查外键, 作为外键应该和主键的字段长度是一样的, 若不一样,即非法!
@@ -3213,27 +3246,27 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
   //检查字段长度, 若字符型字段长度超出规定的长度,即非法!
   if (IsNullOrEmpty(pobjUsersEN.userId) == false && GetStrLen(pobjUsersEN.userId) > 18) {
     throw new Error(
-      '(errid:Watl000416)字段[用户Id(userId)]的长度不能超过18(In 用于用户管理(Users))!值:$(pobjUsersEN.userId)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[用户Id(userId)]的长度不能超过18(In 用于用户管理(Users))!值:${pobjUsersEN.userId}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.userName) == false && GetStrLen(pobjUsersEN.userName) > 30) {
     throw new Error(
-      '(errid:Watl000416)字段[用户名(userName)]的长度不能超过30(In 用于用户管理(Users))!值:$(pobjUsersEN.userName)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[用户名(userName)]的长度不能超过30(In 用于用户管理(Users))!值:${pobjUsersEN.userName}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.departmentId) == false && GetStrLen(pobjUsersEN.departmentId) > 6) {
     throw new Error(
-      '(errid:Watl000416)字段[部门ID(departmentId)]的长度不能超过6(In 用于用户管理(Users))!值:$(pobjUsersEN.departmentId)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[部门ID(departmentId)]的长度不能超过6(In 用于用户管理(Users))!值:${pobjUsersEN.departmentId}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.userStateId) == false && GetStrLen(pobjUsersEN.userStateId) > 2) {
     throw new Error(
-      '(errid:Watl000416)字段[用户状态号(userStateId)]的长度不能超过2(In 用于用户管理(Users))!值:$(pobjUsersEN.userStateId)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[用户状态号(userStateId)]的长度不能超过2(In 用于用户管理(Users))!值:${pobjUsersEN.userStateId}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.roleId) == false && GetStrLen(pobjUsersEN.roleId) > 8) {
     throw new Error(
-      '(errid:Watl000416)字段[角色ID(roleId)]的长度不能超过8(In 用于用户管理(Users))!值:$(pobjUsersEN.roleId)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[角色ID(roleId)]的长度不能超过8(In 用于用户管理(Users))!值:${pobjUsersEN.roleId}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3241,7 +3274,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     GetStrLen(pobjUsersEN.effectiveDate) > 8
   ) {
     throw new Error(
-      '(errid:Watl000416)字段[有效日期(effectiveDate)]的长度不能超过8(In 用于用户管理(Users))!值:$(pobjUsersEN.effectiveDate)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[有效日期(effectiveDate)]的长度不能超过8(In 用于用户管理(Users))!值:${pobjUsersEN.effectiveDate}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3249,7 +3282,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     GetStrLen(pobjUsersEN.effitiveBeginDate) > 14
   ) {
     throw new Error(
-      '(errid:Watl000416)字段[有效开始日期(effitiveBeginDate)]的长度不能超过14(In 用于用户管理(Users))!值:$(pobjUsersEN.effitiveBeginDate)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[有效开始日期(effitiveBeginDate)]的长度不能超过14(In 用于用户管理(Users))!值:${pobjUsersEN.effitiveBeginDate}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3257,22 +3290,22 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     GetStrLen(pobjUsersEN.effitiveEndDate) > 14
   ) {
     throw new Error(
-      '(errid:Watl000416)字段[有效结束日期(effitiveEndDate)]的长度不能超过14(In 用于用户管理(Users))!值:$(pobjUsersEN.effitiveEndDate)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[有效结束日期(effitiveEndDate)]的长度不能超过14(In 用于用户管理(Users))!值:${pobjUsersEN.effitiveEndDate}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.password) == false && GetStrLen(pobjUsersEN.password) > 20) {
     throw new Error(
-      '(errid:Watl000416)字段[口令(password)]的长度不能超过20(In 用于用户管理(Users))!值:$(pobjUsersEN.password)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[口令(password)]的长度不能超过20(In 用于用户管理(Users))!值:${pobjUsersEN.password}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.identityID) == false && GetStrLen(pobjUsersEN.identityID) > 2) {
     throw new Error(
-      '(errid:Watl000416)字段[身份编号(identityID)]的长度不能超过2(In 用于用户管理(Users))!值:$(pobjUsersEN.identityID)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[身份编号(identityID)]的长度不能超过2(In 用于用户管理(Users))!值:${pobjUsersEN.identityID}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.email) == false && GetStrLen(pobjUsersEN.email) > 50) {
     throw new Error(
-      '(errid:Watl000416)字段[电子邮箱(email)]的长度不能超过50(In 用于用户管理(Users))!值:$(pobjUsersEN.email)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[电子邮箱(email)]的长度不能超过50(In 用于用户管理(Users))!值:${pobjUsersEN.email}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3280,7 +3313,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     GetStrLen(pobjUsersEN.registerPassword) > 30
   ) {
     throw new Error(
-      '(errid:Watl000416)字段[注册密码(registerPassword)]的长度不能超过30(In 用于用户管理(Users))!值:$(pobjUsersEN.registerPassword)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[注册密码(registerPassword)]的长度不能超过30(In 用于用户管理(Users))!值:${pobjUsersEN.registerPassword}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3288,32 +3321,32 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     GetStrLen(pobjUsersEN.registerDate) > 14
   ) {
     throw new Error(
-      '(errid:Watl000416)字段[注册日期(registerDate)]的长度不能超过14(In 用于用户管理(Users))!值:$(pobjUsersEN.registerDate)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[注册日期(registerDate)]的长度不能超过14(In 用于用户管理(Users))!值:${pobjUsersEN.registerDate}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.auditUser) == false && GetStrLen(pobjUsersEN.auditUser) > 18) {
     throw new Error(
-      '(errid:Watl000416)字段[审核人(auditUser)]的长度不能超过18(In 用于用户管理(Users))!值:$(pobjUsersEN.auditUser)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[审核人(auditUser)]的长度不能超过18(In 用于用户管理(Users))!值:${pobjUsersEN.auditUser}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.auditDate) == false && GetStrLen(pobjUsersEN.auditDate) > 14) {
     throw new Error(
-      '(errid:Watl000416)字段[审核日期(auditDate)]的长度不能超过14(In 用于用户管理(Users))!值:$(pobjUsersEN.auditDate)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[审核日期(auditDate)]的长度不能超过14(In 用于用户管理(Users))!值:${pobjUsersEN.auditDate}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.updDate) == false && GetStrLen(pobjUsersEN.updDate) > 20) {
     throw new Error(
-      '(errid:Watl000416)字段[修改日期(updDate)]的长度不能超过20(In 用于用户管理(Users))!值:$(pobjUsersEN.updDate)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[修改日期(updDate)]的长度不能超过20(In 用于用户管理(Users))!值:${pobjUsersEN.updDate}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.updUser) == false && GetStrLen(pobjUsersEN.updUser) > 20) {
     throw new Error(
-      '(errid:Watl000416)字段[修改者(updUser)]的长度不能超过20(In 用于用户管理(Users))!值:$(pobjUsersEN.updUser)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[修改者(updUser)]的长度不能超过20(In 用于用户管理(Users))!值:${pobjUsersEN.updUser}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (IsNullOrEmpty(pobjUsersEN.memo) == false && GetStrLen(pobjUsersEN.memo) > 1000) {
     throw new Error(
-      '(errid:Watl000416)字段[说明(memo)]的长度不能超过1000(In 用于用户管理(Users))!值:$(pobjUsersEN.memo)(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[说明(memo)]的长度不能超过1000(In 用于用户管理(Users))!值:${pobjUsersEN.memo}(clsUsersBL:CheckProperty4Update)`,
     );
   }
   //检查字段的数据类型是否正确
@@ -3323,7 +3356,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.userId) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[用户Id(userId)]的值:[$(pobjUsersEN.userId)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[用户Id(userId)]的值:[${pobjUsersEN.userId}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3332,7 +3365,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.userName) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[用户名(userName)]的值:[$(pobjUsersEN.userName)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[用户名(userName)]的值:[${pobjUsersEN.userName}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3341,7 +3374,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.departmentId) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[部门ID(departmentId)]的值:[$(pobjUsersEN.departmentId)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[部门ID(departmentId)]的值:[${pobjUsersEN.departmentId}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3350,7 +3383,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.userStateId) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[用户状态号(userStateId)]的值:[$(pobjUsersEN.userStateId)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[用户状态号(userStateId)]的值:[${pobjUsersEN.userStateId}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3359,7 +3392,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.roleId) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[角色ID(roleId)]的值:[$(pobjUsersEN.roleId)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[角色ID(roleId)]的值:[${pobjUsersEN.roleId}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3368,7 +3401,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isNumber(pobjUsersEN.qxdj) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[权限等级(qxdj)]的值:[$(pobjUsersEN.qxdj)], 非法,应该为数值型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[权限等级(qxdj)]的值:[${pobjUsersEN.qxdj}], 非法,应该为数值型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3377,7 +3410,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.effectiveDate) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[有效日期(effectiveDate)]的值:[$(pobjUsersEN.effectiveDate)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[有效日期(effectiveDate)]的值:[${pobjUsersEN.effectiveDate}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3386,7 +3419,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.effitiveBeginDate) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[有效开始日期(effitiveBeginDate)]的值:[$(pobjUsersEN.effitiveBeginDate)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[有效开始日期(effitiveBeginDate)]的值:[${pobjUsersEN.effitiveBeginDate}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3395,7 +3428,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.effitiveEndDate) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[有效结束日期(effitiveEndDate)]的值:[$(pobjUsersEN.effitiveEndDate)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[有效结束日期(effitiveEndDate)]的值:[${pobjUsersEN.effitiveEndDate}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3404,7 +3437,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.password) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[口令(password)]的值:[$(pobjUsersEN.password)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[口令(password)]的值:[${pobjUsersEN.password}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3413,7 +3446,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.identityID) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[身份编号(identityID)]的值:[$(pobjUsersEN.identityID)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[身份编号(identityID)]的值:[${pobjUsersEN.identityID}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3422,7 +3455,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.email) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[电子邮箱(email)]的值:[$(pobjUsersEN.email)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[电子邮箱(email)]的值:[${pobjUsersEN.email}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3431,7 +3464,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isBoolean(pobjUsersEN.isGpUser) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[是否平台用户(isGpUser)]的值:[$(pobjUsersEN.isGpUser)], 非法,应该为布尔型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[是否平台用户(isGpUser)]的值:[${pobjUsersEN.isGpUser}], 非法,应该为布尔型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3440,7 +3473,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.registerPassword) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[注册密码(registerPassword)]的值:[$(pobjUsersEN.registerPassword)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[注册密码(registerPassword)]的值:[${pobjUsersEN.registerPassword}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3449,7 +3482,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isBoolean(pobjUsersEN.isRegister) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[是否注册(isRegister)]的值:[$(pobjUsersEN.isRegister)], 非法,应该为布尔型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[是否注册(isRegister)]的值:[${pobjUsersEN.isRegister}], 非法,应该为布尔型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3458,7 +3491,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.registerDate) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[注册日期(registerDate)]的值:[$(pobjUsersEN.registerDate)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[注册日期(registerDate)]的值:[${pobjUsersEN.registerDate}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3467,7 +3500,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isBoolean(pobjUsersEN.isAudit) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[是否审核(isAudit)]的值:[$(pobjUsersEN.isAudit)], 非法,应该为布尔型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[是否审核(isAudit)]的值:[${pobjUsersEN.isAudit}], 非法,应该为布尔型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3476,7 +3509,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.auditUser) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[审核人(auditUser)]的值:[$(pobjUsersEN.auditUser)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[审核人(auditUser)]的值:[${pobjUsersEN.auditUser}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3485,7 +3518,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.auditDate) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[审核日期(auditDate)]的值:[$(pobjUsersEN.auditDate)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[审核日期(auditDate)]的值:[${pobjUsersEN.auditDate}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3494,7 +3527,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.updDate) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[修改日期(updDate)]的值:[$(pobjUsersEN.updDate)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[修改日期(updDate)]的值:[${pobjUsersEN.updDate}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3503,7 +3536,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.updUser) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[修改者(updUser)]的值:[$(pobjUsersEN.updUser)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[修改者(updUser)]的值:[${pobjUsersEN.updUser}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -3512,13 +3545,13 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
     tzDataType.isString(pobjUsersEN.memo) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[说明(memo)]的值:[$(pobjUsersEN.memo)], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[说明(memo)]的值:[${pobjUsersEN.memo}], 非法,应该为字符型(In 用于用户管理(Users))!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   //检查主键是否为Null或者空!
   if (IsNullOrEmpty(pobjUsersEN.userId) === true || pobjUsersEN.userId.toString() === '0') {
     throw new Error(
-      '(errid:Watl000064)字段[用户Id]不能为空(In 用于用户管理)!(clsUsersBL:CheckProperty4Update)',
+      `(errid:Watl000064)字段[用户Id]不能为空(In 用于用户管理)!(clsUsersBL:CheckProperty4Update)`,
     );
   }
   //检查外键, 作为外键应该和主键的字段长度是一样的, 若不一样,即非法!
@@ -3541,7 +3574,7 @@ export function Users_CheckProperty4Update(pobjUsersEN: clsUsersEN) {
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3562,7 +3595,7 @@ export function Users_GetJSONStrByObj(pobjUsersEN: clsUsersEN): string {
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -3583,7 +3616,7 @@ export function Users_GetObjLstByJSONStr(strJSON: string): Array<clsUsersEN> {
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrUsersObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -3601,7 +3634,7 @@ export function Users_GetObjLstByJSONObjLst(arrUsersObjLstS: Array<clsUsersEN>):
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

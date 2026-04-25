@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsCodeTypeEN
  * 表名:CodeType(00050203)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:51:39
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/22 06:56:50
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:生成代码(GeneCode)
  * 框架-层名:实体层(TS)(EntityLayer,0121)
@@ -20,15 +20,15 @@ import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
 export class clsCodeTypeEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
-  public static CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
-  public static CacheModeId = ''; //
-  public static PrimaryTypeId = '03'; //自增
-  public static IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
-  public static WhereFormat = ''; //条件格式串
-  public static _CurrTabName = 'CodeType'; //当前表名,与该类相关的表名
-  public static _KeyFldName = 'CodeTypeId'; //当前表中的关键字名称,与该类相关的表中关键字名
-  public static mintAttributeCount = 38;
-  public static AttributeName = [
+  public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
+  public static readonly _CacheModeId: string = ''; //
+  public static readonly _PrimaryTypeId: string = '03'; //自增
+  public static readonly _IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
+  public static readonly _WhereFormat = ''; //条件格式串
+  public static readonly _CurrTabName: string = 'CodeType'; //当前表名,与该类相关的表名
+  public static readonly _KeyFldName: string = 'CodeTypeId'; //当前表中的关键字名称,与该类相关的表中关键字名
+  public static readonly _AttributeCount = 38;
+  public static readonly _AttributeName = [
     'codeTypeId',
     'codeTypeName',
     'codeTypeSimName',
@@ -896,305 +896,229 @@ export class clsCodeTypeEN extends clsGeneralTab {
    * 常量:"CodeTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CodeTypeId(): string {
-    return 'codeTypeId';
-  } //代码类型Id
+  public static readonly con_CodeTypeId = 'codeTypeId'; //代码类型Id
 
   /**
    * 常量:"CodeTypeName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CodeTypeName(): string {
-    return 'codeTypeName';
-  } //代码类型名
+  public static readonly con_CodeTypeName = 'codeTypeName'; //代码类型名
 
   /**
    * 常量:"CodeTypeSimName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CodeTypeSimName(): string {
-    return 'codeTypeSimName';
-  } //简称
+  public static readonly con_CodeTypeSimName = 'codeTypeSimName'; //简称
 
   /**
    * 常量:"CodeTypeENName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CodeTypeENName(): string {
-    return 'codeTypeENName';
-  } //代码类型英文名
+  public static readonly con_CodeTypeENName = 'codeTypeENName'; //代码类型英文名
 
   /**
    * 常量:"GroupName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_GroupName(): string {
-    return 'groupName';
-  } //组名
+  public static readonly con_GroupName = 'groupName'; //组名
 
   /**
    * 常量:"ProgLangTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ProgLangTypeId(): string {
-    return 'progLangTypeId';
-  } //编程语言类型Id
+  public static readonly con_ProgLangTypeId = 'progLangTypeId'; //编程语言类型Id
 
   /**
    * 常量:"RegionTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_RegionTypeId(): string {
-    return 'regionTypeId';
-  } //区域类型Id
+  public static readonly con_RegionTypeId = 'regionTypeId'; //区域类型Id
 
   /**
    * 常量:"Prefix"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Prefix(): string {
-    return 'prefix';
-  } //前缀
+  public static readonly con_Prefix = 'prefix'; //前缀
 
   /**
    * 常量:"DependsOn"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_DependsOn(): string {
-    return 'dependsOn';
-  } //依赖于
+  public static readonly con_DependsOn = 'dependsOn'; //依赖于
 
   /**
    * 常量:"FrontOrBack"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_FrontOrBack(): string {
-    return 'frontOrBack';
-  } //前台Or后台
+  public static readonly con_FrontOrBack = 'frontOrBack'; //前台Or后台
 
   /**
    * 常量:"SqlDsTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_SqlDsTypeId(): string {
-    return 'sqlDsTypeId';
-  } //数据源类型Id
+  public static readonly con_SqlDsTypeId = 'sqlDsTypeId'; //数据源类型Id
 
   /**
    * 常量:"ClassNameFormat"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ClassNameFormat(): string {
-    return 'classNameFormat';
-  } //类名格式
+  public static readonly con_ClassNameFormat = 'classNameFormat'; //类名格式
 
   /**
    * 常量:"FileNameFormat"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_FileNameFormat(): string {
-    return 'fileNameFormat';
-  } //文件名格式
+  public static readonly con_FileNameFormat = 'fileNameFormat'; //文件名格式
 
   /**
    * 常量:"ClassNamePattern"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ClassNamePattern(): string {
-    return 'classNamePattern';
-  } //类名模式
+  public static readonly con_ClassNamePattern = 'classNamePattern'; //类名模式
 
   /**
    * 常量:"IsCSharp"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsCSharp(): string {
-    return 'isCSharp';
-  } //是否CSharp语言
+  public static readonly con_IsCSharp = 'isCSharp'; //是否CSharp语言
 
   /**
    * 常量:"IsJava"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsJava(): string {
-    return 'isJava';
-  } //是否Java语言
+  public static readonly con_IsJava = 'isJava'; //是否Java语言
 
   /**
    * 常量:"IsJavaScript"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsJavaScript(): string {
-    return 'isJavaScript';
-  } //是否JavaScript语言
+  public static readonly con_IsJavaScript = 'isJavaScript'; //是否JavaScript语言
 
   /**
    * 常量:"IsTypeScript"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsTypeScript(): string {
-    return 'isTypeScript';
-  } //是否TypeScript语言
+  public static readonly con_IsTypeScript = 'isTypeScript'; //是否TypeScript语言
 
   /**
    * 常量:"IsSilverLight"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsSilverLight(): string {
-    return 'isSilverLight';
-  } //是否SilverLight语言
+  public static readonly con_IsSilverLight = 'isSilverLight'; //是否SilverLight语言
 
   /**
    * 常量:"IsSwift"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsSwift(): string {
-    return 'isSwift';
-  } //是否Swift语言
+  public static readonly con_IsSwift = 'isSwift'; //是否Swift语言
 
   /**
    * 常量:"IsVB"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsVB(): string {
-    return 'isVB';
-  } //IsVB语言
+  public static readonly con_IsVB = 'isVB'; //IsVB语言
 
   /**
    * 常量:"IsTableFldConst"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsTableFldConst(): string {
-    return 'isTableFldConst';
-  } //IsTableFldConst
+  public static readonly con_IsTableFldConst = 'isTableFldConst'; //IsTableFldConst
 
   /**
    * 常量:"IsPubApp4WinWeb"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsPubApp4WinWeb(): string {
-    return 'isPubApp4WinWeb';
-  } //IsPubApp4WinWeb
+  public static readonly con_IsPubApp4WinWeb = 'isPubApp4WinWeb'; //IsPubApp4WinWeb
 
   /**
    * 常量:"IsWeb"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsWeb(): string {
-    return 'isWeb';
-  } //是否Web应用
+  public static readonly con_IsWeb = 'isWeb'; //是否Web应用
 
   /**
    * 常量:"IsAspMvc"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsAspMvc(): string {
-    return 'isAspMvc';
-  } //是否AspMvc
+  public static readonly con_IsAspMvc = 'isAspMvc'; //是否AspMvc
 
   /**
    * 常量:"IsWebSrvAccess"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsWebSrvAccess(): string {
-    return 'isWebSrvAccess';
-  } //IsWebSrvAccess
+  public static readonly con_IsWebSrvAccess = 'isWebSrvAccess'; //IsWebSrvAccess
 
   /**
    * 常量:"IsWin"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsWin(): string {
-    return 'isWin';
-  } //是否Win应用
+  public static readonly con_IsWin = 'isWin'; //是否Win应用
 
   /**
    * 常量:"IsMobileApp"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsMobileApp(): string {
-    return 'isMobileApp';
-  } //是否移动终端应用
+  public static readonly con_IsMobileApp = 'isMobileApp'; //是否移动终端应用
 
   /**
    * 常量:"IsExtend"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsExtend(): string {
-    return 'isExtend';
-  } //是否扩展类
+  public static readonly con_IsExtend = 'isExtend'; //是否扩展类
 
   /**
    * 常量:"OrderNum"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_OrderNum(): string {
-    return 'orderNum';
-  } //序号
+  public static readonly con_OrderNum = 'orderNum'; //序号
 
   /**
    * 常量:"WinOrWeb"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_WinOrWeb(): string {
-    return 'winOrWeb';
-  } //WinOrWeb
+  public static readonly con_WinOrWeb = 'winOrWeb'; //WinOrWeb
 
   /**
    * 常量:"IsDirByTabName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsDirByTabName(): string {
-    return 'isDirByTabName';
-  } //是否用表名作为路径
+  public static readonly con_IsDirByTabName = 'isDirByTabName'; //是否用表名作为路径
 
   /**
    * 常量:"IsDefaultOverride"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsDefaultOverride(): string {
-    return 'isDefaultOverride';
-  } //是否默认覆盖
+  public static readonly con_IsDefaultOverride = 'isDefaultOverride'; //是否默认覆盖
 
   /**
    * 常量:"InUse"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_InUse(): string {
-    return 'inUse';
-  } //是否在用
+  public static readonly con_InUse = 'inUse'; //是否在用
 
   /**
    * 常量:"IsAutoParseFile"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsAutoParseFile(): string {
-    return 'isAutoParseFile';
-  } //是否自动分析文件
+  public static readonly con_IsAutoParseFile = 'isAutoParseFile'; //是否自动分析文件
 
   /**
    * 常量:"UpdDate"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdDate(): string {
-    return 'updDate';
-  } //修改日期
+  public static readonly con_UpdDate = 'updDate'; //修改日期
 
   /**
    * 常量:"UpdUser"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdUser(): string {
-    return 'updUser';
-  } //修改者
+  public static readonly con_UpdUser = 'updUser'; //修改者
 
   /**
    * 常量:"Memo"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Memo(): string {
-    return 'memo';
-  } //说明
+  public static readonly con_Memo = 'memo'; //说明
 
   /**
    * 设置条件字段值.
@@ -1213,6 +1137,7 @@ export class clsCodeTypeEN extends clsGeneralTab {
     }
     this.sfFldComparisonOp = JSON.stringify(this.dicFldComparisonOp);
   }
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名
@@ -2189,4 +2114,16 @@ export class enumCodeType {
    * Vue共享(TS)
    **/
   static readonly Vue_Share_TS_0264 = '0264';
+  /**
+   * Vue_界面后台-列表_TS(TS)
+   **/
+  static readonly Vue_ViewScriptColumns_TS_0265 = '0265';
+  /**
+   * Vue_界面后台-查询_TS(TS)
+   **/
+  static readonly Vue_ViewScriptQuery_TS_0266 = '0266';
+  /**
+   * Vue_界面后台-命令_TS(TS)
+   **/
+  static readonly Vue_ViewScriptCommands_TS_0267 = '0267';
 }

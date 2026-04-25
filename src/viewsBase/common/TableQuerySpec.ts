@@ -1,0 +1,1 @@
+export { QueryControlType } from './TableSpecQuery';

@@ -8,6 +8,8 @@ export default {
   'views/GeneCode/GCKeyIdGetModeCRUD': () => import('@/views/GeneCode/GCKeyIdGetModeCRUD.vue'),
   'views/GeneCode/GCContainerTypeCRUD': () => import('@/views/GeneCode/GCContainerTypeCRUD.vue'),
   'views/GeneCode/CodeTypeCRUD': () => import('@/views/GeneCode/CodeTypeCRUD.vue'),
+  'views/GeneCode/ApplicationTypeCRUD': () => import('@/views/GeneCode/ApplicationTypeCRUD.vue'),
+  'views/GeneCode/AppCodeTypeRelaCRUD': () => import('@/views/GeneCode/AppCodeTypeRelaCRUD.vue'),
   'views/GeneCode/GCVariablePrjIdRelaCRUD': () =>
     import('@/views/GeneCode/GCVariablePrjIdRelaCRUD.vue'),
 

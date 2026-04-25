@@ -179,7 +179,7 @@ export abstract class CodeType_Edit {
       this.opType = 'Add';
       const bolIsSuccess = await this.ShowDialog_CodeType(this.opType);
       if (bolIsSuccess == false) return;
-      if (['02', '03', '06'].indexOf(clsCodeTypeEN.PrimaryTypeId) > -1) {
+      if (['02', '03', '06'].indexOf(clsCodeTypeEN._PrimaryTypeId) > -1) {
         await this.AddNewRecordWithMaxId();
       } else {
         await this.AddNewRecord();
@@ -278,13 +278,13 @@ export abstract class CodeType_Edit {
         case '确认添加':
           //这是一个单表的插入的代码,由于逻辑层太简单,
           //就把逻辑层合并到控制层,
-          if (['02', '03', '06'].indexOf(clsCodeTypeEN.PrimaryTypeId) > -1) {
+          if (['02', '03', '06'].indexOf(clsCodeTypeEN._PrimaryTypeId) > -1) {
             returnKeyId = await this.AddNewRecordWithMaxIdSave();
             if (IsNullOrEmpty(returnKeyId) == false) {
               if (CodeType_Edit.strPageDispModeId == enumPageDispMode.PopupBox_01)
                 this.HideDialog_CodeType();
               if (this.iShowList != null)
-                this.iShowList.BindGv(clsCodeTypeEN._CurrTabName, returnKeyId);
+                this.iShowList.BindGvCache(clsCodeTypeEN._CurrTabName, returnKeyId);
             }
           } else {
             returnBool = await this.AddNewRecordSave();
@@ -293,7 +293,7 @@ export abstract class CodeType_Edit {
                 refCodeType_Edit.value.hideDialog();
               }
               if (this.iShowList != null)
-                this.iShowList.BindGv(clsCodeTypeEN._CurrTabName, this.keyId);
+                this.iShowList.BindGvCache(clsCodeTypeEN._CurrTabName, this.keyId);
             }
           }
           break;
@@ -310,7 +310,7 @@ export abstract class CodeType_Edit {
               refCodeType_Edit.value.hideDialog();
             }
             if (this.iShowList != null)
-              this.iShowList.BindGv(clsCodeTypeEN._CurrTabName, this.keyId);
+              this.iShowList.BindGvCache(clsCodeTypeEN._CurrTabName, this.keyId);
           }
           break;
         default:

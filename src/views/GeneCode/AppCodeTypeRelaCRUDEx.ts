@@ -3,6 +3,7 @@ import { GetFirstCheckedKeyIdInDivObj } from '@/ts/PubFun/clsCommFunc4Ctrl';
 
 import { IShowList } from '@/ts/PubFun/IShowList';
 import { AppCodeTypeRelaCRUD } from '@/viewsBase/GeneCode/AppCodeTypeRelaCRUD';
+import { clsAppCodeTypeRelaEN } from '@/ts/L0Entity/GeneCode/clsAppCodeTypeRelaEN';
 import {
   divVarSet,
   refAppCodeTypeRela_Detail,
@@ -28,6 +29,11 @@ export default class AppCodeTypeRelaCRUDEx extends AppCodeTypeRelaCRUD implement
    **/
   public async InitVarSet(): Promise<void> {
     console.log('InitVarSet in ViewInfoCRUDEx');
+    clsAppCodeTypeRelaEN.CacheAddiCondition = '';
+    const intApplicationTypeId = this.GetApplicationTypeIdFromUrl();
+    if (intApplicationTypeId > 0) {
+      clsAppCodeTypeRelaEN.CacheAddiCondition = `ApplicationTypeId=${intApplicationTypeId}`;
+    }
   }
   /**
    * 函数功能:初始化界面控件值，放在绑定下拉框之后
@@ -140,5 +146,26 @@ export default class AppCodeTypeRelaCRUDEx extends AppCodeTypeRelaCRUD implement
   public async SortColumn(sortColumnKey: string, sortDirection: string) {
     console.log('sortColumnKey', sortColumnKey);
     console.log('sortDirection', sortDirection);
+  }
+
+  private GetApplicationTypeIdFromUrl(): number {
+    const queryText = window.location.search;
+    if (queryText) {
+      const searchParams = new URLSearchParams(queryText);
+      const strId = searchParams.get('applicationTypeId') ?? '';
+      const intId = Number(strId);
+      if (intId > 0) return intId;
+    }
+
+    const hash = window.location.hash ?? '';
+    const indexOfQuestion = hash.indexOf('?');
+    if (indexOfQuestion >= 0) {
+      const strHashQuery = hash.substring(indexOfQuestion + 1);
+      const searchParams = new URLSearchParams(strHashQuery);
+      const strId = searchParams.get('applicationTypeId') ?? '';
+      const intId = Number(strId);
+      if (intId > 0) return intId;
+    }
+    return 0;
   }
 }

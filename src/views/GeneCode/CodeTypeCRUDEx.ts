@@ -9,7 +9,10 @@ import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { IShowList } from '@/ts/PubFun/IShowList';
 import { clsCodeTypeEN } from '@/ts/L0Entity/GeneCode/clsCodeTypeEN';
 import {
+  CodeType_AddNewRecordAsync,
+  CodeType_GetMaxStrIdAsync,
   CodeType_GetObjLstByCodeTypeIdLstAsync,
+  CodeType_IsExistRecordAsync,
   CodeType_UpdateRecordAsync,
 } from '@/ts/L3ForWApi/GeneCode/clsCodeTypeWApi';
 import { vCodeType_Sim_ReFreshThisCache } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
@@ -45,6 +48,74 @@ export default class CodeTypeCRUDEx extends CodeTypeCRUD implements IShowList {
   public async InitCtlVar(): Promise<void> {
     console.log('InitCtlVar in ViewInfoCRUDEx');
   }
+
+  /** 复制记录：扩展层处理唯一字段冲突，避免 CodeTypeName 重复导致新增失败。 */
+  public async CopyRecord(arrCodeTypeId: Array<string>) {
+    const strThisFuncName = this.CopyRecord.name;
+    try {
+      const arrCodeTypeObjLst = await CodeType_GetObjLstByCodeTypeIdLstAsync(arrCodeTypeId);
+      let intSuccessCount = 0;
+      let intFailCount = 0;
+
+      for (const objInFor of arrCodeTypeObjLst) {
+        const objClone = new clsCodeTypeEN();
+        ObjectAssign(objClone, objInFor);
+
+        const strMaxStrId = await CodeType_GetMaxStrIdAsync();
+        objClone.codeTypeId = strMaxStrId;
+        objClone.codeTypeName = await this.BuildUniqueCodeTypeName(objInFor.codeTypeName);
+
+        const returnBool = await CodeType_AddNewRecordAsync(objClone);
+        if (returnBool == true) {
+          intSuccessCount++;
+        } else {
+          intFailCount++;
+        }
+      }
+
+      const strInfo =
+        intFailCount > 0
+          ? Format('共克隆了{0}条记录，失败{1}条!', intSuccessCount, intFailCount)
+          : Format('共克隆了{0}条记录!', intSuccessCount);
+      alert(strInfo);
+      if (intSuccessCount > 0) {
+        vCodeType_Sim_ReFreshThisCache();
+      }
+    } catch (e) {
+      const strMsg = Format(
+        '复制记录不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+    }
+  }
+
+  /** 基于原名称生成可用的新名称，直到满足唯一约束。 */
+  private async BuildUniqueCodeTypeName(srcCodeTypeName: string): Promise<string> {
+    const baseName = IsNullOrEmpty(srcCodeTypeName) ? 'CodeType' : srcCodeTypeName;
+    let index = 1;
+
+    while (index <= 9999) {
+      const candidate =
+        index == 1 ? Format('{0}_Copy', baseName) : Format('{0}_Copy{1}', baseName, index);
+      const isExist = await this.IsCodeTypeNameExist(candidate);
+      if (isExist == false) return candidate;
+      index++;
+    }
+
+    throw new Error('无法生成唯一的CodeTypeName，请检查数据后重试。');
+  }
+
+  /** 判断 CodeTypeName 是否已存在。 */
+  private async IsCodeTypeNameExist(codeTypeName: string): Promise<boolean> {
+    const safeName = codeTypeName.replace(/'/g, "''");
+    const strWhereCond = Format("1 = 1 and CodeTypeName = '{0}'", safeName);
+    return await CodeType_IsExistRecordAsync(strWhereCond);
+  }
+
   BindGv(strType: string, strPara: string) {
     console.log(strType, strPara);
     alert('该类没有绑定该函数：[this.BindGv_vCodeType]！');
@@ -403,7 +474,24 @@ export default class CodeTypeCRUDEx extends CodeTypeCRUD implements IShowList {
     }
   }
   public async SortColumn(sortColumnKey: string, sortDirection: string) {
-    console.log('sortColumnKey', sortColumnKey);
-    console.log('sortDirection', sortDirection);
+    switch (sortColumnKey) {
+      case 'sqlDsTypeName|Ex':
+        viewVarSet.sortCodeTypeBy = `sqlDsTypeName ${sortDirection}|(SQLDSType)CodeType.SqlDsTypeId = SQLDSType.SqlDsTypeId|`;
+        break;
+      default:
+        viewVarSet.sortCodeTypeBy = Format('{0} {1}', sortColumnKey, sortDirection);
+        break;
+    }
+    await this.BindGv_CodeType4Func(this.listPara.listDiv);
+  }
+
+  public async DelRecord(strCodeTypeId: string) {
+    await super.DelRecord(strCodeTypeId);
+    vCodeType_Sim_ReFreshThisCache();
+  }
+
+  public async DelMultiRecord(arrCodeTypeId: Array<string>) {
+    await super.DelMultiRecord(arrCodeTypeId);
+    vCodeType_Sim_ReFreshThisCache();
   }
 }

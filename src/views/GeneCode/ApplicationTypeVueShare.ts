@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:ApplicationTypeVueShare(界面:ApplicationTypeCRUD,00050315)
  * 表名:ApplicationType(00050127)
- * 版本:2025.05.03.1(服务器:WIN-SRV103-116)
- * 日期:2025/05/06 15:51:20
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/04/21 16:25:16
  * 生成者:
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  * 模块中文名:生成代码(GeneCode)
  * 框架-层名:Vue共享(TS)(Vue_Share_TS,0264)
@@ -15,13 +15,14 @@
 
 import { reactive, ref } from 'vue';
 import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
-import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
 import { clsApplicationTypeENEx } from '@/ts/L0Entity/GeneCode/clsApplicationTypeENEx';
+import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
 import { clsApplicationTypeEN } from '@/ts/L0Entity/GeneCode/clsApplicationTypeEN';
 import { Format } from '@/ts/PubFun/clsString';
 
 const ascOrDesc4SortFun = ref('Asc');
 const sortApplicationTypeBy = ref('');
+
 const viewVarSet = reactive({
   ascOrDesc4SortFun,
   sortApplicationTypeBy,
@@ -72,20 +73,25 @@ export const applicationTypeName_q = ref('');
 export const applicationTypeSimName_q = ref('');
 export const applicationTypeENName_q = ref('');
 export const progLangTypeId_q = ref('');
+export const isVisible_q = ref('0');
 const qryVarSet = reactive({
   applicationTypeName_q,
   applicationTypeSimName_q,
   applicationTypeENName_q,
   progLangTypeId_q,
+  isVisible_q,
 });
 export { qryVarSet };
 
 //功能区变量定义
-const featureVarSet = reactive({});
+export const isVisible_f = ref('0');
+const featureVarSet = reactive({
+  isVisible_f,
+});
 export { featureVarSet };
 
 /** 把所有的查询控件内容组合成一个条件串
- * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_vue_ts_setup_fun_CombineCondition)
+ * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_Share_method_CombineCondition)
  * @returns 条件串(strWhereCond)
  **/
 export const CombineApplicationTypeCondition = async (): Promise<string> => {
@@ -123,6 +129,11 @@ export const CombineApplicationTypeCondition = async (): Promise<string> => {
         progLangTypeId_q.value,
       );
     }
+    if (isVisible_q.value == 'true') {
+      strWhereCond += Format(" And {0} = '1'", clsApplicationTypeEN.con_IsVisible);
+    } else if (isVisible_q.value == 'false') {
+      strWhereCond += Format(" And {0} = '0'", clsApplicationTypeEN.con_IsVisible);
+    }
   } catch (objException) {
     const strMsg: string = Format(
       '在组合查询条件(CombineApplicationTypeCondition)时出错!请联系管理员!{0}',
@@ -134,7 +145,7 @@ export const CombineApplicationTypeCondition = async (): Promise<string> => {
 };
 
 /** 把所有的查询控件内容组合成一个条件串
- * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_vue_ts_setup_fun_CombineConditionObj)
+ * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_Share_method_CombineConditionObj)
  * @returns 条件串(strWhereCond)
  **/
 export const CombineApplicationTypeConditionObj = async (): Promise<ConditionCollection> => {
@@ -191,6 +202,13 @@ export const CombineApplicationTypeConditionObj = async (): Promise<ConditionCol
         progLangTypeId_q.value,
         '=',
       );
+    }
+    if (isVisible_q.value == 'true') {
+      strWhereCond += Format(" And {0} = '1'", clsApplicationTypeEN.con_IsVisible);
+      objApplicationTypeCond.SetCondFldValue(clsApplicationTypeEN.con_IsVisible, true, '=');
+    } else if (isVisible_q.value == 'false') {
+      strWhereCond += Format(" And {0} = '0'", clsApplicationTypeEN.con_IsVisible);
+      objApplicationTypeCond.SetCondFldValue(clsApplicationTypeEN.con_IsVisible, false, '=');
     }
   } catch (objException) {
     const strMsg: string = Format(

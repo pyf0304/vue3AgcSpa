@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:CodeTypeCRUD(界面:CodeTypeCRUD,00050271)
  * 表名:CodeType(00050203)
- * 版本:2025.05.12.1(服务器:WIN-SRV103-116)
- * 日期:2025/05/15 01:34:38
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/04/22 06:50:55
  * 生成者:
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  * 模块中文名:生成代码(GeneCode)
  * 框架-层名:Vue_界面后台_TS(TS)(Vue_ViewScriptCS_TS,0254)
@@ -25,8 +25,14 @@ import {
 import {
   CodeType_GetRecCountByCondAsync,
   CodeType_GetObjLstAsync,
+  CodeType_ReOrderAsync,
+  CodeType_GoBottomAsync,
+  CodeType_DownMoveAsync,
+  CodeType_UpMoveAsync,
+  CodeType_GoTopAsync,
   CodeType_DelRecordAsync,
   CodeType_GetObjByCodeTypeIdAsync,
+  CodeType_FuncMapByFldName,
   CodeType_GetObjLstByCodeTypeIdLstAsync,
   CodeType_GetMaxStrIdAsync,
   CodeType_AddNewRecordAsync,
@@ -48,16 +54,15 @@ import { FieldType_BindDdl_FieldTypeIdInDivCache } from '@/ts/L3ForWApi/Table_Fi
 import {
   GetCheckedKeyIdsInDivObj,
   GetSelectValueInDivObj,
+  SetCheckedItem4KeyIdInDiv,
   GetDivObjInDivObj,
   SetLabelHtmlByIdInDivObj,
   GetLabelHtmlInDivObj,
 } from '@/ts/PubFun/clsCommFunc4Ctrl';
+import { clsOrderByData } from '@/ts/PubFun/clsOrderByData';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
 import { clsCodeTypeENEx } from '@/ts/L0Entity/GeneCode/clsCodeTypeENEx';
-import {
-  CodeTypeEx_FuncMapByFldName,
-  CodeTypeEx_GetObjExLstByPagerAsync,
-} from '@/ts/L3ForWApiEx/GeneCode/clsCodeTypeExWApi';
+import { CodeTypeEx_GetObjExLstByPagerAsync } from '@/ts/L3ForWApiEx/GeneCode/clsCodeTypeExWApi';
 import { clsCodeTypeEN } from '@/ts/L0Entity/GeneCode/clsCodeTypeEN';
 import { clsPager } from '@/ts/PubFun/clsPager';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
@@ -79,10 +84,15 @@ export abstract class CodeTypeCRUD implements clsOperateList {
   public objPager: clsPager;
   public static objPageCRUD: CodeTypeCRUD;
   public static sortFunStatic: (ascOrDesc: string) => (x: any, y: any) => number;
+  /** 保存用户通过下拉框选择的每页记录数，null 时由子类 getter 提供默认值 */
+  protected _pageSize: number | null = null;
   constructor() {
     this.listPara = new ListPara(divVarSet.refDivLayout, divVarSet.refDivList);
     CodeTypeCRUD.objPageCRUD = this;
     this.objPager = new clsPager(this);
+    this.objPager.onPageSizeChange = (ps: number) => {
+      this._pageSize = ps;
+    };
   }
   /**
    * 获取当前组件的divList的层对象
@@ -106,7 +116,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
    * 每页记录数,在扩展类可以修改
    **/
   public get pageSize(): number {
-    return 5;
+    return this._pageSize ?? 10;
   }
   public recCount = 0;
 
@@ -629,6 +639,150 @@ export abstract class CodeTypeCRUD implements clsOperateList {
   }
 
   /**
+   * 重序
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_btnReOrder_Click)
+   **/
+  public async btnReOrder_Click() {
+    const strThisFuncName = this.btnReOrder_Click.name;
+    if (this.PreCheck4Order() == false) return;
+    try {
+      const objOrderByData: clsOrderByData = new clsOrderByData();
+      await CodeType_ReOrderAsync(objOrderByData);
+      //CodeType_ReFreshCache();
+    } catch (e) {
+      const strMsg = `重序出错。错误:${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+      console.error('Error: ', strMsg);
+      //console.trace();
+      alert(strMsg);
+      return;
+    }
+    await this.BindGv_CodeType4Func(divVarSet.refDivList);
+  }
+
+  /**
+   * 置底
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_btnGoBottum_Click)
+   **/
+  public async btnGoBottum_Click() {
+    const strThisFuncName = this.btnGoBottum_Click.name;
+    if (this.PreCheck4Order() == false) return;
+    const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+    if (arrKeyIds.length == 0) {
+      alert(`请选择需要置底的${this.thisTabName}记录!`);
+      return '';
+    }
+    try {
+      const objOrderByData: clsOrderByData = new clsOrderByData();
+      objOrderByData.KeyIdLst = arrKeyIds;
+      await CodeType_GoBottomAsync(objOrderByData);
+      //CodeType_ReFreshCache();
+    } catch (e) {
+      const strMsg = `置底出错。错误:${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+      console.error('Error: ', strMsg);
+      //console.trace();
+      alert(strMsg);
+      return;
+    }
+    await this.BindGv_CodeType4Func(divVarSet.refDivList);
+    const divDataLst = GetDivObjInDivObj(divVarSet.refDivList, 'divDataLst');
+    arrKeyIds.forEach((e) => SetCheckedItem4KeyIdInDiv(divDataLst, e));
+  }
+
+  /**
+   * 移动记录序号时的预检查函数
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_PreCheck4Order)
+   **/
+  public PreCheck4Order(): boolean {
+    return true;
+  }
+
+  /**
+   * 下移
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_btnDownMove_Click)
+   **/
+  public async btnDownMove_Click() {
+    const strThisFuncName = this.btnDownMove_Click.name;
+    if (this.PreCheck4Order() == false) return;
+    const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+    if (arrKeyIds.length == 0) {
+      alert(`请选择需要下移的${this.thisTabName}记录!`);
+      return;
+    }
+    try {
+      const objOrderByData: clsOrderByData = new clsOrderByData();
+      objOrderByData.KeyIdLst = arrKeyIds;
+      await CodeType_DownMoveAsync(objOrderByData);
+      //CodeType_ReFreshCache();
+    } catch (e) {
+      const strMsg = `下移记录出错。错误:${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+      console.error('Error: ', strMsg);
+      //console.trace();
+      alert(strMsg);
+      return;
+    }
+    await this.BindGv_CodeType4Func(divVarSet.refDivList);
+    const divDataLst = GetDivObjInDivObj(divVarSet.refDivList, 'divDataLst');
+    arrKeyIds.forEach((e) => SetCheckedItem4KeyIdInDiv(divDataLst, e));
+  }
+
+  /**
+   * 上移
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_btnUpMove_Click)
+   **/
+  public async btnUpMove_Click() {
+    const strThisFuncName = this.btnUpMove_Click.name;
+    if (this.PreCheck4Order() == false) return;
+    const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+    if (arrKeyIds.length == 0) {
+      alert(`请选择需要上移的${this.thisTabName}记录!`);
+      return;
+    }
+    try {
+      const objOrderByData: clsOrderByData = new clsOrderByData();
+      objOrderByData.KeyIdLst = arrKeyIds;
+      await CodeType_UpMoveAsync(objOrderByData);
+      //CodeType_ReFreshCache();
+    } catch (e) {
+      const strMsg = `上移记录出错。错误:${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+      console.error('Error: ', strMsg);
+      //console.trace();
+      alert(strMsg);
+      return;
+    }
+    await this.BindGv_CodeType4Func(divVarSet.refDivList);
+    const divDataLst = GetDivObjInDivObj(divVarSet.refDivList, 'divDataLst');
+    arrKeyIds.forEach((e) => SetCheckedItem4KeyIdInDiv(divDataLst, e));
+  }
+
+  /** 置顶
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_btnGoTop_Click)
+   **/
+  public async btnGoTop_Click() {
+    const strThisFuncName = this.btnGoTop_Click.name;
+    if (this.PreCheck4Order() == false) return;
+    const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+    if (arrKeyIds.length == 0) {
+      alert(`请选择需要置顶的${this.thisTabName}记录!`);
+      return '';
+    }
+    try {
+      const objOrderByData: clsOrderByData = new clsOrderByData();
+      objOrderByData.KeyIdLst = arrKeyIds;
+      await CodeType_GoTopAsync(objOrderByData);
+      //CodeType_ReFreshCache();
+    } catch (e) {
+      const strMsg = `置顶出错。错误:${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+      console.error('Error: ', strMsg);
+      //console.trace();
+      alert(strMsg);
+      return;
+    }
+    await this.BindGv_CodeType4Func(divVarSet.refDivList);
+    const divDataLst = GetDivObjInDivObj(divVarSet.refDivList, 'divDataLst');
+    arrKeyIds.forEach((e) => SetCheckedItem4KeyIdInDiv(divDataLst, e));
+  }
+
+  /**
    * 添加新记录
    * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_btnCopyRecord_Click)
    **/
@@ -803,7 +957,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_OrderNum,
-        sortBy: clsCodeTypeEN.con_OrderNum,
+        sortBy: 'orderNum',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '序号',
@@ -818,7 +972,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_CodeTypeId,
-        sortBy: clsCodeTypeEN.con_CodeTypeId,
+        sortBy: 'codeTypeId',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '代码类型Id',
@@ -833,7 +987,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_CodeTypeName,
-        sortBy: clsCodeTypeEN.con_CodeTypeName,
+        sortBy: 'codeTypeName',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '代码类型名',
@@ -848,7 +1002,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_GroupName,
-        sortBy: clsCodeTypeEN.con_GroupName,
+        sortBy: 'groupName',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '组名',
@@ -863,7 +1017,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_CodeTypeENName,
-        sortBy: clsCodeTypeEN.con_CodeTypeENName,
+        sortBy: 'codeTypeENName',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '英文名',
@@ -878,7 +1032,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_DependsOn,
-        sortBy: clsCodeTypeEN.con_DependsOn,
+        sortBy: 'dependsOn',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '依赖于',
@@ -893,7 +1047,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_FrontOrBack,
-        sortBy: clsCodeTypeEN.con_FrontOrBack,
+        sortBy: 'frontOrBack',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '前台Or后台',
@@ -923,7 +1077,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_ClassNameFormat,
-        sortBy: clsCodeTypeEN.con_ClassNameFormat,
+        sortBy: 'classNameFormat',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '类名格式',
@@ -938,7 +1092,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_FileNameFormat,
-        sortBy: clsCodeTypeEN.con_FileNameFormat,
+        sortBy: 'fileNameFormat',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '文件名格式',
@@ -968,7 +1122,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_IsDefaultOverride,
-        sortBy: clsCodeTypeEN.con_IsDefaultOverride,
+        sortBy: 'isDefaultOverride',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '是否默认覆盖',
@@ -983,7 +1137,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_Prefix,
-        sortBy: clsCodeTypeEN.con_Prefix,
+        sortBy: 'prefix',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '前缀',
@@ -998,7 +1152,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_IsExtend,
-        sortBy: clsCodeTypeEN.con_IsExtend,
+        sortBy: 'isExtend',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '是否扩展类',
@@ -1119,7 +1273,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_OrderNum,
-        sortBy: clsCodeTypeEN.con_OrderNum,
+        sortBy: 'orderNum',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '序号',
@@ -1134,7 +1288,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_CodeTypeId,
-        sortBy: clsCodeTypeEN.con_CodeTypeId,
+        sortBy: 'codeTypeId',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '代码类型Id',
@@ -1149,7 +1303,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_CodeTypeName,
-        sortBy: clsCodeTypeEN.con_CodeTypeName,
+        sortBy: 'codeTypeName',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '代码类型名',
@@ -1164,7 +1318,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_GroupName,
-        sortBy: clsCodeTypeEN.con_GroupName,
+        sortBy: 'groupName',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '组名',
@@ -1179,7 +1333,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_CodeTypeENName,
-        sortBy: clsCodeTypeEN.con_CodeTypeENName,
+        sortBy: 'codeTypeENName',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '英文名',
@@ -1194,7 +1348,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_DependsOn,
-        sortBy: clsCodeTypeEN.con_DependsOn,
+        sortBy: 'dependsOn',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '依赖于',
@@ -1209,7 +1363,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_FrontOrBack,
-        sortBy: clsCodeTypeEN.con_FrontOrBack,
+        sortBy: 'frontOrBack',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '前台Or后台',
@@ -1239,7 +1393,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_ClassNameFormat,
-        sortBy: clsCodeTypeEN.con_ClassNameFormat,
+        sortBy: 'classNameFormat',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '类名格式',
@@ -1254,7 +1408,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_FileNameFormat,
-        sortBy: clsCodeTypeEN.con_FileNameFormat,
+        sortBy: 'fileNameFormat',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '文件名格式',
@@ -1284,7 +1438,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_IsDefaultOverride,
-        sortBy: clsCodeTypeEN.con_IsDefaultOverride,
+        sortBy: 'isDefaultOverride',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '是否默认覆盖',
@@ -1299,7 +1453,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_Prefix,
-        sortBy: clsCodeTypeEN.con_Prefix,
+        sortBy: 'prefix',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '前缀',
@@ -1314,7 +1468,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
       },
       {
         fldName: clsCodeTypeEN.con_IsExtend,
-        sortBy: clsCodeTypeEN.con_IsExtend,
+        sortBy: 'isExtend',
         sortFun: SortFun,
         getDataSource: '',
         colHeader: '是否扩展类',
@@ -1373,18 +1527,25 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         },
       },
     ];
-    try {
-      await this.ExtendFldFuncMap(arrCodeTypeExObjLst, arrDataColumn);
-    } catch (e) {
-      const strMsg = `扩展字段值的映射出错,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
-      console.error(strMsg);
-      alert(strMsg);
-      return;
-    }
     if (refCodeType_List.value != null) {
-      dataColumn.value = arrDataColumn;
+      try {
+        await this.ExtendTdFldFuncMap(arrCodeTypeExObjLst);
+      } catch (e) {
+        const strMsg = `扩展Td字段值的映射出错,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
       await BindTabByList(arrCodeTypeExObjLst, this.dispAllErrMsg_q);
     } else {
+      try {
+        await this.ExtendFldFuncMap(arrCodeTypeExObjLst, arrDataColumn);
+      } catch (e) {
+        const strMsg = `扩展字段值的映射出错,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
       const divDataLst = GetDivObjInDivObj(divContainer, 'divDataLst');
       if (divDataLst == null) {
         alert('在BindTab_CodeType4Func函数中，divDataLst不存在!');
@@ -1414,12 +1575,12 @@ export abstract class CodeTypeCRUD implements clsOperateList {
     arrCodeTypeExObjLst: Array<clsCodeTypeENEx>,
     arrDataColumn: Array<clsDataColumn>,
   ) {
-    const arrFldName = clsCodeTypeEN.AttributeName;
+    const arrFldName = clsCodeTypeEN._AttributeName;
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;
       for (const objInFor of arrCodeTypeExObjLst) {
-        await CodeTypeEx_FuncMapByFldName(objDataColumn.fldName, objInFor);
+        await CodeType_FuncMapByFldName(objDataColumn.fldName, objInFor);
       }
     }
   }
@@ -1613,6 +1774,23 @@ export abstract class CodeTypeCRUD implements clsOperateList {
     viewVarSet.ascOrDesc4SortFun = ascOrDesc4SortFun;
     CodeTypeCRUD.sortFunStatic = sortFun;
     await this.BindGv_CodeType4Func(this.listPara.listDiv);
+  }
+
+  /** 扩展Td字段值的函数映射
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_ExtendTdFldFuncMap)
+   * @param arrCodeTypeExObjLst:需要映射的对象列表
+   * @param arrDataColumn:用于绑定表的数据列信息
+   **/
+  public async ExtendTdFldFuncMap(arrCodeTypeExObjLst: Array<clsCodeTypeENEx>) {
+    const arrFldName = clsCodeTypeEN._AttributeName;
+    const tdFieldNames = refCodeType_List.value?.tdFieldNames;
+    for (const strFldName of tdFieldNames) {
+      if (IsNullOrEmpty(strFldName) == true) continue;
+      if (arrFldName.indexOf(strFldName) > -1) continue;
+      for (const objInFor of arrCodeTypeExObjLst) {
+        await CodeType_FuncMapByFldName(strFldName, objInFor);
+      }
+    }
   }
 
   /** 复制记录

@@ -1,6 +1,7 @@
 ﻿import { CodeType_Edit } from '@/viewsBase/GeneCode/CodeType_Edit';
 import { IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
+import { vCodeType_Sim_ReFreshThisCache } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
 
 /* CodeType_EditEx 的摘要说明。其中Q代表查询,U代表修改
   (AutoGCLib.WA_ViewScript_EditCSEx_TS4TypeScript:GeneCode)
@@ -52,5 +53,29 @@ export default class CodeType_EditEx extends CodeType_Edit {
 
         break;
     }
+  }
+
+  public async AddNewRecordSave(): Promise<boolean> {
+    const returnBool = await super.AddNewRecordSave();
+    if (returnBool === true) {
+      vCodeType_Sim_ReFreshThisCache();
+    }
+    return returnBool;
+  }
+
+  public async AddNewRecordWithMaxIdSave(): Promise<string> {
+    const returnKeyId = await super.AddNewRecordWithMaxIdSave();
+    if (IsNullOrEmpty(returnKeyId) === false) {
+      vCodeType_Sim_ReFreshThisCache();
+    }
+    return returnKeyId;
+  }
+
+  public async UpdateRecordSave(): Promise<boolean> {
+    const returnBool = await super.UpdateRecordSave();
+    if (returnBool === true) {
+      vCodeType_Sim_ReFreshThisCache();
+    }
+    return returnBool;
   }
 }

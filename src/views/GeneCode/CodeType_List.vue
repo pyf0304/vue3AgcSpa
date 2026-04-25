@@ -9,19 +9,109 @@
               <input v-model="selectAllChecked" type="checkbox" @change="selectAllRows" />
             </th>
 
-            <th> 序号 </th>
+            <th @click="sortColumn('orderNum')">
+              序号
+              <span>
+                <i
+                  :class="
+                    sortColumnKey === 'orderNum'
+                      ? sortDirection === 'Asc'
+                        ? 'arrow-up'
+                        : 'arrow-down'
+                      : 'arrow-neutral'
+                  "
+                ></i>
+              </span>
+            </th>
+            <th @click="sortColumn('codeTypeId')">
+              代码类型Id
+              <span>
+                <i
+                  :class="
+                    sortColumnKey === 'codeTypeId'
+                      ? sortDirection === 'Asc'
+                        ? 'arrow-up'
+                        : 'arrow-down'
+                      : 'arrow-neutral'
+                  "
+                ></i>
+              </span>
+            </th>
 
-            <th> 代码类型Id </th>
+            <th @click="sortColumn('codeTypeName')">
+              代码类型名
+              <span>
+                <i
+                  :class="
+                    sortColumnKey === 'codeTypeName'
+                      ? sortDirection === 'Asc'
+                        ? 'arrow-up'
+                        : 'arrow-down'
+                      : 'arrow-neutral'
+                  "
+                ></i>
+              </span>
+            </th>
 
-            <th> 代码类型名 </th>
+            <th @click="sortColumn('groupName')">
+              组名
+              <span>
+                <i
+                  :class="
+                    sortColumnKey === 'groupName'
+                      ? sortDirection === 'Asc'
+                        ? 'arrow-up'
+                        : 'arrow-down'
+                      : 'arrow-neutral'
+                  "
+                ></i>
+              </span>
+            </th>
 
-            <th> 组名 </th>
+            <th @click="sortColumn('codeTypeENName')">
+              英文名
+              <span>
+                <i
+                  :class="
+                    sortColumnKey === 'codeTypeENName'
+                      ? sortDirection === 'Asc'
+                        ? 'arrow-up'
+                        : 'arrow-down'
+                      : 'arrow-neutral'
+                  "
+                ></i>
+              </span>
+            </th>
 
-            <th> 英文名 </th>
+            <th @click="sortColumn('dependsOn')">
+              依赖于
+              <span>
+                <i
+                  :class="
+                    sortColumnKey === 'dependsOn'
+                      ? sortDirection === 'Asc'
+                        ? 'arrow-up'
+                        : 'arrow-down'
+                      : 'arrow-neutral'
+                  "
+                ></i>
+              </span>
+            </th>
 
-            <th> 依赖于 </th>
-
-            <th> 前台Or后台 </th>
+            <th @click="sortColumn('frontOrBack')">
+              前台Or后台
+              <span>
+                <i
+                  :class="
+                    sortColumnKey === 'frontOrBack'
+                      ? sortDirection === 'Asc'
+                        ? 'arrow-up'
+                        : 'arrow-down'
+                      : 'arrow-neutral'
+                  "
+                ></i>
+              </span>
+            </th>
 
             <th @click="sortColumn('sqlDsTypeName|Ex')">
               Sql类型
@@ -38,17 +128,82 @@
               </span>
             </th>
 
-            <th> 类名格式 </th>
+            <th @click="sortColumn('classNameFormat')">
+              类名格式
+              <span>
+                <i
+                  :class="
+                    sortColumnKey === 'classNameFormat'
+                      ? sortDirection === 'Asc'
+                        ? 'arrow-up'
+                        : 'arrow-down'
+                      : 'arrow-neutral'
+                  "
+                ></i>
+              </span>
+            </th>
 
-            <th> 文件名格式 </th>
+            <th @click="sortColumn('fileNameFormat')">
+              文件名格式
+              <span>
+                <i
+                  :class="
+                    sortColumnKey === 'fileNameFormat'
+                      ? sortDirection === 'Asc'
+                        ? 'arrow-up'
+                        : 'arrow-down'
+                      : 'arrow-neutral'
+                  "
+                ></i>
+              </span>
+            </th>
 
             <th> 类名模式 </th>
 
-            <th> 是否默认覆盖 </th>
+            <th @click="sortColumn('isDefaultOverride')">
+              是否默认覆盖
+              <span>
+                <i
+                  :class="
+                    sortColumnKey === 'isDefaultOverride'
+                      ? sortDirection === 'Asc'
+                        ? 'arrow-up'
+                        : 'arrow-down'
+                      : 'arrow-neutral'
+                  "
+                ></i>
+              </span>
+            </th>
 
-            <th> 前缀 </th>
+            <th @click="sortColumn('prefix')">
+              前缀
+              <span>
+                <i
+                  :class="
+                    sortColumnKey === 'prefix'
+                      ? sortDirection === 'Asc'
+                        ? 'arrow-up'
+                        : 'arrow-down'
+                      : 'arrow-neutral'
+                  "
+                ></i>
+              </span>
+            </th>
 
-            <th> 是否扩展类 </th>
+            <th @click="sortColumn('isExtend')">
+              是否扩展类
+              <span>
+                <i
+                  :class="
+                    sortColumnKey === 'isExtend'
+                      ? sortDirection === 'Asc'
+                        ? 'arrow-up'
+                        : 'arrow-down'
+                      : 'arrow-neutral'
+                  "
+                ></i>
+              </span>
+            </th>
 
             <th> 是否用表名作为路径 </th>
 
@@ -153,6 +308,25 @@
       const sortDirection = ref('asc'); // 初始化排序方向
       //const showCourseColumn = ref (false);
       const showSelectColumn = ref(false);
+      const tdFieldNames = [
+        'orderNum',
+        'codeTypeId',
+        'codeTypeName',
+        'groupName',
+        'codeTypeENName',
+        'dependsOn',
+        'frontOrBack',
+        'sqlDsTypeName',
+        'classNameFormat',
+        'fileNameFormat',
+        'classNamePattern',
+        'isDefaultOverride',
+        'prefix',
+        'isExtend',
+        'isDirByTabName',
+        'inUse',
+        'isAutoParseFile',
+      ];
       watchEffect(() => {
         //showCourseColumn.value = props.dataColumn.some((column) => column.colHeader === '课程');
         showSelectColumn.value = props.dataColumn.some((column) => column.colHeader === '选择');
@@ -214,6 +388,7 @@
         //showCourseColumn,
         btnSubmitSel,
         showSelectColumn,
+        tdFieldNames,
       };
     },
 

@@ -1,16 +1,17 @@
 ﻿/**
  * 类名:clsDataBaseTypeWApi
  * 表名:DataBaseType(00050159)
- * 版本:2023.10.12.1(服务器:WIN-SRV103-116)
- * 日期:2023/10/12 14:40:53
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/19 19:16:10
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
- CM工程:AgcSpa前端(变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,9433AGC_CS12
+ 应用类型:Vue应用InCore-TS(30)
+ CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:系统参数(SysPara)
- * 框架-层名:WA_访问层(TS)(WA_Access)
+ * 框架-层名:WA_访问层(TS)(WA_Access,0155)
  * 编程语言:TypeScript
  * 注意:1、需要数据底层(PubDataBase.dll)的版本:2019.03.07.01
    *      2、需要公共函数层(TzPubFunction.dll)的版本:2017.12.21.01
@@ -19,7 +20,7 @@
 /**
  * 数据库类型(DataBaseType)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2023年10月12日.
+ * Created by pyf on 2026年04月19日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -28,8 +29,9 @@ import { Storage } from '@/utils/Storage';
 import { IsNullOrEmpty, GetStrLen, tzDataType, Format } from '@/ts/PubFun/clsString';
 import { enumComparisonOp } from '@/ts/PubFun/enumComparisonOp';
 import { CacheHelper } from '@/ts/PubFun/CacheHelper';
+import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
+import { AddRecordResult } from '@/ts/PubFun/AddRecordResult';
 import {
-  GetObjKeys,
   BindDdl_ObjLstInDivObj,
   GetExceptionStr,
   myShowErrorMsg,
@@ -39,7 +41,7 @@ import { clsDataBaseTypeEN } from '@/ts/L0Entity/SysPara/clsDataBaseTypeEN';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
 import { stuRangePara } from '@/ts/PubFun/stuRangePara';
-import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
+import { clsDateTime } from '@/ts/PubFun/clsDateTime';
 
 export const dataBaseType_Controller = 'DataBaseTypeApi';
 export const dataBaseType_ConstructorName = 'dataBaseType';
@@ -128,6 +130,64 @@ export async function DataBaseType_GetObjByDataBaseTypeIdAsync(
 }
 
 /**
+ * 根据关键字获取相关对象, 从localStorage缓存中获取.
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
+ * @param strDataBaseTypeId:所给的关键字
+ * @returns 对象
+ */
+export async function DataBaseType_GetObjByDataBaseTypeIdlocalStorage(strDataBaseTypeId: string) {
+  const strThisFuncName = 'GetObjByDataBaseTypeIdlocalStorage';
+
+  if (IsNullOrEmpty(strDataBaseTypeId) == true) {
+    const strMsg = Format(
+      '参数:[strDataBaseTypeId]不能为空!(In clsDataBaseTypeWApi.GetObjByDataBaseTypeIdlocalStorage)',
+    );
+    console.error(strMsg);
+    throw strMsg;
+  }
+  if (strDataBaseTypeId.length != 2) {
+    const strMsg = Format(
+      '缓存分类变量:[strDataBaseTypeId]的长度:[{0}]不正确!(clsDataBaseTypeWApi.GetObjByDataBaseTypeIdlocalStorage)',
+      strDataBaseTypeId.length,
+    );
+    console.error(strMsg);
+    throw strMsg;
+  }
+  const strKey = Format('{0}_{1}', clsDataBaseTypeEN._CurrTabName, strDataBaseTypeId);
+  if (strKey == '') {
+    console.error('关键字为空!不正确');
+    throw new Error('关键字为空!不正确');
+  }
+  if (Object.prototype.hasOwnProperty.call(localStorage, strKey)) {
+    //缓存存在,直接返回
+    const strTempObj = localStorage.getItem(strKey) as string;
+    const objDataBaseTypeCache: clsDataBaseTypeEN = JSON.parse(strTempObj);
+    return objDataBaseTypeCache;
+  }
+  try {
+    const objDataBaseType = await DataBaseType_GetObjByDataBaseTypeIdAsync(strDataBaseTypeId);
+    if (objDataBaseType != null) {
+      localStorage.setItem(strKey, JSON.stringify(objDataBaseType));
+      const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
+      console.log(strInfo);
+      return objDataBaseType;
+    }
+    return objDataBaseType;
+  } catch (e) {
+    const strMsg = Format(
+      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
+      e,
+      strDataBaseTypeId,
+      dataBaseType_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+    return;
+  }
+}
+
+/**
  * 根据关键字获取相关对象, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
  * @param strDataBaseTypeId:所给的关键字
@@ -189,64 +249,6 @@ export async function DataBaseType_GetObjByDataBaseTypeIdCache(
 }
 
 /**
- * 根据关键字获取相关对象, 从localStorage缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
- * @param strDataBaseTypeId:所给的关键字
- * @returns 对象
- */
-export async function DataBaseType_GetObjByDataBaseTypeIdlocalStorage(strDataBaseTypeId: string) {
-  const strThisFuncName = 'GetObjByDataBaseTypeIdlocalStorage';
-
-  if (IsNullOrEmpty(strDataBaseTypeId) == true) {
-    const strMsg = Format(
-      '参数:[strDataBaseTypeId]不能为空!(In clsDataBaseTypeWApi.GetObjByDataBaseTypeIdlocalStorage)',
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  if (strDataBaseTypeId.length != 2) {
-    const strMsg = Format(
-      '缓存分类变量:[strDataBaseTypeId]的长度:[{0}]不正确!(clsDataBaseTypeWApi.GetObjByDataBaseTypeIdlocalStorage)',
-      strDataBaseTypeId.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  const strKey = Format('{0}_{1}', clsDataBaseTypeEN._CurrTabName, strDataBaseTypeId);
-  if (strKey == '') {
-    console.error('关键字为空!不正确');
-    throw new Error('关键字为空!不正确');
-  }
-  if (Object.prototype.hasOwnProperty.call(localStorage, strKey)) {
-    //缓存存在,直接返回
-    const strTempObj = localStorage.getItem(strKey) as string;
-    const objDataBaseTypeCache: clsDataBaseTypeEN = JSON.parse(strTempObj);
-    return objDataBaseTypeCache;
-  }
-  try {
-    const objDataBaseType = await DataBaseType_GetObjByDataBaseTypeIdAsync(strDataBaseTypeId);
-    if (objDataBaseType != null) {
-      localStorage.setItem(strKey, JSON.stringify(objDataBaseType));
-      const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
-      console.log(strInfo);
-      return objDataBaseType;
-    }
-    return objDataBaseType;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
-      e,
-      strDataBaseTypeId,
-      dataBaseType_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-    return;
-  }
-}
-
-/**
  * 修改在缓存对象列表中的对象, 与后台数据库无关.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_UpdateObjInLstCache)
  * @param objDataBaseType:所给的对象
@@ -278,97 +280,9 @@ export async function DataBaseType_UpdateObjInLstCache(objDataBaseType: clsDataB
 }
 
 /**
- * 根据关键字获取相关对象的名称属性, 从缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
- * @param strDataBaseTypeId:所给的关键字
- * @returns 对象
- */
-export async function DataBaseType_GetNameByDataBaseTypeIdCache(strDataBaseTypeId: string) {
-  if (IsNullOrEmpty(strDataBaseTypeId) == true) {
-    const strMsg = Format(
-      '参数:[strDataBaseTypeId]不能为空!(In clsDataBaseTypeWApi.GetNameByDataBaseTypeIdCache)',
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  if (strDataBaseTypeId.length != 2) {
-    const strMsg = Format(
-      '缓存分类变量:[strDataBaseTypeId]的长度:[{0}]不正确!(clsDataBaseTypeWApi.GetNameByDataBaseTypeIdCache)',
-      strDataBaseTypeId.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  const arrDataBaseTypeObjLstCache = await DataBaseType_GetObjLstCache();
-  if (arrDataBaseTypeObjLstCache == null) return '';
-  try {
-    const arrDataBaseTypeSel = arrDataBaseTypeObjLstCache.filter(
-      (x) => x.dataBaseTypeId == strDataBaseTypeId,
-    );
-    let objDataBaseType: clsDataBaseTypeEN;
-    if (arrDataBaseTypeSel.length > 0) {
-      objDataBaseType = arrDataBaseTypeSel[0];
-      return objDataBaseType.dataBaseTypeName;
-    } else {
-      return '';
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象名称属性不成功!',
-      e,
-      strDataBaseTypeId,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-  }
-  return '';
-}
-
-/**
- * 映射函数。根据表映射把输入字段值,映射成输出字段值
- * 作者:pyf
- * 日期:2023-10-12
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
- * @param strInFldName:输入字段名
- * @param strOutFldName:输出字段名
- * @param strInValue:输入字段值
- * @returns 返回一个输出字段值
- */
-export async function DataBaseType_func(
-  strInFldName: string,
-  strOutFldName: string,
-  strInValue: string,
-) {
-  //const strThisFuncName = "func";
-
-  if (strInFldName != clsDataBaseTypeEN.con_DataBaseTypeId) {
-    const strMsg = Format('输入字段名:[{0}]不正确!', strInFldName);
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  if (clsDataBaseTypeEN.AttributeName.indexOf(strOutFldName) == -1) {
-    const strMsg = Format(
-      '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
-      strOutFldName,
-      clsDataBaseTypeEN.AttributeName.join(','),
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  const strDataBaseTypeId = strInValue;
-  if (IsNullOrEmpty(strInValue) == true) {
-    return '';
-  }
-  const objDataBaseType = await DataBaseType_GetObjByDataBaseTypeIdCache(strDataBaseTypeId);
-  if (objDataBaseType == null) return '';
-  if (objDataBaseType.GetFldValue(strOutFldName) == null) return '';
-  return objDataBaseType.GetFldValue(strOutFldName).toString();
-}
-
-/**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -380,7 +294,7 @@ export function DataBaseType_SortFunDefa(a: clsDataBaseTypeEN, b: clsDataBaseTyp
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -395,7 +309,7 @@ export function DataBaseType_SortFunDefa2Fld(a: clsDataBaseTypeEN, b: clsDataBas
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -474,9 +388,56 @@ export function DataBaseType_SortFunByKey(strKey: string, AscOrDesc: string) {
 }
 
 /**
+ * 根据关键字获取相关对象的名称属性, 从缓存中获取.
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
+ * @param strDataBaseTypeId:所给的关键字
+ * @returns 对象
+ */
+export async function DataBaseType_GetNameByDataBaseTypeIdCache(strDataBaseTypeId: string) {
+  if (IsNullOrEmpty(strDataBaseTypeId) == true) {
+    const strMsg = Format(
+      '参数:[strDataBaseTypeId]不能为空!(In clsDataBaseTypeWApi.GetNameByDataBaseTypeIdCache)',
+    );
+    console.error(strMsg);
+    throw strMsg;
+  }
+  if (strDataBaseTypeId.length != 2) {
+    const strMsg = Format(
+      '缓存分类变量:[strDataBaseTypeId]的长度:[{0}]不正确!(clsDataBaseTypeWApi.GetNameByDataBaseTypeIdCache)',
+      strDataBaseTypeId.length,
+    );
+    console.error(strMsg);
+    throw strMsg;
+  }
+  const arrDataBaseTypeObjLstCache = await DataBaseType_GetObjLstCache();
+  if (arrDataBaseTypeObjLstCache == null) return '';
+  try {
+    const arrDataBaseTypeSel = arrDataBaseTypeObjLstCache.filter(
+      (x) => x.dataBaseTypeId == strDataBaseTypeId,
+    );
+    let objDataBaseType: clsDataBaseTypeEN;
+    if (arrDataBaseTypeSel.length > 0) {
+      objDataBaseType = arrDataBaseTypeSel[0];
+      return objDataBaseType.dataBaseTypeName;
+    } else {
+      return '';
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象名称属性不成功!',
+      e,
+      strDataBaseTypeId,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+  return '';
+}
+
+/**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -516,7 +477,48 @@ export async function DataBaseType_FilterFunByKey(strKey: string, value: any) {
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
+ * @param strInFldName:输入字段名
+ * @param strOutFldName:输出字段名
+ * @param strInValue:输入字段值
+ * @returns 返回一个输出字段值
+ */
+export async function DataBaseType_func(
+  strInFldName: string,
+  strOutFldName: string,
+  strInValue: string,
+) {
+  //const strThisFuncName = "func";
+
+  if (strInFldName != clsDataBaseTypeEN.con_DataBaseTypeId) {
+    const strMsg = Format('输入字段名:[{0}]不正确!', strInFldName);
+    console.error(strMsg);
+    throw new Error(strMsg);
+  }
+  if (clsDataBaseTypeEN._AttributeName.indexOf(strOutFldName) == -1) {
+    const strMsg = Format(
+      '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
+      strOutFldName,
+      clsDataBaseTypeEN._AttributeName.join(','),
+    );
+    console.error(strMsg);
+    throw new Error(strMsg);
+  }
+  const strDataBaseTypeId = strInValue;
+  if (IsNullOrEmpty(strDataBaseTypeId) == true) {
+    return '';
+  }
+  const objDataBaseType = await DataBaseType_GetObjByDataBaseTypeIdCache(strDataBaseTypeId);
+  if (objDataBaseType == null) return '';
+  if (objDataBaseType.GetFldValue(strOutFldName) == null) return '';
+  return objDataBaseType.GetFldValue(strOutFldName).toString();
+}
+
+/**
+ * 映射函数。根据表映射把输入字段值,映射成输出字段值
+ * 作者:pyf
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -610,6 +612,70 @@ export async function DataBaseType_funcKey(
   }
   if (arrDataBaseTypeSel.length == 0) return [];
   return arrDataBaseTypeSel.map((x) => x.dataBaseTypeId);
+}
+
+/**
+ * 根据条件获取满足条件的第一条记录
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetFldValueAsync)
+ * @param strWhereCond:条件
+ * @returns 返回的第一条记录的关键字值
+ **/
+export async function DataBaseType_GetFldValueAsync(
+  strFldName: string,
+  strWhereCond: string,
+): Promise<Array<string>> {
+  const strThisFuncName = 'GetFldValueAsync';
+  const strAction = 'GetFldValue';
+  const strUrl = GetWebApiUrl(dataBaseType_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  //console.error('token:', token);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strFldName,
+      strWhereCond,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      const arrId = data.returnStrLst.split(',');
+      return arrId;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
+        strUrl,
+        dataBaseType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
+        strUrl,
+        dataBaseType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
 }
 
 /**
@@ -807,8 +873,11 @@ export async function DataBaseType_GetObjLstClientCache() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsDataBaseTypeEN._CurrTabName;
-  if (IsNullOrEmpty(clsDataBaseTypeEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsDataBaseTypeEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsDataBaseTypeEN._WhereFormat) == false) {
+    strWhereCond = clsDataBaseTypeEN._WhereFormat;
+  }
+  if (IsNullOrEmpty(clsDataBaseTypeEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsDataBaseTypeEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -852,8 +921,11 @@ export async function DataBaseType_GetObjLstlocalStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsDataBaseTypeEN._CurrTabName;
-  if (IsNullOrEmpty(clsDataBaseTypeEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsDataBaseTypeEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsDataBaseTypeEN._WhereFormat) == false) {
+    strWhereCond = clsDataBaseTypeEN._WhereFormat;
+  }
+  if (IsNullOrEmpty(clsDataBaseTypeEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsDataBaseTypeEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -991,8 +1063,11 @@ export async function DataBaseType_GetObjLstsessionStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsDataBaseTypeEN._CurrTabName;
-  if (IsNullOrEmpty(clsDataBaseTypeEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsDataBaseTypeEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsDataBaseTypeEN._WhereFormat) == false) {
+    strWhereCond = clsDataBaseTypeEN._WhereFormat;
+  }
+  if (IsNullOrEmpty(clsDataBaseTypeEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsDataBaseTypeEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1056,7 +1131,7 @@ export async function DataBaseType_GetObjLstCache(): Promise<Array<clsDataBaseTy
   //const strThisFuncName = "GetObjLst_Cache";
 
   let arrDataBaseTypeObjLstCache;
-  switch (clsDataBaseTypeEN.CacheModeId) {
+  switch (clsDataBaseTypeEN._CacheModeId) {
     case '04': //sessionStorage
       arrDataBaseTypeObjLstCache = await DataBaseType_GetObjLstsessionStorage();
       break;
@@ -1081,7 +1156,7 @@ export async function DataBaseType_GetObjLstCache(): Promise<Array<clsDataBaseTy
 export async function DataBaseType_GetObjLstPureCache() {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrDataBaseTypeObjLstCache;
-  switch (clsDataBaseTypeEN.CacheModeId) {
+  switch (clsDataBaseTypeEN._CacheModeId) {
     case '04': //sessionStorage
       arrDataBaseTypeObjLstCache = await DataBaseType_GetObjLstsessionStoragePureCache();
       break;
@@ -1104,25 +1179,19 @@ export async function DataBaseType_GetObjLstPureCache() {
  * @param objstrDataBaseTypeIdCond:条件对象
  * @returns 对象列表子集
  */
-export async function DataBaseType_GetSubObjLstCache(objDataBaseTypeCond: clsDataBaseTypeEN) {
+export async function DataBaseType_GetSubObjLstCache(objDataBaseTypeCond: ConditionCollection) {
   const strThisFuncName = 'GetSubObjLstCache';
   const arrDataBaseTypeObjLstCache = await DataBaseType_GetObjLstCache();
   let arrDataBaseTypeSel = arrDataBaseTypeObjLstCache;
-  if (objDataBaseTypeCond.sfFldComparisonOp == null || objDataBaseTypeCond.sfFldComparisonOp == '')
-    return arrDataBaseTypeSel;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objDataBaseTypeCond.sfFldComparisonOp,
-  );
-  //console.log("clsDataBaseTypeWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
+  if (objDataBaseTypeCond.GetConditions().length == 0) return arrDataBaseTypeSel;
   try {
-    const sstrKeys = GetObjKeys(objDataBaseTypeCond);
     //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
+    for (const objCondition of objDataBaseTypeCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
       arrDataBaseTypeSel = arrDataBaseTypeSel.filter((x) => x.GetFldValue(strKey) != null);
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objDataBaseTypeCond.GetFldValue(strKey);
       const strType = typeof strValue;
       switch (strType) {
         case 'string':
@@ -1443,210 +1512,8 @@ export async function DataBaseType_GetObjLstByRangeAsync(
     }
   }
 }
-
-/**
- * 根据分页条件从缓存中获取分页对象列表,只获取一页.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerCache)
- * @param objPagerPara:分页参数结构
- * @returns 对象列表
- */
-export async function DataBaseType_GetObjLstByPagerCache(objPagerPara: stuPagerPara) {
-  const strThisFuncName = 'GetObjLstByPagerCache';
-  if (objPagerPara.pageIndex == 0) return new Array<clsDataBaseTypeEN>();
-  const arrDataBaseTypeObjLstCache = await DataBaseType_GetObjLstCache();
-  if (arrDataBaseTypeObjLstCache.length == 0) return arrDataBaseTypeObjLstCache;
-  let arrDataBaseTypeSel = arrDataBaseTypeObjLstCache;
-  const objCond = JSON.parse(objPagerPara.whereCond);
-  const objDataBaseTypeCond = new clsDataBaseTypeEN();
-  ObjectAssign(objDataBaseTypeCond, objCond);
-  let dicFldComparisonOp: { [index: string]: string } = {};
-  if (objCond.sfFldComparisonOp != '') {
-    dicFldComparisonOp = JSON.parse(objCond.sfFldComparisonOp);
-  }
-  //console.log("clsDataBaseTypeWApi->GetObjLstByPagerCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
-  try {
-    const sstrKeys = GetObjKeys(objCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
-      arrDataBaseTypeSel = arrDataBaseTypeSel.filter((x) => x.GetFldValue(strKey) != null);
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objDataBaseTypeCond.GetFldValue(strKey);
-      const strType = typeof strValue;
-      switch (strType) {
-        case 'string':
-          if (strValue == null) continue;
-          if (strValue == '') continue;
-          if (strComparisonOp == '=') {
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
-            );
-          } else if (strComparisonOp == 'like') {
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
-            );
-          } else if (strComparisonOp == 'length greater') {
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not greater') {
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not less') {
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length less') {
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length equal') {
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'in') {
-            const arrValues = strValue.toString().split(',');
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter(
-              (x) => arrValues.indexOf(x.GetFldValue(strKey).toString()) != -1,
-            );
-          }
-          break;
-        case 'boolean':
-          if (strValue == null) continue;
-          if (strComparisonOp == '=') {
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter(
-              (x) => x.GetFldValue(strKey) == strValue,
-            );
-          }
-          break;
-        case 'number':
-          if (Number(strValue) == 0) continue;
-          if (strComparisonOp == '=') {
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter(
-              (x) => x.GetFldValue(strKey) == strValue,
-            );
-          } else if (strComparisonOp == '>=') {
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter(
-              (x) => x.GetFldValue(strKey) >= strValue,
-            );
-          } else if (strComparisonOp == '<=') {
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter(
-              (x) => x.GetFldValue(strKey) <= strValue,
-            );
-          } else if (strComparisonOp == '>') {
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter((x) => x.GetFldValue(strKey) > strValue);
-          } else if (strComparisonOp == '<') {
-            arrDataBaseTypeSel = arrDataBaseTypeSel.filter(
-              (x) => x.GetFldValue(strKey) <= strValue,
-            );
-          }
-          break;
-      }
-    }
-    if (arrDataBaseTypeSel.length == 0) return arrDataBaseTypeSel;
-    let intStart: number = objPagerPara.pageSize * (objPagerPara.pageIndex - 1);
-    if (intStart <= 0) intStart = 0;
-    const intEnd = intStart + objPagerPara.pageSize;
-    if (objPagerPara.orderBy != null && objPagerPara.orderBy.length > 0) {
-      const sstrSplit: string[] = objPagerPara.orderBy.split(' ');
-      let strSortType = 'asc';
-      const strSortFld = sstrSplit[0];
-      if (sstrSplit.length > 1) strSortType = sstrSplit[1];
-      arrDataBaseTypeSel = arrDataBaseTypeSel.sort(
-        DataBaseType_SortFunByKey(strSortFld, strSortType),
-      );
-    } else {
-      //如果排序字段名[OrderBy]为空,就调用排序函数
-      arrDataBaseTypeSel = arrDataBaseTypeSel.sort(objPagerPara.sortFun);
-    }
-    arrDataBaseTypeSel = arrDataBaseTypeSel.slice(intStart, intEnd);
-    return arrDataBaseTypeSel;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据条件:[{1}]获取分页对象列表不成功!(In {2}.{3})',
-      e,
-      objPagerPara.whereCond,
-      dataBaseType_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return new Array<clsDataBaseTypeEN>();
-}
-
-/**
- * 根据分页条件获取相应的记录对象列表,只获取一页
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerAsync)
- * @param objPagerPara:分页获取对象列表的参数对象
- * @returns 获取的相应记录对象列表
- **/
-export async function DataBaseType_GetObjLstByPagerAsync(
-  objPagerPara: stuPagerPara,
-): Promise<Array<clsDataBaseTypeEN>> {
-  const strThisFuncName = 'GetObjLstByPagerAsync';
-  if (objPagerPara.pageIndex == 0) return new Array<clsDataBaseTypeEN>();
-  const strAction = 'GetObjLstByPager';
-  const strUrl = GetWebApiUrl(dataBaseType_Controller, strAction);
-
-  const token = Storage.get(ACCESS_TOKEN_KEY);
-  //console.error('token:', token);
-  const config = {
-    headers: {
-      Authorization: `${token}`,
-    },
-  };
-  try {
-    const response = await axios.post(strUrl, objPagerPara, config);
-    const data = response.data;
-    if (data.errorId == 0) {
-      const returnObjLst = data.returnObjLst;
-      if (returnObjLst == null) {
-        const strNullInfo = Format(
-          '获取数据为null, 请注意!(in {0}.{1})',
-          dataBaseType_ConstructorName,
-          strThisFuncName,
-        );
-        console.error(strNullInfo);
-        throw strNullInfo;
-      }
-      //console.log(returnObjLst);
-      const arrObjLst = DataBaseType_GetObjLstByJSONObjLst(returnObjLst);
-      return arrObjLst;
-    } else {
-      console.error(data.errorMsg);
-      throw data.errorMsg;
-    }
-  } catch (error: any) {
-    console.error(error);
-    if (error.statusText == undefined) {
-      throw error;
-    }
-    if (error.statusText == 'error') {
-      const strInfo = Format(
-        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
-        strUrl,
-        dataBaseType_ConstructorName,
-        strThisFuncName,
-      );
-      console.error(strInfo);
-      throw strInfo;
-    } else if (error.statusText == 'Not Found') {
-      const strInfo = Format(
-        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
-        strUrl,
-        dataBaseType_ConstructorName,
-        strThisFuncName,
-      );
-      console.error(strInfo);
-      throw strInfo;
-    } else {
-      throw error.statusText;
-    }
-  }
-}
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerCache)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerAsync)
 
 /**
  * 调用WebApi来删除记录,根据关键字来删除记录
@@ -1762,6 +1629,11 @@ export async function DataBaseType_DelDataBaseTypesAsync(
     }
   }
 }
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjExLstByPagerCache)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_CopyToEx)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
 
 /**
  * 根据条件删除记录
@@ -1940,6 +1812,124 @@ export async function DataBaseType_AddNewRecordWithMaxIdAsync(
   }
 }
 
+/** 添加新记录,保存函数
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_AddNewObjSave)
+ **/
+export async function DataBaseType_AddNewObjSave(
+  objDataBaseTypeEN: clsDataBaseTypeEN,
+): Promise<AddRecordResult> {
+  const strThisFuncName = 'AddNewObjSave';
+  try {
+    DataBaseType_CheckPropertyNew(objDataBaseTypeEN);
+  } catch (e) {
+    const strMsg = `检查数据不成功,${e}.(in ${dataBaseType_ConstructorName}.${strThisFuncName})`;
+    console.error(strMsg);
+    alert(strMsg);
+    return { keyword: '', success: false }; //一定要有一个返回值,否则会出错!
+  }
+  try {
+    //检查唯一性条件
+    const bolIsExistCond = await DataBaseType_CheckUniCond4Add(objDataBaseTypeEN);
+    if (bolIsExistCond == false) {
+      return { keyword: '', success: false };
+    }
+    let returnBool = false;
+    const returnKeyId = await DataBaseType_AddNewRecordWithMaxIdAsync(objDataBaseTypeEN);
+    if (IsNullOrEmpty(returnKeyId) == false) {
+      returnBool = true;
+    }
+    if (returnBool == true) {
+      DataBaseType_ReFreshCache();
+    } else {
+      const strInfo = `添加[数据库类型(DataBaseType)]记录不成功!`;
+      //显示信息框
+      throw strInfo;
+    }
+    return { keyword: returnKeyId, success: returnBool }; //一定要有一个返回值,否则会出错!
+  } catch (e) {
+    const strMsg = `添加记录不成功,${e}.(in ${dataBaseType_ConstructorName}.${strThisFuncName})`;
+    console.error(strMsg);
+    throw strMsg;
+  }
+}
+
+/** 为添加记录检查唯一性条件
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_CheckUniCondition4Add)
+ **/
+export async function DataBaseType_CheckUniCond4Add(
+  objDataBaseTypeEN: clsDataBaseTypeEN,
+): Promise<boolean> {
+  const strUniquenessCondition = DataBaseType_GetUniCondStr(objDataBaseTypeEN);
+  const bolIsExistCondition = await DataBaseType_IsExistRecordAsync(strUniquenessCondition);
+  if (bolIsExistCondition == true) {
+    const strMsg = Format(
+      '不能满足唯一性条件。满足条件：{0}的记录已经存在!',
+      strUniquenessCondition,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+    return false;
+  }
+  return true;
+}
+
+/** 为修改记录检查唯一性条件
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_CheckUniCondition4Update)
+ **/
+export async function DataBaseType_CheckUniCond4Update(
+  objDataBaseTypeEN: clsDataBaseTypeEN,
+): Promise<boolean> {
+  const strUniquenessCondition = DataBaseType_GetUniCondStr4Update(objDataBaseTypeEN);
+  const bolIsExistCondition = await DataBaseType_IsExistRecordAsync(strUniquenessCondition);
+  if (bolIsExistCondition == true) {
+    const strMsg = Format(
+      '不能满足唯一性条件。满足条件：{0}的记录已经存在!',
+      strUniquenessCondition,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+    return false;
+  }
+  return true;
+}
+
+/** 修改记录
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_UpdateObjSave)
+ **/
+export async function DataBaseType_UpdateObjSave(
+  objDataBaseTypeEN: clsDataBaseTypeEN,
+): Promise<boolean> {
+  const strThisFuncName = 'UpdateObjSave';
+  objDataBaseTypeEN.sfUpdFldSetStr = objDataBaseTypeEN.updFldString; //设置哪些字段被修改(脏字段)
+  if (objDataBaseTypeEN.dataBaseTypeId == '' || objDataBaseTypeEN.dataBaseTypeId == undefined) {
+    console.error('关键字不能为空!');
+    throw '关键字不能为空!';
+  }
+  try {
+    DataBaseType_CheckProperty4Update(objDataBaseTypeEN);
+  } catch (e) {
+    const strMsg = `检查数据不成功,${e}.(in ${dataBaseType_ConstructorName}.${strThisFuncName})`;
+    console.error(strMsg);
+    throw strMsg;
+  }
+  try {
+    //检查唯一性条件
+    const bolIsExistCond = await DataBaseType_CheckUniCond4Update(objDataBaseTypeEN);
+    if (bolIsExistCond == false) {
+      return false;
+    }
+    const returnBool = await DataBaseType_UpdateRecordAsync(objDataBaseTypeEN);
+    if (returnBool == true) {
+      DataBaseType_ReFreshCache();
+    }
+    return returnBool;
+  } catch (e) {
+    const strMsg = `修改记录不成功,${e}.(in ${dataBaseType_ConstructorName}.${strThisFuncName})`;
+    console.error(strMsg);
+    throw strMsg;
+  }
+}
+
 /**
  * 把表对象添加到数据库中,并且返回该记录的关键字(针对Identity关键字和自增关键字)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_AddNewRecordWithReturnKeyAsync)
@@ -2009,6 +1999,75 @@ export async function DataBaseType_UpdateRecordAsync(
 ): Promise<boolean> {
   const strThisFuncName = 'UpdateRecordAsync';
   const strAction = 'UpdateRecord';
+  if (
+    objDataBaseTypeEN.sfUpdFldSetStr === undefined ||
+    objDataBaseTypeEN.sfUpdFldSetStr === null ||
+    objDataBaseTypeEN.sfUpdFldSetStr === ''
+  ) {
+    const strMsg = Format(
+      '对象(关键字: {0})的【修改字段集】为空,不能修改!',
+      objDataBaseTypeEN.dataBaseTypeId,
+    );
+    throw strMsg;
+  }
+  const strUrl = GetWebApiUrl(dataBaseType_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  //console.error('token:', token);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+  try {
+    const response = await axios.post(strUrl, objDataBaseTypeEN, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnBool;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
+        strUrl,
+        dataBaseType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
+        strUrl,
+        dataBaseType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 调用WebApi来编辑记录（存在就修改，不存在就添加）,数据传递使用JSON串
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_EditRecordExAsync)
+ * @param objDataBaseTypeEN:需要添加的对象
+ * @returns 获取修改是否成功？
+ **/
+export async function DataBaseType_EditRecordExAsync(
+  objDataBaseTypeEN: clsDataBaseTypeEN,
+): Promise<boolean> {
+  const strThisFuncName = 'EditRecordExAsync';
+  const strAction = 'EditRecordEx';
   if (
     objDataBaseTypeEN.sfUpdFldSetStr === undefined ||
     objDataBaseTypeEN.sfUpdFldSetStr === null ||
@@ -2145,25 +2204,19 @@ export async function DataBaseType_UpdateWithConditionAsync(
  * @param objstrDataBaseTypeIdCond:条件对象
  * @returns 对象列表子集
  */
-export async function DataBaseType_IsExistRecordCache(objDataBaseTypeCond: clsDataBaseTypeEN) {
+export async function DataBaseType_IsExistRecordCache(objDataBaseTypeCond: ConditionCollection) {
   const strThisFuncName = 'IsExistRecordCache';
   const arrDataBaseTypeObjLstCache = await DataBaseType_GetObjLstCache();
   if (arrDataBaseTypeObjLstCache == null) return false;
   let arrDataBaseTypeSel = arrDataBaseTypeObjLstCache;
-  if (objDataBaseTypeCond.sfFldComparisonOp == null || objDataBaseTypeCond.sfFldComparisonOp == '')
+  if (objDataBaseTypeCond.GetConditions().length == 0)
     return arrDataBaseTypeSel.length > 0 ? true : false;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objDataBaseTypeCond.sfFldComparisonOp,
-  );
-  //console.log("clsDataBaseTypeWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
   try {
-    const sstrKeys = GetObjKeys(objDataBaseTypeCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objDataBaseTypeCond.GetFldValue(strKey);
+    for (const objCondition of objDataBaseTypeCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
       const strType = typeof strValue;
       switch (strType) {
         case 'string':
@@ -2465,26 +2518,21 @@ export async function DataBaseType_GetRecCountByCondAsync(strWhereCond: string):
  * @param objDataBaseTypeCond:条件对象
  * @returns 对象列表记录数
  */
-export async function DataBaseType_GetRecCountByCondCache(objDataBaseTypeCond: clsDataBaseTypeEN) {
+export async function DataBaseType_GetRecCountByCondCache(
+  objDataBaseTypeCond: ConditionCollection,
+) {
   const strThisFuncName = 'GetRecCountByCondCache';
   const arrDataBaseTypeObjLstCache = await DataBaseType_GetObjLstCache();
   if (arrDataBaseTypeObjLstCache == null) return 0;
   let arrDataBaseTypeSel = arrDataBaseTypeObjLstCache;
-  if (objDataBaseTypeCond.sfFldComparisonOp == null || objDataBaseTypeCond.sfFldComparisonOp == '')
-    return arrDataBaseTypeSel.length;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objDataBaseTypeCond.sfFldComparisonOp,
-  );
-  //console.log("clsDataBaseTypeWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
+  if (objDataBaseTypeCond.GetConditions().length == 0) return arrDataBaseTypeSel.length;
   try {
-    const sstrKeys = GetObjKeys(objDataBaseTypeCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
+    for (const objCondition of objDataBaseTypeCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
       arrDataBaseTypeSel = arrDataBaseTypeSel.filter((x) => x.GetFldValue(strKey) != null);
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objDataBaseTypeCond.GetFldValue(strKey);
       const strType = typeof strValue;
       switch (strType) {
         case 'string':
@@ -2723,7 +2771,7 @@ export function DataBaseType_ReFreshCache(): void {
   console.trace(strMsg);
   // 静态的对象列表,用于清空相关缓存,针对记录较少,作为参数表可以使用
   const strKey = clsDataBaseTypeEN._CurrTabName;
-  switch (clsDataBaseTypeEN.CacheModeId) {
+  switch (clsDataBaseTypeEN._CacheModeId) {
     case '04': //sessionStorage
       sessionStorage.removeItem(strKey);
       break;
@@ -2737,6 +2785,7 @@ export function DataBaseType_ReFreshCache(): void {
       CacheHelper.Remove(strKey);
       break;
   }
+  clsDataBaseTypeEN._RefreshTimeLst.push(clsDateTime.getTodayDateTimeStr(0));
 }
 
 /**
@@ -2746,7 +2795,7 @@ export function DataBaseType_ReFreshCache(): void {
 export function DataBaseType_ReFreshThisCache(): void {
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = clsDataBaseTypeEN._CurrTabName;
-    switch (clsDataBaseTypeEN.CacheModeId) {
+    switch (clsDataBaseTypeEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -2760,6 +2809,7 @@ export function DataBaseType_ReFreshThisCache(): void {
         CacheHelper.Remove(strKey);
         break;
     }
+    clsDataBaseTypeEN._RefreshTimeLst.push(clsDateTime.getTodayDateTimeStr(0));
     const strMsg = Format('刷新缓存成功!');
     console.trace(strMsg);
   } else {
@@ -2767,10 +2817,18 @@ export function DataBaseType_ReFreshThisCache(): void {
     console.trace(strMsg);
   }
 }
+/**
+ * 获取最新的缓存刷新时间
+ * @returns 最新的缓存刷新时间，字符串型
+ **/
+export function DataBaseType_GetLastRefreshTime(): string {
+  if (clsDataBaseTypeEN._RefreshTimeLst.length == 0) return '';
+  return clsDataBaseTypeEN._RefreshTimeLst[clsDataBaseTypeEN._RefreshTimeLst.length - 1];
+}
 
 /**
  * 绑定基于Web的下拉框,在某一层下的下拉框
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
 */
@@ -2795,8 +2853,28 @@ export async function DataBaseType_BindDdl_DataBaseTypeIdInDivCache(
     arrObjLstSel,
     clsDataBaseTypeEN.con_DataBaseTypeId,
     clsDataBaseTypeEN.con_DataBaseTypeName,
-    '数据库类型',
+    '数据库类型...',
   );
+}
+
+/**
+ * 绑定基于Web的下拉框,在某一层下的下拉框
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_GetDdlData)-pyf
+ * @param objDDL:需要绑定当前表的下拉框
+
+*/
+export async function DataBaseType_GetArrDataBaseType() {
+  //为数据源于表的下拉框设置内容
+  //console.log("开始：BindDdl_DataBaseTypeIdInDivCache");
+  const arrDataBaseType = new Array<clsDataBaseTypeEN>();
+  const arrObjLstSel = await DataBaseType_GetObjLstCache();
+  if (arrObjLstSel == null) return null;
+  const obj0 = new clsDataBaseTypeEN();
+  obj0.dataBaseTypeId = '0';
+  obj0.dataBaseTypeName = '选数据库类型...';
+  arrDataBaseType.push(obj0);
+  arrObjLstSel.forEach((x) => arrDataBaseType.push(x));
+  return arrDataBaseType;
 }
 
 /**
@@ -2807,7 +2885,7 @@ export function DataBaseType_CheckPropertyNew(pobjDataBaseTypeEN: clsDataBaseTyp
   //检查字段非空, 即数据表要求非常非空的字段,不能为空!
   if (IsNullOrEmpty(pobjDataBaseTypeEN.dataBaseTypeName) === true) {
     throw new Error(
-      '(errid:Watl000411)字段[数据库类型名]不能为空(In 数据库类型)!(clsDataBaseTypeBL:CheckPropertyNew0)',
+      `(errid:Watl000411)字段[数据库类型名]不能为空(In 数据库类型)!(clsDataBaseTypeBL:CheckPropertyNew0)`,
     );
   }
   //检查字段长度, 若字符型字段长度超出规定的长度,即非法!
@@ -2816,7 +2894,7 @@ export function DataBaseType_CheckPropertyNew(pobjDataBaseTypeEN: clsDataBaseTyp
     GetStrLen(pobjDataBaseTypeEN.dataBaseTypeId) > 2
   ) {
     throw new Error(
-      '(errid:Watl000413)字段[数据库类型ID(dataBaseTypeId)]的长度不能超过2(In 数据库类型(DataBaseType))!值:$(pobjDataBaseTypeEN.dataBaseTypeId)(clsDataBaseTypeBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[数据库类型ID(dataBaseTypeId)]的长度不能超过2(In 数据库类型(DataBaseType))!值:${pobjDataBaseTypeEN.dataBaseTypeId}(clsDataBaseTypeBL:CheckPropertyNew)`,
     );
   }
   if (
@@ -2824,7 +2902,7 @@ export function DataBaseType_CheckPropertyNew(pobjDataBaseTypeEN: clsDataBaseTyp
     GetStrLen(pobjDataBaseTypeEN.dataBaseTypeName) > 30
   ) {
     throw new Error(
-      '(errid:Watl000413)字段[数据库类型名(dataBaseTypeName)]的长度不能超过30(In 数据库类型(DataBaseType))!值:$(pobjDataBaseTypeEN.dataBaseTypeName)(clsDataBaseTypeBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[数据库类型名(dataBaseTypeName)]的长度不能超过30(In 数据库类型(DataBaseType))!值:${pobjDataBaseTypeEN.dataBaseTypeName}(clsDataBaseTypeBL:CheckPropertyNew)`,
     );
   }
   if (
@@ -2832,7 +2910,7 @@ export function DataBaseType_CheckPropertyNew(pobjDataBaseTypeEN: clsDataBaseTyp
     GetStrLen(pobjDataBaseTypeEN.dataBaseTypeENName) > 30
   ) {
     throw new Error(
-      '(errid:Watl000413)字段[数据库类型英文名(dataBaseTypeENName)]的长度不能超过30(In 数据库类型(DataBaseType))!值:$(pobjDataBaseTypeEN.dataBaseTypeENName)(clsDataBaseTypeBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[数据库类型英文名(dataBaseTypeENName)]的长度不能超过30(In 数据库类型(DataBaseType))!值:${pobjDataBaseTypeEN.dataBaseTypeENName}(clsDataBaseTypeBL:CheckPropertyNew)`,
     );
   }
   if (
@@ -2840,7 +2918,7 @@ export function DataBaseType_CheckPropertyNew(pobjDataBaseTypeEN: clsDataBaseTyp
     GetStrLen(pobjDataBaseTypeEN.dataBaseTypeSimName) > 30
   ) {
     throw new Error(
-      '(errid:Watl000413)字段[数据库类型简名(dataBaseTypeSimName)]的长度不能超过30(In 数据库类型(DataBaseType))!值:$(pobjDataBaseTypeEN.dataBaseTypeSimName)(clsDataBaseTypeBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[数据库类型简名(dataBaseTypeSimName)]的长度不能超过30(In 数据库类型(DataBaseType))!值:${pobjDataBaseTypeEN.dataBaseTypeSimName}(clsDataBaseTypeBL:CheckPropertyNew)`,
     );
   }
   if (
@@ -2848,7 +2926,7 @@ export function DataBaseType_CheckPropertyNew(pobjDataBaseTypeEN: clsDataBaseTyp
     GetStrLen(pobjDataBaseTypeEN.memo) > 1000
   ) {
     throw new Error(
-      '(errid:Watl000413)字段[说明(memo)]的长度不能超过1000(In 数据库类型(DataBaseType))!值:$(pobjDataBaseTypeEN.memo)(clsDataBaseTypeBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[说明(memo)]的长度不能超过1000(In 数据库类型(DataBaseType))!值:${pobjDataBaseTypeEN.memo}(clsDataBaseTypeBL:CheckPropertyNew)`,
     );
   }
   //检查字段的数据类型是否正确
@@ -2858,7 +2936,7 @@ export function DataBaseType_CheckPropertyNew(pobjDataBaseTypeEN: clsDataBaseTyp
     tzDataType.isString(pobjDataBaseTypeEN.dataBaseTypeId) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[数据库类型ID(dataBaseTypeId)]的值:[$(pobjDataBaseTypeEN.dataBaseTypeId)], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[数据库类型ID(dataBaseTypeId)]的值:[${pobjDataBaseTypeEN.dataBaseTypeId}], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -2867,7 +2945,7 @@ export function DataBaseType_CheckPropertyNew(pobjDataBaseTypeEN: clsDataBaseTyp
     tzDataType.isString(pobjDataBaseTypeEN.dataBaseTypeName) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[数据库类型名(dataBaseTypeName)]的值:[$(pobjDataBaseTypeEN.dataBaseTypeName)], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[数据库类型名(dataBaseTypeName)]的值:[${pobjDataBaseTypeEN.dataBaseTypeName}], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -2876,7 +2954,7 @@ export function DataBaseType_CheckPropertyNew(pobjDataBaseTypeEN: clsDataBaseTyp
     tzDataType.isString(pobjDataBaseTypeEN.dataBaseTypeENName) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[数据库类型英文名(dataBaseTypeENName)]的值:[$(pobjDataBaseTypeEN.dataBaseTypeENName)], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[数据库类型英文名(dataBaseTypeENName)]的值:[${pobjDataBaseTypeEN.dataBaseTypeENName}], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -2885,7 +2963,7 @@ export function DataBaseType_CheckPropertyNew(pobjDataBaseTypeEN: clsDataBaseTyp
     tzDataType.isString(pobjDataBaseTypeEN.dataBaseTypeSimName) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[数据库类型简名(dataBaseTypeSimName)]的值:[$(pobjDataBaseTypeEN.dataBaseTypeSimName)], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[数据库类型简名(dataBaseTypeSimName)]的值:[${pobjDataBaseTypeEN.dataBaseTypeSimName}], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -2894,7 +2972,7 @@ export function DataBaseType_CheckPropertyNew(pobjDataBaseTypeEN: clsDataBaseTyp
     tzDataType.isString(pobjDataBaseTypeEN.memo) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[说明(memo)]的值:[$(pobjDataBaseTypeEN.memo)], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[说明(memo)]的值:[${pobjDataBaseTypeEN.memo}], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckPropertyNew0)`,
     );
   }
   //检查外键, 作为外键应该和主键的字段长度是一样的, 若不一样,即非法!
@@ -2912,7 +2990,7 @@ export function DataBaseType_CheckProperty4Update(pobjDataBaseTypeEN: clsDataBas
     GetStrLen(pobjDataBaseTypeEN.dataBaseTypeId) > 2
   ) {
     throw new Error(
-      '(errid:Watl000416)字段[数据库类型ID(dataBaseTypeId)]的长度不能超过2(In 数据库类型(DataBaseType))!值:$(pobjDataBaseTypeEN.dataBaseTypeId)(clsDataBaseTypeBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[数据库类型ID(dataBaseTypeId)]的长度不能超过2(In 数据库类型(DataBaseType))!值:${pobjDataBaseTypeEN.dataBaseTypeId}(clsDataBaseTypeBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -2920,7 +2998,7 @@ export function DataBaseType_CheckProperty4Update(pobjDataBaseTypeEN: clsDataBas
     GetStrLen(pobjDataBaseTypeEN.dataBaseTypeName) > 30
   ) {
     throw new Error(
-      '(errid:Watl000416)字段[数据库类型名(dataBaseTypeName)]的长度不能超过30(In 数据库类型(DataBaseType))!值:$(pobjDataBaseTypeEN.dataBaseTypeName)(clsDataBaseTypeBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[数据库类型名(dataBaseTypeName)]的长度不能超过30(In 数据库类型(DataBaseType))!值:${pobjDataBaseTypeEN.dataBaseTypeName}(clsDataBaseTypeBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -2928,7 +3006,7 @@ export function DataBaseType_CheckProperty4Update(pobjDataBaseTypeEN: clsDataBas
     GetStrLen(pobjDataBaseTypeEN.dataBaseTypeENName) > 30
   ) {
     throw new Error(
-      '(errid:Watl000416)字段[数据库类型英文名(dataBaseTypeENName)]的长度不能超过30(In 数据库类型(DataBaseType))!值:$(pobjDataBaseTypeEN.dataBaseTypeENName)(clsDataBaseTypeBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[数据库类型英文名(dataBaseTypeENName)]的长度不能超过30(In 数据库类型(DataBaseType))!值:${pobjDataBaseTypeEN.dataBaseTypeENName}(clsDataBaseTypeBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -2936,7 +3014,7 @@ export function DataBaseType_CheckProperty4Update(pobjDataBaseTypeEN: clsDataBas
     GetStrLen(pobjDataBaseTypeEN.dataBaseTypeSimName) > 30
   ) {
     throw new Error(
-      '(errid:Watl000416)字段[数据库类型简名(dataBaseTypeSimName)]的长度不能超过30(In 数据库类型(DataBaseType))!值:$(pobjDataBaseTypeEN.dataBaseTypeSimName)(clsDataBaseTypeBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[数据库类型简名(dataBaseTypeSimName)]的长度不能超过30(In 数据库类型(DataBaseType))!值:${pobjDataBaseTypeEN.dataBaseTypeSimName}(clsDataBaseTypeBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -2944,7 +3022,7 @@ export function DataBaseType_CheckProperty4Update(pobjDataBaseTypeEN: clsDataBas
     GetStrLen(pobjDataBaseTypeEN.memo) > 1000
   ) {
     throw new Error(
-      '(errid:Watl000416)字段[说明(memo)]的长度不能超过1000(In 数据库类型(DataBaseType))!值:$(pobjDataBaseTypeEN.memo)(clsDataBaseTypeBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[说明(memo)]的长度不能超过1000(In 数据库类型(DataBaseType))!值:${pobjDataBaseTypeEN.memo}(clsDataBaseTypeBL:CheckProperty4Update)`,
     );
   }
   //检查字段的数据类型是否正确
@@ -2954,7 +3032,7 @@ export function DataBaseType_CheckProperty4Update(pobjDataBaseTypeEN: clsDataBas
     tzDataType.isString(pobjDataBaseTypeEN.dataBaseTypeId) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[数据库类型ID(dataBaseTypeId)]的值:[$(pobjDataBaseTypeEN.dataBaseTypeId)], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[数据库类型ID(dataBaseTypeId)]的值:[${pobjDataBaseTypeEN.dataBaseTypeId}], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -2963,7 +3041,7 @@ export function DataBaseType_CheckProperty4Update(pobjDataBaseTypeEN: clsDataBas
     tzDataType.isString(pobjDataBaseTypeEN.dataBaseTypeName) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[数据库类型名(dataBaseTypeName)]的值:[$(pobjDataBaseTypeEN.dataBaseTypeName)], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[数据库类型名(dataBaseTypeName)]的值:[${pobjDataBaseTypeEN.dataBaseTypeName}], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -2972,7 +3050,7 @@ export function DataBaseType_CheckProperty4Update(pobjDataBaseTypeEN: clsDataBas
     tzDataType.isString(pobjDataBaseTypeEN.dataBaseTypeENName) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[数据库类型英文名(dataBaseTypeENName)]的值:[$(pobjDataBaseTypeEN.dataBaseTypeENName)], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[数据库类型英文名(dataBaseTypeENName)]的值:[${pobjDataBaseTypeEN.dataBaseTypeENName}], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -2981,7 +3059,7 @@ export function DataBaseType_CheckProperty4Update(pobjDataBaseTypeEN: clsDataBas
     tzDataType.isString(pobjDataBaseTypeEN.dataBaseTypeSimName) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[数据库类型简名(dataBaseTypeSimName)]的值:[$(pobjDataBaseTypeEN.dataBaseTypeSimName)], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[数据库类型简名(dataBaseTypeSimName)]的值:[${pobjDataBaseTypeEN.dataBaseTypeSimName}], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -2990,7 +3068,7 @@ export function DataBaseType_CheckProperty4Update(pobjDataBaseTypeEN: clsDataBas
     tzDataType.isString(pobjDataBaseTypeEN.memo) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[说明(memo)]的值:[$(pobjDataBaseTypeEN.memo)], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[说明(memo)]的值:[${pobjDataBaseTypeEN.memo}], 非法,应该为字符型(In 数据库类型(DataBaseType))!(clsDataBaseTypeBL:CheckProperty4Update)`,
     );
   }
   //检查主键是否为Null或者空!
@@ -3000,7 +3078,7 @@ export function DataBaseType_CheckProperty4Update(pobjDataBaseTypeEN: clsDataBas
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3021,7 +3099,7 @@ export function DataBaseType_GetJSONStrByObj(pobjDataBaseTypeEN: clsDataBaseType
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -3042,7 +3120,7 @@ export function DataBaseType_GetObjLstByJSONStr(strJSON: string): Array<clsDataB
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrDataBaseTypeObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -3062,7 +3140,7 @@ export function DataBaseType_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-19
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

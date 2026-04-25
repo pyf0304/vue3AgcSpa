@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:ApplicationType_Edit(界面:ApplicationTypeCRUD,00050315)
  * 表名:ApplicationType(00050127)
- * 版本:2025.05.03.1(服务器:WIN-SRV103-116)
- * 日期:2025/05/08 11:50:39
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/04/21 16:11:23
  * 生成者:
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  * 模块中文名:生成代码(GeneCode)
  * 框架-层名:Vue_编辑区后台_TS(TS)(Vue_ViewScript_EditCS_TS,0257)
@@ -184,7 +184,7 @@ export abstract class ApplicationType_Edit {
       this.opType = 'Add';
       const bolIsSuccess = await this.ShowDialog_ApplicationType(this.opType);
       if (bolIsSuccess == false) return;
-      if (['02', '03', '06'].indexOf(clsApplicationTypeEN.PrimaryTypeId) > -1) {
+      if (['02', '03', '06'].indexOf(clsApplicationTypeEN._PrimaryTypeId) > -1) {
         await this.AddNewRecordWithMaxId();
       } else {
         await this.AddNewRecord();
@@ -284,7 +284,7 @@ export abstract class ApplicationType_Edit {
         case '确认添加':
           //这是一个单表的插入的代码,由于逻辑层太简单,
           //就把逻辑层合并到控制层,
-          if (['02', '03', '06'].indexOf(clsApplicationTypeEN.PrimaryTypeId) > -1) {
+          if (['02', '03', '06'].indexOf(clsApplicationTypeEN._PrimaryTypeId) > -1) {
             const returnKeyId = await this.AddNewRecordWithReturnKeySave();
             if (returnKeyId != 0) {
               refApplicationType_Edit.value.hideDialog();

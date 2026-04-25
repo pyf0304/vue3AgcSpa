@@ -26,7 +26,7 @@ export function CodeTypeEx_FuncMapByFldName(strFldName: string, objCodeTypeEx: c
   const strThisFuncName = CodeTypeEx_FuncMapByFldName.name;
   let strMsg = '';
   //如果是本表中字段，不需要映射
-  const arrFldName = clsCodeTypeEN.AttributeName;
+  const arrFldName = clsCodeTypeEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -167,7 +167,7 @@ export async function CodeTypeEx_GetObjExLstByPagerAsync(
   const objSortInfo = GetSortExpressInfo(objPagerPara);
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsCodeTypeEN.AttributeName.indexOf(objSortInfo.SortFld) == -1
+    clsCodeTypeEN._AttributeName.indexOf(objSortInfo.SortFld) == -1
   ) {
     for (const objInFor of arrCodeTypeExObjLst) {
       await CodeTypeEx_FuncMapByFldName(objSortInfo.SortFld, objInFor);

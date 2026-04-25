@@ -1,0 +1,104 @@
+﻿/*
+ * [样例说明]
+ * 1. 本文件为教学样例，由项目源码复制生成，不参与实际编译。
+ * 2. 文件属性: 扩展层样例。
+ * 3. 修改建议: 可修改。
+ * 4. 维护建议: 推荐承载业务规则与跨表联动（如缓存刷新）。
+ */
+
+import { CodeType_Edit } from '@/viewsBase/GeneCode/CodeType_Edit';
+import { IsNullOrEmpty } from '@/ts/PubFun/clsString';
+import { AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
+import { vCodeType_Sim_ReFreshThisCache } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
+
+/* CodeType_EditEx 的摘要说明。其中Q代表查询,U代表修改
+  (AutoGCLib.WA_ViewScript_EditCSEx_TS4TypeScript:GeneCode)
+*/
+export default class CodeType_EditEx extends CodeType_Edit {
+  /*
+   * [推荐实现样例]
+   * 生成层通常不知道 CodeType 与 vCodeType_Sim 的关系，
+   * 因此把联动刷新放在 Ex 覆盖方法最稳妥。
+   *
+   * 这里演示 3 个关键成功路径：
+   * 1. AddNewRecordSave
+   * 2. AddNewRecordWithMaxIdSave
+   * 3. UpdateRecordSave
+   */
+  /*
+  按钮单击,用于调用Js函数中btn_Click
+ (AutoGCLib.WA_ViewScript_EditCSEx_TS4TypeScript:Gen_WApi_TS_btnEdit_Click)
+ */
+  public static btnEdit_Click(strCommandName: string, strKeyId: string) {
+    const objPage: CodeType_EditEx = <CodeType_EditEx>(
+      CodeType_Edit.GetPageEditObj('CodeType_EditEx')
+    );
+    if (objPage == null) {
+      const strMsg = `当前编辑页面没有按合适的关键字初始化过，请检查！`;
+      alert(strMsg);
+      console.error(strMsg);
+      return;
+    }
+    let strMsg = '';
+    switch (strCommandName) {
+      case 'Submit': //提交
+        objPage.btnSubmit_Click();
+        break;
+      case 'AddNewRecordWithMaxId': //添加记录使用最大关键字
+        //objPageEdit.btnAddNewRecordWithMaxId_Click();
+        break;
+      case 'CreateWithMaxId': //添加记录使用最大关键字
+        //objPageEdit.btnAddNewRecordWithMaxId_Click();
+        break;
+      case 'AddNewRecord': //添加记录
+      case 'Create': //添加记录
+        objPage.btnAddNewRecord_Click();
+        break;
+      case 'UpdateRecord': //修改记录
+      case 'Update': //修改记录
+        // strKeyId = GetFirstCheckedKeyIdInDivObj(objPage.divName4List);
+        if (IsNullOrEmpty(strKeyId) == true) {
+          strMsg = '请选择需要修改的记录！';
+          console.error(strMsg);
+          alert(strMsg);
+          return;
+        }
+        objPage.btnUpdateRecord_Click(strKeyId);
+        break;
+
+      default:
+        AccessBtnClickDefault(strCommandName, 'CodeType_EditEx.btn_Click');
+
+        break;
+    }
+  }
+
+  public async AddNewRecordSave(): Promise<boolean> {
+    // 仅在新增成功后刷新关联缓存，避免无效清缓存。
+    const returnBool = await super.AddNewRecordSave();
+    if (returnBool === true) {
+      vCodeType_Sim_ReFreshThisCache();
+    }
+    return returnBool;
+  }
+
+  public async AddNewRecordWithMaxIdSave(): Promise<string> {
+    // 仅在成功返回新主键后刷新关联缓存。
+    const returnKeyId = await super.AddNewRecordWithMaxIdSave();
+    if (IsNullOrEmpty(returnKeyId) === false) {
+      vCodeType_Sim_ReFreshThisCache();
+    }
+    return returnKeyId;
+  }
+
+  public async UpdateRecordSave(): Promise<boolean> {
+    // 仅在修改成功后刷新关联缓存。
+    const returnBool = await super.UpdateRecordSave();
+    if (returnBool === true) {
+      vCodeType_Sim_ReFreshThisCache();
+    }
+    return returnBool;
+  }
+}
+
+

@@ -99,7 +99,7 @@ export function ApplicationTypeEx_FuncMapByFldName(
   const strThisFuncName = ApplicationTypeEx_FuncMapByFldName.name;
   let strMsg = '';
   //如果是本表中字段，不需要映射
-  const arrFldName = clsApplicationTypeEN.AttributeName;
+  const arrFldName = clsApplicationTypeEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {

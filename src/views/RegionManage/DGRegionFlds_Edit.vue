@@ -97,6 +97,7 @@
               <td class="text-left">
                 <input
                   id="txtSortExpression"
+                  v-model="sortExpression"
                   name="txtSortExpression"
                   class="form-control form-control-sm"
                   style="width: 230px"
@@ -438,6 +439,7 @@
             <td class="text-left">
               <input
                 id="txtSortExpression"
+                v-model="sortExpression"
                 name="txtSortExpression"
                 class="form-control form-control-sm"
                 style="width: 230px"

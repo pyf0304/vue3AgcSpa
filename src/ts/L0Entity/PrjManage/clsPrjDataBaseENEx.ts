@@ -1,15 +1,15 @@
 ﻿/**
  * 类名:clsPrjDataBaseENEx
  * 表名:PrjDataBase(00050176)
- * 版本:2023.10.12.1(服务器:WIN-SRV103-116)
- * 日期:2023/10/12 14:41:22
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/19 19:12:45
  * 生成者:pyf
  工程名称:AGC(0005)
- CM工程:AgcSpa前端(变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,9433AGC_CS12
+ CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:工程管理(PrjManage)
- * 框架-层名:实体扩展层(TS)(EntityLayerEx)
+ * 框架-层名:实体扩展层(TS)(EntityLayerEx,0191)
  * 编程语言:TypeScript
  **/
 /**
@@ -40,9 +40,39 @@ export class clsPrjDataBaseENEx extends clsPrjDataBaseEN {
     switch (strFldName) {
       case 'CtrlId':
         return '';
+      case clsPrjDataBaseENEx.con_DataBaseTypeName:
+        return this.dataBaseTypeName;
+      case clsPrjDataBaseENEx.con_UseStateName:
+        return this.useStateName;
       default:
         strValue = super.GetFldValue(strFldName);
         return strValue;
     }
+  }
+
+  /**
+   * 常量:"DataBaseTypeName"
+   * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
+   */
+  public static readonly con_DataBaseTypeName = 'dataBaseTypeName'; //数据库类型名
+
+  /**
+   * 常量:"UseStateName"
+   * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
+   */
+  public static readonly con_UseStateName = 'useStateName'; //使用状态名称
+
+  public dataBaseTypeName = ''; //数据库类型名
+  public useStateName = ''; //使用状态名称
+
+  /**
+   * 判断一个字符串是否是类的属性
+   * @param propName: 属性名
+   * @returns 是否是属性
+   */
+  public static hasProperty(propName: string): boolean {
+    //return propName in new clsPrjDataBaseENEx();
+    const instance = new clsPrjDataBaseENEx();
+    return Object.prototype.hasOwnProperty.call(instance, propName);
   }
 }

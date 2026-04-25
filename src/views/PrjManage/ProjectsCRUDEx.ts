@@ -28,6 +28,8 @@ import {
 } from '@/views/PrjManage/ProjectsVueShare';
 import { Format } from '@/ts/PubFun/clsString';
 import Projects_EditEx from '@/views/PrjManage/Projects_EditEx';
+import { ProjectDatabaseRel_GetObjLstCache } from '@/ts/L3ForWApi/PrjManage/clsProjectDatabaseRelWApi';
+import { PrjDataBase_GetObjLstCache } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
 
 /** ProjectsCRUDEx 的摘要说明。其中Q代表查询,U代表修改
  * (AutoGCLib.Vue_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -127,6 +129,115 @@ export default class ProjectsCRUDEx extends ProjectsCRUD implements IShowList {
         break;
     }
   }
+  /**
+   * 重写 BindGv_Projects4Func：先渲染表格，再注入"相关数据库"列
+   **/
+  public override async BindGv_Projects4Func(divList: HTMLDivElement) {
+    await super.BindGv_Projects4Func(divList);
+    await this.injectRelatedDbColumn(divList);
+    this.removeColumns(divList, ['ISO工程名', '修改日期']);
+    this.moveColumnsToEnd(divList, ['域/包名', '表空间', '说明']);
+  }
+
+  /**
+   * 向已渲染的表格中注入"相关数据库"列
+   **/
+  private async injectRelatedDbColumn(divList: HTMLDivElement) {
+    if (!divList) return;
+    const table = divList.querySelector('table');
+    if (!table) return;
+    const rows = table.querySelectorAll('tbody tr');
+    if (rows.length === 0) return;
+
+    // 批量预取，避免逐行请求
+    const relLst = await ProjectDatabaseRel_GetObjLstCache();
+    const dbLst = await PrjDataBase_GetObjLstCache();
+
+    // prjDataBaseId -> prjDataBaseName
+    const dbNameMap = new Map<string, string>();
+    for (const db of dbLst) {
+      dbNameMap.set(db.prjDataBaseId.trim(), db.prjDataBaseName || db.prjDataBaseId);
+    }
+    // prjId -> 显示串列表
+    const prjDbMap = new Map<string, string[]>();
+    for (const rel of relLst) {
+      const prjId = rel.prjId.trim();
+      if (!prjDbMap.has(prjId)) prjDbMap.set(prjId, []);
+      const dbName = dbNameMap.get(rel.prjDataBaseId.trim()) || rel.prjDataBaseId;
+      prjDbMap.get(prjId)!.push(`${rel.prjDataBaseId.trim()}: ${dbName}`);
+    }
+
+    // 表头行（tbody 第一行即 trHead）
+    const th = document.createElement('td');
+    th.textContent = '相关数据库';
+    th.className = 'text-center';
+    rows[0].appendChild(th);
+
+    // 数据行
+    for (let i = 1; i < rows.length; i++) {
+      const tr = rows[i] as HTMLTableRowElement;
+      const td = document.createElement('td');
+      td.className = 'text-left';
+      const prjId = tr.id.startsWith('tr') ? tr.id.substring(2) : '';
+      const dbNames = prjDbMap.get(prjId.trim()) || [];
+      td.innerHTML = dbNames.join('<br>');
+      tr.appendChild(td);
+    }
+  }
+
+  /**
+   * 将指定列移动到表格末尾，按传入顺序排列
+   **/
+  private moveColumnsToEnd(divList: HTMLDivElement, colHeaders: Array<string>) {
+    if (!divList) return;
+    const table = divList.querySelector('table');
+    if (!table) return;
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
+    if (rows.length === 0) return;
+
+    for (const colHeader of colHeaders) {
+      const headerCells = Array.from(rows[0].children) as Array<HTMLElement>;
+      const colIndex = headerCells.findIndex(
+        (cell) => cell.textContent != null && cell.textContent.trim() === colHeader,
+      );
+      if (colIndex < 0) continue;
+
+      for (const row of rows) {
+        const cell = row.children.item(colIndex);
+        if (cell != null) {
+          row.removeChild(cell);
+          row.appendChild(cell);
+        }
+      }
+    }
+  }
+
+  /**
+   * 删除指定表头对应的整列
+   **/
+  private removeColumns(divList: HTMLDivElement, colHeaders: Array<string>) {
+    if (!divList) return;
+    const table = divList.querySelector('table');
+    if (!table) return;
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
+    if (rows.length === 0) return;
+
+    for (const colHeader of colHeaders) {
+      const headerCells = Array.from(rows[0].children) as Array<HTMLElement>;
+      const colIndex = headerCells.findIndex(
+        (cell) => cell.textContent != null && cell.textContent.trim() === colHeader,
+      );
+      if (colIndex < 0) continue;
+
+      for (const row of rows) {
+        const cell = row.children.item(colIndex);
+        if (cell != null) {
+          row.removeChild(cell);
+        }
+      }
+    }
+  }
+
   public async SortColumn(sortColumnKey: string, sortDirection: string) {
     switch (sortColumnKey) {
       case 'dateTimeSim|Ex':

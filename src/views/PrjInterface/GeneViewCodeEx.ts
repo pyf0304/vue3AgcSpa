@@ -266,6 +266,8 @@ export class GeneViewCodeEx implements IShowList {
       const strGroupName1 = objCodeType.groupName;
       const arrGroupName1 = strGroupName1.split(',');
       x.groupName = arrGroupName1[0];
+      // 统一按 CodeType 的序号排序，而不是 AppCodeTypeRela 的序号。
+      x.orderNum = objCodeType.orderNum;
     }
     arrAppCodeTypeRelaExObjLst = arrAppCodeTypeRelaExObjLst.sort(
       AppCodeTypeRelaEx_SortFunByGroupNameAndOrderNum,

@@ -111,7 +111,7 @@
                 name="lblProgLangTypeId_q"
                 class="col-form-label text-right"
                 style="width: 90px"
-                >编程语言类型Id
+                >语言
               </label>
             </td>
             <td class="text-left">
@@ -364,6 +364,45 @@
             >
           </div>
         </li>
+        <li class="nav-item ml-3">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button
+              id="btnGoTop"
+              name="btnGoTop"
+              class="btn btn-outline-info btn-sm text-nowrap"
+              @click="btnGoTop_Click"
+              >移顶</button
+            >
+            <button
+              id="btnUpMove"
+              name="btnUpMove"
+              class="btn btn-outline-info btn-sm text-nowrap"
+              @click="btnUpMove_Click"
+              >上移</button
+            >
+            <button
+              id="btnDownMove"
+              name="btnDownMove"
+              class="btn btn-outline-info btn-sm text-nowrap"
+              @click="btnDownMove_Click"
+              >下移</button
+            >
+            <button
+              id="btnGoBottum"
+              name="btnGoBottum"
+              class="btn btn-outline-info btn-sm text-nowrap"
+              @click="btnGoBottum_Click"
+              >移底</button
+            >
+            <button
+              id="btnReOrder"
+              name="btnReOrder"
+              class="btn btn-outline-info btn-sm text-nowrap"
+              @click="btnReOrder_Click"
+              >重序</button
+            >
+          </div>
+        </li>
       </ul>
     </div>
     <!--列表层-->
@@ -386,11 +425,11 @@
   </div>
 </template>
 <script lang="ts">
-  //import $ from "jquery";
   import 'jquery/dist/jquery.min.js';
   import 'bootstrap/dist/js/bootstrap.min.js';
   import 'bootstrap/dist/css/bootstrap.css';
   import { defineComponent, onMounted, ref } from 'vue';
+  import $ from 'jquery';
   import * as XLSX from 'xlsx';
   import router from '@/router';
   import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
@@ -399,6 +438,8 @@
     GetCheckedKeyIdsInDivObj,
     GetSelectValueInDivObj,
     GetFirstCheckedKeyIdInDivObj,
+    GetDivObjInDivObj,
+    SetCheckedItem4KeyIdInDiv,
   } from '@/ts/PubFun/clsCommFunc4Ctrl';
   import {
     divVarSet,
@@ -441,6 +482,14 @@
   import { ProgLangType_GetArrProgLangTypeByIsVisible } from '@/ts/L3ForWApi/SysPara/clsProgLangTypeWApi';
   import { SQLDSType_GetArrSQLDSType } from '@/ts/L3ForWApi/PrjInterface/clsSQLDSTypeWApi';
   import { FieldType_GetArrFieldType } from '@/ts/L3ForWApi/Table_Field/clsFieldTypeWApi';
+  import {
+    CodeType_DownMoveAsync,
+    CodeType_GoBottomAsync,
+    CodeType_GoTopAsync,
+    CodeType_ReOrderAsync,
+    CodeType_UpMoveAsync,
+  } from '@/ts/L3ForWApi/GeneCode/clsCodeTypeWApi';
+  import { clsOrderByData } from '@/ts/PubFun/clsOrderByData';
   export default defineComponent({
     name: 'CodeTypeCRUD',
     components: {
@@ -491,7 +540,7 @@
           opType.value = 'Add';
           const bolIsSuccess = await objPage_Edit.value.ShowDialog_CodeType(opType.value);
           if (bolIsSuccess == false) return;
-          if (['02', '03', '06'].indexOf(clsCodeTypeEN.PrimaryTypeId) > -1) {
+          if (['02', '03', '06'].indexOf(clsCodeTypeEN._PrimaryTypeId) > -1) {
             await objPage_Edit.value.AddNewRecordWithMaxId();
           } else {
             await objPage_Edit.value.AddNewRecord();
@@ -702,7 +751,8 @@
             alert(`请选择需要设置是否在用的${thisTabName}记录!`);
             return '';
           }
-          const bolInUse: boolean = $('#ddlInUse_SetFldValue').prop('checked');
+          const bolInUse: boolean = inUse_f.value == '02' ? false : true; //;$('#ddlInUse_SetFldValue').prop('checked');
+
           //console.log('bolInUse=' + bolInUse);
           //console.log('arrKeyIds=');
           //console.log(arrKeyIds);
@@ -752,6 +802,162 @@
         }
       };
 
+      /**
+       * 上移
+       * (AutoGCLib.Vue_ViewScript_TS4Html:Gen_CRUD_setup_btnUpMove_Click)
+       **/
+      const btnUpMove_Click = async () => {
+        const strThisFuncName = btnUpMove_Click.name;
+        if (objPage.value == null) {
+          alert('页面初始化不成功,请联系管理员!');
+          return;
+        }
+        if (objPage.value.PreCheck4Order() == false) return;
+        const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+        if (arrKeyIds.length == 0) {
+          alert(`请选择需要上移的${thisTabName}记录!`);
+          return;
+        }
+        try {
+          const objOrderByData: clsOrderByData = new clsOrderByData();
+          objOrderByData.KeyIdLst = arrKeyIds;
+          await CodeType_UpMoveAsync(objOrderByData);
+          //CodeType_ReFreshCache();
+        } catch (e) {
+          const strMsg = `上移记录出错。错误:${e}.(in ${thisConstructorName}.${strThisFuncName}`;
+          console.error('Error: ', strMsg);
+          //console.trace();
+          alert(strMsg);
+          return;
+        }
+        await objPage.value.BindGv_CodeType4Func(divVarSet.refDivList);
+        const divDataLst = GetDivObjInDivObj(divVarSet.refDivList, 'divDataLst');
+        arrKeyIds.forEach((e) => SetCheckedItem4KeyIdInDiv(divDataLst, e));
+      };
+
+      /**
+       * 下移
+       * (AutoGCLib.Vue_ViewScript_TS4Html:Gen_CRUD_setup_btnDownMove_Click)
+       **/
+      const btnDownMove_Click = async () => {
+        const strThisFuncName = btnDownMove_Click.name;
+        if (objPage.value == null) {
+          alert('页面初始化不成功,请联系管理员!');
+          return;
+        }
+        if (objPage.value.PreCheck4Order() == false) return;
+        const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+        if (arrKeyIds.length == 0) {
+          alert(`请选择需要下移的${thisTabName}记录!`);
+          return;
+        }
+        try {
+          const objOrderByData: clsOrderByData = new clsOrderByData();
+          objOrderByData.KeyIdLst = arrKeyIds;
+          await CodeType_DownMoveAsync(objOrderByData);
+          //CodeType_ReFreshCache();
+        } catch (e) {
+          const strMsg = `下移记录出错。错误:${e}.(in ${thisConstructorName}.${strThisFuncName}`;
+          console.error('Error: ', strMsg);
+          //console.trace();
+          alert(strMsg);
+          return;
+        }
+        await objPage.value.BindGv_CodeType4Func(divVarSet.refDivList);
+        const divDataLst = GetDivObjInDivObj(divVarSet.refDivList, 'divDataLst');
+        arrKeyIds.forEach((e) => SetCheckedItem4KeyIdInDiv(divDataLst, e));
+      };
+
+      /** 置顶
+       * (AutoGCLib.Vue_ViewScript_TS4Html:Gen_CRUD_setup_btnGoTop_Click)
+       **/
+      const btnGoTop_Click = async () => {
+        const strThisFuncName = btnGoTop_Click.name;
+        if (objPage.value == null) {
+          alert('页面初始化不成功,请联系管理员!');
+          return;
+        }
+        if (objPage.value.PreCheck4Order() == false) return;
+        const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+        if (arrKeyIds.length == 0) {
+          alert(`请选择需要置顶的${thisTabName}记录!`);
+          return '';
+        }
+        try {
+          const objOrderByData: clsOrderByData = new clsOrderByData();
+          objOrderByData.KeyIdLst = arrKeyIds;
+          await CodeType_GoTopAsync(objOrderByData);
+          //CodeType_ReFreshCache();
+        } catch (e) {
+          const strMsg = `置顶出错。错误:${e}.(in ${thisConstructorName}.${strThisFuncName}`;
+          console.error('Error: ', strMsg);
+          //console.trace();
+          alert(strMsg);
+          return;
+        }
+        await objPage.value.BindGv_CodeType4Func(divVarSet.refDivList);
+        const divDataLst = GetDivObjInDivObj(divVarSet.refDivList, 'divDataLst');
+        arrKeyIds.forEach((e) => SetCheckedItem4KeyIdInDiv(divDataLst, e));
+      };
+
+      /**
+       * 置底
+       * (AutoGCLib.Vue_ViewScript_TS4Html:Gen_CRUD_setup_btnGoBottum_Click)
+       **/
+      const btnGoBottum_Click = async () => {
+        const strThisFuncName = btnGoBottum_Click.name;
+        if (objPage.value == null) {
+          alert('页面初始化不成功,请联系管理员!');
+          return;
+        }
+        if (objPage.value.PreCheck4Order() == false) return;
+        const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+        if (arrKeyIds.length == 0) {
+          alert(`请选择需要置底的${thisTabName}记录!`);
+          return '';
+        }
+        try {
+          const objOrderByData: clsOrderByData = new clsOrderByData();
+          objOrderByData.KeyIdLst = arrKeyIds;
+          await CodeType_GoBottomAsync(objOrderByData);
+          //CodeType_ReFreshCache();
+        } catch (e) {
+          const strMsg = `置底出错。错误:${e}.(in ${thisConstructorName}.${strThisFuncName}`;
+          console.error('Error: ', strMsg);
+          //console.trace();
+          alert(strMsg);
+          return;
+        }
+        await objPage.value.BindGv_CodeType4Func(divVarSet.refDivList);
+        const divDataLst = GetDivObjInDivObj(divVarSet.refDivList, 'divDataLst');
+        arrKeyIds.forEach((e) => SetCheckedItem4KeyIdInDiv(divDataLst, e));
+      };
+
+      /**
+       * 重序
+       * (AutoGCLib.Vue_ViewScript_TS4Html:Gen_CRUD_setup_btnReOrder_Click)
+       **/
+      const btnReOrder_Click = async () => {
+        const strThisFuncName = btnReOrder_Click.name;
+        if (objPage.value == null) {
+          alert('页面初始化不成功,请联系管理员!');
+          return;
+        }
+        if (objPage.value.PreCheck4Order() == false) return;
+        try {
+          const objOrderByData: clsOrderByData = new clsOrderByData();
+          await CodeType_ReOrderAsync(objOrderByData);
+          //CodeType_ReFreshCache();
+        } catch (e) {
+          const strMsg = `重序出错。错误:${e}.(in ${thisConstructorName}.${strThisFuncName}`;
+          console.error('Error: ', strMsg);
+          //console.trace();
+          alert(strMsg);
+          return;
+        }
+        await objPage.value.BindGv_CodeType4Func(divVarSet.refDivList);
+      };
+
       /** 函数功能:为查询区绑定下拉框
        * (AutoGCLib.Vue_ViewScript_TS4Html:Gen_Vue_setup_Ts_BindDdl4QryRegion)
        **/
@@ -770,6 +976,7 @@
         dependsOn_q.value = '0';
 
         BindDdl_TrueAndFalseInDivObj(divVarSet.refDivQuery, 'ddlInUse_q');
+        inUse_q.value = '01';
       }
 
       /** 函数功能:为功能区绑定下拉框
@@ -858,6 +1065,11 @@
         btnSetSqlDsTypeId_Click,
         btnSetInUse_Click,
         btnSetGroupName_Click,
+        btnGoTop_Click,
+        btnGoBottum_Click,
+        btnReOrder_Click,
+        btnUpMove_Click,
+        btnDownMove_Click,
       };
     },
     watch: {

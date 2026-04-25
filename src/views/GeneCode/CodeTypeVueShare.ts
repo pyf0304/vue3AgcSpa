@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:CodeTypeVueShare(界面:CodeTypeCRUD,00050271)
  * 表名:CodeType(00050203)
- * 版本:2025.05.03.1(服务器:WIN-SRV103-116)
- * 日期:2025/05/06 15:50:50
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/22 06:59:26
  * 生成者:
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  * 模块中文名:生成代码(GeneCode)
  * 框架-层名:Vue共享(TS)(Vue_Share_TS,0264)
@@ -15,13 +15,14 @@
 
 import { reactive, ref } from 'vue';
 import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
-import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
 import { clsCodeTypeENEx } from '@/ts/L0Entity/GeneCode/clsCodeTypeENEx';
+import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
 import { clsCodeTypeEN } from '@/ts/L0Entity/GeneCode/clsCodeTypeEN';
 
 const ascOrDesc4SortFun = ref('Asc');
 const sortCodeTypeBy = ref('');
+
 const viewVarSet = reactive({
   ascOrDesc4SortFun,
   sortCodeTypeBy,
@@ -104,7 +105,7 @@ const featureVarSet = reactive({
 export { featureVarSet };
 
 /** 把所有的查询控件内容组合成一个条件串
- * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_vue_ts_setup_fun_CombineCondition)
+ * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_Share_method_CombineCondition)
  * @returns 条件串(strWhereCond)
  **/
 export const CombineCodeTypeCondition = async (): Promise<string> => {
@@ -143,7 +144,11 @@ export const CombineCodeTypeCondition = async (): Promise<string> => {
       );
     }
     if (groupName_q.value != '' && groupName_q.value != '0') {
-      strWhereCond += Format(" And {0} = '{1}'", clsCodeTypeEN.con_GroupName, groupName_q.value);
+      strWhereCond += Format(
+        " And CodeType.{0} = '{1}'",
+        clsCodeTypeEN.con_GroupName,
+        groupName_q.value,
+      );
     }
     if (progLangTypeId_q.value != '' && progLangTypeId_q.value != '0') {
       strWhereCond += Format(
@@ -167,11 +172,15 @@ export const CombineCodeTypeCondition = async (): Promise<string> => {
       );
     }
     if (dependsOn_q.value != '' && dependsOn_q.value != '0') {
-      strWhereCond += Format(" And {0} = '{1}'", clsCodeTypeEN.con_DependsOn, dependsOn_q.value);
+      strWhereCond += Format(
+        " And CodeType.{0} = '{1}'",
+        clsCodeTypeEN.con_DependsOn,
+        dependsOn_q.value,
+      );
     }
-    if (inUse_q.value == 'true') {
+    if (inUse_q.value == 'true' || inUse_q.value == '01') {
       strWhereCond += Format(" And {0} = '1'", clsCodeTypeEN.con_InUse);
-    } else if (inUse_q.value == 'false') {
+    } else if (inUse_q.value == 'false' || inUse_q.value == '02') {
       strWhereCond += Format(" And {0} = '0'", clsCodeTypeEN.con_InUse);
     }
   } catch (objException) {
@@ -185,7 +194,7 @@ export const CombineCodeTypeCondition = async (): Promise<string> => {
 };
 
 /** 把所有的查询控件内容组合成一个条件串
- * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_vue_ts_setup_fun_CombineConditionObj)
+ * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_Share_method_CombineConditionObj)
  * @returns 条件串(strWhereCond)
  **/
 export const CombineCodeTypeConditionObj = async (): Promise<ConditionCollection> => {
@@ -267,10 +276,10 @@ export const CombineCodeTypeConditionObj = async (): Promise<ConditionCollection
       strWhereCond += Format(" And {0} = '{1}'", clsCodeTypeEN.con_DependsOn, dependsOn_q.value);
       objCodeTypeCond.SetCondFldValue(clsCodeTypeEN.con_DependsOn, dependsOn_q.value, '=');
     }
-    if (inUse_q.value == 'true') {
+    if (inUse_q.value == 'true' || inUse_q.value == '01') {
       strWhereCond += Format(" And {0} = '1'", clsCodeTypeEN.con_InUse);
       objCodeTypeCond.SetCondFldValue(clsCodeTypeEN.con_InUse, true, '=');
-    } else if (inUse_q.value == 'false') {
+    } else if (inUse_q.value == 'false' || inUse_q.value == '02') {
       strWhereCond += Format(" And {0} = '0'", clsCodeTypeEN.con_InUse);
       objCodeTypeCond.SetCondFldValue(clsCodeTypeEN.con_InUse, false, '=');
     }
@@ -286,7 +295,7 @@ export const CombineCodeTypeConditionObj = async (): Promise<ConditionCollection
 };
 
 /** 把所有的查询控件内容组合成一个条件串
- * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_vue_ts_setup_fun_CombineConditionObj4ExportExcel)
+ * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_Share_method_CombineConditionObj4ExportExcel)
  * @returns 条件串(strWhereCond)
  **/
 export const CombineCodeTypeConditionObj4ExportExcel = async (): Promise<ConditionCollection> => {
@@ -368,10 +377,10 @@ export const CombineCodeTypeConditionObj4ExportExcel = async (): Promise<Conditi
       strWhereCond += Format(" And {0} = '{1}'", clsCodeTypeEN.con_DependsOn, dependsOn_q.value);
       objCodeTypeCond.SetCondFldValue(clsCodeTypeEN.con_DependsOn, dependsOn_q.value, '=');
     }
-    if (inUse_q.value == 'true') {
+    if (inUse_q.value == 'true' || inUse_q.value == '01') {
       strWhereCond += Format(" And {0} = '1'", clsCodeTypeEN.con_InUse);
       objCodeTypeCond.SetCondFldValue(clsCodeTypeEN.con_InUse, true, '=');
-    } else if (inUse_q.value == 'false') {
+    } else if (inUse_q.value == 'false' || inUse_q.value == '02') {
       strWhereCond += Format(" And {0} = '0'", clsCodeTypeEN.con_InUse);
       objCodeTypeCond.SetCondFldValue(clsCodeTypeEN.con_InUse, false, '=');
     }

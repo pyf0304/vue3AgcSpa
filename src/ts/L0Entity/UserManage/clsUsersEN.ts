@@ -1,15 +1,15 @@
 ﻿/**
  * 类名:clsUsersEN
  * 表名:Users(00050001)
- * 版本:2023.10.12.1(服务器:WIN-SRV103-116)
- * 日期:2023/10/12 14:42:05
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/19 19:23:45
  * 生成者:pyf
  工程名称:AGC(0005)
- CM工程:AgcSpa前端(变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,9433AGC_CS12
+ CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:用户管理(UserManage)
- * 框架-层名:实体层(TS)(EntityLayer)
+ * 框架-层名:实体层(TS)(EntityLayer,0121)
  * 编程语言:TypeScript
  **/
 /**
@@ -19,14 +19,16 @@
 import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
 export class clsUsersEN extends clsGeneralTab {
-  public static CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
-  public static CacheModeId = '03'; //localStorage
-  public static IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
-  public static WhereFormat = ''; //条件格式串
-  public static _CurrTabName = 'Users'; //当前表名,与该类相关的表名
-  public static _KeyFldName = 'UserId'; //当前表中的关键字名称,与该类相关的表中关键字名
-  public static mintAttributeCount = 22;
-  public static AttributeName = [
+  public static _RefreshTimeLst = new Array<string>();
+  public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
+  public static readonly _CacheModeId: string = '03'; //localStorage
+  public static readonly _PrimaryTypeId: string = '01'; //关键字
+  public static readonly _IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
+  public static readonly _WhereFormat = ''; //条件格式串
+  public static readonly _CurrTabName: string = 'Users'; //当前表名,与该类相关的表名
+  public static readonly _KeyFldName: string = 'UserId'; //当前表中的关键字名称,与该类相关的表中关键字名
+  public static readonly _AttributeCount = 22;
+  public static readonly _AttributeName = [
     'userId',
     'userName',
     'departmentId',
@@ -556,179 +558,135 @@ export class clsUsersEN extends clsGeneralTab {
 
   /**
    * 常量:"UserId"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UserId(): string {
-    return 'userId';
-  } //用户Id
+  public static readonly con_UserId = 'userId'; //用户Id
 
   /**
    * 常量:"UserName"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UserName(): string {
-    return 'userName';
-  } //用户名
+  public static readonly con_UserName = 'userName'; //用户名
 
   /**
    * 常量:"DepartmentId"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_DepartmentId(): string {
-    return 'departmentId';
-  } //部门ID
+  public static readonly con_DepartmentId = 'departmentId'; //部门ID
 
   /**
    * 常量:"UserStateId"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UserStateId(): string {
-    return 'userStateId';
-  } //用户状态号
+  public static readonly con_UserStateId = 'userStateId'; //用户状态号
 
   /**
    * 常量:"RoleId"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_RoleId(): string {
-    return 'roleId';
-  } //角色ID
+  public static readonly con_RoleId = 'roleId'; //角色ID
 
   /**
    * 常量:"qxdj"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_qxdj(): string {
-    return 'qxdj';
-  } //权限等级
+  public static readonly con_qxdj = 'qxdj'; //权限等级
 
   /**
    * 常量:"EffectiveDate"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_EffectiveDate(): string {
-    return 'effectiveDate';
-  } //有效日期
+  public static readonly con_EffectiveDate = 'effectiveDate'; //有效日期
 
   /**
    * 常量:"EffitiveBeginDate"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_EffitiveBeginDate(): string {
-    return 'effitiveBeginDate';
-  } //有效开始日期
+  public static readonly con_EffitiveBeginDate = 'effitiveBeginDate'; //有效开始日期
 
   /**
    * 常量:"EffitiveEndDate"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_EffitiveEndDate(): string {
-    return 'effitiveEndDate';
-  } //有效结束日期
+  public static readonly con_EffitiveEndDate = 'effitiveEndDate'; //有效结束日期
 
   /**
    * 常量:"Password"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Password(): string {
-    return 'password';
-  } //口令
+  public static readonly con_Password = 'password'; //口令
 
   /**
    * 常量:"IdentityID"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IdentityID(): string {
-    return 'identityID';
-  } //身份编号
+  public static readonly con_IdentityID = 'identityID'; //身份编号
 
   /**
    * 常量:"Email"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Email(): string {
-    return 'email';
-  } //电子邮箱
+  public static readonly con_Email = 'email'; //电子邮箱
 
   /**
    * 常量:"IsGpUser"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsGpUser(): string {
-    return 'isGpUser';
-  } //是否平台用户
+  public static readonly con_IsGpUser = 'isGpUser'; //是否平台用户
 
   /**
    * 常量:"RegisterPassword"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_RegisterPassword(): string {
-    return 'registerPassword';
-  } //注册密码
+  public static readonly con_RegisterPassword = 'registerPassword'; //注册密码
 
   /**
    * 常量:"IsRegister"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsRegister(): string {
-    return 'isRegister';
-  } //是否注册
+  public static readonly con_IsRegister = 'isRegister'; //是否注册
 
   /**
    * 常量:"RegisterDate"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_RegisterDate(): string {
-    return 'registerDate';
-  } //注册日期
+  public static readonly con_RegisterDate = 'registerDate'; //注册日期
 
   /**
    * 常量:"IsAudit"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsAudit(): string {
-    return 'isAudit';
-  } //是否审核
+  public static readonly con_IsAudit = 'isAudit'; //是否审核
 
   /**
    * 常量:"AuditUser"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_AuditUser(): string {
-    return 'auditUser';
-  } //审核人
+  public static readonly con_AuditUser = 'auditUser'; //审核人
 
   /**
    * 常量:"AuditDate"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_AuditDate(): string {
-    return 'auditDate';
-  } //审核日期
+  public static readonly con_AuditDate = 'auditDate'; //审核日期
 
   /**
    * 常量:"UpdDate"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdDate(): string {
-    return 'updDate';
-  } //修改日期
+  public static readonly con_UpdDate = 'updDate'; //修改日期
 
   /**
    * 常量:"UpdUser"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdUser(): string {
-    return 'updUser';
-  } //修改者
+  public static readonly con_UpdUser = 'updUser'; //修改者
 
   /**
    * 常量:"Memo"
-   * (AGC.BusinessLogicEx.clsPrjTabFldBLEx:DefPropertyNameConst)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Memo(): string {
-    return 'memo';
-  } //说明
+  public static readonly con_Memo = 'memo'; //说明
 
   /**
    * 设置条件字段值.
@@ -746,5 +704,16 @@ export class clsUsersEN extends clsGeneralTab {
       this.dicFldComparisonOp[strFldName] = strComparisonOp;
     }
     this.sfFldComparisonOp = JSON.stringify(this.dicFldComparisonOp);
+  }
+
+  /**
+   * 判断一个字符串是否是类的属性
+   * @param propName: 属性名
+   * @returns 是否是属性
+   */
+  public static hasProperty(propName: string): boolean {
+    //return propName in new clsUsersEN();
+    const instance = new clsUsersEN();
+    return Object.prototype.hasOwnProperty.call(instance, propName);
   }
 }
