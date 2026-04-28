@@ -1465,7 +1465,7 @@ export abstract class PrjTabFldCRUD implements clsOperateList {
     arrPrjTabFldExObjLst: Array<clsPrjTabFldENEx>,
     arrDataColumn: Array<clsDataColumn>,
   ) {
-    const arrFldName = clsPrjTabFldEN.AttributeName;
+    const arrFldName = clsPrjTabFldEN._AttributeName;
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;

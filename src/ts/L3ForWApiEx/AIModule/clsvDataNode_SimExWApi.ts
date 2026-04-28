@@ -978,6 +978,7 @@ export async function vDataNode_SimEx_FuncMapFldName(objvDataNode_Sim: clsvDataN
 export async function vDataNode_SimEx_FuncMapTabName(objvDataNode_Sim: clsvDataNode_SimENEx) {
   const strThisFuncName = vDataNode_SimEx_FuncMapTabName.name;
   const vPrjTab_SimStore = usevPrjTab_SimStore();
+  const arrMsgObjId = ['lblMsg_List_GraphByTable', 'lblMsg_List_Graph', 'lblMsg_List'];
   try {
     console.log('objvDataNode_Sim.tabName:', objvDataNode_Sim.tabName);
     if (IsNullOrEmpty(objvDataNode_Sim.tabName) == true) {
@@ -996,7 +997,17 @@ export async function vDataNode_SimEx_FuncMapTabName(objvDataNode_Sim: clsvDataN
       strThisFuncName,
     );
     console.error(strMsg);
-    alert(strMsg);
+    let bolSetMsg = false;
+    for (const strMsgObjId of arrMsgObjId) {
+      const objMsg = document.getElementById(strMsgObjId);
+      if (objMsg != null) {
+        objMsg.innerHTML = strMsg;
+        bolSetMsg = true;
+      }
+    }
+    if (bolSetMsg == false) {
+      alert(strMsg);
+    }
   }
 }
 /**

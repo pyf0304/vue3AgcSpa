@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsViewRelaTabWApi
  * 表名:ViewRelaTab(00050100)
- * 版本:2025.06.13.1(服务器:PYF-AI)
- * 日期:2025/06/15 10:03:57
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/04/29 02:09:43
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:界面管理(PrjInterface)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * 界面相关表(ViewRelaTab)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年06月15日.
+ * Created by pyf on 2026年04月29日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -41,6 +41,7 @@ import { AddRecordResult } from '@/ts/PubFun/AddRecordResult';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
 import { stuRangePara } from '@/ts/PubFun/stuRangePara';
+import { clsDateTime } from '@/ts/PubFun/clsDateTime';
 
 export const viewRelaTab_Controller = 'ViewRelaTabApi';
 export const viewRelaTab_ConstructorName = 'viewRelaTab';
@@ -124,7 +125,7 @@ export async function ViewRelaTab_GetObjBymIdAsync(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -136,7 +137,7 @@ export function ViewRelaTab_SortFunDefa(a: clsViewRelaTabEN, b: clsViewRelaTabEN
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -150,7 +151,7 @@ export function ViewRelaTab_SortFunDefa2Fld(a: clsViewRelaTabEN, b: clsViewRelaT
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -194,6 +195,12 @@ export function ViewRelaTab_SortFunByKey(strKey: string, AscOrDesc: string) {
       case clsViewRelaTabEN.con_PrjId:
         return (a: clsViewRelaTabEN, b: clsViewRelaTabEN) => {
           return a.prjId.localeCompare(b.prjId);
+        };
+      case clsViewRelaTabEN.con_RelaFldNames:
+        return (a: clsViewRelaTabEN, b: clsViewRelaTabEN) => {
+          if (a.relaFldNames == null) return -1;
+          if (b.relaFldNames == null) return 1;
+          return a.relaFldNames.localeCompare(b.relaFldNames);
         };
       case clsViewRelaTabEN.con_UpdDate:
         return (a: clsViewRelaTabEN, b: clsViewRelaTabEN) => {
@@ -254,6 +261,12 @@ export function ViewRelaTab_SortFunByKey(strKey: string, AscOrDesc: string) {
         return (a: clsViewRelaTabEN, b: clsViewRelaTabEN) => {
           return b.prjId.localeCompare(a.prjId);
         };
+      case clsViewRelaTabEN.con_RelaFldNames:
+        return (a: clsViewRelaTabEN, b: clsViewRelaTabEN) => {
+          if (b.relaFldNames == null) return -1;
+          if (a.relaFldNames == null) return 1;
+          return b.relaFldNames.localeCompare(a.relaFldNames);
+        };
       case clsViewRelaTabEN.con_UpdDate:
         return (a: clsViewRelaTabEN, b: clsViewRelaTabEN) => {
           if (b.updDate == null) return -1;
@@ -284,7 +297,7 @@ export function ViewRelaTab_SortFunByKey(strKey: string, AscOrDesc: string) {
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -325,6 +338,10 @@ export async function ViewRelaTab_FilterFunByKey(strKey: string, value: any) {
     case clsViewRelaTabEN.con_PrjId:
       return (obj: clsViewRelaTabEN) => {
         return obj.prjId === value;
+      };
+    case clsViewRelaTabEN.con_RelaFldNames:
+      return (obj: clsViewRelaTabEN) => {
+        return obj.relaFldNames === value;
       };
     case clsViewRelaTabEN.con_UpdDate:
       return (obj: clsViewRelaTabEN) => {
@@ -1102,7 +1119,7 @@ export function ViewRelaTab_CopyToEx(objViewRelaTabENS: clsViewRelaTabEN): clsVi
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -1116,7 +1133,7 @@ export function ViewRelaTab_FuncMapByFldName(
   strFldName = strFldName.replace('|Ex', '');
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsViewRelaTabEN.AttributeName;
+  const arrFldName = clsViewRelaTabEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -1126,6 +1143,10 @@ export function ViewRelaTab_FuncMapByFldName(
       return ViewRelaTab_FuncMapInOutTypeName(objViewRelaTabEx);
     case clsViewRelaTabENEx.con_ViewTabTypeName:
       return ViewRelaTab_FuncMapViewTabTypeName(objViewRelaTabEx);
+    case clsViewRelaTabENEx.con_CmPrjId:
+      return ViewRelaTab_FuncMapCmPrjId(objViewRelaTabEx);
+    case clsViewRelaTabENEx.con_DateTimeSim:
+      return ViewRelaTab_FuncMapDateTimeSim(objViewRelaTabEx);
     default:
       strMsg = Format(
         '扩展字段:[{0}]在字段值函数映射中不存在!(in {1})',
@@ -1139,7 +1160,7 @@ export function ViewRelaTab_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -1180,6 +1201,17 @@ export function ViewRelaTab_SortFunByExKey(strKey: string, AscOrDesc: string) {
         return (a: clsViewRelaTabENEx, b: clsViewRelaTabENEx) => {
           return a.tabName.localeCompare(b.tabName);
         };
+      case clsViewRelaTabENEx.con_CmPrjId:
+        return (a: clsViewRelaTabENEx, b: clsViewRelaTabENEx) => {
+          return a.cmPrjId.localeCompare(b.cmPrjId);
+        };
+      case clsViewRelaTabENEx.con_DateTimeSim:
+        return (a: clsViewRelaTabENEx, b: clsViewRelaTabENEx) => {
+          if (a.dateTimeSim === null && b.dateTimeSim === null) return 0;
+          if (a.dateTimeSim === null) return -1;
+          if (b.dateTimeSim === null) return 1;
+          return a.dateTimeSim.localeCompare(b.dateTimeSim);
+        };
       default:
         return ViewRelaTab_SortFunByKey(strKey, AscOrDesc);
     }
@@ -1215,6 +1247,17 @@ export function ViewRelaTab_SortFunByExKey(strKey: string, AscOrDesc: string) {
       case clsViewRelaTabENEx.con_TabName:
         return (a: clsViewRelaTabENEx, b: clsViewRelaTabENEx) => {
           return b.tabName.localeCompare(a.tabName);
+        };
+      case clsViewRelaTabENEx.con_CmPrjId:
+        return (a: clsViewRelaTabENEx, b: clsViewRelaTabENEx) => {
+          return b.cmPrjId.localeCompare(a.cmPrjId);
+        };
+      case clsViewRelaTabENEx.con_DateTimeSim:
+        return (a: clsViewRelaTabENEx, b: clsViewRelaTabENEx) => {
+          if (a.dateTimeSim === null && b.dateTimeSim === null) return 0;
+          if (a.dateTimeSim === null) return 1;
+          if (b.dateTimeSim === null) return -1;
+          return b.dateTimeSim.localeCompare(a.dateTimeSim);
         };
       default:
         return ViewRelaTab_SortFunByKey(strKey, AscOrDesc);
@@ -1305,6 +1348,64 @@ export async function ViewRelaTab_FuncMapViewTabTypeName(objViewRelaTab: clsView
   } catch (e) {
     const strMsg = Format(
       '(errid:Watl001398)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      viewRelaTab_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
+ * @param objViewRelaTabS:源对象
+ **/
+export async function ViewRelaTab_FuncMapCmPrjId(objViewRelaTab: clsViewRelaTabENEx) {
+  const strThisFuncName = ViewRelaTab_FuncMapCmPrjId.name;
+  try {
+    if (IsNullOrEmpty(objViewRelaTab.cmPrjId) == true) {
+      const ViewInfoViewId = objViewRelaTab.viewId;
+      if (IsNullOrEmpty(objViewRelaTab.prjId) == true) {
+        const strMsg = `函数映射[CmPrjId]数据出错,prjId不能为空!(in ${viewRelaTab_ConstructorName}.${strThisFuncName})`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      const ViewInfoCmPrjId = await ViewInfo_func(
+        clsViewInfoEN.con_ViewId,
+        clsViewRelaTabENEx.con_CmPrjId,
+        ViewInfoViewId,
+        objViewRelaTab.prjId,
+      );
+      objViewRelaTab.cmPrjId = ViewInfoCmPrjId;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001399)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      viewRelaTab_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
+ * @param objViewRelaTabS:源对象
+ **/
+export async function ViewRelaTab_FuncMapDateTimeSim(objViewRelaTab: clsViewRelaTabENEx) {
+  const strThisFuncName = ViewRelaTab_FuncMapDateTimeSim.name;
+  try {
+    if (IsNullOrEmpty(objViewRelaTab.dateTimeSim) == true) {
+      const CommonDataNodeDateTimeSim = clsDateTime.GetDateTime_Sim(objViewRelaTab.updDate);
+      objViewRelaTab.dateTimeSim = CommonDataNodeDateTimeSim;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001326)函数映射表对象数据出错,{0}.(in {1}.{2})',
       e,
       viewRelaTab_ConstructorName,
       strThisFuncName,
@@ -2181,6 +2282,14 @@ export function ViewRelaTab_CheckPropertyNew(pobjViewRelaTabEN: clsViewRelaTabEN
     );
   }
   if (
+    IsNullOrEmpty(pobjViewRelaTabEN.relaFldNames) == false &&
+    GetStrLen(pobjViewRelaTabEN.relaFldNames) > 500
+  ) {
+    throw new Error(
+      `(errid:Watl000413)字段[相关字段名s(relaFldNames)]的长度不能超过500(In 界面相关表(ViewRelaTab))!值:${pobjViewRelaTabEN.relaFldNames}(clsViewRelaTabBL:CheckPropertyNew)`,
+    );
+  }
+  if (
     IsNullOrEmpty(pobjViewRelaTabEN.updDate) == false &&
     GetStrLen(pobjViewRelaTabEN.updDate) > 20
   ) {
@@ -2272,6 +2381,15 @@ export function ViewRelaTab_CheckPropertyNew(pobjViewRelaTabEN: clsViewRelaTabEN
   ) {
     throw new Error(
       `(errid:Watl000414)字段[工程Id(prjId)]的值:[${pobjViewRelaTabEN.prjId}], 非法,应该为字符型(In 界面相关表(ViewRelaTab))!(clsViewRelaTabBL:CheckPropertyNew0)`,
+    );
+  }
+  if (
+    IsNullOrEmpty(pobjViewRelaTabEN.relaFldNames) == false &&
+    undefined !== pobjViewRelaTabEN.relaFldNames &&
+    tzDataType.isString(pobjViewRelaTabEN.relaFldNames) === false
+  ) {
+    throw new Error(
+      `(errid:Watl000414)字段[相关字段名s(relaFldNames)]的值:[${pobjViewRelaTabEN.relaFldNames}], 非法,应该为字符型(In 界面相关表(ViewRelaTab))!(clsViewRelaTabBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -2373,6 +2491,14 @@ export function ViewRelaTab_CheckProperty4Update(pobjViewRelaTabEN: clsViewRelaT
     );
   }
   if (
+    IsNullOrEmpty(pobjViewRelaTabEN.relaFldNames) == false &&
+    GetStrLen(pobjViewRelaTabEN.relaFldNames) > 500
+  ) {
+    throw new Error(
+      `(errid:Watl000416)字段[相关字段名s(relaFldNames)]的长度不能超过500(In 界面相关表(ViewRelaTab))!值:${pobjViewRelaTabEN.relaFldNames}(clsViewRelaTabBL:CheckProperty4Update)`,
+    );
+  }
+  if (
     IsNullOrEmpty(pobjViewRelaTabEN.updDate) == false &&
     GetStrLen(pobjViewRelaTabEN.updDate) > 20
   ) {
@@ -2467,6 +2593,15 @@ export function ViewRelaTab_CheckProperty4Update(pobjViewRelaTabEN: clsViewRelaT
     );
   }
   if (
+    IsNullOrEmpty(pobjViewRelaTabEN.relaFldNames) == false &&
+    undefined !== pobjViewRelaTabEN.relaFldNames &&
+    tzDataType.isString(pobjViewRelaTabEN.relaFldNames) === false
+  ) {
+    throw new Error(
+      `(errid:Watl000417)字段[相关字段名s(relaFldNames)]的值:[${pobjViewRelaTabEN.relaFldNames}], 非法,应该为字符型(In 界面相关表(ViewRelaTab))!(clsViewRelaTabBL:CheckProperty4Update)`,
+    );
+  }
+  if (
     IsNullOrEmpty(pobjViewRelaTabEN.updDate) == false &&
     undefined !== pobjViewRelaTabEN.updDate &&
     tzDataType.isString(pobjViewRelaTabEN.updDate) === false
@@ -2522,7 +2657,7 @@ export function ViewRelaTab_CheckProperty4Update(pobjViewRelaTabEN: clsViewRelaT
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -2543,7 +2678,7 @@ export function ViewRelaTab_GetJSONStrByObj(pobjViewRelaTabEN: clsViewRelaTabEN)
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -2564,7 +2699,7 @@ export function ViewRelaTab_GetObjLstByJSONStr(strJSON: string): Array<clsViewRe
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrViewRelaTabObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -2584,7 +2719,7 @@ export function ViewRelaTab_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -2735,6 +2870,21 @@ export function ViewRelaTab_GetCombineCondition(objViewRelaTabCond: clsViewRelaT
   if (
     Object.prototype.hasOwnProperty.call(
       objViewRelaTabCond.dicFldComparisonOp,
+      clsViewRelaTabEN.con_RelaFldNames,
+    ) == true
+  ) {
+    const strComparisonOpRelaFldNames: string =
+      objViewRelaTabCond.dicFldComparisonOp[clsViewRelaTabEN.con_RelaFldNames];
+    strWhereCond += Format(
+      " And {0} {2} '{1}'",
+      clsViewRelaTabEN.con_RelaFldNames,
+      objViewRelaTabCond.relaFldNames,
+      strComparisonOpRelaFldNames,
+    );
+  }
+  if (
+    Object.prototype.hasOwnProperty.call(
+      objViewRelaTabCond.dicFldComparisonOp,
       clsViewRelaTabEN.con_UpdDate,
     ) == true
   ) {
@@ -2783,29 +2933,33 @@ export function ViewRelaTab_GetCombineCondition(objViewRelaTabCond: clsViewRelaT
 /**
  *获取唯一性条件串(Uniqueness)--ViewRelaTab(界面相关表),根据唯一约束条件来生成
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_GetUniquenessConditionString)
- * @param strViewId: 界面Id(要求唯一的字段)
  * @param strTabId: 表ID(要求唯一的字段)
+ * @param strViewId: 界面Id(要求唯一的字段)
+ * @param strRegionId: 区域Id(要求唯一的字段)
  * @returns 条件串(strWhereCond)
  **/
 export function ViewRelaTab_GetUniCondStr(objViewRelaTabEN: clsViewRelaTabEN): string {
   let strWhereCond = ' 1 = 1 ';
-  strWhereCond += Format(" and ViewId = '{0}'", objViewRelaTabEN.viewId);
   strWhereCond += Format(" and TabId = '{0}'", objViewRelaTabEN.tabId);
+  strWhereCond += Format(" and ViewId = '{0}'", objViewRelaTabEN.viewId);
+  strWhereCond += Format(" and RegionId = '{0}'", objViewRelaTabEN.regionId);
   return strWhereCond;
 }
 
 /**
  *获取唯一性条件串(Uniqueness)--ViewRelaTab(界面相关表),根据唯一约束条件来生成
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_GetUniquenessConditionString4Update)
- * @param strViewId: 界面Id(要求唯一的字段)
  * @param strTabId: 表ID(要求唯一的字段)
+ * @param strViewId: 界面Id(要求唯一的字段)
+ * @param strRegionId: 区域Id(要求唯一的字段)
  * @returns 条件串(strWhereCond)
  **/
 export function ViewRelaTab_GetUniCondStr4Update(objViewRelaTabEN: clsViewRelaTabEN): string {
   let strWhereCond = ' 1 = 1 ';
   strWhereCond += Format(" and mId <> '{0}'", objViewRelaTabEN.mId);
-  strWhereCond += Format(" and ViewId = '{0}'", objViewRelaTabEN.viewId);
   strWhereCond += Format(" and TabId = '{0}'", objViewRelaTabEN.tabId);
+  strWhereCond += Format(" and ViewId = '{0}'", objViewRelaTabEN.viewId);
+  strWhereCond += Format(" and RegionId = '{0}'", objViewRelaTabEN.regionId);
   return strWhereCond;
 }
 

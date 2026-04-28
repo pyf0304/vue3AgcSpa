@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsCacheUseStateEN
  * 表名:CacheUseState(00050566)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:49:08
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/28 23:40:23
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:系统设置(SystemSet)
  * 框架-层名:实体层(TS)(EntityLayer,0121)
@@ -20,15 +20,15 @@ import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
 export class clsCacheUseStateEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
-  public static CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
-  public static CacheModeId = '04'; //sessionStorage
-  public static PrimaryTypeId = '02'; //identity
-  public static IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
-  public static WhereFormat = ''; //条件格式串
-  public static _CurrTabName = 'CacheUseState'; //当前表名,与该类相关的表名
-  public static _KeyFldName = 'mId'; //当前表中的关键字名称,与该类相关的表中关键字名
-  public static mintAttributeCount = 7;
-  public static AttributeName = [
+  public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
+  public static readonly _CacheModeId: string = '04'; //sessionStorage
+  public static readonly _PrimaryTypeId: string = '02'; //identity
+  public static readonly _IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
+  public static readonly _WhereFormat = ''; //条件格式串
+  public static readonly _CurrTabName: string = 'CacheUseState'; //当前表名,与该类相关的表名
+  public static readonly _KeyFldName: string = 'mId'; //当前表中的关键字名称,与该类相关的表中关键字名
+  public static readonly _AttributeCount = 7;
+  public static readonly _AttributeName = [
     'mId',
     'userId',
     'cacheModeId',
@@ -245,57 +245,43 @@ export class clsCacheUseStateEN extends clsGeneralTab {
    * 常量:"mId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_mId(): string {
-    return 'mId';
-  } //mId
+  public static readonly con_mId = 'mId'; //mId
 
   /**
    * 常量:"UserId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UserId(): string {
-    return 'userId';
-  } //用户Id
+  public static readonly con_UserId = 'userId'; //用户Id
 
   /**
    * 常量:"CacheModeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CacheModeId(): string {
-    return 'cacheModeId';
-  } //缓存方式Id
+  public static readonly con_CacheModeId = 'cacheModeId'; //缓存方式Id
 
   /**
    * 常量:"CacheKey"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CacheKey(): string {
-    return 'cacheKey';
-  } //缓存关键字
+  public static readonly con_CacheKey = 'cacheKey'; //缓存关键字
 
   /**
    * 常量:"CacheSize"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CacheSize(): string {
-    return 'cacheSize';
-  } //缓存大小
+  public static readonly con_CacheSize = 'cacheSize'; //缓存大小
 
   /**
    * 常量:"UseDate"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UseDate(): string {
-    return 'useDate';
-  } //使用日期
+  public static readonly con_UseDate = 'useDate'; //使用日期
 
   /**
    * 常量:"Memo"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Memo(): string {
-    return 'memo';
-  } //说明
+  public static readonly con_Memo = 'memo'; //说明
 
   /**
    * 设置条件字段值.
@@ -314,6 +300,7 @@ export class clsCacheUseStateEN extends clsGeneralTab {
     }
     this.sfFldComparisonOp = JSON.stringify(this.dicFldComparisonOp);
   }
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名

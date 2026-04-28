@@ -5,7 +5,7 @@
  * */
 
 import { clsOperateList } from './clsOperateList';
-import { Format } from './clsString';
+// import { Format } from './clsString';
 
 export class clsTabs {
   constructor() {}
@@ -75,12 +75,41 @@ export class clsTabs {
     if (objTabInfo.IsActive) {
       AField.className = 'nav-link active';
     }
-    AField.href = Format('#{0}', objTabInfo.tabId);
+    AField.href = 'javascript:void(0)';
+    AField.setAttribute('data-tab-id', objTabInfo.tabId);
     AField.setAttribute('onclick', objTabInfo.TabClick);
     AField.setAttribute('data-toggle', 'tab');
     AField.setAttribute('role', 'tab');
     AField.innerText = objTabInfo.TabTitle;
+    AField.addEventListener('click', (event: MouseEvent) => {
+      event.preventDefault();
+      const divRoot = <HTMLDivElement>AField.closest('div');
+      if (divRoot == null) return;
+      this.ActiveTab(divRoot, objTabInfo.tabId);
+    });
     return AField;
+  }
+
+  private ActiveTab(divRoot: HTMLDivElement, strTabId: string) {
+    const arrTabLink = Array.from(divRoot.querySelectorAll('ul.nav-tabs a.nav-link'));
+    arrTabLink.forEach((x) => {
+      const aLink = <HTMLAnchorElement>x;
+      if (aLink.getAttribute('data-tab-id') == strTabId) {
+        aLink.classList.add('active');
+      } else {
+        aLink.classList.remove('active');
+      }
+    });
+
+    const arrTabPane = Array.from(divRoot.querySelectorAll('div.tab-content > div.tab-pane'));
+    arrTabPane.forEach((x) => {
+      const divPane = <HTMLDivElement>x;
+      if (divPane.id == strTabId) {
+        divPane.classList.add('active');
+      } else {
+        divPane.classList.remove('active');
+      }
+    });
   }
 
   public GetDiv_TabContent(): HTMLDivElement {

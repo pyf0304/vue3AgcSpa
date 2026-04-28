@@ -377,7 +377,7 @@
           alert(strMsg);
         }
       };
-      const strTitle = ref('约束编辑');
+      const strTitle = ref('约束编辑1');
       const strSubmitButtonText = ref('添加');
       const strCancelButtonText = ref('取消');
       const keyId = ref('');

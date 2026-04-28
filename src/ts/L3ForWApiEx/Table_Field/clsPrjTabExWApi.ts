@@ -1194,7 +1194,7 @@ export async function PrjTabEx_GetObjExLstByPagerAsyncBak(
   const objSortInfo = GetSortExpressInfo(objPagerPara);
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsPrjTabEN.AttributeName.indexOf(objSortInfo.SortFld) == -1
+    clsPrjTabEN._AttributeName.indexOf(objSortInfo.SortFld) == -1
   ) {
     for (const objInFor of arrPrjTabExObjLst) {
       await PrjTabEx_FuncMapByFldName(objSortInfo.SortFld, objInFor);
@@ -1345,7 +1345,7 @@ export function PrjTabEx_FuncMapByFldName(strFldName: string, objPrjTabEx: clsPr
   const strThisFuncName = 'PrjTabEx_FuncMapByFldName';
   let strMsg = '';
   //如果是本表中字段，不需要映射
-  const arrFldName = clsPrjTabEN.AttributeName;
+  const arrFldName = clsPrjTabEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -1952,7 +1952,7 @@ export async function PrjTabEx_GetObjExLstByPagerAsync(
   const objSortInfo = GetSortExpressInfo(objPagerPara);
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsPrjTabEN.AttributeName.indexOf(objSortInfo.SortFld) == -1
+    clsPrjTabEN._AttributeName.indexOf(objSortInfo.SortFld) == -1
   ) {
     for (const objInFor of arrPrjTabExObjLst) {
       await PrjTabEx_FuncMapByFldName(objSortInfo.SortFld, objInFor);

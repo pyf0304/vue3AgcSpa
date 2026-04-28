@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsPrjTabFldWApi
  * 表名:PrjTabFld(00050019)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/15 10:07:56
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/28 23:40:08
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:字段、表维护(Table_Field)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * 工程表字段(PrjTabFld)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年06月15日.
+ * Created by pyf on 2026年04月28日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -270,7 +270,7 @@ export async function PrjTabFld_UpdateObjInLstCache(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -282,7 +282,7 @@ export function PrjTabFld_SortFunDefa(a: clsPrjTabFldEN, b: clsPrjTabFldEN): num
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -296,7 +296,7 @@ export function PrjTabFld_SortFunDefa2Fld(a: clsPrjTabFldEN, b: clsPrjTabFldEN):
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -430,14 +430,10 @@ export function PrjTabFld_SortFunByKey(strKey: string, AscOrDesc: string) {
         };
       case clsPrjTabFldEN.con_UpdDate:
         return (a: clsPrjTabFldEN, b: clsPrjTabFldEN) => {
-          if (a.updDate == null) return -1;
-          if (b.updDate == null) return 1;
           return a.updDate.localeCompare(b.updDate);
         };
       case clsPrjTabFldEN.con_UpdUser:
         return (a: clsPrjTabFldEN, b: clsPrjTabFldEN) => {
-          if (a.updUser == null) return -1;
-          if (b.updUser == null) return 1;
           return a.updUser.localeCompare(b.updUser);
         };
       case clsPrjTabFldEN.con_Memo:
@@ -576,14 +572,10 @@ export function PrjTabFld_SortFunByKey(strKey: string, AscOrDesc: string) {
         };
       case clsPrjTabFldEN.con_UpdDate:
         return (a: clsPrjTabFldEN, b: clsPrjTabFldEN) => {
-          if (b.updDate == null) return -1;
-          if (a.updDate == null) return 1;
           return b.updDate.localeCompare(a.updDate);
         };
       case clsPrjTabFldEN.con_UpdUser:
         return (a: clsPrjTabFldEN, b: clsPrjTabFldEN) => {
-          if (b.updUser == null) return -1;
-          if (a.updUser == null) return 1;
           return b.updUser.localeCompare(a.updUser);
         };
       case clsPrjTabFldEN.con_Memo:
@@ -604,7 +596,7 @@ export function PrjTabFld_SortFunByKey(strKey: string, AscOrDesc: string) {
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -732,7 +724,7 @@ export async function PrjTabFld_FilterFunByKey(strKey: string, value: any) {
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -767,11 +759,11 @@ export async function PrjTabFld_func(
     console.error(strMsg);
     throw new Error(strMsg);
   }
-  if (clsPrjTabFldEN.AttributeName.indexOf(strOutFldName) == -1) {
+  if (clsPrjTabFldEN._AttributeName.indexOf(strOutFldName) == -1) {
     const strMsg = Format(
       '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
       strOutFldName,
-      clsPrjTabFldEN.AttributeName.join(','),
+      clsPrjTabFldEN._AttributeName.join(','),
     );
     console.error(strMsg);
     throw new Error(strMsg);
@@ -789,7 +781,7 @@ export async function PrjTabFld_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -1155,14 +1147,14 @@ export async function PrjTabFld_GetObjLstClientCache(strTabId: string) {
   const strThisFuncName = 'GetObjLstClientCache';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsPrjTabFldEN.WhereFormat) == false) {
-    strWhereCond = Format(clsPrjTabFldEN.WhereFormat, strTabId);
+  if (IsNullOrEmpty(clsPrjTabFldEN._WhereFormat) == false) {
+    strWhereCond = Format(clsPrjTabFldEN._WhereFormat, strTabId);
   } else {
     strWhereCond = Format("TabId='{0}'", strTabId);
   }
   const strKey = Format('{0}_{1}', clsPrjTabFldEN._CurrTabName, strTabId);
-  if (IsNullOrEmpty(clsPrjTabFldEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsPrjTabFldEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsPrjTabFldEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsPrjTabFldEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1205,14 +1197,14 @@ export async function PrjTabFld_GetObjLstlocalStorage(strTabId: string) {
   const strThisFuncName = 'GetObjLstlocalStorage';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsPrjTabFldEN.WhereFormat) == false) {
-    strWhereCond = Format(clsPrjTabFldEN.WhereFormat, strTabId);
+  if (IsNullOrEmpty(clsPrjTabFldEN._WhereFormat) == false) {
+    strWhereCond = Format(clsPrjTabFldEN._WhereFormat, strTabId);
   } else {
     strWhereCond = Format("{0}='{1}'", clsPrjTabFldEN.con_TabId, strTabId);
   }
   const strKey = Format('{0}_{1}', clsPrjTabFldEN._CurrTabName, strTabId);
-  if (IsNullOrEmpty(clsPrjTabFldEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsPrjTabFldEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsPrjTabFldEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsPrjTabFldEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1352,14 +1344,14 @@ export async function PrjTabFld_GetObjLstsessionStorage(strTabId: string) {
   const strThisFuncName = 'GetObjLstsessionStorage';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsPrjTabFldEN.WhereFormat) == false) {
-    strWhereCond = Format(clsPrjTabFldEN.WhereFormat, strTabId);
+  if (IsNullOrEmpty(clsPrjTabFldEN._WhereFormat) == false) {
+    strWhereCond = Format(clsPrjTabFldEN._WhereFormat, strTabId);
   } else {
     strWhereCond = Format("{0}='{1}'", clsPrjTabFldEN.con_TabId, strTabId);
   }
   const strKey = Format('{0}_{1}', clsPrjTabFldEN._CurrTabName, strTabId);
-  if (IsNullOrEmpty(clsPrjTabFldEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsPrjTabFldEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsPrjTabFldEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsPrjTabFldEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1441,7 +1433,7 @@ export async function PrjTabFld_GetObjLstCache(strTabId: string): Promise<Array<
     throw strMsg;
   }
   let arrPrjTabFldObjLstCache;
-  switch (clsPrjTabFldEN.CacheModeId) {
+  switch (clsPrjTabFldEN._CacheModeId) {
     case '04': //sessionStorage
       arrPrjTabFldObjLstCache = await PrjTabFld_GetObjLstsessionStorage(strTabId);
       break;
@@ -1466,7 +1458,7 @@ export async function PrjTabFld_GetObjLstCache(strTabId: string): Promise<Array<
 export async function PrjTabFld_GetObjLstPureCache(strTabId: string) {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrPrjTabFldObjLstCache;
-  switch (clsPrjTabFldEN.CacheModeId) {
+  switch (clsPrjTabFldEN._CacheModeId) {
     case '04': //sessionStorage
       arrPrjTabFldObjLstCache = await PrjTabFld_GetObjLstsessionStoragePureCache(strTabId);
       break;
@@ -2156,7 +2148,7 @@ export async function PrjTabFld_GetObjExLstByPagerCache(
   const bolIsFuncMap = isFuncMapCache[isFuncMapKey];
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsPrjTabFldEN.AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
+    clsPrjTabFldEN._AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
     (bolIsFuncMap == false || bolIsFuncMap == undefined)
   ) {
     for (const newObj of arrPrjTabFldExObjLst) {
@@ -2300,7 +2292,7 @@ export function PrjTabFld_CopyToEx(objPrjTabFldENS: clsPrjTabFldEN): clsPrjTabFl
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -2311,7 +2303,7 @@ export function PrjTabFld_FuncMapByFldName(strFldName: string, objPrjTabFldEx: c
   strFldName = strFldName.replace('|Ex', '');
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsPrjTabFldEN.AttributeName;
+  const arrFldName = clsPrjTabFldEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -2348,7 +2340,7 @@ export function PrjTabFld_FuncMapByFldName(strFldName: string, objPrjTabFldEx: c
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -4257,14 +4249,14 @@ export function PrjTabFld_GetWebApiUrl(strController: string, strAction: string)
 export function PrjTabFld_ReFreshCache(strTabId: string): void {
   if (IsNullOrEmpty(strTabId) == true) {
     const strMsg = Format(
-      '参数:[strTabId]不能为空!(In clsPrjTabFldWApi.clsPrjTabFldWApi.ReFreshCache)',
+      '参数:[strTabId]不能为空！(In clsPrjTabFldWApi.clsPrjTabFldWApi.ReFreshCache)',
     );
     console.error(strMsg);
     throw strMsg;
   }
   if (strTabId.length != 8) {
     const strMsg = Format(
-      '缓存分类变量:[strTabId]的长度:[{0}]不正确!(clsPrjTabFldWApi.clsPrjTabFldWApi.ReFreshCache)',
+      '缓存分类变量:[strTabId]的长度:[{0}]不正确！(clsPrjTabFldWApi.clsPrjTabFldWApi.ReFreshCache)',
       strTabId.length,
     );
     console.error(strMsg);
@@ -4275,7 +4267,7 @@ export function PrjTabFld_ReFreshCache(strTabId: string): void {
   console.trace(strMsg);
   // 静态的对象列表,用于清空相关缓存,针对记录较少,作为参数表可以使用
   const strKey = Format('{0}_{1}', clsPrjTabFldEN._CurrTabName, strTabId);
-  switch (clsPrjTabFldEN.CacheModeId) {
+  switch (clsPrjTabFldEN._CacheModeId) {
     case '04': //sessionStorage
       sessionStorage.removeItem(strKey);
       break;
@@ -4299,14 +4291,14 @@ export function PrjTabFld_ReFreshCache(strTabId: string): void {
 export function PrjTabFld_ReFreshThisCache(strTabId: string): void {
   if (IsNullOrEmpty(strTabId) == true) {
     const strMsg = Format(
-      '参数:[strTabId]不能为空!(In clsPrjTabFldWApi.PrjTabFld_ReFreshThisCache)',
+      '参数:[strTabId]不能为空！(In clsPrjTabFldWApi.PrjTabFld_ReFreshThisCache)',
     );
     console.error(strMsg);
     throw strMsg;
   }
   if (strTabId.length != 8) {
     const strMsg = Format(
-      '缓存分类变量:[strTabId]的长度:[{0}]不正确!(clsPrjTabFldWApi.PrjTabFld_ReFreshThisCache)',
+      '缓存分类变量:[strTabId]的长度:[{0}]不正确！(clsPrjTabFldWApi.PrjTabFld_ReFreshThisCache)',
       strTabId.length,
     );
     console.error(strMsg);
@@ -4314,7 +4306,7 @@ export function PrjTabFld_ReFreshThisCache(strTabId: string): void {
   }
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = Format('{0}_{1}', clsPrjTabFldEN._CurrTabName, strTabId);
-    switch (clsPrjTabFldEN.CacheModeId) {
+    switch (clsPrjTabFldEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -4406,6 +4398,11 @@ export function PrjTabFld_CheckPropertyNew(pobjPrjTabFldEN: clsPrjTabFldEN) {
   ) {
     throw new Error(
       `(errid:Watl000411)字段[字段操作类型Id]不能为空(In 工程表字段)!(clsPrjTabFldBL:CheckPropertyNew0)`,
+    );
+  }
+  if (IsNullOrEmpty(pobjPrjTabFldEN.updUser) === true) {
+    throw new Error(
+      `(errid:Watl000411)字段[修改者]不能为空(In 工程表字段)!(clsPrjTabFldBL:CheckPropertyNew0)`,
     );
   }
   //检查字段长度, 若字符型字段长度超出规定的长度,即非法!
@@ -5254,7 +5251,7 @@ export function PrjTabFld_CheckProperty4Update(pobjPrjTabFldEN: clsPrjTabFldEN) 
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -5275,7 +5272,7 @@ export function PrjTabFld_GetJSONStrByObj(pobjPrjTabFldEN: clsPrjTabFldEN): stri
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -5296,7 +5293,7 @@ export function PrjTabFld_GetObjLstByJSONStr(strJSON: string): Array<clsPrjTabFl
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrPrjTabFldObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -5316,7 +5313,7 @@ export function PrjTabFld_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-06-15
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

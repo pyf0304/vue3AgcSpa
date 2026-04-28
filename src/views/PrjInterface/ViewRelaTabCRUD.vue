@@ -15,6 +15,64 @@
         class="table table-bordered table-hover table td table-sm"
       >
         <tr>
+          <td class="text-left" style="width: 360px">
+            <select
+              id="ddlRelaTabFilter"
+              v-model="selectedRelaTabId"
+              name="ddlRelaTabFilter"
+              class="form-control form-control-sm"
+              @change="btnClick('Query', '')"
+            >
+              <option
+                v-for="objOpt in relaTabFilterOptions"
+                :key="objOpt.value"
+                :value="objOpt.value"
+              >
+                {{ objOpt.label }}
+              </option>
+            </select>
+            <div
+              v-if="relaTabFilterOptions.length <= 1"
+              class="text-warning"
+              style="font-size: 12px; margin-top: 4px"
+            >
+              当前界面暂无相关表记录
+            </div>
+          </td>
+          <td class="text-left" style="width: 280px">
+            <select
+              id="ddlViewTabTypeFilter"
+              v-model="selectedViewTabTypeId"
+              name="ddlViewTabTypeFilter"
+              class="form-control form-control-sm"
+              @change="btnClick('Query', '')"
+            >
+              <option
+                v-for="objOpt in viewTabTypeFilterOptions"
+                :key="objOpt.value"
+                :value="objOpt.value"
+              >
+                {{ objOpt.label }}
+              </option>
+            </select>
+          </td>
+          <td class="text-left" style="width: 260px">
+            <select
+              id="ddlRegionTypeFilter"
+              v-model="selectedRegionTypeId"
+              name="ddlRegionTypeFilter"
+              class="form-control form-control-sm"
+              @change="btnClick('Query', '')"
+            >
+              <option
+                v-for="objOpt in regionTypeFilterOptions"
+                :key="objOpt.value"
+                :value="objOpt.value"
+              >
+                {{ objOpt.label }}
+              </option>
+            </select>
+          </td>
           <td class="text-left">
             <button
               id="btnQuery"
@@ -78,6 +136,24 @@
             >删除</button
           >
         </li>
+        <li class="nav-item ml-3">
+          <button
+            id="btnImportRelaTab"
+            name="btnImportRelaTab"
+            class="btn btn-outline-info btn-sm text-nowrap"
+            @click="btnClick('ImportRelaTab', '')"
+            >导入相关表</button
+          >
+        </li>
+        <li class="nav-item ml-3">
+          <button
+            id="btnPreviewImportRelaTab"
+            name="btnPreviewImportRelaTab"
+            class="btn btn-outline-info btn-sm text-nowrap"
+            @click="btnClick('PreviewImportRelaTab', '')"
+            >预览待导入</button
+          >
+        </li>
       </ul>
     </div>
     <!--列表层-->
@@ -110,6 +186,14 @@
     refDivList,
     refViewRelaTab_Edit,
   } from '@/views/PrjInterface/ViewRelaTabVueShare';
+  import {
+    selectedRelaTabId,
+    relaTabFilterOptions,
+    selectedViewTabTypeId,
+    viewTabTypeFilterOptions,
+    selectedRegionTypeId,
+    regionTypeFilterOptions,
+  } from '@/views/PrjInterface/ViewRelaTabVueShareEx';
   export default defineComponent({
     name: 'ViewRelaTabCRUD',
     components: {
@@ -150,6 +234,12 @@
         refDivList,
         refDivDataLst,
         refViewRelaTab_Edit,
+        selectedRelaTabId,
+        relaTabFilterOptions,
+        selectedViewTabTypeId,
+        viewTabTypeFilterOptions,
+        selectedRegionTypeId,
+        regionTypeFilterOptions,
       };
     },
     watch: {

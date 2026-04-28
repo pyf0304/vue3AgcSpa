@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsPrjTabEN
  * 表名:PrjTab(00050009)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/13 23:53:21
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/28 23:40:28
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:字段、表维护(Table_Field)
  * 框架-层名:实体层(TS)(EntityLayer,0121)
@@ -20,15 +20,15 @@ import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
 export class clsPrjTabEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
-  public static CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
-  public static CacheModeId = ''; //
-  public static PrimaryTypeId = '06'; //前缀自增
-  public static IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
-  public static WhereFormat = ''; //条件格式串
-  public static _CurrTabName = 'PrjTab'; //当前表名,与该类相关的表名
-  public static _KeyFldName = 'TabId'; //当前表中的关键字名称,与该类相关的表中关键字名
-  public static mintAttributeCount = 46;
-  public static AttributeName = [
+  public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
+  public static readonly _CacheModeId: string = ''; //
+  public static readonly _PrimaryTypeId: string = '06'; //前缀自增
+  public static readonly _IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
+  public static readonly _WhereFormat = ''; //条件格式串
+  public static readonly _CurrTabName: string = 'PrjTab'; //当前表名,与该类相关的表名
+  public static readonly _KeyFldName: string = 'TabId'; //当前表中的关键字名称,与该类相关的表中关键字名
+  public static readonly _AttributeCount = 46;
+  public static readonly _AttributeName = [
     'tabId',
     'tabName',
     'tabCnName',
@@ -1064,369 +1064,277 @@ export class clsPrjTabEN extends clsGeneralTab {
    * 常量:"TabId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_TabId(): string {
-    return 'tabId';
-  } //表ID
+  public static readonly con_TabId = 'tabId'; //表ID
 
   /**
    * 常量:"TabName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_TabName(): string {
-    return 'tabName';
-  } //表名
+  public static readonly con_TabName = 'tabName'; //表名
 
   /**
    * 常量:"TabCnName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_TabCnName(): string {
-    return 'tabCnName';
-  } //表中文名
+  public static readonly con_TabCnName = 'tabCnName'; //表中文名
 
   /**
    * 常量:"PrjId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_PrjId(): string {
-    return 'prjId';
-  } //工程Id
+  public static readonly con_PrjId = 'prjId'; //工程Id
 
   /**
    * 常量:"SqlDsTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_SqlDsTypeId(): string {
-    return 'sqlDsTypeId';
-  } //数据源类型Id
+  public static readonly con_SqlDsTypeId = 'sqlDsTypeId'; //数据源类型Id
 
   /**
    * 常量:"TabStateId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_TabStateId(): string {
-    return 'tabStateId';
-  } //表状态ID
+  public static readonly con_TabStateId = 'tabStateId'; //表状态ID
 
   /**
    * 常量:"FuncModuleAgcId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_FuncModuleAgcId(): string {
-    return 'funcModuleAgcId';
-  } //功能模块Id
+  public static readonly con_FuncModuleAgcId = 'funcModuleAgcId'; //功能模块Id
 
   /**
    * 常量:"IsReleToSqlTab"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsReleToSqlTab(): string {
-    return 'isReleToSqlTab';
-  } //是否与SQL表相关
+  public static readonly con_IsReleToSqlTab = 'isReleToSqlTab'; //是否与SQL表相关
 
   /**
    * 常量:"Keyword"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Keyword(): string {
-    return 'keyword';
-  } //关键字
+  public static readonly con_Keyword = 'keyword'; //关键字
 
   /**
    * 常量:"TabTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_TabTypeId(): string {
-    return 'tabTypeId';
-  } //表类型Id
+  public static readonly con_TabTypeId = 'tabTypeId'; //表类型Id
 
   /**
    * 常量:"TabMainTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_TabMainTypeId(): string {
-    return 'tabMainTypeId';
-  } //表主类型Id
+  public static readonly con_TabMainTypeId = 'tabMainTypeId'; //表主类型Id
 
   /**
    * 常量:"RelaTabId4View"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_RelaTabId4View(): string {
-    return 'relaTabId4View';
-  } //视图的相关表ID
+  public static readonly con_RelaTabId4View = 'relaTabId4View'; //视图的相关表ID
 
   /**
    * 常量:"IsNeedGeneIndexer"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsNeedGeneIndexer(): string {
-    return 'isNeedGeneIndexer';
-  } //是否需要生成索引器
+  public static readonly con_IsNeedGeneIndexer = 'isNeedGeneIndexer'; //是否需要生成索引器
 
   /**
    * 常量:"ParentClass"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ParentClass(): string {
-    return 'parentClass';
-  } //父类
+  public static readonly con_ParentClass = 'parentClass'; //父类
 
   /**
    * 常量:"IsShare"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsShare(): string {
-    return 'isShare';
-  } //是否共享
+  public static readonly con_IsShare = 'isShare'; //是否共享
 
   /**
    * 常量:"IsUseDelSign"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsUseDelSign(): string {
-    return 'isUseDelSign';
-  } //是否使用删除标记
+  public static readonly con_IsUseDelSign = 'isUseDelSign'; //是否使用删除标记
 
   /**
    * 常量:"IsUseCache"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsUseCache(): string {
-    return 'isUseCache';
-  } //是否使用Cache
+  public static readonly con_IsUseCache = 'isUseCache'; //是否使用Cache
 
   /**
    * 常量:"IsMultiKeyClassify"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsMultiKeyClassify(): string {
-    return 'isMultiKeyClassify';
-  } //是否可以多个关键字分类共存
+  public static readonly con_IsMultiKeyClassify = 'isMultiKeyClassify'; //是否可以多个关键字分类共存
 
   /**
    * 常量:"CacheClassifyField"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CacheClassifyField(): string {
-    return 'cacheClassifyField';
-  } //缓存分类字段
+  public static readonly con_CacheClassifyField = 'cacheClassifyField'; //缓存分类字段
 
   /**
    * 常量:"CacheClassifyField2"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CacheClassifyField2(): string {
-    return 'cacheClassifyField2';
-  } //缓存分类字段2
+  public static readonly con_CacheClassifyField2 = 'cacheClassifyField2'; //缓存分类字段2
 
   /**
    * 常量:"CacheModeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CacheModeId(): string {
-    return 'cacheModeId';
-  } //缓存方式Id
+  public static readonly con_CacheModeId = 'cacheModeId'; //缓存方式Id
 
   /**
    * 常量:"CacheClassifyFieldTS"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CacheClassifyFieldTS(): string {
-    return 'cacheClassifyFieldTS';
-  } //缓存分类字段_TS
+  public static readonly con_CacheClassifyFieldTS = 'cacheClassifyFieldTS'; //缓存分类字段_TS
 
   /**
    * 常量:"CacheClassifyField2TS"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CacheClassifyField2TS(): string {
-    return 'cacheClassifyField2TS';
-  } //缓存分类字段2_TS
+  public static readonly con_CacheClassifyField2TS = 'cacheClassifyField2TS'; //缓存分类字段2_TS
 
   /**
    * 常量:"ParaVar2TS"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ParaVar2TS(): string {
-    return 'paraVar2TS';
-  } //参数变量2_TS
+  public static readonly con_ParaVar2TS = 'paraVar2TS'; //参数变量2_TS
 
   /**
    * 常量:"ParaVar1TS"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ParaVar1TS(): string {
-    return 'paraVar1TS';
-  } //参数变量_TS
+  public static readonly con_ParaVar1TS = 'paraVar1TS'; //参数变量_TS
 
   /**
    * 常量:"WhereFormat"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_WhereFormat(): string {
-    return 'whereFormat';
-  } //缓存条件格式
+  public static readonly con_WhereFormat = 'whereFormat'; //缓存条件格式
 
   /**
    * 常量:"WhereFormatBack"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_WhereFormatBack(): string {
-    return 'whereFormatBack';
-  } //后台缓存条件格式
+  public static readonly con_WhereFormatBack = 'whereFormatBack'; //后台缓存条件格式
 
   /**
    * 常量:"IsRefresh4RelaView"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsRefresh4RelaView(): string {
-    return 'isRefresh4RelaView';
-  } //是否刷新相关视图
+  public static readonly con_IsRefresh4RelaView = 'isRefresh4RelaView'; //是否刷新相关视图
 
   /**
    * 常量:"TabRecNum"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_TabRecNum(): string {
-    return 'tabRecNum';
-  } //记录数
+  public static readonly con_TabRecNum = 'tabRecNum'; //记录数
 
   /**
    * 常量:"KeyId4Test"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_KeyId4Test(): string {
-    return 'keyId4Test';
-  } //测试关键字Id
+  public static readonly con_KeyId4Test = 'keyId4Test'; //测试关键字Id
 
   /**
    * 常量:"ErrMsg"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ErrMsg(): string {
-    return 'errMsg';
-  } //错误信息
+  public static readonly con_ErrMsg = 'errMsg'; //错误信息
 
   /**
    * 常量:"FldNum"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_FldNum(): string {
-    return 'fldNum';
-  } //字段数
+  public static readonly con_FldNum = 'fldNum'; //字段数
 
   /**
    * 常量:"UpdUserId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdUserId(): string {
-    return 'updUserId';
-  } //修改用户Id
+  public static readonly con_UpdUserId = 'updUserId'; //修改用户Id
 
   /**
    * 常量:"UpdDate"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdDate(): string {
-    return 'updDate';
-  } //修改日期
+  public static readonly con_UpdDate = 'updDate'; //修改日期
 
   /**
    * 常量:"Memo"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Memo(): string {
-    return 'memo';
-  } //说明
+  public static readonly con_Memo = 'memo'; //说明
 
   /**
    * 常量:"OrderNum4Refer"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_OrderNum4Refer(): string {
-    return 'orderNum4Refer';
-  } //引用序号
+  public static readonly con_OrderNum4Refer = 'orderNum4Refer'; //引用序号
 
   /**
    * 常量:"IsChecked"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsChecked(): string {
-    return 'isChecked';
-  } //是否核实
+  public static readonly con_IsChecked = 'isChecked'; //是否核实
 
   /**
    * 常量:"Owner"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Owner(): string {
-    return 'owner';
-  } //拥有者
+  public static readonly con_Owner = 'owner'; //拥有者
 
   /**
    * 常量:"TabEnName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_TabEnName(): string {
-    return 'tabEnName';
-  } //表英文详细名
+  public static readonly con_TabEnName = 'tabEnName'; //表英文详细名
 
   /**
    * 常量:"IsNeedTransCode"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsNeedTransCode(): string {
-    return 'isNeedTransCode';
-  } //是否需要转换代码
+  public static readonly con_IsNeedTransCode = 'isNeedTransCode'; //是否需要转换代码
 
   /**
    * 常量:"TabNameB"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_TabNameB(): string {
-    return 'tabNameB';
-  } //表名_后备
+  public static readonly con_TabNameB = 'tabNameB'; //表名_后备
 
   /**
    * 常量:"RelaViewId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_RelaViewId(): string {
-    return 'relaViewId';
-  } //RelaViewId
+  public static readonly con_RelaViewId = 'relaViewId'; //RelaViewId
 
   /**
    * 常量:"DataBaseName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_DataBaseName(): string {
-    return 'dataBaseName';
-  } //数据库名
+  public static readonly con_DataBaseName = 'dataBaseName'; //数据库名
 
   /**
    * 常量:"IsNationStandard"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsNationStandard(): string {
-    return 'isNationStandard';
-  } //是否国标
+  public static readonly con_IsNationStandard = 'isNationStandard'; //是否国标
 
   /**
    * 常量:"IsParaTab"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsParaTab(): string {
-    return 'isParaTab';
-  } //是否参数表
+  public static readonly con_IsParaTab = 'isParaTab'; //是否参数表
 
   /**
    * 常量:"IsArchive"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsArchive(): string {
-    return 'isArchive';
-  } //是否存档
+  public static readonly con_IsArchive = 'isArchive'; //是否存档
 
   /**
    * 设置条件字段值.
@@ -1445,6 +1353,7 @@ export class clsPrjTabEN extends clsGeneralTab {
     }
     this.sfFldComparisonOp = JSON.stringify(this.dicFldComparisonOp);
   }
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名

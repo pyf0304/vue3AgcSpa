@@ -333,7 +333,10 @@
   import ViewInfoCRUDEx from '@/views/PrjInterface/ViewInfoCRUDEx';
   import ViewInfo_EditCom from '@/views/PrjInterface/ViewInfo_Edit.vue';
   import ViewInfo_DetailCom from '@/views/PrjInterface/ViewInfo_Detail.vue';
-  import { clsApplicationTypeEN } from '@/ts/L0Entity/GeneCode/clsApplicationTypeEN';
+  import {
+    clsApplicationTypeEN,
+    enumApplicationType,
+  } from '@/ts/L0Entity/GeneCode/clsApplicationTypeEN';
   import { clsFuncModule_AgcEN } from '@/ts/L0Entity/PrjManage/clsFuncModule_AgcEN';
   import { clsvPrjTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvPrjTab_SimEN';
   import { clsCMProjectEN } from '@/ts/L0Entity/CodeMan/clsCMProjectEN';
@@ -370,7 +373,7 @@
 
       PrjId_Session.value = clsPrivateSessionStorage.currSelPrjId;
       UserId_Local.value = userStore.getUserId;
-      ApplicationTypeId_Static.value = 0;
+      ApplicationTypeId_Static.value = enumApplicationType.VueAppInCore_TS_30;
       CmPrjId_Local.value = clsPrivateSessionStorage.cmPrjId;
       const objPage = ref<ViewInfoCRUDEx>();
       const objPage_Edit = ref<ViewInfo_EditEx>();
@@ -668,11 +671,13 @@
           case 'Create':
           case 'AddNewRecordWithMaxId':
           case 'CreateWithMaxId':
+            ApplicationTypeId_Static.value = enumApplicationType.VueAppInCore_TS_30;
+            refViewInfo_Edit.value.showDialog();
+            break;
           case 'Update':
           case 'UpdateRecord':
           case 'UpdateRecordInTab':
             refViewInfo_Edit.value.showDialog();
-
             break;
           case 'DelTableRows':
             delTableRows();

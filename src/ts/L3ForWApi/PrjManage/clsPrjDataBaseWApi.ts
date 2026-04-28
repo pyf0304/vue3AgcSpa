@@ -2,7 +2,7 @@
  * 类名:clsPrjDataBaseWApi
  * 表名:PrjDataBase(00050176)
  * 版本:2026.04.19(服务器:WIN-SRV103-116)
- * 日期:2026/04/19 19:12:43
+ * 日期:2026/04/28 23:40:03
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
@@ -20,7 +20,7 @@
 /**
  * 数据库对象(PrjDataBase)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2026年04月19日.
+ * Created by pyf on 2026年04月28日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -288,7 +288,7 @@ export async function PrjDataBase_UpdateObjInLstCache(objPrjDataBase: clsPrjData
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-19
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -300,7 +300,7 @@ export function PrjDataBase_SortFunDefa(a: clsPrjDataBaseEN, b: clsPrjDataBaseEN
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-19
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -314,7 +314,7 @@ export function PrjDataBase_SortFunDefa2Fld(a: clsPrjDataBaseEN, b: clsPrjDataBa
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-19
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -542,7 +542,7 @@ export async function PrjDataBase_GetNameByPrjDataBaseIdCache(strPrjDataBaseId: 
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2026-04-19
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -618,7 +618,7 @@ export async function PrjDataBase_FilterFunByKey(strKey: string, value: any) {
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2026-04-19
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -659,7 +659,7 @@ export async function PrjDataBase_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2026-04-19
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -2130,7 +2130,7 @@ export function PrjDataBase_CopyToEx(objPrjDataBaseENS: clsPrjDataBaseEN): clsPr
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2026-04-19
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -2165,7 +2165,7 @@ export function PrjDataBase_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-19
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -4015,7 +4015,7 @@ export function PrjDataBase_CheckProperty4Update(pobjPrjDataBaseEN: clsPrjDataBa
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2026-04-19
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -4036,7 +4036,7 @@ export function PrjDataBase_GetJSONStrByObj(pobjPrjDataBaseEN: clsPrjDataBaseEN)
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2026-04-19
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -4057,7 +4057,7 @@ export function PrjDataBase_GetObjLstByJSONStr(strJSON: string): Array<clsPrjDat
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2026-04-19
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrPrjDataBaseObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -4077,7 +4077,7 @@ export function PrjDataBase_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2026-04-19
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

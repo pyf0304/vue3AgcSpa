@@ -118,7 +118,7 @@
       <ul class="nav">
         <li class="nav-item">
           <label id="lblTabFeatureList" class="col-form-label text-info" style="width: 250px"
-            >表功能列表
+            >表功能列表2
           </label>
         </li>
 

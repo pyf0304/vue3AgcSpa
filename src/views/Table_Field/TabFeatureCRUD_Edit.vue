@@ -4,7 +4,12 @@
 
     <div style="position: relative; width: 648px; height: 37px; left: 0px; top: 0px">
       <label id="lblViewTitle" name="lblViewTitle" class="h5"> 表功能CRUD </label>
-      <label id="lblMsg_List" name="lblMsg_List" class="text-warning" style="width: 250px"> </label>
+      <span
+        id="lblMsg_List"
+        name="lblMsg_List"
+        class="text-warning"
+        style="display: inline-block; margin-left: 10px; width: 700px"
+      ></span>
     </div>
     <!-- 查询层  -->
 
@@ -232,10 +237,20 @@
 
               <div class="tab-content">
                 <div v-if="activeTabId === 'aspweb'">
-                  <textarea v-model="tab1Data.codeText" rows="20" cols="80"></textarea>
+                  <textarea
+                    v-model="tab1Data.codeText"
+                    :rows="tab1Data.codeText ? 20 : 1"
+                    cols="80"
+                    :style="{ width: '100%', height: tab1Data.codeText ? '360px' : '34px' }"
+                  ></textarea>
                 </div>
                 <div v-if="activeTabId === 'typescript'">
-                  <textarea v-model="tab2Data.codeText" rows="20" cols="80"></textarea>
+                  <textarea
+                    v-model="tab2Data.codeText"
+                    :rows="tab2Data.codeText ? 20 : 1"
+                    cols="80"
+                    :style="{ width: '100%', height: tab2Data.codeText ? '360px' : '34px' }"
+                  ></textarea>
                 </div>
               </div>
             </div>
@@ -263,7 +278,8 @@
 
               <li class="nav-item ml-3">
                 <button class="layui-btn" @click="btn_Click('AddSortFunc', '')"
-                  ><i class="layui-icon"></i>添加新排序功能0</button
+                  ><span style="display: inline-block; margin-right: 4px">+</span
+                  >添加新排序功能</button
                 >
               </li>
             </ul>
@@ -342,7 +358,7 @@
             class="col-form-label text-info"
             style="width: 250px"
           >
-            表功能列表
+            表功能列表0
           </label>
         </li>
         <li class="nav-item ml-3">
@@ -389,16 +405,6 @@
             class="btn btn-outline-info btn-sm text-nowrap"
             @click="btn_Click('GetDefaNameProp', '')"
             >获取默认命名属性</button
-          >
-        </li>
-        <!-- 右端：添加新排序功能 -->
-        <li class="nav-item" style="float: right">
-          <button
-            id="btnAddSortFunc"
-            name="btnAddSortFunc"
-            class="btn btn-outline-info btn-sm text-nowrap"
-            @click="btn_Click('AddSortFunc', '')"
-            ><i class="layui-icon"></i>添加新排序功能1</button
           >
         </li>
       </ul>
@@ -461,11 +467,8 @@
   import {
     refAdjustOrderNum_Edt,
     refComboBox_Edt,
-    refSetFieldValue_Edt,
   } from '@/views/Table_Field/TabFeatureEditVueShare';
-  // interface CodeTextSetter {
-  //   SetCodeText: (strCodeText_Web: string, strCodeText_Ts: string) => void;
-  // }
+
   export default defineComponent({
     name: 'PrjTabRelationCRUD',
     components: {
@@ -486,8 +489,8 @@
       const tabFeaturetabs = reactive([
         { id: 'tab1', label: '绑定下拉框' },
         { id: 'tab2', label: '调整记录次序' },
-        { id: 'tab3', label: '设置字段值' },
-        { id: 'tab4', label: '表相关事务操作' },
+        { id: 'tab3', label: '设置字段值(未用)' },
+        { id: 'tab4', label: '表相关事务操作(未用)' },
       ]);
       const tab1Data = ref({
         // Data for Tab1

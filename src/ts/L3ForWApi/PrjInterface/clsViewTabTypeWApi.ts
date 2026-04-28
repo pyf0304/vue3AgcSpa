@@ -1,16 +1,17 @@
 ﻿/**
  * 类名:clsViewTabTypeWApi
  * 表名:ViewTabType(00050103)
- * 版本:2023.10.12.1(服务器:WIN-SRV103-116)
- * 日期:2023/10/12 14:42:20
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/29 01:25:30
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
- CM工程:AgcSpa前端(变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,9433AGC_CS12
+ 应用类型:Vue应用InCore-TS(30)
+ CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:界面管理(PrjInterface)
- * 框架-层名:WA_访问层(TS)(WA_Access)
+ * 框架-层名:WA_访问层(TS)(WA_Access,0155)
  * 编程语言:TypeScript
  * 注意:1、需要数据底层(PubDataBase.dll)的版本:2019.03.07.01
    *      2、需要公共函数层(TzPubFunction.dll)的版本:2017.12.21.01
@@ -19,7 +20,7 @@
 /**
  * 界面表类型(ViewTabType)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2023年10月12日.
+ * Created by pyf on 2026年04月29日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -28,8 +29,9 @@ import { Storage } from '@/utils/Storage';
 import { IsNullOrEmpty, GetStrLen, tzDataType, Format } from '@/ts/PubFun/clsString';
 import { enumComparisonOp } from '@/ts/PubFun/enumComparisonOp';
 import { CacheHelper } from '@/ts/PubFun/CacheHelper';
+import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
+import { AddRecordResult } from '@/ts/PubFun/AddRecordResult';
 import {
-  GetObjKeys,
   BindDdl_ObjLstInDivObj,
   GetExceptionStr,
   myShowErrorMsg,
@@ -39,7 +41,7 @@ import { clsViewTabTypeEN } from '@/ts/L0Entity/PrjInterface/clsViewTabTypeEN';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
 import { stuRangePara } from '@/ts/PubFun/stuRangePara';
-import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
+import { clsDateTime } from '@/ts/PubFun/clsDateTime';
 
 export const viewTabType_Controller = 'ViewTabTypeApi';
 export const viewTabType_ConstructorName = 'viewTabType';
@@ -120,6 +122,56 @@ export async function ViewTabType_GetObjByViewTabTypeIdAsync(
 }
 
 /**
+ * 根据关键字获取相关对象, 从localStorage缓存中获取.
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
+ * @param strViewTabTypeId:所给的关键字
+ * @returns 对象
+ */
+export async function ViewTabType_GetObjByViewTabTypeIdlocalStorage(strViewTabTypeId: string) {
+  const strThisFuncName = 'GetObjByViewTabTypeIdlocalStorage';
+
+  if (IsNullOrEmpty(strViewTabTypeId) == true) {
+    const strMsg = Format(
+      '参数:[strViewTabTypeId]不能为空!(In clsViewTabTypeWApi.GetObjByViewTabTypeIdlocalStorage)',
+    );
+    console.error(strMsg);
+    throw strMsg;
+  }
+  const strKey = Format('{0}_{1}', clsViewTabTypeEN._CurrTabName, strViewTabTypeId);
+  if (strKey == '') {
+    console.error('关键字为空!不正确');
+    throw new Error('关键字为空!不正确');
+  }
+  if (Object.prototype.hasOwnProperty.call(localStorage, strKey)) {
+    //缓存存在,直接返回
+    const strTempObj = localStorage.getItem(strKey) as string;
+    const objViewTabTypeCache: clsViewTabTypeEN = JSON.parse(strTempObj);
+    return objViewTabTypeCache;
+  }
+  try {
+    const objViewTabType = await ViewTabType_GetObjByViewTabTypeIdAsync(strViewTabTypeId);
+    if (objViewTabType != null) {
+      localStorage.setItem(strKey, JSON.stringify(objViewTabType));
+      const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
+      console.log(strInfo);
+      return objViewTabType;
+    }
+    return objViewTabType;
+  } catch (e) {
+    const strMsg = Format(
+      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
+      e,
+      strViewTabTypeId,
+      viewTabType_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+    return;
+  }
+}
+
+/**
  * 根据关键字获取相关对象, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
  * @param strViewTabTypeId:所给的关键字
@@ -171,56 +223,6 @@ export async function ViewTabType_GetObjByViewTabTypeIdCache(
 }
 
 /**
- * 根据关键字获取相关对象, 从localStorage缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
- * @param strViewTabTypeId:所给的关键字
- * @returns 对象
- */
-export async function ViewTabType_GetObjByViewTabTypeIdlocalStorage(strViewTabTypeId: string) {
-  const strThisFuncName = 'GetObjByViewTabTypeIdlocalStorage';
-
-  if (IsNullOrEmpty(strViewTabTypeId) == true) {
-    const strMsg = Format(
-      '参数:[strViewTabTypeId]不能为空!(In clsViewTabTypeWApi.GetObjByViewTabTypeIdlocalStorage)',
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  const strKey = Format('{0}_{1}', clsViewTabTypeEN._CurrTabName, strViewTabTypeId);
-  if (strKey == '') {
-    console.error('关键字为空!不正确');
-    throw new Error('关键字为空!不正确');
-  }
-  if (Object.prototype.hasOwnProperty.call(localStorage, strKey)) {
-    //缓存存在,直接返回
-    const strTempObj = localStorage.getItem(strKey) as string;
-    const objViewTabTypeCache: clsViewTabTypeEN = JSON.parse(strTempObj);
-    return objViewTabTypeCache;
-  }
-  try {
-    const objViewTabType = await ViewTabType_GetObjByViewTabTypeIdAsync(strViewTabTypeId);
-    if (objViewTabType != null) {
-      localStorage.setItem(strKey, JSON.stringify(objViewTabType));
-      const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
-      console.log(strInfo);
-      return objViewTabType;
-    }
-    return objViewTabType;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
-      e,
-      strViewTabTypeId,
-      viewTabType_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-    return;
-  }
-}
-
-/**
  * 修改在缓存对象列表中的对象, 与后台数据库无关.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_UpdateObjInLstCache)
  * @param objViewTabType:所给的对象
@@ -248,6 +250,98 @@ export async function ViewTabType_UpdateObjInLstCache(objViewTabType: clsViewTab
     );
     console.error(strMsg);
     alert(strMsg);
+  }
+}
+
+/**
+ * 排序函数。根据关键字字段的值进行比较
+ * 作者:pyf
+ * 日期:2026-04-29
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
+ * @param a:比较的第1个对象
+ * @param  b:比较的第1个对象
+ * @returns 返回两个对象比较的结果
+ */
+export function ViewTabType_SortFunDefa(a: clsViewTabTypeEN, b: clsViewTabTypeEN): number {
+  return a.viewTabTypeId.localeCompare(b.viewTabTypeId);
+}
+/**
+ * 排序函数。根据表对象中随机两个字段的值进行比较
+ * 作者:pyf
+ * 日期:2026-04-29
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
+ * @param  a:比较的第1个对象
+ * @param  b:比较的第1个对象
+ * @returns 返回两个对象比较的结果
+ */
+export function ViewTabType_SortFunDefa2Fld(a: clsViewTabTypeEN, b: clsViewTabTypeEN): number {
+  if (a.viewTabTypeName == b.viewTabTypeName)
+    return a.viewTabTypeEnName.localeCompare(b.viewTabTypeEnName);
+  else return a.viewTabTypeName.localeCompare(b.viewTabTypeName);
+}
+
+/**
+ * 排序函数。根据关键字字段的值进行比较
+ * 作者:pyf
+ * 日期:2026-04-29
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
+ * @param a:比较的第1个对象
+ * @param  b:比较的第1个对象
+ * @returns 返回两个对象比较的结果
+ */
+export function ViewTabType_SortFunByKey(strKey: string, AscOrDesc: string) {
+  const strThisFuncName = 'SortFunByKey';
+  let strMsg = '';
+  if (AscOrDesc == 'Asc' || AscOrDesc == '') {
+    switch (strKey) {
+      case clsViewTabTypeEN.con_ViewTabTypeId:
+        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
+          return a.viewTabTypeId.localeCompare(b.viewTabTypeId);
+        };
+      case clsViewTabTypeEN.con_ViewTabTypeName:
+        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
+          return a.viewTabTypeName.localeCompare(b.viewTabTypeName);
+        };
+      case clsViewTabTypeEN.con_ViewTabTypeEnName:
+        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
+          return a.viewTabTypeEnName.localeCompare(b.viewTabTypeEnName);
+        };
+      case clsViewTabTypeEN.con_TabTypeFunction:
+        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
+          if (a.tabTypeFunction == null) return -1;
+          if (b.tabTypeFunction == null) return 1;
+          return a.tabTypeFunction.localeCompare(b.tabTypeFunction);
+        };
+      default:
+        strMsg = `字段名:[${strKey}]在表对象:[ViewTabType]中不存在!(in ${viewTabType_ConstructorName}.${strThisFuncName})`;
+        console.error(strMsg);
+        break;
+    }
+  } else {
+    switch (strKey) {
+      case clsViewTabTypeEN.con_ViewTabTypeId:
+        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
+          return b.viewTabTypeId.localeCompare(a.viewTabTypeId);
+        };
+      case clsViewTabTypeEN.con_ViewTabTypeName:
+        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
+          return b.viewTabTypeName.localeCompare(a.viewTabTypeName);
+        };
+      case clsViewTabTypeEN.con_ViewTabTypeEnName:
+        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
+          return b.viewTabTypeEnName.localeCompare(a.viewTabTypeEnName);
+        };
+      case clsViewTabTypeEN.con_TabTypeFunction:
+        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
+          if (b.tabTypeFunction == null) return -1;
+          if (a.tabTypeFunction == null) return 1;
+          return b.tabTypeFunction.localeCompare(a.tabTypeFunction);
+        };
+      default:
+        strMsg = `字段名:[${strKey}]在表对象:[ViewTabType]中不存在!(in ${viewTabType_ConstructorName}.${strThisFuncName})`;
+        console.error(strMsg);
+        break;
+    }
   }
 }
 
@@ -291,9 +385,45 @@ export async function ViewTabType_GetNameByViewTabTypeIdCache(strViewTabTypeId: 
 }
 
 /**
+ * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
+ * 作者:pyf
+ * 日期:2026-04-29
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
+ * @param strKey:比较的关键字段名称
+ * @param value:给定值
+ * @returns 返回对象的字段值是否等于给定值
+ */
+export async function ViewTabType_FilterFunByKey(strKey: string, value: any) {
+  const strThisFuncName = 'FilterFunByKey';
+  let strMsg = '';
+  switch (strKey) {
+    case clsViewTabTypeEN.con_ViewTabTypeId:
+      return (obj: clsViewTabTypeEN) => {
+        return obj.viewTabTypeId === value;
+      };
+    case clsViewTabTypeEN.con_ViewTabTypeName:
+      return (obj: clsViewTabTypeEN) => {
+        return obj.viewTabTypeName === value;
+      };
+    case clsViewTabTypeEN.con_ViewTabTypeEnName:
+      return (obj: clsViewTabTypeEN) => {
+        return obj.viewTabTypeEnName === value;
+      };
+    case clsViewTabTypeEN.con_TabTypeFunction:
+      return (obj: clsViewTabTypeEN) => {
+        return obj.tabTypeFunction === value;
+      };
+    default:
+      strMsg = `字段名:[${strKey}]在表对象:[ViewTabType]中不存在!(in ${viewTabType_ConstructorName}.${strThisFuncName})`;
+      console.error(strMsg);
+      break;
+  }
+}
+
+/**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -312,17 +442,17 @@ export async function ViewTabType_func(
     console.error(strMsg);
     throw new Error(strMsg);
   }
-  if (clsViewTabTypeEN.AttributeName.indexOf(strOutFldName) == -1) {
+  if (clsViewTabTypeEN._AttributeName.indexOf(strOutFldName) == -1) {
     const strMsg = Format(
       '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
       strOutFldName,
-      clsViewTabTypeEN.AttributeName.join(','),
+      clsViewTabTypeEN._AttributeName.join(','),
     );
     console.error(strMsg);
     throw new Error(strMsg);
   }
   const strViewTabTypeId = strInValue;
-  if (IsNullOrEmpty(strInValue) == true) {
+  if (IsNullOrEmpty(strViewTabTypeId) == true) {
     return '';
   }
   const objViewTabType = await ViewTabType_GetObjByViewTabTypeIdCache(strViewTabTypeId);
@@ -332,125 +462,9 @@ export async function ViewTabType_func(
 }
 
 /**
- * 排序函数。根据关键字字段的值进行比较
- * 作者:pyf
- * 日期:2023-10-12
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
- * @param a:比较的第1个对象
- * @param  b:比较的第1个对象
- * @returns 返回两个对象比较的结果
- */
-export function ViewTabType_SortFunDefa(a: clsViewTabTypeEN, b: clsViewTabTypeEN): number {
-  return a.viewTabTypeId.localeCompare(b.viewTabTypeId);
-}
-/**
- * 排序函数。根据表对象中随机两个字段的值进行比较
- * 作者:pyf
- * 日期:2023-10-12
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
- * @param  a:比较的第1个对象
- * @param  b:比较的第1个对象
- * @returns 返回两个对象比较的结果
- */
-export function ViewTabType_SortFunDefa2Fld(a: clsViewTabTypeEN, b: clsViewTabTypeEN): number {
-  if (a.viewTabTypeName == b.viewTabTypeName)
-    return a.tabTypeFunction.localeCompare(b.tabTypeFunction);
-  else return a.viewTabTypeName.localeCompare(b.viewTabTypeName);
-}
-
-/**
- * 排序函数。根据关键字字段的值进行比较
- * 作者:pyf
- * 日期:2023-10-12
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
- * @param a:比较的第1个对象
- * @param  b:比较的第1个对象
- * @returns 返回两个对象比较的结果
- */
-export function ViewTabType_SortFunByKey(strKey: string, AscOrDesc: string) {
-  const strThisFuncName = 'SortFunByKey';
-  let strMsg = '';
-  if (AscOrDesc == 'Asc' || AscOrDesc == '') {
-    switch (strKey) {
-      case clsViewTabTypeEN.con_ViewTabTypeId:
-        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
-          return a.viewTabTypeId.localeCompare(b.viewTabTypeId);
-        };
-      case clsViewTabTypeEN.con_ViewTabTypeName:
-        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
-          return a.viewTabTypeName.localeCompare(b.viewTabTypeName);
-        };
-      case clsViewTabTypeEN.con_TabTypeFunction:
-        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
-          if (a.tabTypeFunction == null) return -1;
-          if (b.tabTypeFunction == null) return 1;
-          return a.tabTypeFunction.localeCompare(b.tabTypeFunction);
-        };
-      default:
-        strMsg = `字段名:[${strKey}]在表对象:[ViewTabType]中不存在!(in ${viewTabType_ConstructorName}.${strThisFuncName})`;
-        console.error(strMsg);
-        break;
-    }
-  } else {
-    switch (strKey) {
-      case clsViewTabTypeEN.con_ViewTabTypeId:
-        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
-          return b.viewTabTypeId.localeCompare(a.viewTabTypeId);
-        };
-      case clsViewTabTypeEN.con_ViewTabTypeName:
-        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
-          return b.viewTabTypeName.localeCompare(a.viewTabTypeName);
-        };
-      case clsViewTabTypeEN.con_TabTypeFunction:
-        return (a: clsViewTabTypeEN, b: clsViewTabTypeEN) => {
-          if (b.tabTypeFunction == null) return -1;
-          if (a.tabTypeFunction == null) return 1;
-          return b.tabTypeFunction.localeCompare(a.tabTypeFunction);
-        };
-      default:
-        strMsg = `字段名:[${strKey}]在表对象:[ViewTabType]中不存在!(in ${viewTabType_ConstructorName}.${strThisFuncName})`;
-        console.error(strMsg);
-        break;
-    }
-  }
-}
-
-/**
- * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
- * 作者:pyf
- * 日期:2023-10-12
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
- * @param strKey:比较的关键字段名称
- * @param value:给定值
- * @returns 返回对象的字段值是否等于给定值
- */
-export async function ViewTabType_FilterFunByKey(strKey: string, value: any) {
-  const strThisFuncName = 'FilterFunByKey';
-  let strMsg = '';
-  switch (strKey) {
-    case clsViewTabTypeEN.con_ViewTabTypeId:
-      return (obj: clsViewTabTypeEN) => {
-        return obj.viewTabTypeId === value;
-      };
-    case clsViewTabTypeEN.con_ViewTabTypeName:
-      return (obj: clsViewTabTypeEN) => {
-        return obj.viewTabTypeName === value;
-      };
-    case clsViewTabTypeEN.con_TabTypeFunction:
-      return (obj: clsViewTabTypeEN) => {
-        return obj.tabTypeFunction === value;
-      };
-    default:
-      strMsg = `字段名:[${strKey}]在表对象:[ViewTabType]中不存在!(in ${viewTabType_ConstructorName}.${strThisFuncName})`;
-      console.error(strMsg);
-      break;
-  }
-}
-
-/**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -544,6 +558,70 @@ export async function ViewTabType_funcKey(
   }
   if (arrViewTabTypeSel.length == 0) return [];
   return arrViewTabTypeSel.map((x) => x.viewTabTypeId);
+}
+
+/**
+ * 根据条件获取满足条件的第一条记录
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetFldValueAsync)
+ * @param strWhereCond:条件
+ * @returns 返回的第一条记录的关键字值
+ **/
+export async function ViewTabType_GetFldValueAsync(
+  strFldName: string,
+  strWhereCond: string,
+): Promise<Array<string>> {
+  const strThisFuncName = 'GetFldValueAsync';
+  const strAction = 'GetFldValue';
+  const strUrl = GetWebApiUrl(viewTabType_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  //console.error('token:', token);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strFldName,
+      strWhereCond,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      const arrId = data.returnStrLst.split(',');
+      return arrId;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
+        strUrl,
+        viewTabType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
+        strUrl,
+        viewTabType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
 }
 
 /**
@@ -741,8 +819,11 @@ export async function ViewTabType_GetObjLstClientCache() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsViewTabTypeEN._CurrTabName;
-  if (IsNullOrEmpty(clsViewTabTypeEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsViewTabTypeEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsViewTabTypeEN._WhereFormat) == false) {
+    strWhereCond = clsViewTabTypeEN._WhereFormat;
+  }
+  if (IsNullOrEmpty(clsViewTabTypeEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsViewTabTypeEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -786,8 +867,11 @@ export async function ViewTabType_GetObjLstlocalStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsViewTabTypeEN._CurrTabName;
-  if (IsNullOrEmpty(clsViewTabTypeEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsViewTabTypeEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsViewTabTypeEN._WhereFormat) == false) {
+    strWhereCond = clsViewTabTypeEN._WhereFormat;
+  }
+  if (IsNullOrEmpty(clsViewTabTypeEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsViewTabTypeEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -925,8 +1009,11 @@ export async function ViewTabType_GetObjLstsessionStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsViewTabTypeEN._CurrTabName;
-  if (IsNullOrEmpty(clsViewTabTypeEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsViewTabTypeEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsViewTabTypeEN._WhereFormat) == false) {
+    strWhereCond = clsViewTabTypeEN._WhereFormat;
+  }
+  if (IsNullOrEmpty(clsViewTabTypeEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsViewTabTypeEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -990,7 +1077,7 @@ export async function ViewTabType_GetObjLstCache(): Promise<Array<clsViewTabType
   //const strThisFuncName = "GetObjLst_Cache";
 
   let arrViewTabTypeObjLstCache;
-  switch (clsViewTabTypeEN.CacheModeId) {
+  switch (clsViewTabTypeEN._CacheModeId) {
     case '04': //sessionStorage
       arrViewTabTypeObjLstCache = await ViewTabType_GetObjLstsessionStorage();
       break;
@@ -1015,7 +1102,7 @@ export async function ViewTabType_GetObjLstCache(): Promise<Array<clsViewTabType
 export async function ViewTabType_GetObjLstPureCache() {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrViewTabTypeObjLstCache;
-  switch (clsViewTabTypeEN.CacheModeId) {
+  switch (clsViewTabTypeEN._CacheModeId) {
     case '04': //sessionStorage
       arrViewTabTypeObjLstCache = await ViewTabType_GetObjLstsessionStoragePureCache();
       break;
@@ -1038,25 +1125,19 @@ export async function ViewTabType_GetObjLstPureCache() {
  * @param objstrViewTabTypeIdCond:条件对象
  * @returns 对象列表子集
  */
-export async function ViewTabType_GetSubObjLstCache(objViewTabTypeCond: clsViewTabTypeEN) {
+export async function ViewTabType_GetSubObjLstCache(objViewTabTypeCond: ConditionCollection) {
   const strThisFuncName = 'GetSubObjLstCache';
   const arrViewTabTypeObjLstCache = await ViewTabType_GetObjLstCache();
   let arrViewTabTypeSel = arrViewTabTypeObjLstCache;
-  if (objViewTabTypeCond.sfFldComparisonOp == null || objViewTabTypeCond.sfFldComparisonOp == '')
-    return arrViewTabTypeSel;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objViewTabTypeCond.sfFldComparisonOp,
-  );
-  //console.log("clsViewTabTypeWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
+  if (objViewTabTypeCond.GetConditions().length == 0) return arrViewTabTypeSel;
   try {
-    const sstrKeys = GetObjKeys(objViewTabTypeCond);
     //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
+    for (const objCondition of objViewTabTypeCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
       arrViewTabTypeSel = arrViewTabTypeSel.filter((x) => x.GetFldValue(strKey) != null);
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objViewTabTypeCond.GetFldValue(strKey);
       const strType = typeof strValue;
       switch (strType) {
         case 'string':
@@ -1367,198 +1448,8 @@ export async function ViewTabType_GetObjLstByRangeAsync(
     }
   }
 }
-
-/**
- * 根据分页条件从缓存中获取分页对象列表,只获取一页.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerCache)
- * @param objPagerPara:分页参数结构
- * @returns 对象列表
- */
-export async function ViewTabType_GetObjLstByPagerCache(objPagerPara: stuPagerPara) {
-  const strThisFuncName = 'GetObjLstByPagerCache';
-  if (objPagerPara.pageIndex == 0) return new Array<clsViewTabTypeEN>();
-  const arrViewTabTypeObjLstCache = await ViewTabType_GetObjLstCache();
-  if (arrViewTabTypeObjLstCache.length == 0) return arrViewTabTypeObjLstCache;
-  let arrViewTabTypeSel = arrViewTabTypeObjLstCache;
-  const objCond = JSON.parse(objPagerPara.whereCond);
-  const objViewTabTypeCond = new clsViewTabTypeEN();
-  ObjectAssign(objViewTabTypeCond, objCond);
-  let dicFldComparisonOp: { [index: string]: string } = {};
-  if (objCond.sfFldComparisonOp != '') {
-    dicFldComparisonOp = JSON.parse(objCond.sfFldComparisonOp);
-  }
-  //console.log("clsViewTabTypeWApi->GetObjLstByPagerCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
-  try {
-    const sstrKeys = GetObjKeys(objCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
-      arrViewTabTypeSel = arrViewTabTypeSel.filter((x) => x.GetFldValue(strKey) != null);
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objViewTabTypeCond.GetFldValue(strKey);
-      const strType = typeof strValue;
-      switch (strType) {
-        case 'string':
-          if (strValue == null) continue;
-          if (strValue == '') continue;
-          if (strComparisonOp == '=') {
-            arrViewTabTypeSel = arrViewTabTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
-            );
-          } else if (strComparisonOp == 'like') {
-            arrViewTabTypeSel = arrViewTabTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
-            );
-          } else if (strComparisonOp == 'length greater') {
-            arrViewTabTypeSel = arrViewTabTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not greater') {
-            arrViewTabTypeSel = arrViewTabTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not less') {
-            arrViewTabTypeSel = arrViewTabTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length less') {
-            arrViewTabTypeSel = arrViewTabTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length equal') {
-            arrViewTabTypeSel = arrViewTabTypeSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'in') {
-            const arrValues = strValue.toString().split(',');
-            arrViewTabTypeSel = arrViewTabTypeSel.filter(
-              (x) => arrValues.indexOf(x.GetFldValue(strKey).toString()) != -1,
-            );
-          }
-          break;
-        case 'boolean':
-          if (strValue == null) continue;
-          if (strComparisonOp == '=') {
-            arrViewTabTypeSel = arrViewTabTypeSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          }
-          break;
-        case 'number':
-          if (Number(strValue) == 0) continue;
-          if (strComparisonOp == '=') {
-            arrViewTabTypeSel = arrViewTabTypeSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          } else if (strComparisonOp == '>=') {
-            arrViewTabTypeSel = arrViewTabTypeSel.filter((x) => x.GetFldValue(strKey) >= strValue);
-          } else if (strComparisonOp == '<=') {
-            arrViewTabTypeSel = arrViewTabTypeSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          } else if (strComparisonOp == '>') {
-            arrViewTabTypeSel = arrViewTabTypeSel.filter((x) => x.GetFldValue(strKey) > strValue);
-          } else if (strComparisonOp == '<') {
-            arrViewTabTypeSel = arrViewTabTypeSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          }
-          break;
-      }
-    }
-    if (arrViewTabTypeSel.length == 0) return arrViewTabTypeSel;
-    let intStart: number = objPagerPara.pageSize * (objPagerPara.pageIndex - 1);
-    if (intStart <= 0) intStart = 0;
-    const intEnd = intStart + objPagerPara.pageSize;
-    if (objPagerPara.orderBy != null && objPagerPara.orderBy.length > 0) {
-      const sstrSplit: string[] = objPagerPara.orderBy.split(' ');
-      let strSortType = 'asc';
-      const strSortFld = sstrSplit[0];
-      if (sstrSplit.length > 1) strSortType = sstrSplit[1];
-      arrViewTabTypeSel = arrViewTabTypeSel.sort(ViewTabType_SortFunByKey(strSortFld, strSortType));
-    } else {
-      //如果排序字段名[OrderBy]为空,就调用排序函数
-      arrViewTabTypeSel = arrViewTabTypeSel.sort(objPagerPara.sortFun);
-    }
-    arrViewTabTypeSel = arrViewTabTypeSel.slice(intStart, intEnd);
-    return arrViewTabTypeSel;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据条件:[{1}]获取分页对象列表不成功!(In {2}.{3})',
-      e,
-      objPagerPara.whereCond,
-      viewTabType_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return new Array<clsViewTabTypeEN>();
-}
-
-/**
- * 根据分页条件获取相应的记录对象列表,只获取一页
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerAsync)
- * @param objPagerPara:分页获取对象列表的参数对象
- * @returns 获取的相应记录对象列表
- **/
-export async function ViewTabType_GetObjLstByPagerAsync(
-  objPagerPara: stuPagerPara,
-): Promise<Array<clsViewTabTypeEN>> {
-  const strThisFuncName = 'GetObjLstByPagerAsync';
-  if (objPagerPara.pageIndex == 0) return new Array<clsViewTabTypeEN>();
-  const strAction = 'GetObjLstByPager';
-  const strUrl = GetWebApiUrl(viewTabType_Controller, strAction);
-
-  const token = Storage.get(ACCESS_TOKEN_KEY);
-  //console.error('token:', token);
-  const config = {
-    headers: {
-      Authorization: `${token}`,
-    },
-  };
-  try {
-    const response = await axios.post(strUrl, objPagerPara, config);
-    const data = response.data;
-    if (data.errorId == 0) {
-      const returnObjLst = data.returnObjLst;
-      if (returnObjLst == null) {
-        const strNullInfo = Format(
-          '获取数据为null, 请注意!(in {0}.{1})',
-          viewTabType_ConstructorName,
-          strThisFuncName,
-        );
-        console.error(strNullInfo);
-        throw strNullInfo;
-      }
-      //console.log(returnObjLst);
-      const arrObjLst = ViewTabType_GetObjLstByJSONObjLst(returnObjLst);
-      return arrObjLst;
-    } else {
-      console.error(data.errorMsg);
-      throw data.errorMsg;
-    }
-  } catch (error: any) {
-    console.error(error);
-    if (error.statusText == undefined) {
-      throw error;
-    }
-    if (error.statusText == 'error') {
-      const strInfo = Format(
-        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
-        strUrl,
-        viewTabType_ConstructorName,
-        strThisFuncName,
-      );
-      console.error(strInfo);
-      throw strInfo;
-    } else if (error.statusText == 'Not Found') {
-      const strInfo = Format(
-        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
-        strUrl,
-        viewTabType_ConstructorName,
-        strThisFuncName,
-      );
-      console.error(strInfo);
-      throw strInfo;
-    } else {
-      throw error.statusText;
-    }
-  }
-}
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerCache)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerAsync)
 
 /**
  * 调用WebApi来删除记录,根据关键字来删除记录
@@ -1674,6 +1565,11 @@ export async function ViewTabType_DelViewTabTypesAsync(
     }
   }
 }
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjExLstByPagerCache)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_CopyToEx)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
 
 /**
  * 根据条件删除记录
@@ -1852,6 +1748,124 @@ export async function ViewTabType_AddNewRecordWithMaxIdAsync(
   }
 }
 
+/** 添加新记录,保存函数
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_AddNewObjSave)
+ **/
+export async function ViewTabType_AddNewObjSave(
+  objViewTabTypeEN: clsViewTabTypeEN,
+): Promise<AddRecordResult> {
+  const strThisFuncName = 'AddNewObjSave';
+  try {
+    ViewTabType_CheckPropertyNew(objViewTabTypeEN);
+  } catch (e) {
+    const strMsg = `检查数据不成功,${e}.(in ${viewTabType_ConstructorName}.${strThisFuncName})`;
+    console.error(strMsg);
+    alert(strMsg);
+    return { keyword: '', success: false }; //一定要有一个返回值,否则会出错!
+  }
+  try {
+    //检查唯一性条件
+    const bolIsExistCond = await ViewTabType_CheckUniCond4Add(objViewTabTypeEN);
+    if (bolIsExistCond == false) {
+      return { keyword: '', success: false };
+    }
+    let returnBool = false;
+    const returnKeyId = await ViewTabType_AddNewRecordWithMaxIdAsync(objViewTabTypeEN);
+    if (IsNullOrEmpty(returnKeyId) == false) {
+      returnBool = true;
+    }
+    if (returnBool == true) {
+      ViewTabType_ReFreshCache();
+    } else {
+      const strInfo = `添加[界面表类型(ViewTabType)]记录不成功!`;
+      //显示信息框
+      throw strInfo;
+    }
+    return { keyword: returnKeyId, success: returnBool }; //一定要有一个返回值,否则会出错!
+  } catch (e) {
+    const strMsg = `添加记录不成功,${e}.(in ${viewTabType_ConstructorName}.${strThisFuncName})`;
+    console.error(strMsg);
+    throw strMsg;
+  }
+}
+
+/** 为添加记录检查唯一性条件
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_CheckUniCondition4Add)
+ **/
+export async function ViewTabType_CheckUniCond4Add(
+  objViewTabTypeEN: clsViewTabTypeEN,
+): Promise<boolean> {
+  const strUniquenessCondition = ViewTabType_GetUniCondStr(objViewTabTypeEN);
+  const bolIsExistCondition = await ViewTabType_IsExistRecordAsync(strUniquenessCondition);
+  if (bolIsExistCondition == true) {
+    const strMsg = Format(
+      '不能满足唯一性条件。满足条件：{0}的记录已经存在!',
+      strUniquenessCondition,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+    return false;
+  }
+  return true;
+}
+
+/** 为修改记录检查唯一性条件
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_CheckUniCondition4Update)
+ **/
+export async function ViewTabType_CheckUniCond4Update(
+  objViewTabTypeEN: clsViewTabTypeEN,
+): Promise<boolean> {
+  const strUniquenessCondition = ViewTabType_GetUniCondStr4Update(objViewTabTypeEN);
+  const bolIsExistCondition = await ViewTabType_IsExistRecordAsync(strUniquenessCondition);
+  if (bolIsExistCondition == true) {
+    const strMsg = Format(
+      '不能满足唯一性条件。满足条件：{0}的记录已经存在!',
+      strUniquenessCondition,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+    return false;
+  }
+  return true;
+}
+
+/** 修改记录
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_UpdateObjSave)
+ **/
+export async function ViewTabType_UpdateObjSave(
+  objViewTabTypeEN: clsViewTabTypeEN,
+): Promise<boolean> {
+  const strThisFuncName = 'UpdateObjSave';
+  objViewTabTypeEN.sfUpdFldSetStr = objViewTabTypeEN.updFldString; //设置哪些字段被修改(脏字段)
+  if (objViewTabTypeEN.viewTabTypeId == '' || objViewTabTypeEN.viewTabTypeId == undefined) {
+    console.error('关键字不能为空!');
+    throw '关键字不能为空!';
+  }
+  try {
+    ViewTabType_CheckProperty4Update(objViewTabTypeEN);
+  } catch (e) {
+    const strMsg = `检查数据不成功,${e}.(in ${viewTabType_ConstructorName}.${strThisFuncName})`;
+    console.error(strMsg);
+    throw strMsg;
+  }
+  try {
+    //检查唯一性条件
+    const bolIsExistCond = await ViewTabType_CheckUniCond4Update(objViewTabTypeEN);
+    if (bolIsExistCond == false) {
+      return false;
+    }
+    const returnBool = await ViewTabType_UpdateRecordAsync(objViewTabTypeEN);
+    if (returnBool == true) {
+      ViewTabType_ReFreshCache();
+    }
+    return returnBool;
+  } catch (e) {
+    const strMsg = `修改记录不成功,${e}.(in ${viewTabType_ConstructorName}.${strThisFuncName})`;
+    console.error(strMsg);
+    throw strMsg;
+  }
+}
+
 /**
  * 把表对象添加到数据库中,并且返回该记录的关键字(针对Identity关键字和自增关键字)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_AddNewRecordWithReturnKeyAsync)
@@ -1921,6 +1935,75 @@ export async function ViewTabType_UpdateRecordAsync(
 ): Promise<boolean> {
   const strThisFuncName = 'UpdateRecordAsync';
   const strAction = 'UpdateRecord';
+  if (
+    objViewTabTypeEN.sfUpdFldSetStr === undefined ||
+    objViewTabTypeEN.sfUpdFldSetStr === null ||
+    objViewTabTypeEN.sfUpdFldSetStr === ''
+  ) {
+    const strMsg = Format(
+      '对象(关键字: {0})的【修改字段集】为空,不能修改!',
+      objViewTabTypeEN.viewTabTypeId,
+    );
+    throw strMsg;
+  }
+  const strUrl = GetWebApiUrl(viewTabType_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  //console.error('token:', token);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+  try {
+    const response = await axios.post(strUrl, objViewTabTypeEN, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnBool;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
+        strUrl,
+        viewTabType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
+        strUrl,
+        viewTabType_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 调用WebApi来编辑记录（存在就修改，不存在就添加）,数据传递使用JSON串
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_EditRecordExAsync)
+ * @param objViewTabTypeEN:需要添加的对象
+ * @returns 获取修改是否成功？
+ **/
+export async function ViewTabType_EditRecordExAsync(
+  objViewTabTypeEN: clsViewTabTypeEN,
+): Promise<boolean> {
+  const strThisFuncName = 'EditRecordExAsync';
+  const strAction = 'EditRecordEx';
   if (
     objViewTabTypeEN.sfUpdFldSetStr === undefined ||
     objViewTabTypeEN.sfUpdFldSetStr === null ||
@@ -2057,25 +2140,19 @@ export async function ViewTabType_UpdateWithConditionAsync(
  * @param objstrViewTabTypeIdCond:条件对象
  * @returns 对象列表子集
  */
-export async function ViewTabType_IsExistRecordCache(objViewTabTypeCond: clsViewTabTypeEN) {
+export async function ViewTabType_IsExistRecordCache(objViewTabTypeCond: ConditionCollection) {
   const strThisFuncName = 'IsExistRecordCache';
   const arrViewTabTypeObjLstCache = await ViewTabType_GetObjLstCache();
   if (arrViewTabTypeObjLstCache == null) return false;
   let arrViewTabTypeSel = arrViewTabTypeObjLstCache;
-  if (objViewTabTypeCond.sfFldComparisonOp == null || objViewTabTypeCond.sfFldComparisonOp == '')
+  if (objViewTabTypeCond.GetConditions().length == 0)
     return arrViewTabTypeSel.length > 0 ? true : false;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objViewTabTypeCond.sfFldComparisonOp,
-  );
-  //console.log("clsViewTabTypeWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
   try {
-    const sstrKeys = GetObjKeys(objViewTabTypeCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objViewTabTypeCond.GetFldValue(strKey);
+    for (const objCondition of objViewTabTypeCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
       const strType = typeof strValue;
       switch (strType) {
         case 'string':
@@ -2367,26 +2444,19 @@ export async function ViewTabType_GetRecCountByCondAsync(strWhereCond: string): 
  * @param objViewTabTypeCond:条件对象
  * @returns 对象列表记录数
  */
-export async function ViewTabType_GetRecCountByCondCache(objViewTabTypeCond: clsViewTabTypeEN) {
+export async function ViewTabType_GetRecCountByCondCache(objViewTabTypeCond: ConditionCollection) {
   const strThisFuncName = 'GetRecCountByCondCache';
   const arrViewTabTypeObjLstCache = await ViewTabType_GetObjLstCache();
   if (arrViewTabTypeObjLstCache == null) return 0;
   let arrViewTabTypeSel = arrViewTabTypeObjLstCache;
-  if (objViewTabTypeCond.sfFldComparisonOp == null || objViewTabTypeCond.sfFldComparisonOp == '')
-    return arrViewTabTypeSel.length;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objViewTabTypeCond.sfFldComparisonOp,
-  );
-  //console.log("clsViewTabTypeWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
+  if (objViewTabTypeCond.GetConditions().length == 0) return arrViewTabTypeSel.length;
   try {
-    const sstrKeys = GetObjKeys(objViewTabTypeCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
+    for (const objCondition of objViewTabTypeCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
       arrViewTabTypeSel = arrViewTabTypeSel.filter((x) => x.GetFldValue(strKey) != null);
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objViewTabTypeCond.GetFldValue(strKey);
       const strType = typeof strValue;
       switch (strType) {
         case 'string':
@@ -2615,7 +2685,7 @@ export function ViewTabType_ReFreshCache(): void {
   console.trace(strMsg);
   // 静态的对象列表,用于清空相关缓存,针对记录较少,作为参数表可以使用
   const strKey = clsViewTabTypeEN._CurrTabName;
-  switch (clsViewTabTypeEN.CacheModeId) {
+  switch (clsViewTabTypeEN._CacheModeId) {
     case '04': //sessionStorage
       sessionStorage.removeItem(strKey);
       break;
@@ -2629,6 +2699,7 @@ export function ViewTabType_ReFreshCache(): void {
       CacheHelper.Remove(strKey);
       break;
   }
+  clsViewTabTypeEN._RefreshTimeLst.push(clsDateTime.getTodayDateTimeStr(0));
 }
 
 /**
@@ -2638,7 +2709,7 @@ export function ViewTabType_ReFreshCache(): void {
 export function ViewTabType_ReFreshThisCache(): void {
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = clsViewTabTypeEN._CurrTabName;
-    switch (clsViewTabTypeEN.CacheModeId) {
+    switch (clsViewTabTypeEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -2652,6 +2723,7 @@ export function ViewTabType_ReFreshThisCache(): void {
         CacheHelper.Remove(strKey);
         break;
     }
+    clsViewTabTypeEN._RefreshTimeLst.push(clsDateTime.getTodayDateTimeStr(0));
     const strMsg = Format('刷新缓存成功!');
     console.trace(strMsg);
   } else {
@@ -2659,10 +2731,18 @@ export function ViewTabType_ReFreshThisCache(): void {
     console.trace(strMsg);
   }
 }
+/**
+ * 获取最新的缓存刷新时间
+ * @returns 最新的缓存刷新时间，字符串型
+ **/
+export function ViewTabType_GetLastRefreshTime(): string {
+  if (clsViewTabTypeEN._RefreshTimeLst.length == 0) return '';
+  return clsViewTabTypeEN._RefreshTimeLst[clsViewTabTypeEN._RefreshTimeLst.length - 1];
+}
 
 /**
  * 绑定基于Web的下拉框,在某一层下的下拉框
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
 */
@@ -2687,8 +2767,28 @@ export async function ViewTabType_BindDdl_ViewTabTypeIdInDivCache(
     arrObjLstSel,
     clsViewTabTypeEN.con_ViewTabTypeId,
     clsViewTabTypeEN.con_ViewTabTypeName,
-    '界面表类型',
+    '界面表类型...',
   );
+}
+
+/**
+ * 绑定基于Web的下拉框,在某一层下的下拉框
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_GetDdlData)-pyf
+ * @param objDDL:需要绑定当前表的下拉框
+
+*/
+export async function ViewTabType_GetArrViewTabType() {
+  //为数据源于表的下拉框设置内容
+  //console.log("开始：BindDdl_ViewTabTypeIdInDivCache");
+  const arrViewTabType = new Array<clsViewTabTypeEN>();
+  const arrObjLstSel = await ViewTabType_GetObjLstCache();
+  if (arrObjLstSel == null) return null;
+  const obj0 = new clsViewTabTypeEN();
+  obj0.viewTabTypeId = '0';
+  obj0.viewTabTypeName = '选界面表类型...';
+  arrViewTabType.push(obj0);
+  arrObjLstSel.forEach((x) => arrViewTabType.push(x));
+  return arrViewTabType;
 }
 
 /**
@@ -2699,7 +2799,12 @@ export function ViewTabType_CheckPropertyNew(pobjViewTabTypeEN: clsViewTabTypeEN
   //检查字段非空, 即数据表要求非常非空的字段,不能为空!
   if (IsNullOrEmpty(pobjViewTabTypeEN.viewTabTypeName) === true) {
     throw new Error(
-      '(errid:Watl000411)字段[ViewTabTypeName]不能为空(In 界面表类型)!(clsViewTabTypeBL:CheckPropertyNew0)',
+      `(errid:Watl000411)字段[界面表类型名]不能为空(In 界面表类型)!(clsViewTabTypeBL:CheckPropertyNew0)`,
+    );
+  }
+  if (IsNullOrEmpty(pobjViewTabTypeEN.viewTabTypeEnName) === true) {
+    throw new Error(
+      `(errid:Watl000411)字段[界面表类型英文名]不能为空(In 界面表类型)!(clsViewTabTypeBL:CheckPropertyNew0)`,
     );
   }
   //检查字段长度, 若字符型字段长度超出规定的长度,即非法!
@@ -2708,7 +2813,7 @@ export function ViewTabType_CheckPropertyNew(pobjViewTabTypeEN: clsViewTabTypeEN
     GetStrLen(pobjViewTabTypeEN.viewTabTypeId) > 4
   ) {
     throw new Error(
-      '(errid:Watl000413)字段[界面表类型码(viewTabTypeId)]的长度不能超过4(In 界面表类型(ViewTabType))!值:$(pobjViewTabTypeEN.viewTabTypeId)(clsViewTabTypeBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[界面表类型码(viewTabTypeId)]的长度不能超过4(In 界面表类型(ViewTabType))!值:${pobjViewTabTypeEN.viewTabTypeId}(clsViewTabTypeBL:CheckPropertyNew)`,
     );
   }
   if (
@@ -2716,7 +2821,15 @@ export function ViewTabType_CheckPropertyNew(pobjViewTabTypeEN: clsViewTabTypeEN
     GetStrLen(pobjViewTabTypeEN.viewTabTypeName) > 20
   ) {
     throw new Error(
-      '(errid:Watl000413)字段[ViewTabTypeName(viewTabTypeName)]的长度不能超过20(In 界面表类型(ViewTabType))!值:$(pobjViewTabTypeEN.viewTabTypeName)(clsViewTabTypeBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[界面表类型名(viewTabTypeName)]的长度不能超过20(In 界面表类型(ViewTabType))!值:${pobjViewTabTypeEN.viewTabTypeName}(clsViewTabTypeBL:CheckPropertyNew)`,
+    );
+  }
+  if (
+    IsNullOrEmpty(pobjViewTabTypeEN.viewTabTypeEnName) == false &&
+    GetStrLen(pobjViewTabTypeEN.viewTabTypeEnName) > 100
+  ) {
+    throw new Error(
+      `(errid:Watl000413)字段[界面表类型英文名(viewTabTypeEnName)]的长度不能超过100(In 界面表类型(ViewTabType))!值:${pobjViewTabTypeEN.viewTabTypeEnName}(clsViewTabTypeBL:CheckPropertyNew)`,
     );
   }
   if (
@@ -2724,7 +2837,7 @@ export function ViewTabType_CheckPropertyNew(pobjViewTabTypeEN: clsViewTabTypeEN
     GetStrLen(pobjViewTabTypeEN.tabTypeFunction) > 500
   ) {
     throw new Error(
-      '(errid:Watl000413)字段[TabTypeFunction(tabTypeFunction)]的长度不能超过500(In 界面表类型(ViewTabType))!值:$(pobjViewTabTypeEN.tabTypeFunction)(clsViewTabTypeBL:CheckPropertyNew)',
+      `(errid:Watl000413)字段[表类型功能(tabTypeFunction)]的长度不能超过500(In 界面表类型(ViewTabType))!值:${pobjViewTabTypeEN.tabTypeFunction}(clsViewTabTypeBL:CheckPropertyNew)`,
     );
   }
   //检查字段的数据类型是否正确
@@ -2734,7 +2847,7 @@ export function ViewTabType_CheckPropertyNew(pobjViewTabTypeEN: clsViewTabTypeEN
     tzDataType.isString(pobjViewTabTypeEN.viewTabTypeId) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[界面表类型码(viewTabTypeId)]的值:[$(pobjViewTabTypeEN.viewTabTypeId)], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[界面表类型码(viewTabTypeId)]的值:[${pobjViewTabTypeEN.viewTabTypeId}], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -2743,7 +2856,16 @@ export function ViewTabType_CheckPropertyNew(pobjViewTabTypeEN: clsViewTabTypeEN
     tzDataType.isString(pobjViewTabTypeEN.viewTabTypeName) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[ViewTabTypeName(viewTabTypeName)]的值:[$(pobjViewTabTypeEN.viewTabTypeName)], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[界面表类型名(viewTabTypeName)]的值:[${pobjViewTabTypeEN.viewTabTypeName}], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckPropertyNew0)`,
+    );
+  }
+  if (
+    IsNullOrEmpty(pobjViewTabTypeEN.viewTabTypeEnName) == false &&
+    undefined !== pobjViewTabTypeEN.viewTabTypeEnName &&
+    tzDataType.isString(pobjViewTabTypeEN.viewTabTypeEnName) === false
+  ) {
+    throw new Error(
+      `(errid:Watl000414)字段[界面表类型英文名(viewTabTypeEnName)]的值:[${pobjViewTabTypeEN.viewTabTypeEnName}], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -2752,7 +2874,7 @@ export function ViewTabType_CheckPropertyNew(pobjViewTabTypeEN: clsViewTabTypeEN
     tzDataType.isString(pobjViewTabTypeEN.tabTypeFunction) === false
   ) {
     throw new Error(
-      '(errid:Watl000414)字段[TabTypeFunction(tabTypeFunction)]的值:[$(pobjViewTabTypeEN.tabTypeFunction)], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckPropertyNew0)',
+      `(errid:Watl000414)字段[表类型功能(tabTypeFunction)]的值:[${pobjViewTabTypeEN.tabTypeFunction}], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckPropertyNew0)`,
     );
   }
   //检查外键, 作为外键应该和主键的字段长度是一样的, 若不一样,即非法!
@@ -2770,7 +2892,7 @@ export function ViewTabType_CheckProperty4Update(pobjViewTabTypeEN: clsViewTabTy
     GetStrLen(pobjViewTabTypeEN.viewTabTypeId) > 4
   ) {
     throw new Error(
-      '(errid:Watl000416)字段[界面表类型码(viewTabTypeId)]的长度不能超过4(In 界面表类型(ViewTabType))!值:$(pobjViewTabTypeEN.viewTabTypeId)(clsViewTabTypeBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[界面表类型码(viewTabTypeId)]的长度不能超过4(In 界面表类型(ViewTabType))!值:${pobjViewTabTypeEN.viewTabTypeId}(clsViewTabTypeBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -2778,7 +2900,15 @@ export function ViewTabType_CheckProperty4Update(pobjViewTabTypeEN: clsViewTabTy
     GetStrLen(pobjViewTabTypeEN.viewTabTypeName) > 20
   ) {
     throw new Error(
-      '(errid:Watl000416)字段[ViewTabTypeName(viewTabTypeName)]的长度不能超过20(In 界面表类型(ViewTabType))!值:$(pobjViewTabTypeEN.viewTabTypeName)(clsViewTabTypeBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[界面表类型名(viewTabTypeName)]的长度不能超过20(In 界面表类型(ViewTabType))!值:${pobjViewTabTypeEN.viewTabTypeName}(clsViewTabTypeBL:CheckProperty4Update)`,
+    );
+  }
+  if (
+    IsNullOrEmpty(pobjViewTabTypeEN.viewTabTypeEnName) == false &&
+    GetStrLen(pobjViewTabTypeEN.viewTabTypeEnName) > 100
+  ) {
+    throw new Error(
+      `(errid:Watl000416)字段[界面表类型英文名(viewTabTypeEnName)]的长度不能超过100(In 界面表类型(ViewTabType))!值:${pobjViewTabTypeEN.viewTabTypeEnName}(clsViewTabTypeBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -2786,7 +2916,7 @@ export function ViewTabType_CheckProperty4Update(pobjViewTabTypeEN: clsViewTabTy
     GetStrLen(pobjViewTabTypeEN.tabTypeFunction) > 500
   ) {
     throw new Error(
-      '(errid:Watl000416)字段[TabTypeFunction(tabTypeFunction)]的长度不能超过500(In 界面表类型(ViewTabType))!值:$(pobjViewTabTypeEN.tabTypeFunction)(clsViewTabTypeBL:CheckProperty4Update)',
+      `(errid:Watl000416)字段[表类型功能(tabTypeFunction)]的长度不能超过500(In 界面表类型(ViewTabType))!值:${pobjViewTabTypeEN.tabTypeFunction}(clsViewTabTypeBL:CheckProperty4Update)`,
     );
   }
   //检查字段的数据类型是否正确
@@ -2796,7 +2926,7 @@ export function ViewTabType_CheckProperty4Update(pobjViewTabTypeEN: clsViewTabTy
     tzDataType.isString(pobjViewTabTypeEN.viewTabTypeId) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[界面表类型码(viewTabTypeId)]的值:[$(pobjViewTabTypeEN.viewTabTypeId)], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[界面表类型码(viewTabTypeId)]的值:[${pobjViewTabTypeEN.viewTabTypeId}], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -2805,7 +2935,16 @@ export function ViewTabType_CheckProperty4Update(pobjViewTabTypeEN: clsViewTabTy
     tzDataType.isString(pobjViewTabTypeEN.viewTabTypeName) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[ViewTabTypeName(viewTabTypeName)]的值:[$(pobjViewTabTypeEN.viewTabTypeName)], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[界面表类型名(viewTabTypeName)]的值:[${pobjViewTabTypeEN.viewTabTypeName}], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckProperty4Update)`,
+    );
+  }
+  if (
+    IsNullOrEmpty(pobjViewTabTypeEN.viewTabTypeEnName) == false &&
+    undefined !== pobjViewTabTypeEN.viewTabTypeEnName &&
+    tzDataType.isString(pobjViewTabTypeEN.viewTabTypeEnName) === false
+  ) {
+    throw new Error(
+      `(errid:Watl000417)字段[界面表类型英文名(viewTabTypeEnName)]的值:[${pobjViewTabTypeEN.viewTabTypeEnName}], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -2814,7 +2953,7 @@ export function ViewTabType_CheckProperty4Update(pobjViewTabTypeEN: clsViewTabTy
     tzDataType.isString(pobjViewTabTypeEN.tabTypeFunction) === false
   ) {
     throw new Error(
-      '(errid:Watl000417)字段[TabTypeFunction(tabTypeFunction)]的值:[$(pobjViewTabTypeEN.tabTypeFunction)], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckProperty4Update)',
+      `(errid:Watl000417)字段[表类型功能(tabTypeFunction)]的值:[${pobjViewTabTypeEN.tabTypeFunction}], 非法,应该为字符型(In 界面表类型(ViewTabType))!(clsViewTabTypeBL:CheckProperty4Update)`,
     );
   }
   //检查主键是否为Null或者空!
@@ -2824,7 +2963,7 @@ export function ViewTabType_CheckProperty4Update(pobjViewTabTypeEN: clsViewTabTy
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -2845,7 +2984,7 @@ export function ViewTabType_GetJSONStrByObj(pobjViewTabTypeEN: clsViewTabTypeEN)
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -2866,7 +3005,7 @@ export function ViewTabType_GetObjLstByJSONStr(strJSON: string): Array<clsViewTa
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrViewTabTypeObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -2886,7 +3025,7 @@ export function ViewTabType_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2023-10-12
+ * 日期:2026-04-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -2947,6 +3086,21 @@ export function ViewTabType_GetCombineCondition(objViewTabTypeCond: clsViewTabTy
   if (
     Object.prototype.hasOwnProperty.call(
       objViewTabTypeCond.dicFldComparisonOp,
+      clsViewTabTypeEN.con_ViewTabTypeEnName,
+    ) == true
+  ) {
+    const strComparisonOpViewTabTypeEnName: string =
+      objViewTabTypeCond.dicFldComparisonOp[clsViewTabTypeEN.con_ViewTabTypeEnName];
+    strWhereCond += Format(
+      " And {0} {2} '{1}'",
+      clsViewTabTypeEN.con_ViewTabTypeEnName,
+      objViewTabTypeCond.viewTabTypeEnName,
+      strComparisonOpViewTabTypeEnName,
+    );
+  }
+  if (
+    Object.prototype.hasOwnProperty.call(
+      objViewTabTypeCond.dicFldComparisonOp,
       clsViewTabTypeEN.con_TabTypeFunction,
     ) == true
   ) {
@@ -2965,7 +3119,7 @@ export function ViewTabType_GetCombineCondition(objViewTabTypeCond: clsViewTabTy
 /**
  *获取唯一性条件串(Uniqueness)--ViewTabType(界面表类型),根据唯一约束条件来生成
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_GetUniquenessConditionString)
- * @param strViewTabTypeName: ViewTabTypeName(要求唯一的字段)
+ * @param strViewTabTypeName: 界面表类型名(要求唯一的字段)
  * @returns 条件串(strWhereCond)
  **/
 export function ViewTabType_GetUniCondStr(objViewTabTypeEN: clsViewTabTypeEN): string {
@@ -2977,7 +3131,7 @@ export function ViewTabType_GetUniCondStr(objViewTabTypeEN: clsViewTabTypeEN): s
 /**
  *获取唯一性条件串(Uniqueness)--ViewTabType(界面表类型),根据唯一约束条件来生成
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_GetUniquenessConditionString4Update)
- * @param strViewTabTypeName: ViewTabTypeName(要求唯一的字段)
+ * @param strViewTabTypeName: 界面表类型名(要求唯一的字段)
  * @returns 条件串(strWhereCond)
  **/
 export function ViewTabType_GetUniCondStr4Update(objViewTabTypeEN: clsViewTabTypeEN): string {

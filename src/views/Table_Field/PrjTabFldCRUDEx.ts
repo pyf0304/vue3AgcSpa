@@ -2594,7 +2594,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
     arrDataColumn: Array<clsDataColumn>,
   ) {
     const strThisFuncName = this.ExtendFldFuncMap.name;
-    const arrFldName = clsPrjTabFldEN.AttributeName;
+    const arrFldName = clsPrjTabFldEN._AttributeName;
     const arrExcludeFldName = ['isNullableSql', 'precisionSql', 'lengthSql', 'typeNameSql'];
 
     // 兜底: 当生成代码字段为空且传入的是 SQL 列结构时，先补齐临时字段记录。

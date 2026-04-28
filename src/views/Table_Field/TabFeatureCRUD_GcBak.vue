@@ -149,7 +149,7 @@
             name="lblTabFeatureList"
             class="col-form-label text-info"
             style="width: 250px"
-            >表功能列表
+            >表功能列表1
           </label>
         </li>
         <li class="nav-item ml-3">

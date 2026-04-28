@@ -17,6 +17,13 @@
         </div>
       </div>
     </div>
+    <div style="margin: 4px 0 8px 0">
+      <span
+        id="lblMsg_List_Graph"
+        class="text-warning"
+        style="display: inline-block; max-width: 100%; word-break: break-all"
+      ></span>
+    </div>
     <div id="content">
       <div id="graph-container">
         <div id="graph" ref="graph"></div>
@@ -325,8 +332,15 @@
       };
 
       const drawGraph = () => {
-        let width = 3000; // 增加宽度以允许滚动
-        let height = 2500; // 增加高度以允许滚动
+        const graphEl = graph.value as HTMLElement | null;
+        const minWidth = graphEl?.clientWidth ?? 1000;
+        const minHeight = graphEl?.clientHeight ?? 420;
+        const maxNodeX =
+          nodes_Tab.value.length > 0 ? Math.max(...nodes_Tab.value.map((node) => node.x ?? 0)) : 0;
+        const maxNodeY =
+          nodes_Tab.value.length > 0 ? Math.max(...nodes_Tab.value.map((node) => node.y ?? 0)) : 0;
+        let width = Math.max(minWidth, Math.min(width0, maxNodeX + 220));
+        let height = Math.max(minHeight, Math.min(height0, maxNodeY + 180));
 
         // const svg = d3.select('#graph').append('svg').attr('width', width).attr('height', height);
         let svg;

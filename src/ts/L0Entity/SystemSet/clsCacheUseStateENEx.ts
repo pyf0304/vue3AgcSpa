@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsCacheUseStateENEx
  * 表名:CacheUseState(00050566)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:49:11
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/28 23:40:27
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:系统设置(SystemSet)
  * 框架-层名:实体扩展层(TS)(EntityLayerEx,0191)
@@ -54,20 +54,17 @@ export class clsCacheUseStateENEx extends clsCacheUseStateEN {
    * 常量:"CacheModeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_CacheModeName(): string {
-    return 'cacheModeName';
-  } //缓存方式名
+  public static readonly con_CacheModeName = 'cacheModeName'; //缓存方式名
 
   /**
    * 常量:"CacheModeENName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_CacheModeENName(): string {
-    return 'cacheModeENName';
-  } //缓存方式英文名
+  public static readonly con_CacheModeENName = 'cacheModeENName'; //缓存方式英文名
 
   public cacheModeName = ''; //缓存方式名
   public cacheModeENName = ''; //缓存方式英文名
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名

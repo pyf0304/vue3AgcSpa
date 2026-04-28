@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsPrjTabWApi
  * 表名:PrjTab(00050009)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/13 23:53:22
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/28 23:40:30
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:字段、表维护(Table_Field)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * 工程表(PrjTab)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年06月13日.
+ * Created by pyf on 2026年04月28日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -141,7 +141,7 @@ export async function PrjTab_GetObjByTabIdAsync(strTabId: string): Promise<clsPr
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-13
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -153,7 +153,7 @@ export function PrjTab_SortFunDefa(a: clsPrjTabEN, b: clsPrjTabEN): number {
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-13
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -167,7 +167,7 @@ export function PrjTab_SortFunDefa2Fld(a: clsPrjTabEN, b: clsPrjTabEN): number {
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-13
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -349,14 +349,10 @@ export function PrjTab_SortFunByKey(strKey: string, AscOrDesc: string) {
         };
       case clsPrjTabEN.con_UpdUserId:
         return (a: clsPrjTabEN, b: clsPrjTabEN) => {
-          if (a.updUserId == null) return -1;
-          if (b.updUserId == null) return 1;
           return a.updUserId.localeCompare(b.updUserId);
         };
       case clsPrjTabEN.con_UpdDate:
         return (a: clsPrjTabEN, b: clsPrjTabEN) => {
-          if (a.updDate == null) return -1;
-          if (b.updDate == null) return 1;
           return a.updDate.localeCompare(b.updDate);
         };
       case clsPrjTabEN.con_Memo:
@@ -602,14 +598,10 @@ export function PrjTab_SortFunByKey(strKey: string, AscOrDesc: string) {
         };
       case clsPrjTabEN.con_UpdUserId:
         return (a: clsPrjTabEN, b: clsPrjTabEN) => {
-          if (b.updUserId == null) return -1;
-          if (a.updUserId == null) return 1;
           return b.updUserId.localeCompare(a.updUserId);
         };
       case clsPrjTabEN.con_UpdDate:
         return (a: clsPrjTabEN, b: clsPrjTabEN) => {
-          if (b.updDate == null) return -1;
-          if (a.updDate == null) return 1;
           return b.updDate.localeCompare(a.updDate);
         };
       case clsPrjTabEN.con_Memo:
@@ -689,7 +681,7 @@ export function PrjTab_SortFunByKey(strKey: string, AscOrDesc: string) {
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-06-13
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -1643,7 +1635,7 @@ export function PrjTab_CopyToEx(objPrjTabENS: clsPrjTabEN): clsPrjTabENEx {
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2025-06-13
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -1654,7 +1646,7 @@ export function PrjTab_FuncMapByFldName(strFldName: string, objPrjTabEx: clsPrjT
   strFldName = strFldName.replace('|Ex', '');
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsPrjTabEN.AttributeName;
+  const arrFldName = clsPrjTabEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -1685,7 +1677,7 @@ export function PrjTab_FuncMapByFldName(strFldName: string, objPrjTabEx: clsPrjT
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-13
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -3157,6 +3149,11 @@ export function PrjTab_CheckPropertyNew(pobjPrjTabEN: clsPrjTabEN) {
       `(errid:Watl000411)字段[表主类型Id]不能为空(In 工程表)!(clsPrjTabBL:CheckPropertyNew0)`,
     );
   }
+  if (IsNullOrEmpty(pobjPrjTabEN.updUserId) === true) {
+    throw new Error(
+      `(errid:Watl000411)字段[修改用户Id]不能为空(In 工程表)!(clsPrjTabBL:CheckPropertyNew0)`,
+    );
+  }
   if (
     null === pobjPrjTabEN.isNeedTransCode ||
     (pobjPrjTabEN.isNeedTransCode != null && pobjPrjTabEN.isNeedTransCode.toString() === '')
@@ -4422,7 +4419,7 @@ export function PrjTab_CheckProperty4Update(pobjPrjTabEN: clsPrjTabEN) {
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-06-13
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -4443,7 +4440,7 @@ export function PrjTab_GetJSONStrByObj(pobjPrjTabEN: clsPrjTabEN): string {
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-06-13
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -4464,7 +4461,7 @@ export function PrjTab_GetObjLstByJSONStr(strJSON: string): Array<clsPrjTabEN> {
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-06-13
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrPrjTabObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -4484,7 +4481,7 @@ export function PrjTab_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-06-13
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

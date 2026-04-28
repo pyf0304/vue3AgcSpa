@@ -237,6 +237,27 @@
             >
           </td>
         </tr>
+        <tr id="trApplicationTypeReadonly">
+          <td class="text-right">
+            <label
+              id="lblApplicationTypeReadonly"
+              class="col-form-label text-right"
+              style="width: 90px"
+            >
+              应用类型
+            </label>
+          </td>
+          <td class="text-left" colSpan="3">
+            <input
+              id="txtApplicationTypeReadonly"
+              :value="applicationTypeName"
+              class="form-control form-control-sm"
+              style="width: 400px"
+              readonly
+              disabled
+            />
+          </td>
+        </tr>
         <tr id="trViewFunction">
           <td class="text-right">
             <label id="lblViewFunction" class="col-form-label text-right" style="width: 90px">
@@ -375,6 +396,7 @@
       const viewId = ref('');
       const prjId = ref('');
       const applicationTypeId = ref(0);
+      const applicationTypeName = ref('');
       const userId = ref('');
       const isShare = ref(true);
       const updDate = ref('');
@@ -394,6 +416,19 @@
         const strCmPrjId = CmPrjId_Local.value; //静态变量;//Session存储、local存储
         const intApplicationTypeId_Static = ApplicationTypeId_Static.value; //静态变量;//静态变量
         const strPrjId = PrjId_Session.value; //静态变量;//Session存储、local存储
+        applicationTypeId.value = intApplicationTypeId_Static;
+        const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
+          intApplicationTypeId_Static,
+        );
+        if (objApplicationType == null) {
+          applicationTypeName.value = Format('未知应用类型({0})', intApplicationTypeId_Static);
+        } else {
+          applicationTypeName.value = Format(
+            '{0}({1})',
+            objApplicationType.applicationTypeName,
+            intApplicationTypeId_Static,
+          );
+        }
         //  await this.SetDdl_MainTabIdInDiv(); //编辑区域
         arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
         mainTabId.value = '0';
@@ -717,6 +752,7 @@
         viewId,
         prjId,
         applicationTypeId,
+        applicationTypeName,
         userId,
         isShare,
         updDate,
@@ -836,6 +872,12 @@
             this.filePath = 'Pages/';
             break;
           case enumApplicationType.WebApi_19:
+            this.viewName = Format('{0}CRUD', objPrjTabEN.tabName);
+            this.viewCnName = Format('{0}CRUD', objPrjTabEN.tabCnName);
+            this.fileName = `${this.viewName}.vue`;
+            this.filePath = 'views/';
+            break;
+          case enumApplicationType.VueAppInCore_TS_30:
             this.viewName = Format('{0}CRUD', objPrjTabEN.tabName);
             this.viewCnName = Format('{0}CRUD', objPrjTabEN.tabCnName);
             this.fileName = `${this.viewName}.vue`;

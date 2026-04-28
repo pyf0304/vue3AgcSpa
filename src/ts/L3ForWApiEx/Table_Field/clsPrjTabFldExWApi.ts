@@ -476,7 +476,7 @@ export function PrjTabFldEx_ReFreshCache(strPrjId: string, strTabId: string): vo
   console.trace(strMsg);
   // 静态的对象列表,用于清空相关缓存,针对记录较少,作为参数表可以使用
   const strKey = Format('{0}_{1}_{2}', clsPrjTabFldEN._CurrTabName, strPrjId, strTabId);
-  switch (clsPrjTabFldEN.CacheModeId) {
+  switch (clsPrjTabFldEN._CacheModeId) {
     case '04': //sessionStorage
       if (IsNullOrEmpty(strTabId) == true) {
         CacheHelper.ClearSessionStorage4Head(strKey);
@@ -1082,7 +1082,7 @@ export async function PrjTabFldEx_GetObjExLstByPagerAsync(
   const objSortInfo = GetSortExpressInfo(objPagerPara);
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsPrjTabFldEN.AttributeName.indexOf(objSortInfo.SortFld) == -1
+    clsPrjTabFldEN._AttributeName.indexOf(objSortInfo.SortFld) == -1
   ) {
     for (const objInFor of arrPrjTabFldExObjLst) {
       await PrjTabFldEx_FuncMapByFldName(objSortInfo.SortFld, objInFor);
@@ -1306,7 +1306,7 @@ export async function PrjTabFldEx_FuncMapByFldName(
   const strThisFuncName = PrjTabFldEx_FuncMapByFldName.name;
   let strMsg = '';
   //如果是本表中字段，不需要映射
-  const arrFldName = clsPrjTabFldEN.AttributeName;
+  const arrFldName = clsPrjTabFldEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {

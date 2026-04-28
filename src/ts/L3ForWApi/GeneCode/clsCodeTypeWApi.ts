@@ -2,7 +2,7 @@
  * 类名:clsCodeTypeWApi
  * 表名:CodeType(00050203)
  * 版本:2026.04.19(服务器:WIN-SRV103-116)
- * 日期:2026/04/22 07:04:04
+ * 日期:2026/04/28 23:40:20
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
@@ -20,7 +20,7 @@
 /**
  * 代码类型(CodeType)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2026年04月22日.
+ * Created by pyf on 2026年04月28日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -136,7 +136,7 @@ export async function CodeType_GetObjByCodeTypeIdAsync(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-22
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -148,7 +148,7 @@ export function CodeType_SortFunDefa(a: clsCodeTypeEN, b: clsCodeTypeEN): number
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-22
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -162,7 +162,7 @@ export function CodeType_SortFunDefa2Fld(a: clsCodeTypeEN, b: clsCodeTypeEN): nu
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-22
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -582,7 +582,7 @@ export function CodeType_SortFunByKey(strKey: string, AscOrDesc: string) {
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2026-04-22
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -1506,7 +1506,7 @@ export function CodeType_CopyToEx(objCodeTypeENS: clsCodeTypeEN): clsCodeTypeENE
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2026-04-22
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -1536,7 +1536,7 @@ export function CodeType_FuncMapByFldName(strFldName: string, objCodeTypeEx: cls
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-22
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -3903,7 +3903,7 @@ export function CodeType_CheckProperty4Update(pobjCodeTypeEN: clsCodeTypeEN) {
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2026-04-22
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3924,7 +3924,7 @@ export function CodeType_GetJSONStrByObj(pobjCodeTypeEN: clsCodeTypeEN): string 
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2026-04-22
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -3945,7 +3945,7 @@ export function CodeType_GetObjLstByJSONStr(strJSON: string): Array<clsCodeTypeE
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2026-04-22
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrCodeTypeObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -3965,7 +3965,7 @@ export function CodeType_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2026-04-22
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

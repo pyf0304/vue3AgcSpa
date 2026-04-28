@@ -21,7 +21,7 @@ export class clsPrjTabFldExWApi_PureCache {
   public static async GetObjLst_PureCache() {
     //const strThisFuncName = this.GetObjLst_PureCache.name;
     let arrPrjTabFldObjLstCache;
-    switch (clsPrjTabFldEN.CacheModeId) {
+    switch (clsPrjTabFldEN._CacheModeId) {
       case '04': //sessionStorage
         arrPrjTabFldObjLstCache =
           await clsPrjTabFldExWApi_PureCache.GetObjLst_sessionStorage_PureCache();

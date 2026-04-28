@@ -141,7 +141,9 @@
             ref="refFieldObjSelector"
             :available-fields="fields"
             :init-selected-fields="initSelectedFields"
-        /></div>
+            @selected-fields-change="onSelectedFieldsChange"
+          />
+        </div>
       </div>
       <input id="hidOpType" type="hidden" />
       <input id="hidKeyId" type="hidden" />
@@ -372,7 +374,7 @@
           alert(strMsg);
         }
       };
-      const strTitle = ref('约束编辑');
+      const strTitle = ref('约束编辑0');
       const strSubmitButtonText = ref('添加');
       const strCancelButtonText = ref('取消');
       const keyId = ref('');
@@ -428,6 +430,15 @@
             alert(strMsg);
             break;
         }
+      };
+      const buildConstraintName = (arrSelectedFields: clsCboObject[]) => {
+        if (arrSelectedFields == null || arrSelectedFields.length === 0) {
+          return '';
+        }
+        return arrSelectedFields.map((x) => x.text).join('_');
+      };
+      const onSelectedFieldsChange = (arrSelectedFields: clsCboObject[]) => {
+        constraintName.value = buildConstraintName(arrSelectedFields);
       };
       const GetButtonText = (strButtonId: string) => {
         let strMsg;
@@ -570,6 +581,7 @@
         ddlTabId_SelectedIndexChanged,
         refFieldObjSelector,
         getSelectedFldObjLst,
+        onSelectedFieldsChange,
 
         ShowFieldObjSelector,
         isHasTabId,

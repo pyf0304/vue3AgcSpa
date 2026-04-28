@@ -71,7 +71,7 @@ export async function PubFun4Web_ShowOutFldName(
         return;
       }
     }
-    if (IsNullOrEmpty(strFldId) == false) {
+    if (IsNullOrEmpty(strFldId) == false && strFldId != '0') {
       const objFieldTab = await vFieldTab_Sim_GetObjByFldIdCache(
         strFldId,
         clsPrivateSessionStorage.currSelPrjId,

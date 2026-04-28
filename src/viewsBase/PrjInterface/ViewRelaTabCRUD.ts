@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:ViewRelaTabCRUD(界面:ViewRelaTabCRUD,00050243)
  * 表名:ViewRelaTab(00050100)
- * 版本:2025.05.12.1(服务器:WIN-SRV103-116)
- * 日期:2025/05/15 01:36:13
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/04/29 02:03:08
  * 生成者:
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  * 模块中文名:界面管理(PrjInterface)
  * 框架-层名:Vue_界面后台_TS(TS)(Vue_ViewScriptCS_TS,0254)
@@ -14,27 +14,28 @@
  **/
 //import $ from "jquery";
 import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
+import { clsViewRelaTabENEx } from '@/ts/L0Entity/PrjInterface/clsViewRelaTabENEx';
 import {
   CombineViewRelaTabCondition,
+  PrjId_Session,
   divVarSet,
   viewVarSet,
   dataColumn,
   BindTabByList,
   refvViewRelaTab_List,
 } from '@/views/PrjInterface/ViewRelaTabVueShare';
-import { clsViewRelaTabENEx } from '@/ts/L0Entity/PrjInterface/clsViewRelaTabENEx';
 import {
   ViewRelaTab_GetRecCountByCondAsync,
   ViewRelaTab_GetObjLstAsync,
   ViewRelaTab_DelRecordAsync,
   ViewRelaTab_GetObjBymIdAsync,
+  ViewRelaTab_FuncMapByFldName,
   ViewRelaTab_GetObjLstBymIdLstAsync,
   ViewRelaTab_AddNewRecordAsync,
   ViewRelaTab_DelViewRelaTabsAsync,
 } from '@/ts/L3ForWApi/PrjInterface/clsViewRelaTabWApi';
 import {
   ViewRelaTabEx_CopyToEx,
-  ViewRelaTabEx_FuncMapByFldName,
   ViewRelaTabEx_GetObjExLstByPagerAsync,
 } from '@/ts/L3ForWApiEx/PrjInterface/clsViewRelaTabExWApi';
 import {
@@ -44,13 +45,6 @@ import {
   GetLabelHtmlInDivObj,
 } from '@/ts/PubFun/clsCommFunc4Ctrl';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
-import {
-  ShowEmptyRecNumInfoByDiv,
-  ListPara,
-  clsOperateList,
-  GetCurrPageIndex,
-  GetSortBy,
-} from '@/ts/PubFun/clsOperateList';
 import { clsViewRelaTabEN } from '@/ts/L0Entity/PrjInterface/clsViewRelaTabEN';
 import {
   ObjectAssign,
@@ -64,6 +58,7 @@ import {
 import { clsPager } from '@/ts/PubFun/clsPager';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
+import { ListPara, clsOperateList, GetCurrPageIndex, GetSortBy } from '@/ts/PubFun/clsOperateList';
 /** ViewRelaTabCRUD 的摘要说明。其中Q代表查询,U代表修改
  * (AutoGCLib.Vue_ViewScriptCS_TS4TypeScript:GeneCode)
  **/
@@ -80,10 +75,15 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
   public objPager: clsPager;
   public static objPageCRUD: ViewRelaTabCRUD;
   public static sortFunStatic: (ascOrDesc: string) => (x: any, y: any) => number;
+  /** 保存用户通过下拉框选择的每页记录数，null 时由子类 getter 提供默认值 */
+  protected _pageSize: number | null = null;
   constructor() {
     this.listPara = new ListPara(divVarSet.refDivLayout, divVarSet.refDivList);
     ViewRelaTabCRUD.objPageCRUD = this;
     this.objPager = new clsPager(this);
+    this.objPager.onPageSizeChange = (ps: number) => {
+      this._pageSize = ps;
+    };
   }
   /**
    * 获取当前组件的divList的层对象
@@ -107,7 +107,7 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
    * 每页记录数,在扩展类可以修改
    **/
   public get pageSize(): number {
-    return 5;
+    return this._pageSize ?? 10;
   }
   public recCount = 0;
 
@@ -134,7 +134,7 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
       if (viewVarSet.sortViewRelaTabBy == '')
         viewVarSet.sortViewRelaTabBy = `${clsViewRelaTabEN.con_ViewId} Asc`;
       //2、显示无条件的表内容在GridView中
-      await this.BindGv_ViewRelaTab(divVarSet.refDivList);
+      await this.BindGv_ViewRelaTab4Func(divVarSet.refDivList);
     } catch (e) {
       const strMsg = `页面启动不成功,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
       console.error('Error: ', strMsg);
@@ -157,7 +157,7 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
       if (viewVarSet.sortViewRelaTabBy == '')
         viewVarSet.sortViewRelaTabBy = `${clsViewRelaTabEN.con_ViewId} Asc`;
       //2、显示无条件的表内容在GridView中
-      await this.BindGv_ViewRelaTab(divVarSet.refDivList);
+      await this.BindGv_ViewRelaTab4Func(divVarSet.refDivList);
     } catch (e) {
       const strMsg = `页面启动不成功,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
       console.error('Error: ', strMsg);
@@ -171,7 +171,7 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
    **/
   public async btnQuery_Click() {
     this.SetCurrPageIndex(1);
-    await this.BindGv_ViewRelaTab(divVarSet.refDivList);
+    await this.BindGv_ViewRelaTab4Func(divVarSet.refDivList);
   }
 
   /** 合并数据
@@ -186,6 +186,33 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
     const arrData: Array<Record<string, any>> = [];
     for (let i = 0; i < intRowNum; i++) {
       const objEN: clsViewRelaTabEN = arrViewRelaTabObjLst[i];
+      const objRow: Record<string, any> = {};
+      for (let j = 0; j < intColNum; j++) {
+        const fldName = arrDataColumn[j].fldName;
+        const colHeader = arrDataColumn[j].colHeader;
+        const value = objEN.GetFldValue(fldName); // Get the value using fldName
+        objRow[colHeader] = value; // Use colHeader as the property name
+      }
+      arrData.push(objRow);
+    }
+    //console.log("arrData", arrData);
+    const strFileName = Format('界面相关表({0})导出.xlsx', clsViewRelaTabEN._CurrTabName);
+    const strSheetName = '界面相关表列表';
+    return { arrObjLst: arrData, sheetName: strSheetName, fileName: strFileName };
+  }
+
+  /** 合并数据
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_CombineData4Func)
+   **/
+  public CombineData4Func(
+    arrViewRelaTabExObjLst: Array<clsViewRelaTabENEx>,
+    arrDataColumn: Array<clsDataColumn>,
+  ): ExportExcelData {
+    const intRowNum = arrViewRelaTabExObjLst.length;
+    const intColNum = arrDataColumn.length;
+    const arrData: Array<Record<string, any>> = [];
+    for (let i = 0; i < intRowNum; i++) {
+      const objEN: clsViewRelaTabENEx = arrViewRelaTabExObjLst[i];
       const objRow: Record<string, any> = {};
       for (let j = 0; j < intColNum; j++) {
         const fldName = arrDataColumn[j].fldName;
@@ -444,7 +471,7 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
         return '';
       }
       await this.CopyRecord(arrKeyIds);
-      await this.BindGv_ViewRelaTab(divVarSet.refDivList);
+      await this.BindGv_ViewRelaTab4Func(divVarSet.refDivList);
     } catch (e) {
       const strMsg = `复制记录不成功,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
       console.error(strMsg);
@@ -469,7 +496,7 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
       }
       const lngKeyId = Number(strKeyId);
       await this.DelRecord(lngKeyId);
-      await this.BindGv_ViewRelaTab(divVarSet.refDivList);
+      await this.BindGv_ViewRelaTab4Func(divVarSet.refDivList);
     } catch (e) {
       const strMsg = `删除${this.thisTabName}记录不成功. ${e}.(in ${this.constructor.name}.${strThisFuncName}`;
       console.error(strMsg);
@@ -561,7 +588,7 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
         return;
       }
       await this.DelMultiRecord(arrKeyIds);
-      await this.BindGv_ViewRelaTab(divVarSet.refDivList);
+      await this.BindGv_ViewRelaTab4Func(divVarSet.refDivList);
     } catch (e) {
       const strMsg = `删除${this.thisTabName}记录不成功. ${e}.(in ${this.constructor.name}.${strThisFuncName}`;
       console.error(strMsg);
@@ -711,11 +738,11 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
         },
       },
       {
-        fldName: clsViewRelaTabEN.con_ViewTabTypeId,
-        sortBy: clsViewRelaTabEN.con_ViewTabTypeId,
+        fldName: clsViewRelaTabENEx.con_ViewTabTypeName,
+        sortBy: 'viewTabTypeName',
         sortFun: SortFun,
         getDataSource: '',
-        colHeader: 'ViewTabTypeName',
+        colHeader: '界面表类型名',
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
@@ -756,11 +783,11 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
         },
       },
       {
-        fldName: clsViewRelaTabEN.con_UpdDate,
-        sortBy: clsViewRelaTabEN.con_UpdDate,
+        fldName: clsViewRelaTabENEx.con_DateTimeSim,
+        sortBy: 'dateTimeSim',
         sortFun: SortFun,
         getDataSource: '',
-        colHeader: '修改日期',
+        colHeader: '简化日期时间',
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
@@ -831,6 +858,271 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
     return true;
   }
 
+  /** 显示ViewRelaTab对象的所有属性值
+   * (AutoGCLib.Vue_ViewScriptCS_TS4TypeScript:Gen_Vue_Ts_BindTab4Func)
+   * @param divContainer:显示容器
+   * @param arrViewRelaTabExObjLst:需要绑定的对象列表
+   **/
+  public async BindTab_ViewRelaTab4Func(
+    divContainer: HTMLDivElement,
+    arrViewRelaTabExObjLst: Array<clsViewRelaTabENEx>,
+  ) {
+    const strThisFuncName = this.BindTab_ViewRelaTab4Func.name;
+    if (divContainer == null) {
+      alert(Format('{0}不存在!', divContainer));
+      return;
+    }
+    const arrDataColumn: Array<clsDataColumn> = [
+      {
+        fldName: '',
+        sortBy: '',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'CheckBox',
+        orderNum: 1,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewRelaTabEN.con_mId,
+        sortBy: clsViewRelaTabEN.con_mId,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: 'mId',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 2,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewRelaTabEN.con_ViewId,
+        sortBy: clsViewRelaTabEN.con_ViewId,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '界面Id',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 3,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewRelaTabEN.con_ViewId,
+        sortBy: clsViewRelaTabEN.con_ViewId,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '界面名称',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 4,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewRelaTabEN.con_ViewId,
+        sortBy: 'viewCnName',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '视图中文名',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 5,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewRelaTabEN.con_RegionId,
+        sortBy: clsViewRelaTabEN.con_RegionId,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '区域名称',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 7,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewRelaTabEN.con_RegionId,
+        sortBy: clsViewRelaTabEN.con_RegionId,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '区域类型名称',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 9,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewRelaTabEN.con_InOutTypeId,
+        sortBy: clsViewRelaTabEN.con_InOutTypeId,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: 'INOUT类型名称',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 11,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewRelaTabENEx.con_ViewTabTypeName,
+        sortBy: 'viewTabTypeName',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '界面表类型名',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 13,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewRelaTabEN.con_TabId,
+        sortBy: clsViewRelaTabEN.con_TabId,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '表名',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 15,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewRelaTabEN.con_TabFunction,
+        sortBy: clsViewRelaTabEN.con_TabFunction,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '表功能说明',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 16,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewRelaTabENEx.con_DateTimeSim,
+        sortBy: 'dateTimeSim',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '简化日期时间',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 17,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewRelaTabEN.con_UpdUser,
+        sortBy: clsViewRelaTabEN.con_UpdUser,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '修改者',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 18,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewRelaTabEN.con_Memo,
+        sortBy: clsViewRelaTabEN.con_Memo,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '说明',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 19,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+    ];
+    if (refvViewRelaTab_List.value != null) {
+      try {
+        await this.ExtendTdFldFuncMap(arrViewRelaTabExObjLst);
+      } catch (e) {
+        const strMsg = `扩展Td字段值的映射出错,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      await BindTabByList(arrViewRelaTabExObjLst, this.dispAllErrMsg_q);
+    } else {
+      try {
+        await this.ExtendFldFuncMap(arrViewRelaTabExObjLst, arrDataColumn);
+      } catch (e) {
+        const strMsg = `扩展字段值的映射出错,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      const divDataLst = GetDivObjInDivObj(divContainer, 'divDataLst');
+      if (divDataLst == null) {
+        alert('在BindTab_ViewRelaTab4Func函数中，divDataLst不存在!');
+        return;
+      }
+      await BindTab(
+        divDataLst,
+        arrViewRelaTabExObjLst,
+        arrDataColumn,
+        clsViewRelaTabEN.con_mId,
+        this,
+      );
+    }
+    if (this.objPager.IsInit(divContainer, this.divName4Pager) == false)
+      this.objPager.InitShow(divContainer, this.divName4Pager);
+    this.objPager.recCount = this.recCount;
+    this.objPager.pageSize = this.pageSize;
+    this.objPager.ShowPagerV2(divContainer, this, this.divName4Pager);
+  }
+
   /** 扩展字段值的函数映射
    * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_ExtendFldFuncMap)
    * @param arrViewRelaTabExObjLst:需要映射的对象列表
@@ -840,12 +1132,14 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
     arrViewRelaTabExObjLst: Array<clsViewRelaTabENEx>,
     arrDataColumn: Array<clsDataColumn>,
   ) {
-    const arrFldName = clsViewRelaTabEN.AttributeName;
+    const arrFldName = clsViewRelaTabEN._AttributeName;
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;
       for (const objInFor of arrViewRelaTabExObjLst) {
-        await ViewRelaTabEx_FuncMapByFldName(objDataColumn.fldName, objInFor);
+        objInFor.prjId = PrjId_Session.value;
+        objInFor.prjId = PrjId_Session.value;
+        await ViewRelaTab_FuncMapByFldName(objDataColumn.fldName, objInFor);
       }
     }
   }
@@ -860,7 +1154,7 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
     }
     //console.log("跳转到" + intPageIndex + "页");
     this.SetCurrPageIndex(intPageIndex);
-    await this.BindGv_ViewRelaTab(this.listPara.listDiv);
+    await this.BindGv_ViewRelaTab4Func(this.listPara.listDiv);
   }
 
   /** 函数功能:在数据列表中跳转到下一页
@@ -884,47 +1178,44 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
   }
 
   /** 根据条件获取相应的对象列表
-   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_BindGv)
+   * (AutoGCLib.Vue_ViewScriptCS_TS4TypeScript:Gen_Vue_Ts_BindGv4Func_NoCache)
    **/
-  public async BindGv_ViewRelaTab(divList: HTMLDivElement) {
-    const strThisFuncName = this.BindGv_ViewRelaTab.name;
-    if (viewVarSet.sortViewRelaTabBy == null) {
+  public async BindGv_ViewRelaTab4Func(divList: HTMLDivElement) {
+    const strThisFuncName = this.BindGv_ViewRelaTab4Func.name;
+    if (divList == null) {
       const strMsg = Format(
-        '在显示列表时,排序字段(sortViewRelaTabBy)为空,请检查!(In BindGv_ViewRelaTab)',
+        '用于显示列表的div为空,请检查!(in {0}.{1})',
+        this.constructor.name,
+        strThisFuncName,
       );
       console.error(strMsg);
       alert(strMsg);
       return;
     }
-    const divDataLst = GetDivObjInDivObj(divList, 'divDataLst');
+    this.listPara.listDiv = divList;
+    if (viewVarSet.sortViewRelaTabBy == null) {
+      const strMsg = Format(
+        '在显示列表时,排序字段(sortViewRelaTabBy)为空,请检查!(In BindGv_ViewRelaTabCache)',
+      );
+      console.error(strMsg);
+      alert(strMsg);
+      return;
+    }
 
     const strWhereCond = await CombineViewRelaTabCondition();
-    let intCurrPageIndex = GetCurrPageIndex(this.objPager.currPageIndex); //获取当前页
+    const intCurrPageIndex = GetCurrPageIndex(this.objPager.currPageIndex); //获取当前页
     let arrViewRelaTabExObjLst: Array<clsViewRelaTabENEx> = [];
     try {
       this.recCount = await ViewRelaTab_GetRecCountByCondAsync(strWhereCond);
       if (this.recCount == 0) {
         const lblMsg: HTMLSpanElement = <HTMLSpanElement>document.createElement('span');
         lblMsg.innerHTML = Format('根据条件:[{0}]获取的对象列表数为0!', strWhereCond);
-        if (divDataLst != null) {
-          divDataLst.innerText = '';
-          divDataLst.appendChild(lblMsg);
-        }
         const strMsg = Format('在绑定Gv过程中,根据条件:[{0}]获取的对象列表数为0!', strWhereCond);
         console.error('Error: ', strMsg);
         //console.trace();
         alert(strMsg);
         BindTabByList(arrViewRelaTabExObjLst, true);
         return;
-      }
-      const intPageCount = this.objPager.GetPageCount(this.recCount, this.pageSize);
-      if (intCurrPageIndex == 0) {
-        if (intPageCount > 1) intCurrPageIndex = intPageCount;
-        else intCurrPageIndex = 1;
-        this.SetCurrPageIndex(intCurrPageIndex);
-      } else if (intCurrPageIndex > intPageCount) {
-        intCurrPageIndex = intPageCount;
-        this.SetCurrPageIndex(intCurrPageIndex);
       }
 
       const objPagerPara: stuPagerPara = {
@@ -940,39 +1231,21 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
       arrViewRelaTabExObjLst = await ViewRelaTabEx_GetObjExLstByPagerAsync(objPagerPara);
     } catch (e) {
       const strMsg = `绑定GridView不成功,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
-      console.error('Error: ', strMsg);
-      //console.trace();
+      console.error(strMsg);
       alert(strMsg);
-    }
-    const divPager: HTMLDivElement = <HTMLDivElement>document.getElementById('divPager');
-    if (this.recCount <= this.pageSize) {
-      if (divPager != null) {
-        divPager.style.display = 'none';
-      }
-    } else {
-      if (divPager != null) {
-        divPager.style.display = 'block';
-      }
+      return;
     }
     if (arrViewRelaTabExObjLst.length == 0) {
-      const lblMsg: HTMLSpanElement = <HTMLSpanElement>document.createElement('span');
-      lblMsg.innerHTML = '根据条件获取的对象列表数为0!';
-      if (divDataLst != null) {
-        divDataLst.innerText = '';
-        divDataLst.appendChild(lblMsg);
-      }
-      const strMsg = Format('根据条件获取的${this.thisTabName}记录数为0!');
+      const strKey = Format('{0}', clsViewRelaTabEN._CurrTabName);
+      const strMsg = `根据条件获取的${this.thisTabName}记录数为0!(Key=${strKey})`;
       console.error('Error: ', strMsg);
       //console.trace();
-      ShowEmptyRecNumInfoByDiv(divDataLst, strMsg);
       this.objPager.Hide(divList, this.divName4Pager);
       return;
     }
     try {
-      await this.BindTab_ViewRelaTab(divList, arrViewRelaTabExObjLst);
-      //console.log("完成BindGv_ViewRelaTab!");
+      await this.BindTab_ViewRelaTab4Func(divList, arrViewRelaTabExObjLst);
     } catch (e) {
-      //console.trace();
       const strMsg = `绑定${this.thisTabName}对象列表不成功, ${e}.(in ${this.constructor.name}.${strThisFuncName}`;
       console.error(strMsg);
       alert(strMsg);
@@ -1059,7 +1332,26 @@ export abstract class ViewRelaTabCRUD implements clsOperateList {
     viewVarSet.sortViewRelaTabBy = sortBy;
     viewVarSet.ascOrDesc4SortFun = ascOrDesc4SortFun;
     ViewRelaTabCRUD.sortFunStatic = sortFun;
-    await this.BindGv_ViewRelaTab(this.listPara.listDiv);
+    await this.BindGv_ViewRelaTab4Func(this.listPara.listDiv);
+  }
+
+  /** 扩展Td字段值的函数映射
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_ExtendTdFldFuncMap)
+   * @param arrViewRelaTabExObjLst:需要映射的对象列表
+   * @param arrDataColumn:用于绑定表的数据列信息
+   **/
+  public async ExtendTdFldFuncMap(arrViewRelaTabExObjLst: Array<clsViewRelaTabENEx>) {
+    const arrFldName = clsViewRelaTabEN._AttributeName;
+    const tdFieldNames = refvViewRelaTab_List.value?.tdFieldNames;
+    for (const strFldName of tdFieldNames) {
+      if (IsNullOrEmpty(strFldName) == true) continue;
+      if (arrFldName.indexOf(strFldName) > -1) continue;
+      for (const objInFor of arrViewRelaTabExObjLst) {
+        objInFor.prjId = PrjId_Session.value;
+        objInFor.prjId = PrjId_Session.value;
+        await ViewRelaTab_FuncMapByFldName(strFldName, objInFor);
+      }
+    }
   }
 
   /** 复制记录

@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsViewRelaTabEN
  * 表名:ViewRelaTab(00050100)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 22:28:10
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/28 23:39:42
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:界面管理(PrjInterface)
  * 框架-层名:实体层(TS)(EntityLayer,0121)
@@ -20,15 +20,15 @@ import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
 export class clsViewRelaTabEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
-  public static CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
-  public static CacheModeId = '02'; //客户端缓存
-  public static PrimaryTypeId = '02'; //identity
-  public static IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
-  public static WhereFormat = ''; //条件格式串
-  public static _CurrTabName = 'ViewRelaTab'; //当前表名,与该类相关的表名
-  public static _KeyFldName = 'mId'; //当前表中的关键字名称,与该类相关的表中关键字名
-  public static mintAttributeCount = 11;
-  public static AttributeName = [
+  public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
+  public static readonly _CacheModeId: string = '02'; //客户端缓存
+  public static readonly _PrimaryTypeId: string = '02'; //identity
+  public static readonly _IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
+  public static readonly _WhereFormat = ''; //条件格式串
+  public static readonly _CurrTabName: string = 'ViewRelaTab'; //当前表名,与该类相关的表名
+  public static readonly _KeyFldName: string = 'mId'; //当前表中的关键字名称,与该类相关的表中关键字名
+  public static readonly _AttributeCount = 12;
+  public static readonly _AttributeName = [
     'mId',
     'viewId',
     'regionId',
@@ -37,6 +37,7 @@ export class clsViewRelaTabEN extends clsGeneralTab {
     'tabId',
     'tabFunction',
     'prjId',
+    'relaFldNames',
     'updDate',
     'updUser',
     'memo',
@@ -63,6 +64,7 @@ export class clsViewRelaTabEN extends clsGeneralTab {
   private mstrTabId = ''; //表ID
   private mstrTabFunction = ''; //表功能说明
   private mstrPrjId = ''; //工程Id
+  private mstrRelaFldNames = ''; //相关字段名s
   private mstrUpdDate = ''; //修改日期
   private mstrUpdUser = ''; //修改者
   private mstrMemo = ''; //说明
@@ -164,6 +166,18 @@ export class clsViewRelaTabEN extends clsGeneralTab {
   }
 
   /**
+   * 相关字段名s(说明:;字段类型:varchar;字段长度:500;是否可空:True)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+   */
+  public SetRelaFldNames(value: string) {
+    if (value != undefined) {
+      this.relaFldNames = value;
+      this.hmProperty['relaFldNames'] = true;
+      this.sfUpdFldSetStr = this.updFldString;
+    }
+  }
+
+  /**
    * 修改日期(说明:;字段类型:varchar;字段长度:20;是否可空:True)
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
    */
@@ -224,6 +238,8 @@ export class clsViewRelaTabEN extends clsGeneralTab {
         return this.tabFunction;
       case clsViewRelaTabEN.con_PrjId:
         return this.prjId;
+      case clsViewRelaTabEN.con_RelaFldNames:
+        return this.relaFldNames;
       case clsViewRelaTabEN.con_UpdDate:
         return this.updDate;
       case clsViewRelaTabEN.con_UpdUser:
@@ -284,6 +300,10 @@ export class clsViewRelaTabEN extends clsGeneralTab {
         this.prjId = strValue;
         this.hmProperty['prjId'] = true;
         break;
+      case clsViewRelaTabEN.con_RelaFldNames:
+        this.relaFldNames = strValue;
+        this.hmProperty['relaFldNames'] = true;
+        break;
       case clsViewRelaTabEN.con_UpdDate:
         this.updDate = strValue;
         this.hmProperty['updDate'] = true;
@@ -321,6 +341,7 @@ export class clsViewRelaTabEN extends clsGeneralTab {
   public tabId = ''; //表ID
   public tabFunction = ''; //表功能说明
   public prjId = ''; //工程Id
+  public relaFldNames = ''; //相关字段名s
   public updDate = ''; //修改日期
   public updUser = ''; //修改者
   public memo = ''; //说明
@@ -329,89 +350,73 @@ export class clsViewRelaTabEN extends clsGeneralTab {
    * 常量:"mId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_mId(): string {
-    return 'mId';
-  } //mId
+  public static readonly con_mId = 'mId'; //mId
 
   /**
    * 常量:"ViewId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ViewId(): string {
-    return 'viewId';
-  } //界面Id
+  public static readonly con_ViewId = 'viewId'; //界面Id
 
   /**
    * 常量:"RegionId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_RegionId(): string {
-    return 'regionId';
-  } //区域Id
+  public static readonly con_RegionId = 'regionId'; //区域Id
 
   /**
    * 常量:"InOutTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_InOutTypeId(): string {
-    return 'inOutTypeId';
-  } //INOUT类型ID
+  public static readonly con_InOutTypeId = 'inOutTypeId'; //INOUT类型ID
 
   /**
    * 常量:"ViewTabTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ViewTabTypeId(): string {
-    return 'viewTabTypeId';
-  } //界面表类型码
+  public static readonly con_ViewTabTypeId = 'viewTabTypeId'; //界面表类型码
 
   /**
    * 常量:"TabId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_TabId(): string {
-    return 'tabId';
-  } //表ID
+  public static readonly con_TabId = 'tabId'; //表ID
 
   /**
    * 常量:"TabFunction"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_TabFunction(): string {
-    return 'tabFunction';
-  } //表功能说明
+  public static readonly con_TabFunction = 'tabFunction'; //表功能说明
 
   /**
    * 常量:"PrjId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_PrjId(): string {
-    return 'prjId';
-  } //工程Id
+  public static readonly con_PrjId = 'prjId'; //工程Id
+
+  /**
+   * 常量:"RelaFldNames"
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+   */
+  public static readonly con_RelaFldNames = 'relaFldNames'; //相关字段名s
 
   /**
    * 常量:"UpdDate"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdDate(): string {
-    return 'updDate';
-  } //修改日期
+  public static readonly con_UpdDate = 'updDate'; //修改日期
 
   /**
    * 常量:"UpdUser"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdUser(): string {
-    return 'updUser';
-  } //修改者
+  public static readonly con_UpdUser = 'updUser'; //修改者
 
   /**
    * 常量:"Memo"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Memo(): string {
-    return 'memo';
-  } //说明
+  public static readonly con_Memo = 'memo'; //说明
 
   /**
    * 设置条件字段值.
@@ -430,6 +435,7 @@ export class clsViewRelaTabEN extends clsGeneralTab {
     }
     this.sfFldComparisonOp = JSON.stringify(this.dicFldComparisonOp);
   }
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名

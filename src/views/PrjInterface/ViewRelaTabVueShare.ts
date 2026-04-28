@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:ViewRelaTabVueShare(界面:ViewRelaTabCRUD,00050243)
  * 表名:ViewRelaTab(00050100)
- * 版本:2025.05.03.1(服务器:WIN-SRV103-116)
- * 日期:2025/05/06 15:51:21
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/29 02:06:25
  * 生成者:
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  * 模块中文名:界面管理(PrjInterface)
  * 框架-层名:Vue共享(TS)(Vue_Share_TS,0264)
@@ -15,12 +15,15 @@
 
 import { reactive, ref } from 'vue';
 import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
-import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
 import { clsViewRelaTabENEx } from '@/ts/L0Entity/PrjInterface/clsViewRelaTabENEx';
+import { clsViewRelaTabEN } from '@/ts/L0Entity/PrjInterface/clsViewRelaTabEN';
+import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
+import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
 
 const ascOrDesc4SortFun = ref('Asc');
 const sortViewRelaTabBy = ref('');
+
 const viewVarSet = reactive({
   ascOrDesc4SortFun,
   sortViewRelaTabBy,
@@ -28,6 +31,8 @@ const viewVarSet = reactive({
 export { viewVarSet };
 
 //界面公共变量，可以在多个相关界面中共享
+export const CmPrjId_Local = ref(''); //1、界面列表区主表的缓存分类字段变量1-Session,local存储
+export const PrjId_Session = ref(''); //1、界面列表区主表的缓存分类字段变量1-Session,local存储
 
 const refDivLayout = ref();
 const refDivQuery = ref();
@@ -75,18 +80,22 @@ const featureVarSet = reactive({});
 export { featureVarSet };
 
 /** 把所有的查询控件内容组合成一个条件串
- * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_vue_ts_setup_fun_CombineCondition)
+ * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_Share_method_CombineCondition)
  * @returns 条件串(strWhereCond)
  **/
 export const CombineViewRelaTabCondition = async (): Promise<string> => {
   //使条件串的初值为"1 = 1",以便在该串的后面用"and "添加其他条件,
   //例如 1 = 1 && UserName = '张三'
-  const strWhereCond = ' 1 = 1 ';
+  let strWhereCond = ' 1 = 1 ';
+  const strViewId = clsPrivateSessionStorage.viewId_Main;
+  if (IsNullOrEmpty(strViewId) == false) {
+    strWhereCond += Format(" and {0}='{1}'", clsViewRelaTabEN.con_ViewId, strViewId);
+  }
   return strWhereCond;
 };
 
 /** 把所有的查询控件内容组合成一个条件串
- * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_vue_ts_setup_fun_CombineConditionObj)
+ * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_Share_method_CombineConditionObj)
  * @returns 条件串(strWhereCond)
  **/
 export const CombineViewRelaTabConditionObj = async (): Promise<ConditionCollection> => {
@@ -97,7 +106,7 @@ export const CombineViewRelaTabConditionObj = async (): Promise<ConditionCollect
 };
 
 /** 把所有的查询控件内容组合成一个条件串
- * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_vue_ts_setup_fun_CombineConditionObj4ExportExcel)
+ * (AutoGCLib.Vue_Share_TS4TypeScript:Gen_Share_method_CombineConditionObj4ExportExcel)
  * @returns 条件串(strWhereCond)
  **/
 export const CombineViewRelaTabConditionObj4ExportExcel =

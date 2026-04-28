@@ -2,7 +2,7 @@
  * 类名:clsCodeTypeEN
  * 表名:CodeType(00050203)
  * 版本:2026.04.19(服务器:WIN-SRV103-116)
- * 日期:2026/04/22 06:56:50
+ * 日期:2026/04/28 23:40:18
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
@@ -2126,4 +2126,12 @@ export class enumCodeType {
    * Vue_界面后台-命令_TS(TS)
    **/
   static readonly Vue_ViewScriptCommands_TS_0267 = '0267';
+  /**
+   * Vue_界面后台Ai_TS
+   **/
+  static readonly Vue_ViewScriptAi_TS_0268 = '0268';
+  /**
+   * Vue_编辑区后台Ai_TS
+   **/
+  static readonly Vue_ViewScript_EditAiCS_TS_0269 = '0269';
 }

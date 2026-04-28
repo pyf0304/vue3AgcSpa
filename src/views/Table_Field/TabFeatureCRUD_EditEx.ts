@@ -1410,20 +1410,6 @@ export default class TabFeatureCRUD_EditEx extends TabFeatureCRUD implements ISh
         },
       },
       {
-        fldName: 'tabName',
-        sortBy: 'tabName',
-        sortFun: clsPubVar4Web.SortFun,
-        colHeader: '表名',
-        text: '',
-        tdClass: 'text-left',
-        columnType: 'Label',
-        orderNum: 4,
-        funcName: (strKey: string, strText: string) => {
-          strKey = strText;
-          return new HTMLElement();
-        },
-      },
-      {
         fldName: 'featureName',
         sortBy: 'featureName',
         sortFun: clsPubVar4Web.SortFun,
@@ -1437,30 +1423,30 @@ export default class TabFeatureCRUD_EditEx extends TabFeatureCRUD implements ISh
           return new HTMLElement();
         },
       },
-
       {
-        fldName: 'funcNameCsEx',
-        sortBy: 'funcNameCsEx',
+        fldName: 'fldNames',
+        sortBy: '',
         sortFun: clsPubVar4Web.SortFun,
-        colHeader: 'Cs函数名',
+        colHeader: '相关字段',
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 7,
+        orderNum: 6,
         funcName: (strKey: string, strText: string) => {
           strKey = strText;
           return new HTMLElement();
         },
       },
+
       {
-        fldName: 'funcNameJsEx',
-        sortBy: 'funcNameJsEx',
+        fldName: 'funcNames',
+        sortBy: '',
         sortFun: clsPubVar4Web.SortFun,
-        colHeader: 'Js函数名',
+        colHeader: '函数名',
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 8,
+        orderNum: 7,
         funcName: (strKey: string, strText: string) => {
           strKey = strText;
           return new HTMLElement();
@@ -1471,7 +1457,7 @@ export default class TabFeatureCRUD_EditEx extends TabFeatureCRUD implements ISh
         fldName: 'useTimes',
         sortBy: 'useTimes',
         sortFun: clsPubVar4Web.SortFun,
-        colHeader: '使用次数',
+        colHeader: '使\u2060用\u2060次\u2060数',
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
@@ -1485,7 +1471,7 @@ export default class TabFeatureCRUD_EditEx extends TabFeatureCRUD implements ISh
         fldName: 'isExtendedClass',
         sortBy: 'isExtendedClass',
         sortFun: clsPubVar4Web.SortFun,
-        colHeader: '在扩展类?',
+        colHeader: '在\u2060扩\u2060展\u2060类\u2060?',
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
@@ -1500,7 +1486,7 @@ export default class TabFeatureCRUD_EditEx extends TabFeatureCRUD implements ISh
         fldName: 'isNeedGC',
         sortBy: 'isNeedGC',
         sortFun: clsPubVar4Web.SortFun,
-        colHeader: '生成代码?',
+        colHeader: '生\u2060成\u2060代\u2060码\u2060?',
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',

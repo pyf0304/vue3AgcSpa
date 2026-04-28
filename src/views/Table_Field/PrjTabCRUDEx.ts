@@ -918,7 +918,7 @@ export default class PrjTabCRUDEx extends PrjTabCRUD implements IShowList {
     arrPrjTabExObjLst: Array<clsPrjTabENEx>,
     arrDataColumn: Array<clsDataColumn>,
   ) {
-    const arrFldName = clsPrjTabEN.AttributeName;
+    const arrFldName = clsPrjTabEN._AttributeName;
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;

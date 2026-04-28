@@ -336,7 +336,7 @@ export async function TabFeatureEx_GetSpan4TabFeature(
 
     // AdjustOrderNum
     if (objTabFeature.featureId === enumPrjFeature.Tab_AdjustOrderNum_0167) {
-      const sp = await TabFeatureEx_GetSpan_AdjustOrderNum(objTabFeature);
+      const sp = await TabFeatureEx_GetSpan_AdjustOrderNum(objTabFeature, arrButtonLst);
       if (sp) return sp;
     }
 
@@ -537,43 +537,16 @@ export async function TabFeatureEx_GetSpan_ForBindDdl(
  */
 export async function TabFeatureEx_GetSpan_AdjustOrderNum(
   objTabFeature: clsvTabFeature_SimEN,
+  arrButtonLst: Array<HTMLButtonElement>,
 ): Promise<HTMLSpanElement | null> {
-  try {
-    const arrFlds = await TabFeatureFldsEx_GetObjLstByTabFeatureId(objTabFeature.tabFeatureId);
-    let orderFldName = '';
-    let classFldName = '';
-    for (const f of arrFlds) {
-      if (f.fieldTypeId === enumFieldType.OrderNumField_09) {
-        const vfield = await vFieldTab_Sim_GetObjByFldIdCache(
-          f.fldId,
-          clsPrivateSessionStorage.currSelPrjId,
-        );
-        orderFldName = vfield ? vfield.fldName : f.fldId || 'OrderNum';
-      }
-      if (f.fieldTypeId === enumFieldType.ClassificationField_10) {
-        const vfield2 = await vFieldTab_Sim_GetObjByFldIdCache(
-          f.fldId,
-          clsPrivateSessionStorage.currSelPrjId,
-        );
-        classFldName = vfield2 ? vfield2.fldName : f.fldId || '';
-      }
-    }
-    const objSpan_Order: HTMLSpanElement = document.createElement('span');
-    objSpan_Order.setAttribute('class', 'text-info');
-    objSpan_Order.innerHTML = Format('序号字段:{0}', orderFldName || 'OrderNum');
-    const br = document.createElement('br');
-    const objSpan_Class: HTMLSpanElement = document.createElement('span');
-    objSpan_Class.setAttribute('class', 'text-info');
-    objSpan_Class.innerHTML = Format('分类字段:{0}', classFldName || '');
-    const minimalSpan: HTMLSpanElement = document.createElement('span');
-    minimalSpan.appendChild(objSpan_Order);
-    minimalSpan.appendChild(br);
-    minimalSpan.appendChild(objSpan_Class);
-    return minimalSpan;
-  } catch (e: any) {
-    console.warn('AdjustOrderNum 渲染失败:', e);
-    return null;
-  }
+  const objSpan: HTMLSpanElement = document.createElement('span');
+  objSpan.setAttribute('class', 'text-primary');
+  const objSpan_TabFeature: HTMLSpanElement = document.createElement('span');
+  objSpan_TabFeature.setAttribute('class', 'text-primary');
+  objSpan_TabFeature.innerHTML = Format('{0}', objTabFeature.tabFeatureName);
+  objSpan.appendChild(objSpan_TabFeature);
+  for (const b of arrButtonLst) objSpan.appendChild(b);
+  return objSpan;
 }
 
 /**

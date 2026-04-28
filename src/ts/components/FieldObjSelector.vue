@@ -37,6 +37,7 @@
         required: true,
       },
     },
+    emits: ['selected-fields-change'],
     data() {
       return {
         selectedFieldId: '',
@@ -48,12 +49,16 @@
       for (const objInFor of this.initSelectedFields) {
         this.selectedFields.push(objInFor);
       }
+      this.emitSelectedFieldsChange();
 
       // setTimeout(async () => {
       //   this.pageInitialized();
       // }, 500);
     },
     methods: {
+      emitSelectedFieldsChange() {
+        this.$emit('selected-fields-change', this.selectedFields.slice());
+      },
       pageInitialized() {
         console.log(this.availableFields[0]);
         this.selectedFieldId = this.availableFields[0].value;
@@ -64,7 +69,10 @@
         const selectedFldIds = this.selectedFields.map((x) => x.value);
         if (!selectedFldIds.includes(this.selectedFieldId)) {
           const objCboObject = this.availableFields.find((x) => x.value === this.selectedFieldId);
-          if (objCboObject != null) this.selectedFields.push(objCboObject);
+          if (objCboObject != null) {
+            this.selectedFields.push(objCboObject);
+            this.emitSelectedFieldsChange();
+          }
         }
       },
       removeSelectedField(fieldId: string) {
@@ -74,6 +82,7 @@
         const index = this.selectedFields.map((x) => x.value).indexOf(fieldId);
         if (index !== -1) {
           this.selectedFields.splice(index, 1);
+          this.emitSelectedFieldsChange();
         }
       },
       getSelectedFldObjLst() {
@@ -86,6 +95,7 @@
             this.selectedFields.push(objInFor);
           }
         }
+        this.emitSelectedFieldsChange();
       },
 
       setSelectedFldId(strFldId: string) {

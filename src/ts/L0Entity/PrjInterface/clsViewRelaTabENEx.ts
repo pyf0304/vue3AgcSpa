@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsViewRelaTabENEx
  * 表名:ViewRelaTab(00050100)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 22:28:12
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/29 02:07:17
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:界面管理(PrjInterface)
  * 框架-层名:实体扩展层(TS)(EntityLayerEx,0191)
@@ -54,6 +54,10 @@ export class clsViewRelaTabENEx extends clsViewRelaTabEN {
         return this.viewTabTypeName;
       case clsViewRelaTabENEx.con_TabName:
         return this.tabName;
+      case clsViewRelaTabENEx.con_CmPrjId:
+        return this.cmPrjId;
+      case clsViewRelaTabENEx.con_DateTimeSim:
+        return this.dateTimeSim;
       default:
         strValue = super.GetFldValue(strFldName);
         return strValue;
@@ -64,65 +68,66 @@ export class clsViewRelaTabENEx extends clsViewRelaTabEN {
    * 常量:"ViewName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_ViewName(): string {
-    return 'viewName';
-  } //界面名称
+  public static readonly con_ViewName = 'viewName'; //界面名称
 
   /**
    * 常量:"ViewCnName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_ViewCnName(): string {
-    return 'viewCnName';
-  } //视图中文名
+  public static readonly con_ViewCnName = 'viewCnName'; //视图中文名
 
   /**
    * 常量:"RegionName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_RegionName(): string {
-    return 'regionName';
-  } //区域名称
+  public static readonly con_RegionName = 'regionName'; //区域名称
 
   /**
    * 常量:"RegionTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_RegionTypeName(): string {
-    return 'regionTypeName';
-  } //区域类型名称
+  public static readonly con_RegionTypeName = 'regionTypeName'; //区域类型名称
 
   /**
    * 常量:"InOutTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_InOutTypeName(): string {
-    return 'inOutTypeName';
-  } //INOUT类型名称
+  public static readonly con_InOutTypeName = 'inOutTypeName'; //INOUT类型名称
 
   /**
    * 常量:"ViewTabTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_ViewTabTypeName(): string {
-    return 'viewTabTypeName';
-  } //ViewTabTypeName
+  public static readonly con_ViewTabTypeName = 'viewTabTypeName'; //界面表类型名
 
   /**
    * 常量:"TabName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_TabName(): string {
-    return 'tabName';
-  } //表名
+  public static readonly con_TabName = 'tabName'; //表名
+
+  /**
+   * 常量:"CmPrjId"
+   * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
+   */
+  public static readonly con_CmPrjId = 'cmPrjId'; //Cm工程Id
+
+  /**
+   * 常量:"DateTimeSim"
+   * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
+   */
+  public static readonly con_DateTimeSim = 'dateTimeSim'; //简化日期时间
 
   public viewName = ''; //界面名称
   public viewCnName = ''; //视图中文名
   public regionName = ''; //区域名称
   public regionTypeName = ''; //区域类型名称
   public inOutTypeName = ''; //INOUT类型名称
-  public viewTabTypeName = ''; //ViewTabTypeName
+  public viewTabTypeName = ''; //界面表类型名
   public tabName = ''; //表名
+  public cmPrjId = ''; //Cm工程Id
+  public dateTimeSim = ''; //简化日期时间
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名

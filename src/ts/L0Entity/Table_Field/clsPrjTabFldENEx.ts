@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsPrjTabFldENEx
  * 表名:PrjTabFld(00050019)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 22:28:00
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/28 23:40:12
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:字段、表维护(Table_Field)
  * 框架-层名:实体扩展层(TS)(EntityLayerEx,0191)
@@ -100,201 +100,151 @@ export class clsPrjTabFldENEx extends clsPrjTabFldEN {
    * 常量:"FldName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_FldName(): string {
-    return 'fldName';
-  } //字段名
+  public static readonly con_FldName = 'fldName'; //字段名
 
   /**
    * 常量:"FldNameEx"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_FldNameEx(): string {
-    return 'fldNameEx';
-  } //字段名Ex
+  public static readonly con_FldNameEx = 'fldNameEx'; //字段名Ex
 
   /**
    * 常量:"Caption"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_Caption(): string {
-    return 'caption';
-  } //标题
+  public static readonly con_Caption = 'caption'; //标题
 
   /**
    * 常量:"PrimaryTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_PrimaryTypeName(): string {
-    return 'primaryTypeName';
-  } //主键类型名
+  public static readonly con_PrimaryTypeName = 'primaryTypeName'; //主键类型名
 
   /**
    * 常量:"FieldTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_FieldTypeName(): string {
-    return 'fieldTypeName';
-  } //字段类型名
+  public static readonly con_FieldTypeName = 'fieldTypeName'; //字段类型名
 
   /**
    * 常量:"DataTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_DataTypeName(): string {
-    return 'dataTypeName';
-  } //数据类型名称
+  public static readonly con_DataTypeName = 'dataTypeName'; //数据类型名称
 
   /**
    * 常量:"FldLength"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_FldLength(): string {
-    return 'fldLength';
-  } //字段长度
+  public static readonly con_FldLength = 'fldLength'; //字段长度
 
   /**
    * 常量:"TabName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_TabName(): string {
-    return 'tabName';
-  } //表名
+  public static readonly con_TabName = 'tabName'; //表名
 
   /**
    * 常量:"ForeignKeyTabName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_ForeignKeyTabName(): string {
-    return 'foreignKeyTabName';
-  } //表名
+  public static readonly con_ForeignKeyTabName = 'foreignKeyTabName'; //表名
 
   /**
    * 常量:"DataTypeId"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_DataTypeId(): string {
-    return 'dataTypeId';
-  } //数据类型Id
+  public static readonly con_DataTypeId = 'dataTypeId'; //数据类型Id
 
   /**
    * 常量:"FldPrecision"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_FldPrecision(): string {
-    return 'fldPrecision';
-  } //精确度
+  public static readonly con_FldPrecision = 'fldPrecision'; //精确度
 
   /**
    * 常量:"ErrorLevelId"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_ErrorLevelId(): string {
-    return 'errorLevelId';
-  } //错误等级Id
+  public static readonly con_ErrorLevelId = 'errorLevelId'; //错误等级Id
 
   /**
    * 常量:"TabCheckErrorTypeId"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_TabCheckErrorTypeId(): string {
-    return 'tabCheckErrorTypeId';
-  } //表检查错误类型Id
+  public static readonly con_TabCheckErrorTypeId = 'tabCheckErrorTypeId'; //表检查错误类型Id
 
   /**
    * 常量:"TypeNameSql"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_TypeNameSql(): string {
-    return 'typeNameSql';
-  } //TypeName_Sql
+  public static readonly con_TypeNameSql = 'typeNameSql'; //TypeName_Sql
 
   /**
    * 常量:"LengthSql"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_LengthSql(): string {
-    return 'lengthSql';
-  } //Length_Sql
+  public static readonly con_LengthSql = 'lengthSql'; //Length_Sql
 
   /**
    * 常量:"PrecisionSql"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_PrecisionSql(): string {
-    return 'precisionSql';
-  } //Precision_Sql
+  public static readonly con_PrecisionSql = 'precisionSql'; //Precision_Sql
 
   /**
    * 常量:"IsNullableSql"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_IsNullableSql(): string {
-    return 'isNullableSql';
-  } //Is_Nullable_SQL
+  public static readonly con_IsNullableSql = 'isNullableSql'; //Is_Nullable_SQL
 
   /**
    * 常量:"SourceTabName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_SourceTabName(): string {
-    return 'sourceTabName';
-  } //SourceTabName
+  public static readonly con_SourceTabName = 'sourceTabName'; //SourceTabName
 
   /**
    * 常量:"ConvFldName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_ConvFldName(): string {
-    return 'convFldName';
-  } //转换字段名
+  public static readonly con_ConvFldName = 'convFldName'; //转换字段名
 
   /**
    * 常量:"TrClass"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_TrClass(): string {
-    return 'trClass';
-  } //TrClass
+  public static readonly con_TrClass = 'trClass'; //TrClass
 
   /**
    * 常量:"TdClass"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_TdClass(): string {
-    return 'tdClass';
-  } //TdClass
+  public static readonly con_TdClass = 'tdClass'; //TdClass
 
   /**
    * 常量:"IsNeedAddConvFldName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_IsNeedAddConvFldName(): string {
-    return 'isNeedAddConvFldName';
-  } //是否需要添加转换字段
+  public static readonly con_IsNeedAddConvFldName = 'isNeedAddConvFldName'; //是否需要添加转换字段
 
   /**
    * 常量:"DnPathDivStr"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_DnPathDivStr(): string {
-    return 'dnPathDivStr';
-  } //路径DivStr
+  public static readonly con_DnPathDivStr = 'dnPathDivStr'; //路径DivStr
 
   /**
    * 常量:"Checked"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_Checked(): string {
-    return 'checked';
-  } //是否选择
+  public static readonly con_Checked = 'checked'; //是否选择
 
   /**
    * 常量:"CmPrjId"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_CmPrjId(): string {
-    return 'cmPrjId';
-  } //Cm工程Id
+  public static readonly con_CmPrjId = 'cmPrjId'; //Cm工程Id
 
   public fldName = ''; //字段名
   public fldNameEx = ''; //字段名Ex
@@ -321,6 +271,7 @@ export class clsPrjTabFldENEx extends clsPrjTabFldEN {
   public dnPathDivStr = ''; //路径DivStr
   public checked = false; //是否选择
   public cmPrjId = ''; //Cm工程Id
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名

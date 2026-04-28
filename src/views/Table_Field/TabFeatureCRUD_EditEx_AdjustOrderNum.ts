@@ -11,12 +11,17 @@ import { clsTabFeatureENEx } from '@/ts/L0Entity/Table_Field/clsTabFeatureENEx';
 import { clsTabFeatureFldsEN } from '@/ts/L0Entity/Table_Field/clsTabFeatureFldsEN';
 import { clsTabFeatureFldsENEx } from '@/ts/L0Entity/Table_Field/clsTabFeatureFldsENEx';
 import { AutoGeneCode_GeneCode4FeatureAsync } from '@/ts/L3ForWApiEx/GeneCode/AutoGeneCodeWApi';
+import { TabFeature_GetObjByTabFeatureIdAsync } from '@/ts/L3ForWApi/Table_Field/clsTabFeatureWApi';
+import { ViewInfo_GetObjLstAsync } from '@/ts/L3ForWApi/PrjInterface/clsViewInfoWApi';
+import { clsViewInfoEN } from '@/ts/L0Entity/PrjInterface/clsViewInfoEN';
 import {
   TabFeatureEx_CopyNodeToNewVersion,
   TabFeatureEx_DelRecordEx,
   TabFeatureEx_GetObjLstByTabIdCache,
   TabFeatureEx_GetSpan4TabFeature,
 } from '@/ts/L3ForWApiEx/Table_Field/clsTabFeatureExWApi';
+import { clsPrjFeatureBLEx } from '@/ts/L2BLL/PrjFunction/clsPrjFeatureBLEx';
+import { ViewRegionRelaEx_GetRegionIdLstByViewId } from '@/ts/L3ForWApiEx/RegionManage/clsViewRegionRelaExWApi';
 import {
   TabFeatureFldsEx_CopyToEx,
   TabFeatureFldsEx_GetObjLstByTabFeatureId,
@@ -310,65 +315,6 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
     // const divUl: HTMLDivElement = <HTMLDivElement>document.getElementById(strDivName);
     divList.innerHTML = '';
 
-    // 在列表顶部显示一个“添加新排序功能”按钮，行为与页面右侧的全局按钮一致
-    let divTopLeft: HTMLDivElement | null = null;
-    try {
-      // 顶部容器：左/右两列，保证左右内容顶部对齐
-      const divTopContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');
-      divTopContainer.className = 'd-flex justify-content-between mb-2';
-      divTopContainer.style.alignItems = 'flex-start';
-
-      const divTopLeftInner: HTMLDivElement = <HTMLDivElement>document.createElement('div');
-      divTopLeftInner.className = 'top-left';
-      // 左侧占70%
-      divTopLeftInner.style.flex = '0 0 70%';
-      divTopLeftInner.style.maxWidth = '70%';
-
-      const divTopRight: HTMLDivElement = <HTMLDivElement>document.createElement('div');
-      divTopRight.className = 'top-right';
-      // 右侧占30%，内容左对齐
-      divTopRight.style.flex = '0 0 30%';
-      divTopRight.style.maxWidth = '30%';
-      divTopRight.style.textAlign = 'left';
-
-      const ulTop: HTMLUListElement = <HTMLUListElement>document.createElement('ul');
-      ulTop.className = 'nav';
-      ulTop.style.display = 'flex';
-      ulTop.style.justifyContent = 'flex-start';
-      const liTop: HTMLLIElement = <HTMLLIElement>document.createElement('li');
-      liTop.className = 'nav-item';
-      const btnAddSort: HTMLButtonElement = <HTMLButtonElement>document.createElement('button');
-      btnAddSort.className = 'layui-btn';
-      btnAddSort.title = '添加新排序功能';
-      btnAddSort.innerHTML = '<i class="layui-icon"></i>添加新排序功能';
-      btnAddSort.onclick = function () {
-        // 直接创建 AdjustOrderNum_EdtEx 实例并调用添加流程，避免循环依赖
-        try {
-          const objPage: TabFeatureCRUD_EditEx_AdjustOrderNum =
-            new TabFeatureCRUD_EditEx_AdjustOrderNum();
-          const objAdjustOrderNum_Edt: AdjustOrderNum_EdtEx = new AdjustOrderNum_EdtEx(
-            'AdjustOrderNum_EdtEx',
-            objPage,
-          );
-          AdjustOrderNum_EdtEx.PrjIdCache = clsPrivateSessionStorage.currSelPrjId;
-          AdjustOrderNum_EdtEx.strTabId4AdjustOrderNum = TabId_Static.value;
-          objAdjustOrderNum_Edt.btnAddNewRecord_OrderFunc_Click();
-        } catch (err) {
-          console.warn('调用添加排序功能失败:', err);
-        }
-      };
-      liTop.appendChild(btnAddSort);
-      ulTop.appendChild(liTop);
-      divTopRight.appendChild(ulTop);
-      divTopContainer.appendChild(divTopLeftInner);
-      divTopContainer.appendChild(divTopRight);
-      divList.appendChild(divTopContainer);
-      // 将左侧容器引用保存以便后续把功能条目放入其中
-      divTopLeft = divTopLeftInner;
-    } catch (e: any) {
-      console.warn('渲染添加新排序功能按钮失败:', e);
-    }
-
     //const ulTreeBind: HTMLUListElement = document.createElement("ul");
     //ulTreeBind.id = "ulTabFeature";
     //ulTreeBind.className = "st_tree"
@@ -383,8 +329,7 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
 
         //建立图For一个字段的一个版本，即一个结点
         const divField = await this.GetDiv_TabFeature(objTabFeature);
-        // 如果顶部左侧容器存在，则把内容放入左侧，否则放到根列表
-        const targetContainer: HTMLDivElement = divTopLeft ?? divList;
+        const targetContainer: HTMLDivElement = divList;
         targetContainer.appendChild(divField);
 
         const objHr: HTMLHRElement = document.createElement('hr');
@@ -407,7 +352,7 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
   public GetDiv_TabFeatureLeft(objTabFeature: clsvTabFeature_SimENEx): HTMLDivElement {
     const divLeft: HTMLDivElement = <HTMLDivElement>document.createElement('div');
     divLeft.innerHTML = '';
-    divLeft.className = 'col-7';
+    divLeft.className = 'col-5';
     divLeft.id = Format('left_{0}', objTabFeature.tabFeatureId);
     return divLeft;
   }
@@ -435,14 +380,19 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
   public static async ShowCode(
     strCode4CSharp: string,
     strCode4TypeScript: string,
+    strCode4VueView: string,
+    strCode4VueBack: string,
     strTabFeatureId: string,
   ) {
     const strDivName4CSharp = Format('divCode4CSharp{0}', strTabFeatureId);
     const strDivName4TypeScript = Format('divCode4TypeScript{0}', strTabFeatureId);
+    const strDivName4VueView = Format('divCode4VueView{0}', strTabFeatureId);
+    const strDivName4VueBack = Format('divCode4VueBack{0}', strTabFeatureId);
 
     const divCSharp: HTMLDivElement = <HTMLDivElement>document.getElementById(strDivName4CSharp);
     divCSharp.className = 'row  border-info';
     divCSharp.style.width = '100%';
+    divCSharp.innerHTML = '';
     //divCSharp.innerHTML = Format("<code>{0}</code>", strCode4CSharp);
     const textarea_CSharp: HTMLTextAreaElement = <HTMLTextAreaElement>(
       document.createElement('textarea')
@@ -458,6 +408,7 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
     );
     divTypeScript.className = 'row  border-info mt-2';
     divTypeScript.style.width = '100%';
+    divTypeScript.innerHTML = '';
     //divTypeScript.innerHTML = Format("<code>{0}</code>", strCode4TypeScript);
     const textarea_TypeScript: HTMLTextAreaElement = <HTMLTextAreaElement>(
       document.createElement('textarea')
@@ -467,6 +418,34 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
 
     textarea_TypeScript.innerHTML = strCode4TypeScript;
     divTypeScript.appendChild(textarea_TypeScript);
+
+    const divVueView: HTMLDivElement = <HTMLDivElement>document.getElementById(strDivName4VueView);
+    if (divVueView != null) {
+      divVueView.className = 'row  border-info mt-2';
+      divVueView.style.width = '100%';
+      divVueView.innerHTML = '';
+      const textarea_VueView: HTMLTextAreaElement = <HTMLTextAreaElement>(
+        document.createElement('textarea')
+      );
+      textarea_VueView.style.width = '100%';
+      textarea_VueView.style.height = '400px';
+      textarea_VueView.innerHTML = strCode4VueView;
+      divVueView.appendChild(textarea_VueView);
+    }
+
+    const divVueBack: HTMLDivElement = <HTMLDivElement>document.getElementById(strDivName4VueBack);
+    if (divVueBack != null) {
+      divVueBack.className = 'row  border-info mt-2';
+      divVueBack.style.width = '100%';
+      divVueBack.innerHTML = '';
+      const textarea_VueBack: HTMLTextAreaElement = <HTMLTextAreaElement>(
+        document.createElement('textarea')
+      );
+      textarea_VueBack.style.width = '100%';
+      textarea_VueBack.style.height = '400px';
+      textarea_VueBack.innerHTML = strCode4VueBack;
+      divVueBack.appendChild(textarea_VueBack);
+    }
   }
   public GetUl_CreateFunc(strFeatureId: string, strTabId: string): HTMLUListElement {
     const btnCreateFunc: HTMLButtonElement = document.createElement('button');
@@ -568,36 +547,230 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
     objPageEdit.btnUpdateRecord_Click(strTabFeatureId);
     //alert(strFldId);
   }
+
+  private static async CopyTextToClipboard(strText: string): Promise<boolean> {
+    try {
+      if (IsNullOrEmpty(strText) == true) return false;
+      if (
+        navigator != null &&
+        navigator.clipboard != null &&
+        navigator.clipboard.writeText != null
+      ) {
+        await navigator.clipboard.writeText(strText);
+        return true;
+      }
+
+      const textarea: HTMLTextAreaElement = <HTMLTextAreaElement>document.createElement('textarea');
+      textarea.value = strText;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      const isCopied = document.execCommand('copy');
+      document.body.removeChild(textarea);
+      return isCopied;
+    } catch (e: any) {
+      console.error('复制失败:', e);
+      return false;
+    }
+  }
+
+  private static BindCopyEmptyResultButton(
+    divLayout: HTMLDivElement,
+    strBtnId: string,
+    strCopyText: string,
+  ) {
+    const btnCopy = <HTMLButtonElement>divLayout.querySelector(`#${strBtnId}`);
+    if (btnCopy == null) return;
+    btnCopy.onclick = async () => {
+      const isCopied = await TabFeatureCRUD_EditEx_AdjustOrderNum.CopyTextToClipboard(strCopyText);
+      if (isCopied == true) {
+        btnCopy.innerText = '已复制空结果明细';
+      } else {
+        alert('复制失败，请手工复制空结果明细。');
+      }
+    };
+  }
+
+  private static async GetFrontEndViewIdByFeatureId(
+    strTabId: string,
+    strFeatureId: string,
+  ): Promise<string> {
+    if (IsNullOrEmpty(strTabId) == true || IsNullOrEmpty(strFeatureId) == true) return '';
+
+    const arrCandidateViewId: Array<string> = [];
+
+    const strWhere4ViewInfo = `${clsViewInfoEN.con_MainTabId}='${strTabId}'`;
+    const arrViewInfo: Array<clsViewInfoEN> = await ViewInfo_GetObjLstAsync(strWhere4ViewInfo);
+    arrViewInfo
+      .map((x) => x.viewId)
+      .filter((x) => IsNullOrEmpty(x) == false)
+      .forEach((x) => {
+        if (arrCandidateViewId.indexOf(x) < 0) arrCandidateViewId.push(x);
+      });
+
+    for (const strViewId of arrCandidateViewId) {
+      const arrRegionId = await ViewRegionRelaEx_GetRegionIdLstByViewId(strViewId);
+      for (const strRegionId of arrRegionId) {
+        const arrFeatureId = await clsPrjFeatureBLEx.GetFeatureIdLstByRegionIdCache(strRegionId);
+        if (arrFeatureId.indexOf(strFeatureId) > -1) return strViewId;
+      }
+    }
+
+    return '';
+  }
+
   public static async btnGeneCode(strTabFeatureId: string, divLayout: HTMLDivElement) {
     let strCodeTypeId = enumCodeType.BusinessLogic_0003;
     let intAppId = enumApplicationType.PubApp4WinWeb_7;
-    const strFeatureId = TabFeatureCRUD_EditEx_AdjustOrderNum.GetPropValue('featureId');
+    const strTabId = TabId_Static.value;
     try {
+      let strFeatureId = '';
+      const objTabFeature = await TabFeature_GetObjByTabFeatureIdAsync(strTabFeatureId);
+      if (objTabFeature != null && IsNullOrEmpty(objTabFeature.featureId) == false) {
+        strFeatureId = objTabFeature.featureId;
+      }
+      if (IsNullOrEmpty(strFeatureId) == true) {
+        strFeatureId = TabFeatureCRUD_EditEx_AdjustOrderNum.GetPropValue('featureId');
+      }
+      if (IsNullOrEmpty(strFeatureId) == true || strFeatureId.startsWith('tab')) {
+        throw `功能Id无效: featureId=${strFeatureId}, tabFeatureId=${strTabFeatureId}, tabId=${strTabId}`;
+      }
+
       const strCode_CSharp = await TabFeatureCRUD_EditEx_AdjustOrderNum.GeneCode4Feature(
-        TabId_Static.value,
+        strTabId,
+        '',
         strFeatureId,
         strCodeTypeId,
         intAppId,
         divLayout,
       );
 
+      const strViewId = await TabFeatureCRUD_EditEx_AdjustOrderNum.GetFrontEndViewIdByFeatureId(
+        strTabId,
+        strFeatureId,
+      );
+
+      // throw `未找到可用前端界面，或界面功能区不包含该功能。tabId=${strTabId}, featureId=${strFeatureId}`;
+
       strCodeTypeId = enumCodeType.WA_Srv_0044;
       intAppId = enumApplicationType.WebApi_19;
       const strCode_TypeScript = await TabFeatureCRUD_EditEx_AdjustOrderNum.GeneCode4Feature(
-        TabId_Static.value,
+        strTabId,
+        '',
         strFeatureId,
         strCodeTypeId,
         intAppId,
         divLayout,
       );
+      let strCode_VueView = '';
+      let strCode_VueBack = '';
+      if (IsNullOrEmpty(strViewId) == false) {
+        strCodeTypeId = enumCodeType.Vue_ViewScript_TS_0253;
+        intAppId = enumApplicationType.VueAppInCore_TS_30;
+        strCode_VueView = await TabFeatureCRUD_EditEx_AdjustOrderNum.GeneCode4Feature(
+          strTabId,
+          strViewId,
+          strFeatureId,
+          strCodeTypeId,
+          intAppId,
+          divLayout,
+        );
+
+        strCodeTypeId = enumCodeType.Vue_ViewScriptCS_TS_0254;
+        intAppId = enumApplicationType.VueAppInCore_TS_30;
+        strCode_VueBack = await TabFeatureCRUD_EditEx_AdjustOrderNum.GeneCode4Feature(
+          strTabId,
+          strViewId,
+          strFeatureId,
+          strCodeTypeId,
+          intAppId,
+          divLayout,
+        );
+      }
+
+      const arrCodeResult = [
+        {
+          title: '后端业务层(C#)',
+          codeTypeId: enumCodeType.BusinessLogic_0003,
+          applicationTypeId: enumApplicationType.PubApp4WinWeb_7,
+          codeText: strCode_CSharp,
+        },
+        {
+          title: '后端WebApi(TS)',
+          codeTypeId: enumCodeType.WA_Srv_0044,
+          applicationTypeId: enumApplicationType.WebApi_19,
+          codeText: strCode_TypeScript,
+        },
+        {
+          title: '前端功能区(Vue)',
+          codeTypeId: enumCodeType.Vue_ViewScript_TS_0253,
+          applicationTypeId: enumApplicationType.VueAppInCore_TS_30,
+          codeText: strCode_VueView,
+        },
+        {
+          title: '前端后台文件(TS)',
+          codeTypeId: enumCodeType.Vue_ViewScriptCS_TS_0254,
+          applicationTypeId: enumApplicationType.VueAppInCore_TS_30,
+          codeText: strCode_VueBack,
+        },
+      ];
+      const arrEmptyResult = arrCodeResult.filter((x) => IsNullOrEmpty(x.codeText) == true);
+      const arrSuccessResult = arrCodeResult.filter((x) => IsNullOrEmpty(x.codeText) == false);
+
+      if (arrSuccessResult.length == 0) {
+        const strEmptyDetail = arrEmptyResult
+          .map((x) => `${x.title}(codeTypeId=${x.codeTypeId}, appTypeId=${x.applicationTypeId})`)
+          .join('；');
+        throw `未生成代码，请检查功能配置。tabFeatureId=${strTabFeatureId}, tabId=${strTabId}, featureId=${strFeatureId}, 空结果=${strEmptyDetail}`;
+      }
       TabFeatureCRUD_EditEx_AdjustOrderNum.ShowCode(
         strCode_CSharp,
         strCode_TypeScript,
+        strCode_VueView,
+        strCode_VueBack,
         strTabFeatureId,
       );
+
+      const lblResult = <HTMLElement>divLayout.querySelector('#lblResult');
+      if (lblResult != null) {
+        const strSuccessDetail = arrSuccessResult
+          .map((x) => `${x.title}(codeTypeId=${x.codeTypeId})`)
+          .join('；');
+        const strEmptyDetail = arrEmptyResult
+          .map((x) => `${x.title}(codeTypeId=${x.codeTypeId}, appTypeId=${x.applicationTypeId})`)
+          .join('；');
+        const arrMsg: Array<string> = [];
+        const strCopyBtnId = Format('btnCopyEmptyResult_{0}', strTabFeatureId);
+        arrMsg.push(
+          `生成完成：成功${arrSuccessResult.length}项，空结果${arrEmptyResult.length}项。`,
+        );
+        if (IsNullOrEmpty(strViewId) == true) {
+          arrMsg.push('未找到匹配界面ViewId，已跳过前端界面相关代码生成。');
+        }
+        if (strSuccessDetail != '') {
+          arrMsg.push(`成功项：${strSuccessDetail}`);
+        }
+        if (strEmptyDetail != '') {
+          arrMsg.push(`空结果项：${strEmptyDetail}`);
+          arrMsg.push(
+            `<button type="button" id="${strCopyBtnId}" class="btn btn-outline-secondary btn-sm mt-1">复制空结果明细</button>`,
+          );
+        }
+        lblResult.innerHTML = arrMsg.join('<br/>');
+
+        if (strEmptyDetail != '') {
+          TabFeatureCRUD_EditEx_AdjustOrderNum.BindCopyEmptyResultButton(
+            divLayout,
+            strCopyBtnId,
+            `空结果项：${strEmptyDetail}`,
+          );
+        }
+      }
       console.log('生成代码完成！');
     } catch (e: any) {
-      const strMsg = `复制记录不成功,${e}.`;
+      const strMsg = `生成代码不成功, tabFeatureId=${strTabFeatureId}, tabId=${strTabId}, codeTypeId=${strCodeTypeId}, err=${e}.`;
       console.error('Error: ', strMsg);
       //console.trace();
       alert(strMsg);
@@ -741,7 +914,7 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
   }
   public async GetUl_TabFeatureFld(objTabFeature: clsvTabFeature_SimEN) {
     const ulTabFeatureFld: HTMLUListElement = <HTMLUListElement>document.createElement('ul');
-    ulTabFeatureFld.id = Format('ulSub{0}', objTabFeature.tabFeatureId);
+    ulTabFeatureFld.id = Format('ulSub{0}_GetUl_TabFeatureFld', objTabFeature.tabFeatureId);
     ulTabFeatureFld.className = 'list-unstyled';
     // let bolIsHasAdjNode = false;
     let arrTabFeatureFlds: Array<clsTabFeatureFldsEN> = []; //以当前结点为输入结点的关系
@@ -768,7 +941,7 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
 
   public async GetUl_TabFeature(objTabFeature: clsvTabFeature_SimEN) {
     const ulTabFeature: HTMLUListElement = <HTMLUListElement>document.createElement('ul');
-    ulTabFeature.id = Format('ul{0}', objTabFeature.tabFeatureId);
+    ulTabFeature.id = Format('ul{0}in_GetUl_TabFeature', objTabFeature.tabFeatureId);
     ulTabFeature.className = 'list-unstyled';
 
     return ulTabFeature;
@@ -777,6 +950,8 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
     const objTabs = new clsTabs();
     const strDivName4CSharp = Format('divCode4CSharp{0}', objTabFeature.tabFeatureId);
     const strDivName4TypeScript = Format('divCode4TypeScript{0}', objTabFeature.tabFeatureId);
+    const strDivName4VueView = Format('divCode4VueView{0}', objTabFeature.tabFeatureId);
+    const strDivName4VueBack = Format('divCode4VueBack{0}', objTabFeature.tabFeatureId);
     const divCSharp: HTMLDivElement = <HTMLDivElement>document.createElement('div');
     //divCSharp.innerHTML = "divCSharp";
 
@@ -787,36 +962,64 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
 
     divTypeScript.id = strDivName4TypeScript;
 
+    const divVueView: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+    divVueView.id = strDivName4VueView;
+
+    const divVueBack: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+    divVueBack.id = strDivName4VueBack;
+
     const arrTabInfo: Array<clsTabInfo> = [
       {
         TabClick: '',
         tabId: Format('codetab1_{0}', objTabFeature.tabFeatureId),
         IsActive: true,
-        TabTitle: '代码-基于CSharp的业务逻辑层中调整次序的功能实现函数',
+        TabTitle: '后端-业务逻辑层',
         DivContent: divCSharp,
       },
       {
         TabClick: '',
         tabId: Format('codetab2_{0}', objTabFeature.tabFeatureId),
         IsActive: false,
-        TabTitle: '代码-基于CSharp的WebApi服务层中调整次序的功能实现函数',
+        TabTitle: '后端-WebApi服务层',
         DivContent: divTypeScript,
+      },
+      {
+        TabClick: '',
+        tabId: Format('codetab3_{0}', objTabFeature.tabFeatureId),
+        IsActive: false,
+        TabTitle: '前端-功能区脚本(Vue)',
+        DivContent: divVueView,
+      },
+      {
+        TabClick: '',
+        tabId: Format('codetab4_{0}', objTabFeature.tabFeatureId),
+        IsActive: false,
+        TabTitle: '前端-后台文件脚本(TS)',
+        DivContent: divVueBack,
       },
     ];
     objTabs.TabLst = arrTabInfo;
     const divTabs: HTMLDivElement = objTabs.CreateTabs();
     divTabs.className += ' col-7';
     divTabs.id = Format('divTabs_{0}', objTabFeature.tabFeatureId);
+
+    const ulTabs = <HTMLUListElement>divTabs.querySelector('ul.nav-tabs');
+    if (ulTabs != null) {
+      ulTabs.style.flexWrap = 'nowrap';
+      ulTabs.style.overflowX = 'auto';
+      ulTabs.style.overflowY = 'hidden';
+      ulTabs.style.whiteSpace = 'nowrap';
+    }
     return divTabs;
   }
   public async GetDiv_TabFeature(objTabFeature: clsvTabFeature_SimENEx): Promise<HTMLDivElement> {
     const divTabFeature: HTMLDivElement = await this.GetDiv_TabFeature0(objTabFeature);
 
     const divLeft: HTMLDivElement = this.GetDiv_TabFeatureLeft(objTabFeature);
+    const divRight: HTMLDivElement = this.GetDiv_TabsBak(objTabFeature);
 
-    // const divRight: HTMLDivElement = this.GetDiv_Tabs(objTabFeature);
     divTabFeature.appendChild(divLeft);
-    // divTabFeature.appendChild(divRight);
+    divTabFeature.appendChild(divRight);
 
     const ulTabFeature: HTMLUListElement = await this.GetUl_TabFeature(objTabFeature);
 
@@ -955,11 +1158,19 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
   }
   public static async GeneCode4Feature(
     strTabId: string,
+    strViewId: string,
     strFeatureId: string,
     strCodeTypeId: string,
     intApplicationTypeId: number,
     divLayout: HTMLDivElement,
   ): Promise<string> {
+    let hidDivName = <HTMLInputElement>divLayout.querySelector('#hidDivName');
+    if (hidDivName == null) {
+      hidDivName = document.createElement('input');
+      hidDivName.type = 'hidden';
+      hidDivName.id = 'hidDivName';
+      divLayout.appendChild(hidDivName);
+    }
     SetInputValueInDivObj(divLayout, 'hidDivName', 'divAddNewRecordSave');
     const objGCPara: clsGCPara = new clsGCPara();
 
@@ -972,6 +1183,7 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
     const vsTypeParas = '';
     const vsDataBaseType = clsPubSessionStorage.currDataBaseTypeId; // this.getQueryString("DataBaseType");//"MsSql";
     objGCPara.tabId = vsTabId;
+    objGCPara.viewId = strViewId;
     objGCPara.featureId = strFeatureId;
 
     objGCPara.tabId = vsTabId;
@@ -1029,14 +1241,15 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
       //$('#lblGCUserId').text(objGCResult.gcUserId);
       //$('#lblTabName').text(objGCResult.tabName);
       const strCurrDate = clsDateTime.getTodayDateTimeStr(1);
+      const lblResult = <HTMLElement>divLayout.querySelector('#lblResult');
       if (objGCResult == null) {
         const strInfo = `生成代码不成功!时间:${strCurrDate}`;
-        $('#lblResult').html(strInfo);
+        if (lblResult != null) lblResult.innerHTML = strInfo;
         //显示信息框
         //alert(strInfo);
       } else {
         const strInfo = `生成代码成功!时间:${strCurrDate}`;
-        $('#lblResult').html(strInfo);
+        if (lblResult != null) lblResult.innerHTML = strInfo;
         //显示信息框
         //alert(strInfo);
       }

@@ -187,6 +187,9 @@
 
   .tabs {
     display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 1px;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -194,8 +197,19 @@
 
   .tabs li {
     cursor: pointer;
-    padding: 10px 20px;
+    padding: 4px 6px;
     background-color: #eee;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .tabs .nav-item {
+    margin: 0;
+    padding: 4px 4px;
+  }
+
+  .tabs li span {
+    white-space: nowrap;
   }
 
   .tabs li.active {

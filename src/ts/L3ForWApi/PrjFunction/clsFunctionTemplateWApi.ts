@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsFunctionTemplateWApi
  * 表名:FunctionTemplate(00050312)
- * 版本:2025.05.08.1(服务器:WIN-SRV103-116)
- * 日期:2025/05/10 20:42:13
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/28 23:40:14
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:函数管理(PrjFunction)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,28 +20,36 @@
 /**
  * 函数模板(FunctionTemplate)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年05月10日.
+ * Created by pyf on 2026年04月28日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
 import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
 import { Storage } from '@/utils/Storage';
-import { IsNullOrEmpty, GetStrLen, tzDataType, Format } from '@/ts/PubFun/clsString';
+import { IsNullOrEmpty, Format, GetStrLen, tzDataType } from '@/ts/PubFun/clsString';
 import { enumComparisonOp } from '@/ts/PubFun/enumComparisonOp';
 import { CacheHelper } from '@/ts/PubFun/CacheHelper';
 import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
-import { AddRecordResult } from '@/ts/PubFun/AddRecordResult';
+import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 import {
+  GetSortExpressInfo,
+  ObjectAssign,
   BindDdl_ObjLstInDivObj,
   GetExceptionStr,
   myShowErrorMsg,
-  ObjectAssign,
 } from '@/ts/PubFun/clsCommFunc4Web';
+import {
+  functionTemplateCache,
+  isFuncMapCache,
+} from '@/views/PrjFunction/FunctionTemplateVueShare';
+import { clsFunctionTemplateENEx } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateENEx';
 import { clsFunctionTemplateEN } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateEN';
+import { ProgLangType_func } from '@/ts/L3ForWApi/SysPara/clsProgLangTypeWApi';
+import { clsProgLangTypeEN } from '@/ts/L0Entity/SysPara/clsProgLangTypeEN';
+import { AddRecordResult } from '@/ts/PubFun/AddRecordResult';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
 import { stuRangePara } from '@/ts/PubFun/stuRangePara';
-import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 import { clsDateTime } from '@/ts/PubFun/clsDateTime';
 
 export const functionTemplate_Controller = 'FunctionTemplateApi';
@@ -289,7 +297,7 @@ export async function FunctionTemplate_UpdateObjInLstCache(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-05-10
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -304,7 +312,7 @@ export function FunctionTemplate_SortFunDefa(
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-05-10
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -322,7 +330,7 @@ export function FunctionTemplate_SortFunDefa2Fld(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-05-10
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -476,7 +484,7 @@ export async function FunctionTemplate_GetNameByFunctionTemplateIdCache(
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-05-10
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -528,7 +536,7 @@ export async function FunctionTemplate_FilterFunByKey(strKey: string, value: any
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-05-10
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -547,11 +555,11 @@ export async function FunctionTemplate_func(
     console.error(strMsg);
     throw new Error(strMsg);
   }
-  if (clsFunctionTemplateEN.AttributeName.indexOf(strOutFldName) == -1) {
+  if (clsFunctionTemplateEN._AttributeName.indexOf(strOutFldName) == -1) {
     const strMsg = Format(
       '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
       strOutFldName,
-      clsFunctionTemplateEN.AttributeName.join(','),
+      clsFunctionTemplateEN._AttributeName.join(','),
     );
     console.error(strMsg);
     throw new Error(strMsg);
@@ -571,7 +579,7 @@ export async function FunctionTemplate_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-05-10
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -926,11 +934,11 @@ export async function FunctionTemplate_GetObjLstClientCache() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsFunctionTemplateEN._CurrTabName;
-  if (IsNullOrEmpty(clsFunctionTemplateEN.WhereFormat) == false) {
-    strWhereCond = clsFunctionTemplateEN.WhereFormat;
+  if (IsNullOrEmpty(clsFunctionTemplateEN._WhereFormat) == false) {
+    strWhereCond = clsFunctionTemplateEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsFunctionTemplateEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsFunctionTemplateEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsFunctionTemplateEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsFunctionTemplateEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -976,11 +984,11 @@ export async function FunctionTemplate_GetObjLstlocalStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsFunctionTemplateEN._CurrTabName;
-  if (IsNullOrEmpty(clsFunctionTemplateEN.WhereFormat) == false) {
-    strWhereCond = clsFunctionTemplateEN.WhereFormat;
+  if (IsNullOrEmpty(clsFunctionTemplateEN._WhereFormat) == false) {
+    strWhereCond = clsFunctionTemplateEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsFunctionTemplateEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsFunctionTemplateEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsFunctionTemplateEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsFunctionTemplateEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1121,11 +1129,11 @@ export async function FunctionTemplate_GetObjLstsessionStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsFunctionTemplateEN._CurrTabName;
-  if (IsNullOrEmpty(clsFunctionTemplateEN.WhereFormat) == false) {
-    strWhereCond = clsFunctionTemplateEN.WhereFormat;
+  if (IsNullOrEmpty(clsFunctionTemplateEN._WhereFormat) == false) {
+    strWhereCond = clsFunctionTemplateEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsFunctionTemplateEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsFunctionTemplateEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsFunctionTemplateEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsFunctionTemplateEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1192,7 +1200,7 @@ export async function FunctionTemplate_GetObjLstCache(): Promise<Array<clsFuncti
   //const strThisFuncName = "GetObjLst_Cache";
 
   let arrFunctionTemplateObjLstCache;
-  switch (clsFunctionTemplateEN.CacheModeId) {
+  switch (clsFunctionTemplateEN._CacheModeId) {
     case '04': //sessionStorage
       arrFunctionTemplateObjLstCache = await FunctionTemplate_GetObjLstsessionStorage();
       break;
@@ -1217,7 +1225,7 @@ export async function FunctionTemplate_GetObjLstCache(): Promise<Array<clsFuncti
 export async function FunctionTemplate_GetObjLstPureCache() {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrFunctionTemplateObjLstCache;
-  switch (clsFunctionTemplateEN.CacheModeId) {
+  switch (clsFunctionTemplateEN._CacheModeId) {
     case '04': //sessionStorage
       arrFunctionTemplateObjLstCache = await FunctionTemplate_GetObjLstsessionStoragePureCache();
       break;
@@ -1897,6 +1905,293 @@ export async function FunctionTemplate_DelFunctionTemplatesAsync(
     } else {
       throw error.statusText;
     }
+  }
+}
+
+/**
+ * 根据分页条件从缓存中获取分页对象列表,只获取一页.
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjExLstByPagerCache)
+ * @param objPagerPara:分页参数结构
+ * @returns 对象列表
+ */
+export async function FunctionTemplate_GetObjExLstByPagerCache(
+  objPagerPara: stuPagerPara,
+): Promise<Array<clsFunctionTemplateENEx>> {
+  const strThisFuncName = 'GetObjLstByPagerCache';
+  const objSortInfo = GetSortExpressInfo(objPagerPara);
+  const isFuncMapKey = `${objSortInfo.SortFld}`;
+  const arrFunctionTemplateObjLst = await FunctionTemplate_GetObjLstCache();
+  //从缓存中获取对象，如果缓存中不存在就扩展复制
+  const arrNewObj = new Array<clsFunctionTemplateENEx>();
+  const arrFunctionTemplateExObjLst = arrFunctionTemplateObjLst.map((obj) => {
+    const cacheKey = `${obj.functionTemplateId}`;
+    if (functionTemplateCache[cacheKey]) {
+      const oldObj = functionTemplateCache[cacheKey];
+      return oldObj;
+    } else {
+      const newObj = FunctionTemplate_CopyToEx(obj);
+      arrNewObj.push(newObj);
+      functionTemplateCache[cacheKey] = newObj;
+      return newObj;
+    }
+  });
+  for (const newObj of arrNewObj) {
+    for (const strFldName of Object.keys(isFuncMapCache)) {
+      await FunctionTemplate_FuncMapByFldName(strFldName, newObj);
+    }
+  }
+  //检查关于当前扩展排序字段是否获取得值，如果没有获取过，就获取，并存缓存
+  const bolIsFuncMap = isFuncMapCache[isFuncMapKey];
+  if (
+    IsNullOrEmpty(objSortInfo.SortFld) == false &&
+    clsFunctionTemplateEN._AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
+    (bolIsFuncMap == false || bolIsFuncMap == undefined)
+  ) {
+    for (const newObj of arrFunctionTemplateExObjLst) {
+      await FunctionTemplate_FuncMapByFldName(objSortInfo.SortFld, newObj);
+      const cacheKey = `${newObj.functionTemplateId}`;
+      functionTemplateCache[cacheKey] = newObj;
+    }
+    isFuncMapCache[isFuncMapKey] = true;
+  }
+  if (arrFunctionTemplateExObjLst.length == 0) return arrFunctionTemplateExObjLst;
+  let arrFunctionTemplateSel: Array<clsFunctionTemplateENEx> = arrFunctionTemplateExObjLst;
+  const objFunctionTemplateCond = objPagerPara.conditionCollection;
+  if (objFunctionTemplateCond == null) {
+    const strMsg = `根据分布条件从缓存中获取分页对象列表时，objPagerPara.conditionCollection为null,请检查！(in ${strThisFuncName})`;
+    alert(strMsg);
+    console.error(strMsg);
+    return arrFunctionTemplateExObjLst;
+  }
+  try {
+    for (const objCondition of objFunctionTemplateCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
+      arrFunctionTemplateSel = arrFunctionTemplateSel.filter((x) => x.GetFldValue(strKey) != null);
+      const strType = typeof strValue;
+      switch (strType) {
+        case 'string':
+          if (strValue == null) continue;
+          if (strValue == '') continue;
+          if (strComparisonOp == '=') {
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
+            );
+          } else if (strComparisonOp == 'like') {
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
+            );
+          } else if (strComparisonOp == 'length greater') {
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
+            );
+          } else if (strComparisonOp == 'length not greater') {
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
+            );
+          } else if (strComparisonOp == 'length not less') {
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
+            );
+          } else if (strComparisonOp == 'length less') {
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
+            );
+          } else if (strComparisonOp == 'length equal') {
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
+            );
+          } else if (strComparisonOp == 'in') {
+            const arrValues = strValue.split(',');
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => arrValues.indexOf(x.GetFldValue(strKey).toString()) != -1,
+            );
+          }
+          break;
+        case 'boolean':
+          if (strValue == null) continue;
+          if (strComparisonOp == '=') {
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => x.GetFldValue(strKey) == strValue,
+            );
+          }
+          break;
+        case 'number':
+          if (Number(strValue) == 0) continue;
+          if (strComparisonOp == '=') {
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => x.GetFldValue(strKey) == strValue,
+            );
+          } else if (strComparisonOp == '>=') {
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => x.GetFldValue(strKey) >= strValue,
+            );
+          } else if (strComparisonOp == '<=') {
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => x.GetFldValue(strKey) <= strValue,
+            );
+          } else if (strComparisonOp == '>') {
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => x.GetFldValue(strKey) > strValue,
+            );
+          } else if (strComparisonOp == '<') {
+            arrFunctionTemplateSel = arrFunctionTemplateSel.filter(
+              (x) => x.GetFldValue(strKey) <= strValue,
+            );
+          }
+          break;
+      }
+    }
+    if (arrFunctionTemplateSel.length == 0) return arrFunctionTemplateSel;
+    let intStart: number = objPagerPara.pageSize * (objPagerPara.pageIndex - 1);
+    if (intStart <= 0) intStart = 0;
+    const intEnd = intStart + objPagerPara.pageSize;
+    if (objPagerPara.orderBy != null && objPagerPara.orderBy.length > 0) {
+      arrFunctionTemplateSel = arrFunctionTemplateSel.sort(
+        FunctionTemplate_SortFunByExKey(objSortInfo.SortFld, objSortInfo.SortType),
+      );
+    } else {
+      //如果排序字段名[OrderBy]为空,就调用排序函数
+      arrFunctionTemplateSel = arrFunctionTemplateSel.sort(objPagerPara.sortFun);
+    }
+    arrFunctionTemplateSel = arrFunctionTemplateSel.slice(intStart, intEnd);
+    return arrFunctionTemplateSel;
+  } catch (e) {
+    const strMsg = Format(
+      '错误:[{0}]. \n根据条件:[{1}]获取分页对象列表不成功!(In {2}.{3})',
+      e,
+      objPagerPara.whereCond,
+      functionTemplate_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    throw new Error(strMsg);
+  }
+  return new Array<clsFunctionTemplateENEx>();
+}
+
+/**
+ * 把同一个类的对象,复制到另一个对象
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_CopyToEx)
+ * @param objFunctionTemplateENS:源对象
+ * @returns 目标对象=>clsFunctionTemplateEN:objFunctionTemplateENT
+ **/
+export function FunctionTemplate_CopyToEx(
+  objFunctionTemplateENS: clsFunctionTemplateEN,
+): clsFunctionTemplateENEx {
+  const strThisFuncName = FunctionTemplate_CopyToEx.name;
+  const objFunctionTemplateENT = new clsFunctionTemplateENEx();
+  try {
+    ObjectAssign(objFunctionTemplateENT, objFunctionTemplateENS);
+    return objFunctionTemplateENT;
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001294)Copy表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      functionTemplate_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+    return objFunctionTemplateENT;
+  }
+}
+
+/**
+ * 根据扩展字段名去调用相应的映射函数
+ * 作者:pyf
+ * 日期:2026-04-28
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
+ * @param strFldName:扩展字段名
+ * @param  obj{0}Ex:需要转换的对象
+ * @returns 针对扩展字段名对转换对象进行函数映射
+ */
+export function FunctionTemplate_FuncMapByFldName(
+  strFldName: string,
+  objFunctionTemplateEx: clsFunctionTemplateENEx,
+) {
+  const strThisFuncName = FunctionTemplate_FuncMapByFldName.name;
+  strFldName = strFldName.replace('|Ex', '');
+  let strMsg = '';
+  //如果是本表中字段,不需要映射
+  const arrFldName = clsFunctionTemplateEN._AttributeName;
+  if (arrFldName.indexOf(strFldName) > -1) return;
+  //针对扩展字段进行映射
+  switch (strFldName) {
+    case clsFunctionTemplateENEx.con_ProgLangTypeName:
+      return FunctionTemplate_FuncMapProgLangTypeName(objFunctionTemplateEx);
+    default:
+      strMsg = Format(
+        '扩展字段:[{0}]在字段值函数映射中不存在!(in {1})',
+        strFldName,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+  }
+}
+
+/**
+ * 排序函数。根据关键字字段的值进行比较
+ * 作者:pyf
+ * 日期:2026-04-28
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
+ * @param a:比较的第1个对象
+ * @param  b:比较的第1个对象
+ * @returns 返回两个对象比较的结果
+ */
+export function FunctionTemplate_SortFunByExKey(strKey: string, AscOrDesc: string) {
+  strKey = strKey.replace('|Ex', '');
+  if (AscOrDesc == 'Asc' || AscOrDesc == '') {
+    switch (strKey) {
+      case clsFunctionTemplateENEx.con_ProgLangTypeName:
+        return (a: clsFunctionTemplateENEx, b: clsFunctionTemplateENEx) => {
+          return a.progLangTypeName.localeCompare(b.progLangTypeName);
+        };
+      default:
+        return FunctionTemplate_SortFunByKey(strKey, AscOrDesc);
+    }
+  } else {
+    switch (strKey) {
+      case clsFunctionTemplateENEx.con_ProgLangTypeName:
+        return (a: clsFunctionTemplateENEx, b: clsFunctionTemplateENEx) => {
+          return b.progLangTypeName.localeCompare(a.progLangTypeName);
+        };
+      default:
+        return FunctionTemplate_SortFunByKey(strKey, AscOrDesc);
+    }
+  }
+}
+
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
+ * @param objFunctionTemplateS:源对象
+ **/
+export async function FunctionTemplate_FuncMapProgLangTypeName(
+  objFunctionTemplate: clsFunctionTemplateENEx,
+) {
+  const strThisFuncName = FunctionTemplate_FuncMapProgLangTypeName.name;
+  try {
+    if (IsNullOrEmpty(objFunctionTemplate.progLangTypeName) == true) {
+      const ProgLangTypeProgLangTypeId = objFunctionTemplate.progLangTypeId;
+      const ProgLangTypeProgLangTypeName = await ProgLangType_func(
+        clsProgLangTypeEN.con_ProgLangTypeId,
+        clsProgLangTypeEN.con_ProgLangTypeName,
+        ProgLangTypeProgLangTypeId,
+      );
+      objFunctionTemplate.progLangTypeName = ProgLangTypeProgLangTypeName;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001312)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      functionTemplate_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
   }
 }
 
@@ -3049,7 +3344,7 @@ export function FunctionTemplate_ReFreshCache(): void {
   console.trace(strMsg);
   // 静态的对象列表,用于清空相关缓存,针对记录较少,作为参数表可以使用
   const strKey = clsFunctionTemplateEN._CurrTabName;
-  switch (clsFunctionTemplateEN.CacheModeId) {
+  switch (clsFunctionTemplateEN._CacheModeId) {
     case '04': //sessionStorage
       sessionStorage.removeItem(strKey);
       break;
@@ -3073,7 +3368,7 @@ export function FunctionTemplate_ReFreshCache(): void {
 export function FunctionTemplate_ReFreshThisCache(): void {
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = clsFunctionTemplateEN._CurrTabName;
-    switch (clsFunctionTemplateEN.CacheModeId) {
+    switch (clsFunctionTemplateEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -3478,7 +3773,7 @@ export function FunctionTemplate_CheckProperty4Update(
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-05-10
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3501,7 +3796,7 @@ export function FunctionTemplate_GetJSONStrByObj(
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-05-10
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -3522,7 +3817,7 @@ export function FunctionTemplate_GetObjLstByJSONStr(strJSON: string): Array<clsF
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-05-10
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrFunctionTemplateObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -3542,7 +3837,7 @@ export function FunctionTemplate_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-05-10
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

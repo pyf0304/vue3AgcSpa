@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsCacheUseStateWApi
  * 表名:CacheUseState(00050566)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:49:09
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/28 23:40:24
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:系统设置(SystemSet)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * 缓存使用状态(CacheUseState)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年06月14日.
+ * Created by pyf on 2026年04月28日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -238,8 +238,8 @@ export async function CacheUseState_UpdateObjInLstCache(
     const arrCacheUseStateObjLstCache = await CacheUseState_GetObjLstCache(strUserId);
     const obj = arrCacheUseStateObjLstCache.find(
       (x) =>
-        x.cacheModeId == objCacheUseState.cacheModeId &&
         x.cacheKey == objCacheUseState.cacheKey &&
+        x.cacheModeId == objCacheUseState.cacheModeId &&
         x.userId == objCacheUseState.userId,
     );
     if (obj != null) {
@@ -263,7 +263,7 @@ export async function CacheUseState_UpdateObjInLstCache(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -275,7 +275,7 @@ export function CacheUseState_SortFunDefa(a: clsCacheUseStateEN, b: clsCacheUseS
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -292,7 +292,7 @@ export function CacheUseState_SortFunDefa2Fld(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -416,7 +416,7 @@ export async function CacheUseState_GetNameBymIdCache(lngmId: number, strUserId:
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -464,7 +464,7 @@ export async function CacheUseState_FilterFunByKey(strKey: string, value: any) {
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -491,11 +491,11 @@ export async function CacheUseState_func(
     console.error(strMsg);
     throw new Error(strMsg);
   }
-  if (clsCacheUseStateEN.AttributeName.indexOf(strOutFldName) == -1) {
+  if (clsCacheUseStateEN._AttributeName.indexOf(strOutFldName) == -1) {
     const strMsg = Format(
       '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
       strOutFldName,
-      clsCacheUseStateEN.AttributeName.join(','),
+      clsCacheUseStateEN._AttributeName.join(','),
     );
     console.error(strMsg);
     throw new Error(strMsg);
@@ -513,7 +513,7 @@ export async function CacheUseState_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -875,14 +875,14 @@ export async function CacheUseState_GetObjLstClientCache(strUserId: string) {
   const strThisFuncName = 'GetObjLstClientCache';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsCacheUseStateEN.WhereFormat) == false) {
-    strWhereCond = Format(clsCacheUseStateEN.WhereFormat, strUserId);
+  if (IsNullOrEmpty(clsCacheUseStateEN._WhereFormat) == false) {
+    strWhereCond = Format(clsCacheUseStateEN._WhereFormat, strUserId);
   } else {
     strWhereCond = Format("UserId='{0}'", strUserId);
   }
   const strKey = Format('{0}_{1}', clsCacheUseStateEN._CurrTabName, strUserId);
-  if (IsNullOrEmpty(clsCacheUseStateEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsCacheUseStateEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsCacheUseStateEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsCacheUseStateEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -927,14 +927,14 @@ export async function CacheUseState_GetObjLstlocalStorage(strUserId: string) {
   const strThisFuncName = 'GetObjLstlocalStorage';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsCacheUseStateEN.WhereFormat) == false) {
-    strWhereCond = Format(clsCacheUseStateEN.WhereFormat, strUserId);
+  if (IsNullOrEmpty(clsCacheUseStateEN._WhereFormat) == false) {
+    strWhereCond = Format(clsCacheUseStateEN._WhereFormat, strUserId);
   } else {
     strWhereCond = Format("{0}='{1}'", clsCacheUseStateEN.con_UserId, strUserId);
   }
   const strKey = Format('{0}_{1}', clsCacheUseStateEN._CurrTabName, strUserId);
-  if (IsNullOrEmpty(clsCacheUseStateEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsCacheUseStateEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsCacheUseStateEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsCacheUseStateEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1073,14 +1073,14 @@ export async function CacheUseState_GetObjLstsessionStorage(strUserId: string) {
   const strThisFuncName = 'GetObjLstsessionStorage';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsCacheUseStateEN.WhereFormat) == false) {
-    strWhereCond = Format(clsCacheUseStateEN.WhereFormat, strUserId);
+  if (IsNullOrEmpty(clsCacheUseStateEN._WhereFormat) == false) {
+    strWhereCond = Format(clsCacheUseStateEN._WhereFormat, strUserId);
   } else {
     strWhereCond = Format("{0}='{1}'", clsCacheUseStateEN.con_UserId, strUserId);
   }
   const strKey = Format('{0}_{1}', clsCacheUseStateEN._CurrTabName, strUserId);
-  if (IsNullOrEmpty(clsCacheUseStateEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsCacheUseStateEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsCacheUseStateEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsCacheUseStateEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1155,7 +1155,7 @@ export async function CacheUseState_GetObjLstCache(
     throw strMsg;
   }
   let arrCacheUseStateObjLstCache;
-  switch (clsCacheUseStateEN.CacheModeId) {
+  switch (clsCacheUseStateEN._CacheModeId) {
     case '04': //sessionStorage
       arrCacheUseStateObjLstCache = await CacheUseState_GetObjLstsessionStorage(strUserId);
       break;
@@ -1180,7 +1180,7 @@ export async function CacheUseState_GetObjLstCache(
 export async function CacheUseState_GetObjLstPureCache(strUserId: string) {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrCacheUseStateObjLstCache;
-  switch (clsCacheUseStateEN.CacheModeId) {
+  switch (clsCacheUseStateEN._CacheModeId) {
     case '04': //sessionStorage
       arrCacheUseStateObjLstCache = await CacheUseState_GetObjLstsessionStoragePureCache(strUserId);
       break;
@@ -1901,7 +1901,7 @@ export async function CacheUseState_GetObjExLstByPagerCache(
   const bolIsFuncMap = isFuncMapCache[isFuncMapKey];
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsCacheUseStateEN.AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
+    clsCacheUseStateEN._AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
     (bolIsFuncMap == false || bolIsFuncMap == undefined)
   ) {
     for (const newObj of arrCacheUseStateExObjLst) {
@@ -2059,7 +2059,7 @@ export function CacheUseState_CopyToEx(
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -2073,7 +2073,7 @@ export function CacheUseState_FuncMapByFldName(
   strFldName = strFldName.replace('|Ex', '');
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsCacheUseStateEN.AttributeName;
+  const arrFldName = clsCacheUseStateEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -2094,7 +2094,7 @@ export function CacheUseState_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -3226,7 +3226,7 @@ export function CacheUseState_GetWebApiUrl(strController: string, strAction: str
 export function CacheUseState_ReFreshCache(strUserId: string): void {
   if (IsNullOrEmpty(strUserId) == true) {
     const strMsg = Format(
-      '参数:[strUserId]不能为空!(In clsCacheUseStateWApi.clsCacheUseStateWApi.ReFreshCache)',
+      '参数:[strUserId]不能为空！(In clsCacheUseStateWApi.clsCacheUseStateWApi.ReFreshCache)',
     );
     console.error(strMsg);
     throw strMsg;
@@ -3236,7 +3236,7 @@ export function CacheUseState_ReFreshCache(strUserId: string): void {
   console.trace(strMsg);
   // 静态的对象列表,用于清空相关缓存,针对记录较少,作为参数表可以使用
   const strKey = Format('{0}_{1}', clsCacheUseStateEN._CurrTabName, strUserId);
-  switch (clsCacheUseStateEN.CacheModeId) {
+  switch (clsCacheUseStateEN._CacheModeId) {
     case '04': //sessionStorage
       sessionStorage.removeItem(strKey);
       break;
@@ -3260,14 +3260,14 @@ export function CacheUseState_ReFreshCache(strUserId: string): void {
 export function CacheUseState_ReFreshThisCache(strUserId: string): void {
   if (IsNullOrEmpty(strUserId) == true) {
     const strMsg = Format(
-      '参数:[strUserId]不能为空!(In clsCacheUseStateWApi.CacheUseState_ReFreshThisCache)',
+      '参数:[strUserId]不能为空！(In clsCacheUseStateWApi.CacheUseState_ReFreshThisCache)',
     );
     console.error(strMsg);
     throw strMsg;
   }
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = Format('{0}_{1}', clsCacheUseStateEN._CurrTabName, strUserId);
-    switch (clsCacheUseStateEN.CacheModeId) {
+    switch (clsCacheUseStateEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -3625,7 +3625,7 @@ export function CacheUseState_CheckProperty4Update(pobjCacheUseStateEN: clsCache
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3646,7 +3646,7 @@ export function CacheUseState_GetJSONStrByObj(pobjCacheUseStateEN: clsCacheUseSt
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -3667,7 +3667,7 @@ export function CacheUseState_GetObjLstByJSONStr(strJSON: string): Array<clsCach
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrCacheUseStateObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -3687,7 +3687,7 @@ export function CacheUseState_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-04-28
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3828,15 +3828,15 @@ export function CacheUseState_GetCombineCondition(
 /**
  *获取唯一性条件串(Uniqueness)--CacheUseState(缓存使用状态),根据唯一约束条件来生成
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_GetUniquenessConditionString)
- * @param strCacheModeId: 缓存方式Id(要求唯一的字段)
  * @param strCacheKey: 缓存关键字(要求唯一的字段)
+ * @param strCacheModeId: 缓存方式Id(要求唯一的字段)
  * @param strUserId: 用户Id(要求唯一的字段)
  * @returns 条件串(strWhereCond)
  **/
 export function CacheUseState_GetUniCondStr(objCacheUseStateEN: clsCacheUseStateEN): string {
   let strWhereCond = ' 1 = 1 ';
-  strWhereCond += Format(" and CacheModeId = '{0}'", objCacheUseStateEN.cacheModeId);
   strWhereCond += Format(" and CacheKey = '{0}'", objCacheUseStateEN.cacheKey);
+  strWhereCond += Format(" and CacheModeId = '{0}'", objCacheUseStateEN.cacheModeId);
   strWhereCond += Format(" and UserId = '{0}'", objCacheUseStateEN.userId);
   return strWhereCond;
 }
@@ -3844,16 +3844,16 @@ export function CacheUseState_GetUniCondStr(objCacheUseStateEN: clsCacheUseState
 /**
  *获取唯一性条件串(Uniqueness)--CacheUseState(缓存使用状态),根据唯一约束条件来生成
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_GetUniquenessConditionString4Update)
- * @param strCacheModeId: 缓存方式Id(要求唯一的字段)
  * @param strCacheKey: 缓存关键字(要求唯一的字段)
+ * @param strCacheModeId: 缓存方式Id(要求唯一的字段)
  * @param strUserId: 用户Id(要求唯一的字段)
  * @returns 条件串(strWhereCond)
  **/
 export function CacheUseState_GetUniCondStr4Update(objCacheUseStateEN: clsCacheUseStateEN): string {
   let strWhereCond = ' 1 = 1 ';
   strWhereCond += Format(" and mId <> '{0}'", objCacheUseStateEN.mId);
-  strWhereCond += Format(" and CacheModeId = '{0}'", objCacheUseStateEN.cacheModeId);
   strWhereCond += Format(" and CacheKey = '{0}'", objCacheUseStateEN.cacheKey);
+  strWhereCond += Format(" and CacheModeId = '{0}'", objCacheUseStateEN.cacheModeId);
   strWhereCond += Format(" and UserId = '{0}'", objCacheUseStateEN.userId);
   return strWhereCond;
 }

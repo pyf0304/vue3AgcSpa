@@ -7,14 +7,14 @@
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 
 export class clsSysPara4WebApi {
-  public static bolIsLocalHost = true; //true,,,false
+  public static bolIsLocalHost = false; //true,,,false
 
   //const CurrIPAddressAndPort = "http://Localhost:2408";
   //    public static CurrIPAddressAndPort:string = getHostAddressweb();// "http://Localhost:2408";
   // public static CurrPrx = 'AgcWAVue';
   //  public static CurrPrx = 'AgcWA';
-  // public static CurrPrx = 'AgcWAV3';
-  public static CurrPrx = '';
+  public static CurrPrx = 'AgcWAV3';
+  // public static CurrPrx = '';
 
   public static CurrPrx_GP = 'GpWATz';
   //public static CurrPrx: string = VirtualRootPath + "/WebApi";
@@ -40,8 +40,8 @@ export class clsSysPara4WebApi {
   public static CurrIPAddressAndPort_GP = 'https://www.sh-tz.com'; // getHostAddressweb();// "http://Localhost:2408";
   public static CurrIPAddressAndPort_GPBak = 'http://103.116.76.183:8080'; // getHostAddressweb();// "http://Localhost:2408";
   //public static CurrIPAddressAndPort_Local_GP = "http://103.116.76.183:8080";// getHostAddressweb();// "http://Localhost:2408";
-  // public static CurrIPAddressAndPort_Local_GP = 'https://www.sh1-tz.com'; // getHostAddressweb();// "http://Localhost:2408";
-  public static CurrIPAddressAndPort_Local_GP = 'http://tzar.ddns.net:27109'; // getHostAddressweb();// "http://Localhost:2408";
+  public static CurrIPAddressAndPort_Local_GP = 'https://www.sh-tz.com'; // getHostAddressweb();// "http://Localhost:2408";
+  // public static CurrIPAddressAndPort_Local_GP = 'http://tzar.ddns.net:27109'; // getHostAddressweb();// "http://Localhost:2408";
   // public static CurrIPAddressAndPort_Local_GP = 'http://192.168.1.20:7109'; // getHostAddressweb();// "http://Localhost:2408";
 
   //localhost

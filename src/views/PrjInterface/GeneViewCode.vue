@@ -74,31 +74,31 @@
         </div>
         <div id="divCodeTypeLst" ref="refDivCodeTypeLst"></div>
         <div>
-          <table style="width: 100%">
+          <table class="code-info-table" style="width: 100%">
             <tr>
               <td colspan="3"><span id="lblResult" class="text-warning"></span></td>
             </tr>
-            <tr>
+            <tr class="row-nowrap">
               <td>类名</td>
               <td>
                 <input
                   id="lblClassName"
                   v-model="className"
                   type="text"
-                  class="Content"
+                  class="Content nowrap-input"
                   style="width: 600px; height: 24px"
                 />
               </td>
               <td><span id="lblResult" class="text-warning"></span></td>
             </tr>
-            <tr>
+            <tr class="row-nowrap">
               <td>文件名</td>
               <td>
                 <input
                   id="lblFileName"
                   v-model="fileName"
                   type="text"
-                  class="text-info"
+                  class="text-info nowrap-input"
                   style="width: 600px"
                 />
               </td>
@@ -264,6 +264,14 @@
     flex-grow: 1;
     padding: 20px;
     background-color: #f0f0f0;
+  }
+
+  .code-info-table .row-nowrap td {
+    white-space: nowrap;
+  }
+
+  .nowrap-input {
+    white-space: nowrap;
   }
 </style>
 

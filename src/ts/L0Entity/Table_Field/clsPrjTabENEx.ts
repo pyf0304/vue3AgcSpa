@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsPrjTabENEx
  * 表名:PrjTab(00050009)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/13 23:53:23
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/04/28 23:40:34
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:字段、表维护(Table_Field)
  * 框架-层名:实体扩展层(TS)(EntityLayerEx,0191)
@@ -94,177 +94,133 @@ export class clsPrjTabENEx extends clsPrjTabEN {
    * 常量:"FuncModuleName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_FuncModuleName(): string {
-    return 'funcModuleName';
-  } //功能模块名称
+  public static readonly con_FuncModuleName = 'funcModuleName'; //功能模块名称
 
   /**
    * 常量:"SqlDsTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_SqlDsTypeName(): string {
-    return 'sqlDsTypeName';
-  } //Sql数据源名
+  public static readonly con_SqlDsTypeName = 'sqlDsTypeName'; //Sql数据源名
 
   /**
    * 常量:"TabStateName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_TabStateName(): string {
-    return 'tabStateName';
-  } //表状态名称
+  public static readonly con_TabStateName = 'tabStateName'; //表状态名称
 
   /**
    * 常量:"TabMainTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_TabMainTypeName(): string {
-    return 'tabMainTypeName';
-  } //表主类型名
+  public static readonly con_TabMainTypeName = 'tabMainTypeName'; //表主类型名
 
   /**
    * 常量:"TabTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_TabTypeName(): string {
-    return 'tabTypeName';
-  } //表类型名
+  public static readonly con_TabTypeName = 'tabTypeName'; //表类型名
 
   /**
    * 常量:"DateTimeSim"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_DateTimeSim(): string {
-    return 'dateTimeSim';
-  } //简化日期时间
+  public static readonly con_DateTimeSim = 'dateTimeSim'; //简化日期时间
 
   /**
    * 常量:"RelaTabName4View"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_RelaTabName4View(): string {
-    return 'relaTabName4View';
-  } //RelaTabName4View
+  public static readonly con_RelaTabName4View = 'relaTabName4View'; //RelaTabName4View
 
   /**
    * 常量:"PrjName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_PrjName(): string {
-    return 'prjName';
-  } //工程名称
+  public static readonly con_PrjName = 'prjName'; //工程名称
 
   /**
    * 常量:"TabFeatureConstraint"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_TabFeatureConstraint(): string {
-    return 'tabFeatureConstraint';
-  } //表功能约束
+  public static readonly con_TabFeatureConstraint = 'tabFeatureConstraint'; //表功能约束
 
   /**
    * 常量:"TabNameEx"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_TabNameEx(): string {
-    return 'tabNameEx';
-  } //Cm工程名s
+  public static readonly con_TabNameEx = 'tabNameEx'; //Cm工程名s
 
   /**
    * 常量:"TabTypeNameEx"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_TabTypeNameEx(): string {
-    return 'tabTypeNameEx';
-  } //表类型名Ex
+  public static readonly con_TabTypeNameEx = 'tabTypeNameEx'; //表类型名Ex
 
   /**
    * 常量:"CacheClassifyField4TSEx"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_CacheClassifyField4TSEx(): string {
-    return 'cacheClassifyField4TSEx';
-  } //缓存分类字段名Ex
+  public static readonly con_CacheClassifyField4TSEx = 'cacheClassifyField4TSEx'; //缓存分类字段名Ex
 
   /**
    * 常量:"CacheClassifyFieldEx"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_CacheClassifyFieldEx(): string {
-    return 'cacheClassifyFieldEx';
-  } //缓存分类字段名Ex
+  public static readonly con_CacheClassifyFieldEx = 'cacheClassifyFieldEx'; //缓存分类字段名Ex
 
   /**
    * 常量:"CmPrjNames"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_CmPrjNames(): string {
-    return 'cmPrjNames';
-  } //Cm工程名s
+  public static readonly con_CmPrjNames = 'cmPrjNames'; //Cm工程名s
 
   /**
    * 常量:"PrimaryTypeNameEx"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_PrimaryTypeNameEx(): string {
-    return 'primaryTypeNameEx';
-  } //主键类型名Ex
+  public static readonly con_PrimaryTypeNameEx = 'primaryTypeNameEx'; //主键类型名Ex
 
   /**
    * 常量:"PrimaryTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_PrimaryTypeName(): string {
-    return 'primaryTypeName';
-  } //主键类型名
+  public static readonly con_PrimaryTypeName = 'primaryTypeName'; //主键类型名
 
   /**
    * 常量:"TrClass"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_TrClass(): string {
-    return 'trClass';
-  } //TrClass
+  public static readonly con_TrClass = 'trClass'; //TrClass
 
   /**
    * 常量:"KeyFldNames"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_KeyFldNames(): string {
-    return 'keyFldNames';
-  } //关键字段名s
+  public static readonly con_KeyFldNames = 'keyFldNames'; //关键字段名s
 
   /**
    * 常量:"PrimaryTypeId"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_PrimaryTypeId(): string {
-    return 'primaryTypeId';
-  } //主键类型ID
+  public static readonly con_PrimaryTypeId = 'primaryTypeId'; //主键类型ID
 
   /**
    * 常量:"IncludeFldId"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_IncludeFldId(): string {
-    return 'includeFldId';
-  } //包含字段Id
+  public static readonly con_IncludeFldId = 'includeFldId'; //包含字段Id
 
   /**
    * 常量:"FeatureId"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_FeatureId(): string {
-    return 'featureId';
-  } //功能Id
+  public static readonly con_FeatureId = 'featureId'; //功能Id
 
   /**
    * 常量:"Checked"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_Checked(): string {
-    return 'checked';
-  } //是否选择
+  public static readonly con_Checked = 'checked'; //是否选择
 
   public funcModuleName = ''; //功能模块名称
   public sqlDsTypeName = ''; //Sql数据源名
@@ -288,6 +244,7 @@ export class clsPrjTabENEx extends clsPrjTabEN {
   public includeFldId = ''; //包含字段Id
   public featureId = ''; //功能Id
   public checked = false; //是否选择
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名

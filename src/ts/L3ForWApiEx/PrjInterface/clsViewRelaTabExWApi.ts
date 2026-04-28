@@ -26,6 +26,7 @@ import { clsSysPara4WebApi } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { vPrjTab_SimEx_func } from '@/ts/L3ForWApiEx/Table_Field/clsvPrjTab_SimExWApi';
 import { useviewInfoStore } from '@/store/modules/viewInfo';
 import { useviewRegionStore } from '@/store/modules/viewRegion';
+import { clsDateTime } from '@/ts/PubFun/clsDateTime';
 
 export const viewRelaTabEx_Controller = 'ViewRelaTabExApi';
 export const viewRelaTabEx_ConstructorName = 'viewRelaTabEx';
@@ -93,13 +94,24 @@ export async function ViewRelaTabEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsViewRelaTabENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrViewRelaTabObjLst = await ViewRelaTab_GetObjLstByPagerAsync(objPagerPara);
-  const arrViewRelaTabExObjLst = arrViewRelaTabObjLst.map(ViewRelaTabEx_CopyToEx);
-
   const objSortInfo = GetSortExpressInfo(objPagerPara);
+  const objPagerPara4Api: stuPagerPara = {
+    ...objPagerPara,
+  };
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsViewRelaTabEN.AttributeName.indexOf(objSortInfo.SortFld) == -1
+    clsViewRelaTabEN._AttributeName.indexOf(objSortInfo.SortFld) == -1
+  ) {
+    // 后端分页SQL只能按实体字段排序，扩展字段排序放到前端完成。
+    objPagerPara4Api.orderBy = `${clsViewRelaTabEN.con_ViewId} Asc`;
+  }
+
+  const arrViewRelaTabObjLst = await ViewRelaTab_GetObjLstByPagerAsync(objPagerPara4Api);
+  const arrViewRelaTabExObjLst = arrViewRelaTabObjLst.map(ViewRelaTabEx_CopyToEx);
+
+  if (
+    IsNullOrEmpty(objSortInfo.SortFld) == false &&
+    clsViewRelaTabEN._AttributeName.indexOf(objSortInfo.SortFld) == -1
   ) {
     for (const objInFor of arrViewRelaTabExObjLst) {
       await ViewRelaTabEx_FuncMapByFldName(objSortInfo.SortFld, objInFor);
@@ -328,6 +340,36 @@ export async function ViewRelaTabEx_FuncMap_TabName(objViewRelaTab: clsViewRelaT
 }
 
 /**
+ * 把一个扩展类的部分属性进行函数转换
+ * (Custom)
+ * @param objViewRelaTab:源对象
+ **/
+export async function ViewRelaTabEx_FuncMap_DateTimeSim(objViewRelaTab: clsViewRelaTabENEx) {
+  const strThisFuncName = ViewRelaTabEx_FuncMap_DateTimeSim.name;
+  try {
+    if (IsNullOrEmpty(objViewRelaTab.dateTimeSim) == true) {
+      const strUpdDate = IsNullOrEmpty(objViewRelaTab.updDate)
+        ? ''
+        : String(objViewRelaTab.updDate);
+      if (strUpdDate.length >= 8) {
+        objViewRelaTab.dateTimeSim = clsDateTime.GetDateTime_Sim(strUpdDate);
+      } else {
+        objViewRelaTab.dateTimeSim = '';
+      }
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001326)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      viewRelaTabEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+
+/**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
  * 日期:2022-04-15
@@ -368,6 +410,13 @@ export function ViewRelaTabEx_SortFunByKey(strKey: string, AscOrDesc: string) {
         return (a: clsViewRelaTabENEx, b: clsViewRelaTabENEx) => {
           return a.tabName.localeCompare(b.tabName);
         };
+      case clsViewRelaTabENEx.con_DateTimeSim:
+        return (a: clsViewRelaTabENEx, b: clsViewRelaTabENEx) => {
+          if (a.dateTimeSim === null && b.dateTimeSim === null) return 0;
+          if (a.dateTimeSim === null) return -1;
+          if (b.dateTimeSim === null) return 1;
+          return a.dateTimeSim.localeCompare(b.dateTimeSim);
+        };
       // case clsViewRelaTabENEx.con_CmPrjId:
       //   return (a: clsViewRelaTabENEx, b: clsViewRelaTabENEx) => {
       //     return a.cmPrjId.localeCompare(b.cmPrjId);
@@ -405,6 +454,13 @@ export function ViewRelaTabEx_SortFunByKey(strKey: string, AscOrDesc: string) {
         return (a: clsViewRelaTabENEx, b: clsViewRelaTabENEx) => {
           return b.tabName.localeCompare(a.tabName);
         };
+      case clsViewRelaTabENEx.con_DateTimeSim:
+        return (a: clsViewRelaTabENEx, b: clsViewRelaTabENEx) => {
+          if (a.dateTimeSim === null && b.dateTimeSim === null) return 0;
+          if (a.dateTimeSim === null) return 1;
+          if (b.dateTimeSim === null) return -1;
+          return b.dateTimeSim.localeCompare(a.dateTimeSim);
+        };
       // case clsViewRelaTabENEx.con_CmPrjId:
       //   return (a: clsViewRelaTabENEx, b: clsViewRelaTabENEx) => {
       //     return b.cmPrjId.localeCompare(a.cmPrjId);
@@ -431,7 +487,7 @@ export function ViewRelaTabEx_FuncMapByFldName(
   const strThisFuncName = ViewRelaTabEx_FuncMapByFldName.name;
   let strMsg = '';
   //如果是本表中字段，不需要映射
-  const arrFldName = clsViewRelaTabEN.AttributeName;
+  const arrFldName = clsViewRelaTabEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -449,6 +505,8 @@ export function ViewRelaTabEx_FuncMapByFldName(
       return ViewRelaTabEx_FuncMap_ViewTabTypeName(objViewRelaTabEx);
     case clsViewRelaTabENEx.con_TabName:
       return ViewRelaTabEx_FuncMap_TabName(objViewRelaTabEx);
+    case clsViewRelaTabENEx.con_DateTimeSim:
+      return ViewRelaTabEx_FuncMap_DateTimeSim(objViewRelaTabEx);
     // case clsViewRelaTabENEx.con_CmPrjId:
     //   return ViewRelaTabEx_FuncMap_CmPrjId(objViewRelaTabEx);
     default:

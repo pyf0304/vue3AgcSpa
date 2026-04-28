@@ -418,7 +418,7 @@
   import Function4GeneCode_ListCom from '@/views/PrjFunction/Function4GeneCode_List.vue';
   import { clsSQLDSTypeEN } from '@/ts/L0Entity/PrjInterface/clsSQLDSTypeEN';
   import { clsCodeTypeEN } from '@/ts/L0Entity/GeneCode/clsCodeTypeEN';
-  import { clsProgLangTypeEN } from '@/ts/L0Entity/SysPara/clsProgLangTypeEN';
+  import { clsProgLangTypeEN, enumProgLangType } from '@/ts/L0Entity/SysPara/clsProgLangTypeEN';
   import { clsFunctionTypeEN } from '@/ts/L0Entity/PrjFunction/clsFunctionTypeEN';
   import { clsFunction4CodeEN } from '@/ts/L0Entity/PrjFunction/clsFunction4CodeEN';
   import { SQLDSType_GetArrSQLDSType } from '@/ts/L3ForWApi/PrjInterface/clsSQLDSTypeWApi';
@@ -441,13 +441,29 @@
       PrjId_Session.value = clsPrivateSessionStorage.currSelPrjId;
       UserId_Local.value = userStore.getUserId;
       FeatureTypeId_Static.value = '';
-      ProgLangTypeId_Static.value = '';
+      ProgLangTypeId_Static.value = enumProgLangType.TypeScript_09;
       FuncPurposeId_Static.value = '';
       const objPage = ref<Function4GeneCodeCRUDEx>();
       const objPage_Edit = ref<Function4GeneCode_EditEx>();
       const objPage_Detail = ref<Function4GeneCode_DetailEx>();
       const opType = ref('');
       const thisConstructorName = 'Function4GeneCodeCRUD';
+      const initErrMsg = ref('');
+
+      const ShowInitError = (strThisFuncName: string, bolIsEdit = false) => {
+        const strHeader = bolIsEdit
+          ? '编辑页面初始化不成功,请联系管理员!'
+          : '页面初始化不成功,请联系管理员!';
+        const strMsg = Format(
+          '{0} (in {1}.{2}){3}',
+          strHeader,
+          thisConstructorName,
+          strThisFuncName,
+          IsNullOrEmpty(initErrMsg.value) ? '' : `\n初始化错误:${initErrMsg.value}`,
+        );
+        console.error(strMsg);
+        alert(strMsg);
+      };
 
       const arrSQLDSType = ref<clsSQLDSTypeEN[] | null>([]);
       const arrCodeType = ref<clsCodeTypeEN[] | null>([]);
@@ -461,7 +477,7 @@
       const btnCreate_Click = async () => {
         const strThisFuncName = btnCreate_Click.name;
         if (objPage.value == null) {
-          alert('页面初始化不成功,请联系管理员!');
+          ShowInitError(strThisFuncName);
           return;
         }
         objPage_Edit.value = new Function4GeneCode_EditEx(
@@ -469,7 +485,7 @@
           objPage.value,
         );
         if (objPage_Edit.value == null) {
-          alert('编辑页面初始化不成功,请联系管理员!');
+          ShowInitError(strThisFuncName, true);
           return;
         }
         try {
@@ -500,7 +516,7 @@
       const btnClone_Click = async () => {
         const strThisFuncName = btnClone_Click.name;
         if (objPage.value == null) {
-          alert('页面初始化不成功,请联系管理员!');
+          ShowInitError(strThisFuncName);
           return;
         }
         try {
@@ -524,7 +540,7 @@
       const btnUpdate_Click = async () => {
         const strThisFuncName = btnUpdate_Click.name;
         if (objPage.value == null) {
-          alert('页面初始化不成功,请联系管理员!');
+          ShowInitError(strThisFuncName);
           return;
         }
         objPage_Edit.value = new Function4GeneCode_EditEx(
@@ -532,7 +548,7 @@
           objPage.value,
         );
         if (objPage_Edit.value == null) {
-          alert('编辑页面初始化不成功,请联系管理员!');
+          ShowInitError(strThisFuncName, true);
           return;
         }
         const strFuncId4GC = GetFirstCheckedKeyIdInDivObj(divVarSet.refDivList);
@@ -569,13 +585,14 @@
  (AutoGCLib.Vue_ViewScript_TS4Html:Gen_Vue_setup_ts_btnDetail_Click)
 */
       const btnDetail_Click = async () => {
+        const strThisFuncName = btnDetail_Click.name;
         if (objPage.value == null) {
-          alert('页面初始化不成功,请联系管理员!');
+          ShowInitError(strThisFuncName);
           return;
         }
         objPage_Detail.value = new Function4GeneCode_DetailEx(objPage.value);
         if (objPage_Detail.value == null) {
-          alert('编辑页面初始化不成功,请联系管理员!');
+          ShowInitError(strThisFuncName, true);
           return;
         }
         const strFuncId4GC = GetFirstCheckedKeyIdInDivObj(divVarSet.refDivList);
@@ -600,7 +617,7 @@
       const btnDelete_Click = async () => {
         const strThisFuncName = btnDelete_Click.name;
         if (objPage.value == null) {
-          alert('页面初始化不成功,请联系管理员!');
+          ShowInitError(strThisFuncName);
           return;
         }
         try {
@@ -625,12 +642,32 @@
        * (AutoGCLib.Vue_ViewScript_TS4Html:Gen_Vue_setup_ts_btnQuery_Click)
        **/
       const btnQuery_Click = async () => {
+        const strThisFuncName = btnQuery_Click.name;
         if (objPage.value == null) {
-          alert('页面初始化不成功,请联系管理员!');
+          const strMsg = Format(
+            '页面初始化不成功,请联系管理员! (in {0}.{1}){2}',
+            thisConstructorName,
+            strThisFuncName,
+            IsNullOrEmpty(initErrMsg.value) ? '' : `\n初始化错误:${initErrMsg.value}`,
+          );
+          console.error(strMsg);
+          alert(strMsg);
           return;
         }
-        objPage.value.SetCurrPageIndex(1);
-        await objPage.value.BindGv_Function4GeneCode4Func(refDivList.value);
+        try {
+          objPage.value.SetCurrPageIndex(1);
+          await objPage.value.BindGv_Function4GeneCode4Func(refDivList.value);
+        } catch (e) {
+          const strMsg = Format(
+            '查询不成功,{0}.(in {1}.{2} -> {3})',
+            e,
+            thisConstructorName,
+            strThisFuncName,
+            'Function4GeneCodeCRUDEx.BindGv_Function4GeneCode4Func',
+          );
+          console.error(strMsg);
+          alert(strMsg);
+        }
       };
 
       const exportToExcel = (
@@ -656,8 +693,9 @@
        * (AutoGCLib.Vue_ViewScript_TS4Html:Gen_Vue_setup_ts_btnExportExcel_Click)
        **/
       const btnExportExcel_Click = async () => {
+        const strThisFuncName = btnExportExcel_Click.name;
         if (objPage.value == null) {
-          alert('页面初始化不成功,请联系管理员!');
+          ShowInitError(strThisFuncName);
           return;
         }
         const objExportExcelData: ExportExcelData =
@@ -679,7 +717,7 @@
       const btnSetInUse_Click = async () => {
         const strThisFuncName = btnSetInUse_Click.name;
         if (objPage.value == null) {
-          alert('页面初始化不成功,请联系管理员!');
+          ShowInitError(strThisFuncName);
           return;
         }
         try {
@@ -705,8 +743,13 @@
        * (AutoGCLib.Vue_ViewScript_TS4Html:Gen_Vue_setup_Ts_BindDdl4QryRegion)
        **/
       async function BindDdl4QryRegion() {
-        const strProgLangTypeId_Static = ProgLangTypeId_Static.value; //静态变量;//静态变量
+        const strProgLangTypeId_Static =
+          IsNullOrEmpty(ProgLangTypeId_Static.value) == true
+            ? enumProgLangType.TypeScript_09
+            : ProgLangTypeId_Static.value; //静态变量;//静态变量
         const strFuncPurposeId_Static = FuncPurposeId_Static.value; //静态变量;//静态变量
+
+        ProgLangTypeId_Static.value = strProgLangTypeId_Static;
 
         arrSQLDSType.value = await SQLDSType_GetArrSQLDSType(); //查询区域
         sqlDsTypeId_q.value = '0';
@@ -715,7 +758,7 @@
         funcCodeTypeId_q.value = '0';
 
         arrProgLangType.value = await ProgLangType_GetArrProgLangTypeByIsVisible(); //查询区域
-        progLangTypeId_q.value = '0';
+        progLangTypeId_q.value = strProgLangTypeId_Static;
 
         arrFunctionType.value = await FunctionType_GetArrFunctionType(); //查询区域
         funcTypeId_q.value = '0';
@@ -735,12 +778,21 @@
 
       const strTitle = ref('函数4GeneCode维护');
       onMounted(async () => {
-        await BindDdl4QryRegion();
-        await BindDdl4FeatureRegion();
-        Function4GeneCodeCRUDEx.vuebtn_Click = btn_Click;
-        Function4GeneCodeCRUDEx.GetPropValue = GetPropValue;
-        objPage.value = new Function4GeneCodeCRUDEx();
-        await objPage.value.PageLoadCache();
+        const strThisFuncName = 'onMounted';
+        try {
+          objPage.value = new Function4GeneCodeCRUDEx();
+          Function4GeneCodeCRUDEx.vuebtn_Click = btn_Click;
+          Function4GeneCodeCRUDEx.GetPropValue = GetPropValue;
+
+          await BindDdl4QryRegion();
+          await BindDdl4FeatureRegion();
+          await objPage.value.PageLoadCache();
+        } catch (e) {
+          initErrMsg.value = Format('{0}.(in {1}.{2})', e, thisConstructorName, strThisFuncName);
+          const strMsg = Format('页面初始化不成功,请联系管理员!\n{0}', initErrMsg.value);
+          console.error(strMsg);
+          alert(strMsg);
+        }
       });
       function GetPropValue(strPropName: string): string {
         switch (strPropName) {

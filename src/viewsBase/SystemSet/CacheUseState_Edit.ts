@@ -185,7 +185,7 @@ export abstract class CacheUseState_Edit {
       this.opType = 'Add';
       const bolIsSuccess = await this.ShowDialog_CacheUseState(this.opType);
       if (bolIsSuccess == false) return;
-      if (['02', '03', '06'].indexOf(clsCacheUseStateEN.PrimaryTypeId) > -1) {
+      if (['02', '03', '06'].indexOf(clsCacheUseStateEN._PrimaryTypeId) > -1) {
         await this.AddNewRecordWithMaxId();
       } else {
         await this.AddNewRecord();
@@ -285,7 +285,7 @@ export abstract class CacheUseState_Edit {
         case '确认添加':
           //这是一个单表的插入的代码,由于逻辑层太简单,
           //就把逻辑层合并到控制层,
-          if (['02', '03', '06'].indexOf(clsCacheUseStateEN.PrimaryTypeId) > -1) {
+          if (['02', '03', '06'].indexOf(clsCacheUseStateEN._PrimaryTypeId) > -1) {
             const returnKeyId = await this.AddNewRecordWithReturnKeySave();
             if (returnKeyId != 0) {
               refCacheUseState_Edit.value.hideDialog();
