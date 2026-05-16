@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <Alert message="自定义模态框" type="info" show-icon style="margin-bottom: 12px">
       <template #description>

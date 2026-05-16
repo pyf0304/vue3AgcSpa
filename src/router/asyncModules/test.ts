@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   'views/demos/form/rule-form.vue': () => import('@/views/demos/form/rule-form/index.vue'), // 验证表单
   'views/demos/icons/Iconfont.vue': () => import('@/views/demos/icons/Iconfont.vue'), // 自定义图标
   'views/demos/tables/lol-table/index.vue': () =>

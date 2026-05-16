@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="tree">
     <ul>
       <li v-for="node in treeData" :key="node.id">

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * example
  * path -> ./modules/user
  * <a-button v-if="$auth('user.add')">Button</a-button>

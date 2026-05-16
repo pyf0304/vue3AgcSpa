@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   demo: 'Demo',
   button: 'Button Extension',
   modal: 'Draggable Modal',

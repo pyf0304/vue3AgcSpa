@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Tooltip :title="$t('common.searchText')" placement="bottom" :mouse-enter-delay="0.5">
     <slot><SearchOutlined @click="visible = true" /></slot>
     <DraggableModal

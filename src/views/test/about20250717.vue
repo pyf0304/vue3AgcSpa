@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <p>Received Parameter: {{ $route.query.param1 }}</p>
     <p>UserId: {{ UserId }}</p>

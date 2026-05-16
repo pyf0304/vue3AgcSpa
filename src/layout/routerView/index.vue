@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <!-- <router-view v-slot="{ Component }">
       <template v-if="Component">

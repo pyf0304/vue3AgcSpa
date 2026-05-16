@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <Alert message="游戏介绍" type="info" show-icon>
       <template #description> 英雄联盟 -- 根据数组格式的数据进行导出 </template>

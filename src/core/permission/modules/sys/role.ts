@@ -1,4 +1,4 @@
-export const sysRole = {
+﻿export const sysRole = {
   list: 'sys/role/list',
   page: 'sys/role/page',
   add: 'sys/role/add',

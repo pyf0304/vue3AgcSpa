@@ -1,4 +1,4 @@
-import { createVNode, ref, render, getCurrentInstance, nextTick } from 'vue';
+﻿import { createVNode, ref, render, getCurrentInstance, nextTick } from 'vue';
 import { MyModal, type MyModalInstance } from './modal';
 import type { App, ComponentInternalInstance, SetupContext } from 'vue';
 import type { HookModalProps } from './types';

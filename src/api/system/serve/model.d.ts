@@ -1,4 +1,4 @@
-declare namespace API {
+﻿declare namespace API {
   export interface Runtime {
     os: string;
     arch: string;

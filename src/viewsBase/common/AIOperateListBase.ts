@@ -1,4 +1,4 @@
-import { clsPager } from '@/ts/PubFun/clsPager';
+﻿import { clsPager } from '@/ts/PubFun/clsPager';
 import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
 import { GetSortBy, ListPara, clsOperateList } from '@/ts/PubFun/clsOperateList';
 

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <Alert message="自定义表单组件示例" type="info" show-icon style="margin-bottom: 12px" />
     <a-card>

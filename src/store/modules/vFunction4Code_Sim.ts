@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia';
+﻿import { defineStore } from 'pinia';
 import { clsvFunction4Code_Sim } from '@/ts/L0Entity/PrjFunction/clsvFunction4Code_Sim';
 import { vFunction4Code_Sim_GetObjByFuncId4CodeAsync } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4Code_SimWApi';
 import { vFunction4Code_SimEx_CopyTo } from '@/ts/L3ForWApiEx/PrjFunction/clsvFunction4Code_SimExWApi';

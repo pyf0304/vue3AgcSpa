@@ -1,4 +1,4 @@
-import type { BaseResponse } from '@/utils/request';
+﻿import type { BaseResponse } from '@/utils/request';
 import { request } from '@/utils/request';
 
 /**

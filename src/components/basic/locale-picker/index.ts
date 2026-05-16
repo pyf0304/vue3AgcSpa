@@ -1,1 +1,1 @@
-export { default as LocalePicker } from './index.vue';
+﻿export { default as LocalePicker } from './index.vue';

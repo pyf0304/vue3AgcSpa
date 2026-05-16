@@ -44,6 +44,7 @@ export class clsViewIdGCVariableRelaENEx extends clsViewIdGCVariableRelaEN {
         return this.varName;
       case clsViewIdGCVariableRelaENEx.con_VarTypeName:
         return this.varTypeName;
+
       case clsViewIdGCVariableRelaENEx.con_RetrievalMethodName:
         return this.retrievalMethodName;
       case clsViewIdGCVariableRelaENEx.con_ViewName:

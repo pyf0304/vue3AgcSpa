@@ -1,4 +1,4 @@
-declare namespace API {
+﻿declare namespace API {
   /** 在线用户列表项 */
   type OnlineUserListItem = {
     id: number;

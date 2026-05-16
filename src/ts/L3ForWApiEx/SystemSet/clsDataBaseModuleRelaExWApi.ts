@@ -8,7 +8,7 @@
 import { GetSortExpressInfo, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsDataBaseModuleRelaENEx } from '@/ts/L0Entity/SystemSet/clsDataBaseModuleRelaENEx';
 import {
-  DataBaseModuleRela_GetObjLstAsync,
+  DataBaseModuleRela_GetObjLstByPagerAsync,
   DataBaseModuleRela_SortFunByKey,
 } from '@/ts/L3ForWApi/SystemSet/clsDataBaseModuleRelaWApi';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
@@ -88,8 +88,8 @@ export async function DataBaseModuleRelaEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsDataBaseModuleRelaENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrDataBaseModuleRelaExObjLst = await DataBaseModuleRela_GetObjLstAsync(
-    objPagerPara.whereCond,
+  const arrDataBaseModuleRelaExObjLst = await DataBaseModuleRela_GetObjLstByPagerAsync(
+    objPagerPara,
   );
   const objSortInfo = GetSortExpressInfo(objPagerPara);
   if (

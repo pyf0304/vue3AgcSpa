@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Card :bordered="false">
     <Card.Grid style="width: 25%" :hoverable="false" :bordered="false">
       <Card class="posters" :bordered="false">

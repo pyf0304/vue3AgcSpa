@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Dropdown placement="bottomRight">
     <SvgIcon name="locale" />
     <span v-if="showText" class="ml-1">{{ getLocaleText }}</span>

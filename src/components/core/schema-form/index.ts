@@ -1,4 +1,4 @@
-import SchemaForm from './src/schema-form.vue';
+﻿import SchemaForm from './src/schema-form.vue';
 import SchemaFormItem from './src/schema-form-item.vue';
 import type { DefineComponent } from 'vue';
 import type { SchemaFormProps } from './src/schema-form';

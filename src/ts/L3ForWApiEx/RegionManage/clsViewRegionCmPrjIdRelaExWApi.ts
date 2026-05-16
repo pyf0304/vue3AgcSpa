@@ -8,7 +8,7 @@
 import { clsViewRegionCmPrjIdRelaENEx } from '@/ts/L0Entity/RegionManage/clsViewRegionCmPrjIdRelaENEx';
 import { GetSortExpressInfo, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import {
-  ViewRegionCmPrjIdRela_GetObjLstAsync,
+  ViewRegionCmPrjIdRela_GetObjLstByPagerAsync,
   ViewRegionCmPrjIdRela_SortFunByKey,
 } from '@/ts/L3ForWApi/RegionManage/clsViewRegionCmPrjIdRelaWApi';
 import { clsViewRegionCmPrjIdRelaEN } from '@/ts/L0Entity/RegionManage/clsViewRegionCmPrjIdRelaEN';
@@ -87,8 +87,8 @@ export async function ViewRegionCmPrjIdRelaEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsViewRegionCmPrjIdRelaENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrViewRegionCmPrjIdRelaObjLst = await ViewRegionCmPrjIdRela_GetObjLstAsync(
-    objPagerPara.whereCond,
+  const arrViewRegionCmPrjIdRelaObjLst = await ViewRegionCmPrjIdRela_GetObjLstByPagerAsync(
+    objPagerPara,
   );
   const arrViewRegionCmPrjIdRelaExObjLst = arrViewRegionCmPrjIdRelaObjLst.map(
     ViewRegionCmPrjIdRelaEx_CopyToEx,

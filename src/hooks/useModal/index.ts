@@ -1,4 +1,4 @@
-import { installUseModal } from './useModal';
+﻿import { installUseModal } from './useModal';
 import type { App } from 'vue';
 
 export { useModal, type ModalInstance } from './useModal';

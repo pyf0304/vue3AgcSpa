@@ -1,4 +1,4 @@
-export interface AddRecordResult {
+﻿export interface AddRecordResult {
   keyword: string;
   success: boolean;
 }

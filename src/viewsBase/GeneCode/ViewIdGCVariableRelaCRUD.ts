@@ -726,6 +726,36 @@ export abstract class ViewIdGCVariableRelaCRUD implements clsOperateList {
         },
       },
       {
+        fldName: clsViewIdGCVariableRelaENEx.con_DsTabId,
+        sortBy: clsViewIdGCVariableRelaENEx.con_DsTabId,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '数据源表ID',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 6,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsViewIdGCVariableRelaENEx.con_InitValue,
+        sortBy: clsViewIdGCVariableRelaENEx.con_InitValue,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: 'InitValue',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 7,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
         fldName: clsViewIdGCVariableRelaENEx.con_RetrievalMethodName,
         sortBy: clsViewIdGCVariableRelaENEx.con_RetrievalMethodName,
         sortFun: SortFun,
@@ -734,7 +764,7 @@ export abstract class ViewIdGCVariableRelaCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 6,
+        orderNum: 8,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -749,7 +779,7 @@ export abstract class ViewIdGCVariableRelaCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 7,
+        orderNum: 9,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -764,7 +794,7 @@ export abstract class ViewIdGCVariableRelaCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 8,
+        orderNum: 10,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -779,7 +809,7 @@ export abstract class ViewIdGCVariableRelaCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 9,
+        orderNum: 11,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -794,7 +824,7 @@ export abstract class ViewIdGCVariableRelaCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 10,
+        orderNum: 12,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -809,7 +839,7 @@ export abstract class ViewIdGCVariableRelaCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 11,
+        orderNum: 13,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1070,7 +1100,7 @@ export abstract class ViewIdGCVariableRelaCRUD implements clsOperateList {
     arrViewIdGCVariableRelaExObjLst: Array<clsViewIdGCVariableRelaENEx>,
     arrDataColumn: Array<clsDataColumn>,
   ) {
-    const arrFldName = clsViewIdGCVariableRelaEN.AttributeName;
+    const arrFldName = clsViewIdGCVariableRelaEN._AttributeName;
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;

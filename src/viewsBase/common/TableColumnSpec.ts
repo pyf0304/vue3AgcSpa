@@ -1,1 +1,1 @@
-export { TableColumnFieldSource, TableColumnSpec } from './TableSpecColumn';
+﻿export { TableColumnFieldSource, TableColumnSpec } from './TableSpecColumn';

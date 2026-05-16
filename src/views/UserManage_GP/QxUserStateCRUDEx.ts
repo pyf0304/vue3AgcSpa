@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 类名:QxUserStateCRUDEx(界面:QxUserStateCRUD)
  * 表名:QxUserState(00140016)
  * 版本:2023.06.21.1(服务器:WIN-SRV103-116)

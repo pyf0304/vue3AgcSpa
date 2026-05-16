@@ -1,4 +1,4 @@
-// reference https://github.com/scopsy/await-to-js
+﻿// reference https://github.com/scopsy/await-to-js
 
 /**
  * @param { Promise } promise

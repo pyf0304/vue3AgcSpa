@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 类名:ViewIdGCVariableRelaCRUDEx(界面:ViewIdGCVariableRelaCRUD)
  * 表名:ViewIdGCVariableRela(00050631)
  * 版本:2024.05.19.1(服务器:DESKTOP-1KM2OK3)

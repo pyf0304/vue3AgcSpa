@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 类名:QxUserStateVueShare(界面:QxUserStateCRUD,00140035)
  * 表名:QxUserState(00140016)
  * 版本:2025.05.26.1(服务器:WIN-SRV103-116)

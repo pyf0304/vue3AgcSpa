@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="xiaomi-charge">
     <div v-for="i in 3" :key="i" class="outer">
       <div class="circle" :style="{ transform: `scale(${1.01 - 0.04 * (i - 1)})` }"></div>

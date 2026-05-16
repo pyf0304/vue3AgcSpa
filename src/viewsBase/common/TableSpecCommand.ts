@@ -1,4 +1,4 @@
-export type TableCommandRegion = 'query' | 'feature';
+﻿export type TableCommandRegion = 'query' | 'feature';
 
 /** 所有表界面通用的命令配置结构。 */
 export interface TableCommandSpec<TCommandId extends string = string> {

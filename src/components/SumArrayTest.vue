@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <h1>这是 Main 组件</h1>
     <SumArray />

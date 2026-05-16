@@ -1,4 +1,4 @@
-import { Tag, Image } from 'ant-design-vue';
+﻿import { Tag, Image } from 'ant-design-vue';
 import type { TableColumn } from '@/components/core/dynamic-table';
 
 export const columns: TableColumn[] = [

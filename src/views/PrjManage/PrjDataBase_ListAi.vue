@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <span v-if="emptyRecNumInfo !== '' && items.length === 0">{ emptyRecNumInfo }</span>
     <template v-else>

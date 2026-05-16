@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Component list, register here to setting it in the form
  */
 import {

@@ -1,4 +1,4 @@
-import type { CascaderProps } from 'ant-design-vue';
+﻿import type { CascaderProps } from 'ant-design-vue';
 
 export type CascaderOptionType = NonNullable<CascaderProps['options']>[number];
 export type Key = string | number;

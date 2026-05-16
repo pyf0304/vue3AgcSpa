@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <!-- <h6><span class="text-primary">显示表对象列表、行编辑的组件:(t_comp_ArrayPara3.vue)</span> </h6> -->
   <div>
     <span v-if="emptyRecNumInfo !== '' && items.length === 0">{{ emptyRecNumInfo }}</span>

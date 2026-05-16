@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Card class="h-full">
     <template #title>
       <Space>

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="logo">
     <img src="~@/assets/images/logo.png" alt="" />
     <h2 v-show="!collapsed" class="title">One Piece</h2>

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <Tabs v-model:activeKey="activeKey">
       <Tabs.TabPane v-for="item in tabs" :key="item.name" :tab="item.title"></Tabs.TabPane>

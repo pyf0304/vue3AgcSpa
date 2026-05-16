@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="sys-server-stat-container">
     <!-- runtime -->
     <Card class="stat-card" title="运行环境">

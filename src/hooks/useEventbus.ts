@@ -1,4 +1,4 @@
-import { onUnmounted } from 'vue';
+﻿import { onUnmounted } from 'vue';
 import mitt from 'mitt';
 
 const emitter: mitt.Emitter = mitt();

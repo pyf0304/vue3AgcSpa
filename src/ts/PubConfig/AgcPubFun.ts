@@ -1,4 +1,4 @@
-import { MakeRandom } from '@/ts/PubFun/clsString';
+﻿import { MakeRandom } from '@/ts/PubFun/clsString';
 
 let intAdditionalSeed = 1;
 /// <summary>

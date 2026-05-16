@@ -1,4 +1,4 @@
-export type LocaleType = keyof typeof localeMap;
+﻿export type LocaleType = keyof typeof localeMap;
 
 export const localeMap = {
   zh_CN: 'zh_CN',

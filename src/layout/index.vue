@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Layout class="layout">
     <Layout.Sider
       v-if="themeStore.layout === 'sidemenu'"

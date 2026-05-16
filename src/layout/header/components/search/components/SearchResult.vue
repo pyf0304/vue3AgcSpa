@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <div class="pb-12px">
       <template v-for="item in options" :key="item.name">

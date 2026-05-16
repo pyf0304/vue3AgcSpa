@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Dropdown placement="bottomRight">
     <!-- <SvgIcon name="locale" /> -->
     <span class="ml-1">数据库: {{ getLocaleText }}{{ Addi }}</span>

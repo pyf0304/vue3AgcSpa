@@ -1,4 +1,4 @@
-export const sysMenu = {
+﻿export const sysMenu = {
   list: 'sys/menu/list',
   add: 'sys/menu/add',
   update: 'sys/menu/update',

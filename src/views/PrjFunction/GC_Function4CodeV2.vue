@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <!-- 编辑层 -->
 
   <div id="divEditLayout" ref="refDivEdit" class="tab_layout">

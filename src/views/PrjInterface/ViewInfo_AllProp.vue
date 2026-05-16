@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div id="divLayout" ref="refDivLayout" class="div_layout">
     <ul class="tabs">
       <li

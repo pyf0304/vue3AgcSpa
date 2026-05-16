@@ -1,4 +1,4 @@
-interface Permissions {
+﻿interface Permissions {
   [key: string]: {
     [key: string]: string;
   };

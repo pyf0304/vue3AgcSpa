@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   settings: 'settings',
   about: 'about',
   selectPrj: 'Select Project',

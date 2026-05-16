@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <a-button type="primary" @click="showDialog">打开对话框</a-button>
     <a-modal

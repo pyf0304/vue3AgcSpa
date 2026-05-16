@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia';
+﻿import { defineStore } from 'pinia';
 import { IS_LOCKSCREEN } from '@/enums/cacheEnum';
 import { store } from '@/store';
 import { Storage } from '@/utils/Storage';

@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   okText: 'OK',
   closeText: 'Close',
   cancelText: 'Cancel',

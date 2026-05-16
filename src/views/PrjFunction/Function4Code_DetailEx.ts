@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 类名:Function4Code_DetailEx(界面:Function4CodeCRUD)
  * 表名:Function4Code(00050386)
  * 版本:2023.07.18.1(服务器:PYF-THINKPAD)

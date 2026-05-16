@@ -1,4 +1,4 @@
-export class Condition {
+﻿export class Condition {
   fldName: string; // Field name
   fldValue: any; // Field value
   comparison: string; // Comparison operator (e.g., '=', 'like')

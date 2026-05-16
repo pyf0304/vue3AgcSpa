@@ -1,4 +1,4 @@
-declare namespace API {
+﻿declare namespace API {
   /** 获取系统部门返回结果 */
   type SysDeptListResult = {
     createTime: string;

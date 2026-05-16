@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Progress v-bind="myProps" />
 </template>
 

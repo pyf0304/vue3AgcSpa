@@ -1,7 +1,8 @@
-/** 所有表界面通用的查询控件类型。 */
+﻿/** 所有表界面通用的查询控件类型。 */
 export type QueryControlType =
   | 'text' // 文本输入框
   | 'select' // 下拉选择框
+  | 'select4Bool' // 下拉选择框4布尔值
   | 'number' // 数字输入框
   | 'date' // 日期选择器
   | 'checkbox' // 多选框

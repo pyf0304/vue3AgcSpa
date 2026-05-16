@@ -1,4 +1,4 @@
-const requestBefore = Symbol('requestBefore');
+﻿const requestBefore = Symbol('requestBefore');
 const requestAfter = Symbol('requestAfter');
 
 export class WsAxios {

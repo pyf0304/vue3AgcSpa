@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <p>UserId: {{ UserId }}</p>
     <p>UserName: {{ UserName }}</p>

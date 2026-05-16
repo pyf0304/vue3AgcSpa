@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <transition name="slide-up">
     <LockScreen v-if="isLock && isMouted && $route.name != LOGIN_NAME" />
   </transition>

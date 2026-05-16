@@ -1,4 +1,4 @@
-import buttonProps from 'ant-design-vue/es/button/buttonTypes';
+﻿import buttonProps from 'ant-design-vue/es/button/buttonTypes';
 import type { ButtonType as AButtonType } from 'ant-design-vue/es/button/buttonTypes';
 import type { ExtractPropTypes } from 'vue';
 

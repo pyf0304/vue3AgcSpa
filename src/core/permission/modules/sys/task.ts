@@ -1,4 +1,4 @@
-export const sysTask = {
+﻿export const sysTask = {
   page: 'sys/task/page',
   add: 'sys/task/add',
   update: 'sys/task/update',

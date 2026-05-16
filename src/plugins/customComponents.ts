@@ -1,4 +1,4 @@
-import type { App } from 'vue';
+﻿import type { App } from 'vue';
 
 import { SvgIcon } from '@/components/basic/svg-icon';
 import { IconFont } from '@/components/basic/iconfont';

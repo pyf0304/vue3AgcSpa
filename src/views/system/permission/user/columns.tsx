@@ -1,4 +1,4 @@
-import { Avatar, Space, Tag } from 'ant-design-vue';
+﻿import { Avatar, Space, Tag } from 'ant-design-vue';
 import type { TableColumn } from '@/components/core/dynamic-table';
 
 export type TableListItem = API.UserListPageResultItem;

@@ -1,4 +1,4 @@
-export const LOGIN_NAME = 'Login';
+﻿export const LOGIN_NAME = 'Login';
 
 export const REDIRECT_NAME = 'Redirect';
 

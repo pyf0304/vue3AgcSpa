@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <DynamicTable
     header-title="任务日志"
     :data-request="getTaskLogList"

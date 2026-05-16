@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <h1>数组求和</h1>
     <p>数组: {{ array }}</p>

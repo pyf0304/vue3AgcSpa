@@ -1,4 +1,4 @@
-export const netdiskMange = {
+﻿export const netdiskMange = {
   list: 'netdisk/manage/list',
   mkdir: 'netdisk/manage/mkdir',
   token: 'netdisk/manage/token',

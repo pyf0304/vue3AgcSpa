@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsViewIdGCVariableRelaEN
  * 表名:ViewIdGCVariableRela(00050631)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/13 23:53:47
- * 生成者:pyf
+ * 版本:2026.04.19(服务器:WIN-SRV103-116)
+ * 日期:2026/05/16 20:41:54
+ * 生成者:pyf2
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:生成代码(GeneCode)
  * 框架-层名:实体层(TS)(EntityLayer,0121)
@@ -20,21 +20,23 @@ import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
 export class clsViewIdGCVariableRelaEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
-  public static CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
-  public static CacheModeId = ''; //
-  public static PrimaryTypeId = '07'; //复合主键
-  public static IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
-  public static WhereFormat = ''; //条件格式串
-  public static _CurrTabName = 'ViewIdGCVariableRela'; //当前表名,与该类相关的表名
-  public static _KeyFldName = 'VarId,ViewId'; //当前表中的关键字名称,与该类相关的表中关键字名
-  public static mintAttributeCount = 10;
-  public static AttributeName = [
-    'isUseInRegion',
+  public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
+  public static readonly _CacheModeId: string = ''; //
+  public static readonly _PrimaryTypeId: string = '07'; //复合主键
+  public static readonly _IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
+  public static readonly _WhereFormat = ''; //条件格式串
+  public static readonly _CurrTabName: string = 'ViewIdGCVariableRela'; //当前表名,与该类相关的表名
+  public static readonly _KeyFldName: string = 'VarId,ViewId'; //当前表中的关键字名称,与该类相关的表中关键字名
+  public static readonly _AttributeCount = 12;
+  public static readonly _AttributeName = [
     'varId',
     'viewId',
     'retrievalMethodId',
     'regionTypeNames',
+    'initValue',
+    'dsTabId',
     'errMsg',
+    'isUseInRegion',
     'prjId',
     'updUser',
     'updDate',
@@ -54,28 +56,18 @@ export class clsViewIdGCVariableRelaEN extends clsGeneralTab {
    * 设置对象中私有属性.
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsPrivateVar)
    */
-  private mbolIsUseInRegion = false; //是否在区域中使用
   private mstrVarId = ''; //变量Id
   private mstrViewId = ''; //界面Id
   private mstrRetrievalMethodId = ''; //获取方式Id
   private mstrRegionTypeNames = ''; //区域类型名s
+  private mstrInitValue = ''; //初始值
+  private mstrDsTabId = ''; //数据源表ID
   private mstrErrMsg = ''; //错误信息
+  private mbolIsUseInRegion = false; //是否在区域中使用
   private mstrPrjId = ''; //工程Id
   private mstrUpdUser = ''; //修改者
   private mstrUpdDate = ''; //修改日期
   private mstrMemo = ''; //说明
-
-  /**
-   * 是否在区域中使用(说明:;字段类型:bit;字段长度:1;是否可空:True)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetIsUseInRegion(value: boolean) {
-    if (value != undefined) {
-      this.isUseInRegion = value;
-      this.hmProperty['isUseInRegion'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
 
   /**
    * 变量Id(说明:;字段类型:char;字段长度:8;是否可空:True)
@@ -126,6 +118,30 @@ export class clsViewIdGCVariableRelaEN extends clsGeneralTab {
   }
 
   /**
+   * 初始值(说明:;字段类型:varchar;字段长度:1000;是否可空:True)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+   */
+  public SetInitValue(value: string) {
+    if (value != undefined) {
+      this.initValue = value;
+      this.hmProperty['initValue'] = true;
+      this.sfUpdFldSetStr = this.updFldString;
+    }
+  }
+
+  /**
+   * 数据源表ID(说明:;字段类型:char;字段长度:8;是否可空:False)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+   */
+  public SetDsTabId(value: string) {
+    if (value != undefined) {
+      this.dsTabId = value;
+      this.hmProperty['dsTabId'] = true;
+      this.sfUpdFldSetStr = this.updFldString;
+    }
+  }
+
+  /**
    * 错误信息(说明:;字段类型:varchar;字段长度:2000;是否可空:True)
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
    */
@@ -133,6 +149,18 @@ export class clsViewIdGCVariableRelaEN extends clsGeneralTab {
     if (value != undefined) {
       this.errMsg = value;
       this.hmProperty['errMsg'] = true;
+      this.sfUpdFldSetStr = this.updFldString;
+    }
+  }
+
+  /**
+   * 是否在区域中使用(说明:;字段类型:bit;字段长度:1;是否可空:True)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+   */
+  public SetIsUseInRegion(value: boolean) {
+    if (value != undefined) {
+      this.isUseInRegion = value;
+      this.hmProperty['isUseInRegion'] = true;
       this.sfUpdFldSetStr = this.updFldString;
     }
   }
@@ -194,8 +222,6 @@ export class clsViewIdGCVariableRelaEN extends clsGeneralTab {
   public GetFldValue(strFldName: string): any {
     let strMsg = '';
     switch (strFldName) {
-      case clsViewIdGCVariableRelaEN.con_IsUseInRegion:
-        return this.isUseInRegion;
       case clsViewIdGCVariableRelaEN.con_VarId:
         return this.varId;
       case clsViewIdGCVariableRelaEN.con_ViewId:
@@ -204,8 +230,14 @@ export class clsViewIdGCVariableRelaEN extends clsGeneralTab {
         return this.retrievalMethodId;
       case clsViewIdGCVariableRelaEN.con_RegionTypeNames:
         return this.regionTypeNames;
+      case clsViewIdGCVariableRelaEN.con_InitValue:
+        return this.initValue;
+      case clsViewIdGCVariableRelaEN.con_DsTabId:
+        return this.dsTabId;
       case clsViewIdGCVariableRelaEN.con_ErrMsg:
         return this.errMsg;
+      case clsViewIdGCVariableRelaEN.con_IsUseInRegion:
+        return this.isUseInRegion;
       case clsViewIdGCVariableRelaEN.con_PrjId:
         return this.prjId;
       case clsViewIdGCVariableRelaEN.con_UpdUser:
@@ -236,10 +268,6 @@ export class clsViewIdGCVariableRelaEN extends clsGeneralTab {
     const strThisFuncName = 'SetFldValue';
     let strMsg = '';
     switch (strFldName) {
-      case clsViewIdGCVariableRelaEN.con_IsUseInRegion:
-        this.isUseInRegion = Boolean(strValue);
-        this.hmProperty['isUseInRegion'] = true;
-        break;
       case clsViewIdGCVariableRelaEN.con_VarId:
         this.varId = strValue;
         this.hmProperty['varId'] = true;
@@ -256,9 +284,21 @@ export class clsViewIdGCVariableRelaEN extends clsGeneralTab {
         this.regionTypeNames = strValue;
         this.hmProperty['regionTypeNames'] = true;
         break;
+      case clsViewIdGCVariableRelaEN.con_InitValue:
+        this.initValue = strValue;
+        this.hmProperty['initValue'] = true;
+        break;
+      case clsViewIdGCVariableRelaEN.con_DsTabId:
+        this.dsTabId = strValue;
+        this.hmProperty['dsTabId'] = true;
+        break;
       case clsViewIdGCVariableRelaEN.con_ErrMsg:
         this.errMsg = strValue;
         this.hmProperty['errMsg'] = true;
+        break;
+      case clsViewIdGCVariableRelaEN.con_IsUseInRegion:
+        this.isUseInRegion = Boolean(strValue);
+        this.hmProperty['isUseInRegion'] = true;
         break;
       case clsViewIdGCVariableRelaEN.con_PrjId:
         this.prjId = strValue;
@@ -293,96 +333,90 @@ export class clsViewIdGCVariableRelaEN extends clsGeneralTab {
    * 设置对象中公共属性.
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsPublicVar)
    */
-  public isUseInRegion = false; //是否在区域中使用
   public varId = ''; //变量Id
   public viewId = ''; //界面Id
   public retrievalMethodId = ''; //获取方式Id
   public regionTypeNames = ''; //区域类型名s
+  public initValue = ''; //初始值
+  public dsTabId = ''; //数据源表ID
   public errMsg = ''; //错误信息
+  public isUseInRegion = false; //是否在区域中使用
   public prjId = ''; //工程Id
   public updUser = ''; //修改者
   public updDate = ''; //修改日期
   public memo = ''; //说明
 
   /**
-   * 常量:"IsUseInRegion"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static get con_IsUseInRegion(): string {
-    return 'isUseInRegion';
-  } //是否在区域中使用
-
-  /**
    * 常量:"VarId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_VarId(): string {
-    return 'varId';
-  } //变量Id
+  public static readonly con_VarId = 'varId'; //变量Id
 
   /**
    * 常量:"ViewId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ViewId(): string {
-    return 'viewId';
-  } //界面Id
+  public static readonly con_ViewId = 'viewId'; //界面Id
 
   /**
    * 常量:"RetrievalMethodId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_RetrievalMethodId(): string {
-    return 'retrievalMethodId';
-  } //获取方式Id
+  public static readonly con_RetrievalMethodId = 'retrievalMethodId'; //获取方式Id
 
   /**
    * 常量:"RegionTypeNames"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_RegionTypeNames(): string {
-    return 'regionTypeNames';
-  } //区域类型名s
+  public static readonly con_RegionTypeNames = 'regionTypeNames'; //区域类型名s
+
+  /**
+   * 常量:"InitValue"
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+   */
+  public static readonly con_InitValue = 'initValue'; //初始值
+
+  /**
+   * 常量:"DsTabId"
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+   */
+  public static readonly con_DsTabId = 'dsTabId'; //数据源表ID
 
   /**
    * 常量:"ErrMsg"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ErrMsg(): string {
-    return 'errMsg';
-  } //错误信息
+  public static readonly con_ErrMsg = 'errMsg'; //错误信息
+
+  /**
+   * 常量:"IsUseInRegion"
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+   */
+  public static readonly con_IsUseInRegion = 'isUseInRegion'; //是否在区域中使用
 
   /**
    * 常量:"PrjId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_PrjId(): string {
-    return 'prjId';
-  } //工程Id
+  public static readonly con_PrjId = 'prjId'; //工程Id
 
   /**
    * 常量:"UpdUser"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdUser(): string {
-    return 'updUser';
-  } //修改者
+  public static readonly con_UpdUser = 'updUser'; //修改者
 
   /**
    * 常量:"UpdDate"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdDate(): string {
-    return 'updDate';
-  } //修改日期
+  public static readonly con_UpdDate = 'updDate'; //修改日期
 
   /**
    * 常量:"Memo"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Memo(): string {
-    return 'memo';
-  } //说明
+  public static readonly con_Memo = 'memo'; //说明
 
   /**
    * 设置条件字段值.
@@ -401,6 +435,7 @@ export class clsViewIdGCVariableRelaEN extends clsGeneralTab {
     }
     this.sfFldComparisonOp = JSON.stringify(this.dicFldComparisonOp);
   }
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名

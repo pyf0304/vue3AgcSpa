@@ -4,6 +4,7 @@
       <div id="divLeft" class="col-2">
         <div id="divLeftMenu" ref="refDivLeftMenu">
           <div id="divFeatureButtonLst" ref="refDivFeatureButtonLst"></div>
+
           <select id="ddlRegionTypeId"></select>
 
           <button
@@ -24,19 +25,23 @@
 
         <div style="position: relative; width: 648px; height: 37px; left: 0px; top: 0px">
           <label id="lblViewTitle" name="lblViewTitle" class="h5"> 功能区域编辑 </label>
+
           <label id="lblMsg_List" name="lblMsg_List" class="text-warning" style="width: 250px">
           </label>
         </div>
+
         <div>
           <div>
             <div style="width: 100%" class="row">
               <ul class="nav ml-3">
                 <li class="nav-item">
                   <!-- <div id="divDetail4ViewRegion"> </div> -->
+
                   <ViewRegion_Detail_SimCom
                     ref="refViewRegion_Detail_Sim"
                   ></ViewRegion_Detail_SimCom>
                 </li>
+
                 <li class="nav-item ml-3">
                   <button
                     id="btnUpdateRecord_ViewRegion"
@@ -44,6 +49,7 @@
                     @click="btn_Click('Update_ViewRegion', '')"
                     >修改</button
                   >
+
                   <button
                     id="btnVisualEffects"
                     class="btn btn-outline-success btn-sm text-nowrap"
@@ -53,6 +59,7 @@
                 </li>
               </ul>
             </div>
+
             <!-- 功能区  -->
 
             <div id="divQuery" ref="refDivQuery" class="table table-bordered table-hover mt-1">
@@ -67,6 +74,7 @@
                     功能操作:
                   </label>
                 </li>
+
                 <li class="nav-item ml-3">
                   <button
                     id="btnCopyRecord"
@@ -76,6 +84,7 @@
                     >复制</button
                   >
                 </li>
+
                 <li class="nav-item ml-3">
                   <button
                     id="btnDelRecord"
@@ -85,6 +94,7 @@
                     >删除</button
                   >
                 </li>
+
                 <li class="nav-item ml-3">
                   <button
                     id="btnUpdateRecord"
@@ -94,6 +104,7 @@
                     >修改</button
                   >
                 </li>
+
                 <li class="nav-item ml-3">
                   <div class="btn-group" role="group" aria-label="Basic example">
                     <button
@@ -103,6 +114,7 @@
                       @click="btn_Click('SetInUse', '')"
                       >启用</button
                     >
+
                     <button
                       id="btnSetNotInUse"
                       name="btnSetNotInUse"
@@ -112,6 +124,7 @@
                     >
                   </div>
                 </li>
+
                 <li class="nav-item ml-3">
                   <div class="btn-group" role="group" aria-label="Basic example">
                     <select
@@ -120,6 +133,7 @@
                       class="form-control form-control-sm"
                       style="width: 60px"
                     ></select>
+
                     <button
                       id="btnSetTabFeatureId"
                       name="btnSetTabFeatureId"
@@ -129,6 +143,7 @@
                     >
                   </div>
                 </li>
+
                 <li class="nav-item ml-3">
                   <div class="btn-group" role="group" aria-label="Basic example">
                     <input
@@ -137,6 +152,7 @@
                       class="form-control form-control-sm"
                       style="width: 60px"
                     />
+
                     <button
                       id="btnSetGroupName"
                       name="btnSetGroupName"
@@ -146,6 +162,7 @@
                     >
                   </div>
                 </li>
+
                 <li class="nav-item ml-3">
                   <div class="btn-group" role="group" aria-label="Basic example">
                     <button
@@ -155,22 +172,37 @@
                       @click="btn_Click('CopyFldFromTemplate', '')"
                       >复制模板</button
                     >
+
                     <!-- <button
+
                       id="btnGetTabFeature"
+
                       name="btnGetTabFeature"
+
                       class="btn btn-outline-success btn-sm text-nowrap"
+
                       @click="btn_Click('GetTabFeature', '')"
+
                       >获取表功能</button
+
                     >
+
                     <button
+
                       id="btnGeneTabFeature"
+
                       name="btnGeneTabFeature"
+
                       class="btn btn-outline-success btn-sm text-nowrap"
+
                       @click="btn_Click('GeneTabFeature', '')"
+
                       >生成表功能</button
+
                     > -->
                   </div>
                 </li>
+
                 <li class="nav-item ml-3">
                   <div class="btn-group" role="group" aria-label="Basic example">
                     <button
@@ -180,6 +212,7 @@
                       @click="btn_Click('GoTop', '')"
                       >移顶</button
                     >
+
                     <button
                       id="btnUpMove"
                       name="btnUpMove"
@@ -187,6 +220,7 @@
                       @click="btn_Click('UpMove', '')"
                       >上移</button
                     >
+
                     <button
                       id="btnDownMove"
                       name="btnDownMove"
@@ -194,6 +228,7 @@
                       @click="btn_Click('DownMove', '')"
                       >下移</button
                     >
+
                     <button
                       id="btnGoBottum"
                       name="btnGoBottum"
@@ -201,6 +236,7 @@
                       @click="btn_Click('GoBottum', '')"
                       >移底</button
                     >
+
                     <button
                       id="btnReOrder"
                       name="btnReOrder"
@@ -208,6 +244,7 @@
                       @click="btn_Click('ReOrder', '')"
                       >重序</button
                     >
+
                     <button
                       id="btnGetObjData"
                       class="btn btn-outline-success btn-sm text-nowrap"
@@ -245,6 +282,7 @@
                           @click="btn_Click('chkRegionType', '')"
                         /><label for="cblRegionTypeLst_0">查询区</label>
                       </li>
+
                       <li class="nav-item ml-3">
                         <input
                           id="cblRegionTypeLst_1"
@@ -254,6 +292,7 @@
                           @click="btn_Click('chkRegionType', '')"
                         /><label for="cblRegionTypeLst_0">功能区</label>
                       </li>
+
                       <li class="nav-item ml-3">
                         <input
                           id="cblRegionTypeLst_2"
@@ -264,12 +303,15 @@
                       </li>
                     </ul>
                   </div>
+
                   <div>
                     <span class="h5 text-success">可视化区域</span>
+
                     <div id="divVisualEffects" ref="refDivVisualEffects" class="mt-1 myBorder">
                     </div>
                   </div>
                 </div>
+
                 <div v-if="showActiveTabId === 'tab4'">
                   <keep-alive>
                     <div id="divList" ref="refDivList" class="small overflow-hidden">
@@ -280,6 +322,7 @@
                         style="height: 800px; overflow: auto"
                       >
                       </div>
+
                       <div id="divPager" class="pager"> </div>
                     </div>
                   </keep-alive>
@@ -302,37 +345,140 @@
                   {{ tab.label }}
                 </div>
               </div>
+
               <div class="tab-content">
                 <div v-if="editActiveTabId === 'tab1'">
                   <!-- <keep-alive> -->
+
                   <FeatureRegionFlds_EditCom
                     ref="refFeatureRegionFlds_Edit"
                     :is-dialog="false"
                   ></FeatureRegionFlds_EditCom>
-                  <br />
-                  <div v-show="isShowViewFeatureFlds1 === true">
-                    <ViewFeatureFlds_EditInCom
-                      ref="refViewFeatureFlds1_Edit"
-                      @del-view-feature-fld="HideViewFeatureFldCom(1)"
-                    ></ViewFeatureFlds_EditInCom>
-                    <br />
+
+                  <div class="mt-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <div class="h6 mb-0">子字段</div>
+
+                      <button class="btn btn-outline-success btn-sm" @click="openCreateChildField">
+                        新增子字段
+                      </button>
+                    </div>
+
+                    <div class="table-responsive border rounded p-2 bg-white">
+                      <table class="table table-sm table-hover align-middle mb-0">
+                        <thead>
+                          <tr>
+                            <th style="width: 60px">序号</th>
+
+                            <th style="width: 140px">类型</th>
+
+                            <th style="width: 140px">相关字段</th>
+
+                            <th style="width: 100px">控件</th>
+
+                            <th>标签</th>
+
+                            <th style="width: 90px">在用</th>
+
+                            <th style="width: 140px">操作</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <tr
+                            v-for="item in arrViewFeatureFlds"
+                            :key="`${item.viewFeatureId}|${item.mId}`"
+                          >
+                            <td>{{ item.orderNum }}</td>
+
+                            <td>{{ getFieldTypeName(item.fieldTypeId) }}</td>
+
+                            <td class="child-field-break">{{
+                              getRelaFieldName(item.releFldId)
+                            }}</td>
+
+                            <td>{{ getCtlTypeName(item.ctlTypeId) }}</td>
+
+                            <td>{{ item.labelCaption }}</td>
+
+                            <td>{{ item.inUse === true ? '是' : '否' }}</td>
+
+                            <td>
+                              <div class="btn-group btn-group-sm">
+                                <button
+                                  class="btn btn-outline-success"
+                                  @click="openEditChildField(item)"
+                                  >修改</button
+                                >
+
+                                <button
+                                  class="btn btn-outline-danger"
+                                  @click="deleteChildField(item)"
+                                  >删除</button
+                                >
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr v-if="arrViewFeatureFlds.length === 0">
+                            <td colspan="7" class="text-center text-secondary"
+                              >当前没有子字段记录。</td
+                            >
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <a-modal
+                      v-model:visible="childDialogVisible"
+                      :title="childDialogTitle"
+                      width="900px"
+                      :destroy-on-close="false"
+                      @cancel="closeChildDialog"
+                    >
+                      <div v-if="childDialogMode === 'create'" class="mb-2">
+                        <label class="form-label mb-1">字段类型</label>
+
+                        <select
+                          v-model="selectedFieldTypeId"
+                          class="form-control form-control-sm"
+                          @change="prepareCreateChildEditor"
+                        >
+                          <option
+                            v-for="item in fieldTypeOptions"
+                            :key="item.fieldTypeId"
+                            :value="item.fieldTypeId"
+                          >
+                            {{ item.fieldTypeName }}({{ item.fieldTypeId }})
+                          </option>
+                        </select>
+                      </div>
+
+                      <ViewFeatureFlds_EditInCom
+                        ref="childEditorRef"
+                        :is-dialog="true"
+                      ></ViewFeatureFlds_EditInCom>
+
+                      <template #footer>
+                        <a-button @click="closeChildDialog">取消</a-button>
+
+                        <a-button type="primary" @click="saveChildField">保存</a-button>
+                      </template>
+                    </a-modal>
                   </div>
-                  <div v-show="isShowViewFeatureFlds2 === true">
-                    <ViewFeatureFlds_EditInCom
-                      ref="refViewFeatureFlds2_Edit"
-                      @del-view-feature-fld="HideViewFeatureFldCom(2)"
-                    ></ViewFeatureFlds_EditInCom>
-                    <br />
-                  </div>
+
                   <!-- </keep-alive> -->
                 </div>
 
                 <div v-if="editActiveTabId === 'tab2'">
                   <!-- <keep-alive> -->
+
                   <div>
                     <div id="divCodeTypeLst"></div>
+
                     <div>
                       <span id="lblResult" class="text-warning"></span><br />
+
                       <input
                         id="lblClassName"
                         type="text"
@@ -340,9 +486,13 @@
                         style="width: 100%; height: 24px"
                         Text="结果"
                       />
+
                       <br />
+
                       <span id="lblResult" class="text-warning"></span>
+
                       <span class="text-warning">文件名</span><br />
+
                       <input
                         id="lblFileName"
                         type="text"
@@ -350,9 +500,12 @@
                         style="width: 100%"
                         value="结果"
                       />
+
                       <span class="text-warning">生成的代码</span><br />
+
                       <textarea id="txtCodeText" style="width: 100%; height: 720px"></textarea></div
                   ></div>
+
                   <!-- </keep-alive> -->
                 </div>
               </div>
@@ -361,9 +514,13 @@
         </div>
       </div>
     </div>
+
     <!-- 编辑层  -->
+
     <div id="divEdit"> </div>
+
     <ViewRegion_Edit_SimCom ref="refViewRegion_Edit_Sim"></ViewRegion_Edit_SimCom>
+
     <FeatureRegionFlds_Edit_SetValueCom
       ref="refFeatureRegionFlds_Edit_SetValue"
     ></FeatureRegionFlds_Edit_SetValueCom>
@@ -371,14 +528,20 @@
     <input id="hidSortFeatureRegionFldsBy" type="hidden" value="" />
   </div>
 </template>
+
 <script lang="ts">
   import 'jquery/dist/jquery.min.js';
+
   import 'bootstrap/dist/js/bootstrap.min.js';
+
   import 'bootstrap/dist/css/bootstrap.css';
-  import { defineComponent, onMounted, ref } from 'vue';
+
+  import { defineComponent, nextTick, onMounted, ref } from 'vue';
 
   //import { Format, IsNullOrEmpty } from "@/ts/PubFun/clsString"
+
   import FeatureRegionFldsCRUDEx from '@/views/RegionManage/FeatureRegionFldsCRUDEx';
+
   //   import FeatureRegionFlds_DetailCom from '@/views/RegionManage/FeatureRegionFlds_Detail.vue';
 
   import ViewRegion_Detail_SimCom from '@/views/RegionManage/ViewRegion_Detail_Sim.vue';
@@ -386,16 +549,48 @@
   import ViewRegion_Edit_SimCom from '@/views/RegionManage/ViewRegion_Edit_Sim.vue';
 
   import FeatureRegionFlds_EditCom from '@/views/RegionManage/FeatureRegionFlds_Edit.vue';
+
   import FeatureRegionFlds_Edit_SetValueCom from '@/views/RegionManage/FeatureRegionFlds_Edit_SetValue.vue';
 
   import ViewFeatureFlds_EditInCom from '@/views/RegionManage/ViewFeatureFlds_EditIn.vue';
 
   import { enumActiveTabName } from '@/ts/PubFun/enumActiveTabName';
+
+  import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
+
+  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
+
+  import { clsFieldTypeEN } from '@/ts/L0Entity/Table_Field/clsFieldTypeEN';
+
+  import { clsvFieldTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvFieldTab_SimEN';
+
+  import { clsCtlTypeEN, enumCtlType } from '@/ts/L0Entity/PrjInterface/clsCtlTypeEN';
+
+  import {
+    FieldType_GetArrFieldType,
+    FieldType_GetObjLstAsync,
+    FieldType_ReFreshThisCache,
+  } from '@/ts/L3ForWApi/Table_Field/clsFieldTypeWApi';
+
+  import { vFieldTab_Sim_GetObjLstCache } from '@/ts/L3ForWApi/Table_Field/clsvFieldTab_SimWApi';
+
+  import { PrjTabFld_GetObjLstCache } from '@/ts/L3ForWApi/Table_Field/clsPrjTabFldWApi';
+
+  import { CtlType_GetObjLstCache } from '@/ts/L3ForWApi/PrjInterface/clsCtlTypeWApi';
+
+  import {
+    ViewFeatureFlds_AddNewRecordAsync,
+    ViewFeatureFlds_DelRecordAsync,
+    ViewFeatureFlds_GetObjBymIdAsync,
+    ViewFeatureFlds_GetObjLstAsync,
+    ViewFeatureFlds_ReFreshCache,
+    ViewFeatureFlds_UpdateRecordAsync,
+  } from '@/ts/L3ForWApi/RegionManage/clsViewFeatureFldsWApi';
+
   import { clsViewFeatureFldsENEx } from '@/ts/L0Entity/RegionManage/clsViewFeatureFldsENEx';
-  import ViewFeatureFlds_EditEx from '@/views/RegionManage/ViewFeatureFlds_EditEx';
-  import { BindData } from '@/views/RegionManage/BindData';
+
   import { clsViewFeatureFldsEN } from '@/ts/L0Entity/RegionManage/clsViewFeatureFldsEN';
-  import FeatureRegionFlds_EditEx from '@/views/RegionManage/FeatureRegionFlds_EditEx';
+
   import {
     divVarSet,
     refDivLayout,
@@ -403,97 +598,491 @@
     refDivFunction,
     refDivList,
     RegionId_Static,
+    TabId_Static,
+    TabId4Region_Static,
     refFeatureRegionFlds_Edit,
     refFeatureRegionFlds_Detail,
     FeatureTypeId_Static,
   } from '@/views/RegionManage/FeatureRegionFldsVueShare';
+
   import {
     refDivFeatureButtonLst,
     refDivLeftMenu,
     refDivVisualEffects,
     refDivLayoutTop,
   } from '@/views/RegionManage/FeatureRegionFldsSetValueVueShare';
+
   import { refFeatureRegionFlds_Edit_SetValue } from '@/views/RegionManage/FeatureRegionFlds_SimVueShare';
-  import {
-    refViewFeatureFlds2_Edit,
-    refViewFeatureFlds1_Edit,
-    isShowViewFeatureFlds2,
-    isShowViewFeatureFlds1,
-  } from '@/views/RegionManage/ViewFeatureFldsLstVueShare';
+
   import {
     refViewRegion_Detail_Sim,
     refViewRegion_Edit_Sim,
   } from '@/views/RegionManage/ViewRegion_UVueShare';
+
   import { enumPrjFeatureType } from '@/ts/L0Entity/PrjFunction/clsPrjFeatureTypeEN';
 
   export default defineComponent({
     name: 'FeatureRegionFldsCRUD',
+
     components: {
       // 组件注册
+
       FeatureRegionFlds_EditCom,
+
       FeatureRegionFlds_Edit_SetValueCom,
+
       ViewFeatureFlds_EditInCom,
+
       //   FeatureRegionFlds_DetailCom,
+
       ViewRegion_Edit_SimCom,
+
       ViewRegion_Detail_SimCom,
     },
+
     setup() {
       // CmPrjId_Local.value = clsPrivateSessionStorage.cmPrjId;
+
       FeatureTypeId_Static.value = enumPrjFeatureType.FrontInterface_01; //定义条件字段
 
       const arrViewFeatureFlds = ref<Array<clsViewFeatureFldsENEx>>([]);
 
-      const arrBindData = ref<BindData>({
-        ctlTypeLst: [], // Initialize ctlTypeLst with an empty array or the actual data
-        vPrjTab_SimLst: [],
-        vFieldTab_SimLst: [],
-        // Add other properties if needed
-      });
+      const fieldTypeOptions = ref<Array<clsFieldTypeEN>>([]);
+
+      const releFieldOptions = ref<Array<clsvFieldTab_SimEN>>([]);
+
+      const ctlTypeOptions = ref<Array<clsCtlTypeEN>>([]);
+
+      const childDialogVisible = ref(false);
+
+      const childDialogMode = ref<'create' | 'update'>('create');
+
+      const childDialogTitle = ref('新增子字段');
+
+      const selectedFieldTypeId = ref('');
+
+      const childEditorRef = ref();
+
+      const editingChildItem = ref<clsViewFeatureFldsENEx | null>(null);
+
+      const getCurrentViewFeatureId = (): string => {
+        const strByEditor = (FeatureRegionFldsCRUDEx.objPageEdit?.keyId || '').trim();
+        if (!IsNullOrEmpty(strByEditor)) return strByEditor;
+
+        const arrChecked = FeatureRegionFldsCRUDEx.GetSelectedKeyIdLst(divVarSet.refDivList);
+        if (arrChecked.length > 0 && !IsNullOrEmpty(arrChecked[0])) return arrChecked[0];
+
+        const strSelected = (FeatureRegionFldsCRUDEx.SelectedKeyIds || '').trim();
+        if (!IsNullOrEmpty(strSelected)) {
+          const firstId = strSelected
+            .split(',')
+            .map((x) => x.trim())
+            .find((x) => x !== '');
+          if (firstId != null) return firstId;
+        }
+        return '';
+      };
+
+      const getCurrentTabId4Region = (): string => {
+        const tabId4Region = (TabId4Region_Static.value || '').trim();
+        if (!IsNullOrEmpty(tabId4Region)) return tabId4Region;
+        return (TabId_Static.value || '').trim();
+      };
+
+      const getFieldTypeName = (fieldTypeId: string): string => {
+        const item = fieldTypeOptions.value.find((x) => x.fieldTypeId === fieldTypeId);
+
+        const rawName = item?.fieldTypeName || fieldTypeId;
+
+        return rawName.replace(/字段/g, '').trim();
+      };
+
+      const removeTrailingId = (value: string): string => {
+        const normalized = (value || '').trim();
+
+        if (IsNullOrEmpty(normalized)) return '';
+
+        const match = normalized.match(/^(.*?)\s*([（(][^()（）]*[)）])\s*$/);
+
+        if (match == null || IsNullOrEmpty(match[1])) return normalized;
+
+        return match[1].trim();
+      };
+
+      const getRelaFieldName = (releFldId: string): string => {
+        const item = releFieldOptions.value.find((x) => x.fldId === releFldId);
+
+        if (item == null) return removeTrailingId(releFldId);
+
+        return item.fldName;
+      };
+
+      const getCtlTypeName = (ctlTypeId: string): string => {
+        const item = ctlTypeOptions.value.find((x) => x.ctlTypeId === ctlTypeId);
+
+        if (item != null) return item.ctlTypeName;
+
+        return removeTrailingId(ctlTypeId);
+      };
+
+      const loadFieldTypeOptions = async () => {
+        const arr = (await FieldType_GetArrFieldType()) as Array<clsFieldTypeEN> | null;
+        let arrOptions = (arr || []).slice();
+
+        // Fallback: force refresh cache and fetch from API when cache-based options are empty.
+        if (arrOptions.length <= 1) {
+          FieldType_ReFreshThisCache();
+          const arrFromApi = (await FieldType_GetObjLstAsync('1=1')) || [];
+          arrOptions = arrFromApi
+            .slice()
+            .sort((a, b) => a.orderNum - b.orderNum) as Array<clsFieldTypeEN>;
+
+          const obj0 = new clsFieldTypeEN();
+          obj0.fieldTypeId = '0';
+          obj0.fieldTypeName = '选字段类型...';
+          arrOptions = [obj0, ...arrOptions];
+        }
+
+        fieldTypeOptions.value = arrOptions;
+
+        const firstRealItem = fieldTypeOptions.value.find((x) => x.fieldTypeId !== '0');
+
+        if (IsNullOrEmpty(selectedFieldTypeId.value)) {
+          selectedFieldTypeId.value =
+            firstRealItem?.fieldTypeId || fieldTypeOptions.value[0]?.fieldTypeId || '';
+        }
+      };
+
+      const loadCtlTypeOptions = async () => {
+        let arr = await CtlType_GetObjLstCache();
+
+        arr = (arr || []).slice().sort((a, b) => a.orderNum - b.orderNum);
+
+        ctlTypeOptions.value = arr as Array<clsCtlTypeEN>;
+      };
+
+      const loadRelaFieldOptions = async () => {
+        const prjId = clsPrivateSessionStorage.currSelPrjId;
+
+        if (IsNullOrEmpty(prjId)) {
+          releFieldOptions.value = [];
+
+          return;
+        }
+
+        const tabId4Region = getCurrentTabId4Region();
+
+        let arrFld = ((await vFieldTab_Sim_GetObjLstCache(prjId)) ||
+          []) as Array<clsvFieldTab_SimEN>;
+
+        if (!IsNullOrEmpty(tabId4Region)) {
+          const arrPrjTabFld = await PrjTabFld_GetObjLstCache(tabId4Region);
+
+          const setFldIds = new Set((arrPrjTabFld || []).map((x) => x.fldId));
+
+          arrFld = arrFld.filter((x) => setFldIds.has(x.fldId));
+        }
+
+        releFieldOptions.value = arrFld.sort((a, b) => a.fldName.localeCompare(b.fldName));
+      };
+
+      const loadChildFieldDisplayOptions = async () => {
+        await Promise.all([loadRelaFieldOptions(), loadCtlTypeOptions()]);
+      };
+
+      const reloadChildFieldList = async () => {
+        const viewFeatureId = getCurrentViewFeatureId();
+
+        await loadChildFieldDisplayOptions();
+
+        if (IsNullOrEmpty(viewFeatureId)) {
+          arrViewFeatureFlds.value = [];
+
+          return;
+        }
+
+        const whereCond = Format(
+          "{0}='{1}'",
+
+          clsViewFeatureFldsEN.con_ViewFeatureId,
+
+          viewFeatureId,
+        );
+
+        const rows = await ViewFeatureFlds_GetObjLstAsync(whereCond);
+
+        arrViewFeatureFlds.value = (rows || []).slice().sort((a, b) => {
+          if (a.orderNum !== b.orderNum) return a.orderNum - b.orderNum;
+
+          return a.fieldTypeId.localeCompare(b.fieldTypeId);
+        }) as Array<clsViewFeatureFldsENEx>;
+      };
+
+      const prepareCreateChildEditor = async () => {
+        const viewFeatureId = getCurrentViewFeatureId();
+
+        if (IsNullOrEmpty(viewFeatureId)) return;
+
+        await nextTick();
+
+        const tabId4Region = getCurrentTabId4Region();
+
+        if (!IsNullOrEmpty(tabId4Region)) {
+          await (childEditorRef.value as any)?.BindDdl4EditRegion?.(tabId4Region);
+        }
+
+        const obj = new clsViewFeatureFldsEN();
+
+        obj.SetViewFeatureId(viewFeatureId);
+
+        obj.SetFieldTypeId(selectedFieldTypeId.value);
+
+        obj.SetInUse(true);
+
+        obj.SetPrjId(clsPrivateSessionStorage.currSelPrjId);
+
+        obj.SetOrderNum(arrViewFeatureFlds.value.length + 1);
+
+        await nextTick();
+
+        await (childEditorRef.value as any)?.GetDataFromViewFeatureFldsClass?.(obj);
+      };
+
+      const openCreateChildField = async () => {
+        const viewFeatureId = getCurrentViewFeatureId();
+
+        if (IsNullOrEmpty(viewFeatureId)) {
+          alert('请先保存主功能，再新增子字段。');
+
+          return;
+        }
+
+        await loadFieldTypeOptions();
+        if (fieldTypeOptions.value.length <= 1) {
+          alert('字段类型数据为空，请检查字段类型基础数据。');
+          return;
+        }
+
+        const firstRealItem = fieldTypeOptions.value.find((x) => x.fieldTypeId !== '0');
+
+        selectedFieldTypeId.value =
+          firstRealItem?.fieldTypeId || fieldTypeOptions.value[0]?.fieldTypeId || '';
+
+        childDialogMode.value = 'create';
+
+        childDialogTitle.value = '新增子字段';
+
+        editingChildItem.value = null;
+
+        childDialogVisible.value = true;
+
+        await prepareCreateChildEditor();
+      };
+
+      const openEditChildField = async (item: any) => {
+        childDialogMode.value = 'update';
+
+        childDialogTitle.value = '修改子字段';
+
+        editingChildItem.value = item;
+
+        selectedFieldTypeId.value = item.fieldTypeId;
+
+        childDialogVisible.value = true;
+
+        await nextTick();
+
+        const tabId4Region = getCurrentTabId4Region();
+
+        if (!IsNullOrEmpty(tabId4Region)) {
+          await (childEditorRef.value as any)?.BindDdl4EditRegion?.(tabId4Region);
+        }
+
+        const mId = Number(item?.mId || 0);
+        if (mId <= 0) {
+          alert('当前子字段缺少主键，无法回填编辑数据。');
+          return;
+        }
+        const fullObj = await ViewFeatureFlds_GetObjBymIdAsync(mId);
+        if (fullObj == null) {
+          alert('未获取到最新子字段数据，请刷新后重试。');
+          return;
+        }
+        await (childEditorRef.value as any)?.GetDataFromViewFeatureFldsClass?.(fullObj);
+      };
+
+      const closeChildDialog = () => {
+        childDialogVisible.value = false;
+      };
+
+      const saveChildField = async () => {
+        const editor = childEditorRef.value as any;
+
+        if (!editor || typeof editor.getObjData !== 'function') {
+          alert('子字段编辑器尚未准备好，请稍后重试。');
+
+          return;
+        }
+
+        const obj = editor.getObjData() as clsViewFeatureFldsEN;
+
+        const viewFeatureId = getCurrentViewFeatureId();
+
+        if (IsNullOrEmpty(viewFeatureId)) {
+          alert('请先保存主功能，再保存子字段。');
+
+          return;
+        }
+
+        obj.SetViewFeatureId(viewFeatureId);
+
+        obj.SetPrjId(clsPrivateSessionStorage.currSelPrjId);
+
+        const currCtlTypeId = (obj as any).ctlTypeId as string;
+
+        if (IsNullOrEmpty(currCtlTypeId) || currCtlTypeId === '0') {
+          obj.SetCtlTypeId(enumCtlType.None_00);
+        }
+
+        if (childDialogMode.value === 'create') {
+          if (IsNullOrEmpty(selectedFieldTypeId.value) || selectedFieldTypeId.value === '0') {
+            alert('请选择字段类型。');
+
+            return;
+          }
+
+          obj.SetFieldTypeId(selectedFieldTypeId.value);
+        } else if (editingChildItem.value != null) {
+          obj.SetmId(editingChildItem.value.mId);
+
+          obj.SetFieldTypeId(editingChildItem.value.fieldTypeId);
+        }
+
+        try {
+          const ok =
+            childDialogMode.value === 'create'
+              ? await ViewFeatureFlds_AddNewRecordAsync(obj)
+              : await ViewFeatureFlds_UpdateRecordAsync(obj);
+
+          if (!ok) {
+            alert('保存子字段失败。');
+
+            return;
+          }
+
+          ViewFeatureFlds_ReFreshCache(viewFeatureId);
+
+          await reloadChildFieldList();
+
+          childDialogVisible.value = false;
+        } catch (e: any) {
+          console.error(e);
+
+          alert(`保存子字段失败: ${e}`);
+        }
+      };
+
+      const deleteChildField = async (item: any) => {
+        const viewFeatureId = getCurrentViewFeatureId();
+
+        if (IsNullOrEmpty(viewFeatureId)) {
+          alert('请先保存主功能，再删除子字段。');
+
+          return;
+        }
+
+        const mId = Number(item?.mId || 0);
+        if (mId <= 0) {
+          alert('当前子字段缺少主键，无法删除。');
+
+          return;
+        }
+
+        if (!confirm(`确定删除子字段【${item.labelCaption || item.fieldTypeId}】吗？`)) return;
+
+        try {
+          const count = await ViewFeatureFlds_DelRecordAsync(mId);
+
+          if (count <= 0) {
+            alert('删除子字段失败。');
+
+            return;
+          }
+
+          ViewFeatureFlds_ReFreshCache(viewFeatureId);
+
+          await reloadChildFieldList();
+        } catch (e: any) {
+          console.error(e);
+
+          alert(`删除子字段失败: ${e}`);
+        }
+      };
 
       const editTabs = [
         { id: 'tab1', label: '属性' },
+
         { id: 'tab2', label: '代码生成' },
       ];
+
       const editActiveTabId = ref('tab1');
+
       const editChangeTab = (tabId: string) => {
         editActiveTabId.value = tabId;
 
         switch (tabId) {
           case 'tab1':
             setTimeout(InitEdit, 100);
+
+            setTimeout(reloadChildFieldList, 200);
+
             break;
+
           case 'tab2':
             break;
         }
       };
+
       const InitEdit = async () => {
         // divVarSet.refDivEdit = FeatureRegionFlds_Edit.EditObj.$refs.refDivEdit;
 
         const objPage = new FeatureRegionFldsCRUDEx();
+
         await objPage.InitEdit();
       };
+
       const showTabs = [
         { id: 'tab3', label: '可视化区域' },
+
         { id: 'tab4', label: '数据列表' },
       ];
+
       const showActiveTabId = ref('tab3');
+
       const showChangeTab = (tabId: string) => {
         showActiveTabId.value = tabId;
 
         switch (tabId) {
           case 'tab3':
             setTimeout(VisualEffectsOnly, 100);
+
             break;
+
           case 'tab4':
             setTimeout(BindOnlyGv, 100);
+
             break;
         }
       };
+
       const VisualEffectsOnly = () => {
         FeatureRegionFldsCRUDEx.ActiveTabName = enumActiveTabName.VisualEffects_01;
+
         const objPage = new FeatureRegionFldsCRUDEx();
+
         objPage.VisualEffects(refDivVisualEffects.value, RegionId_Static.value);
       };
+
       const BindOnlyGv = () => {
         FeatureRegionFldsCRUDEx.ActiveTabName = enumActiveTabName.DataList_02;
 
@@ -501,170 +1090,185 @@
 
         objPage.BindOnlyGv();
       };
+
       const strTitle = ref('功能区域字段维护');
 
-      // const refFeatureRegionFlds_Edit_SetValue = ref();
-      // const refViewFeatureFlds_Edit = ref([]);
-
-      // const refViewFeatureFlds3_Edit = ref();
-
-      // const refDivLayoutTop = ref();
-
       const refDivDataLst = ref();
-      const HideViewFeatureFldCom = (index: number) => {
-        if (index == 1) {
-          isShowViewFeatureFlds1.value = false;
-        } else if (index == 2) {
-          isShowViewFeatureFlds2.value = false;
-        }
-      };
+
       onMounted(() => {
         FeatureRegionFldsCRUDEx.GetPropValueV2 = GetPropValue;
 
-        // divVarSet.refDivEdit = FeatureRegionFlds_Edit.EditObj.$refs.refDivEdit;
+        FeatureRegionFldsCRUDEx.OnCurrentFeatureChanged = () => {
+          reloadChildFieldList();
+        };
 
-        // divVarSet.refDivEdit = refViewFeatureFlds_EditLst.value.$refs.refDivEdit;
-
-        // ViewRegion_Detail_Sim.divDetail = refViewRegion_Detail_Sim.value.$refs.refDivDetail;
         FeatureRegionFldsCRUDEx.ActiveTabName = enumActiveTabName.VisualEffects_01;
-        ViewFeatureFlds_EditEx.ShowLst = ShowLst;
-        ViewFeatureFlds_EditEx.getDataFromViewFeatureFlds_Coms = getDataFromViewFeatureFlds_Coms;
-        FeatureRegionFlds_EditEx.HideViewFeatureFlds = HideViewFeatureFlds;
-        // Populate the componentRefs array with component refs
-        // this.componentRefs = this.arrViewFeatureFlds.map(
-        //   (_, index) => this.$refs[`refViewFeatureFlds_EditLst${index}`],
-        // );
+
         const objPage = new FeatureRegionFldsCRUDEx();
 
         objPage.PageLoadCache();
+
+        loadFieldTypeOptions();
+
+        setTimeout(() => {
+          reloadChildFieldList();
+        }, 200);
+
         //this.myonload();
       });
+
       function GetPropValue(strPropName: string): any {
         switch (strPropName) {
           case 'strTitle':
             return strTitle.value;
+
           case 'editDiv':
             return refFeatureRegionFlds_Edit.value.refDivEdit;
+
           case 'viewRegionDetailDiv':
             return refViewRegion_Detail_Sim.value.refDivDetail;
+
           default:
             return '';
         }
       }
-      const HideViewFeatureFlds = (): void => {
-        isShowViewFeatureFlds1.value = true;
-        isShowViewFeatureFlds2.value = false;
-      };
 
-      const ShowLst = async (
-        arrObjLst: Array<clsViewFeatureFldsENEx>,
-        arrBindData1: BindData,
-      ): Promise<void> => {
-        // console.log(arrObjLst);
-        // alert('ShowLst in ViewInfoCRUD');
-        arrViewFeatureFlds.value = arrObjLst;
-        arrBindData.value = arrBindData1;
-        isShowViewFeatureFlds2.value = false;
-        isShowViewFeatureFlds1.value = false;
-
-        if (arrObjLst.length > 1) {
-          isShowViewFeatureFlds2.value = true;
-          isShowViewFeatureFlds1.value = true;
-          await refViewFeatureFlds2_Edit.value.GetDataFromViewFeatureFldsClass(arrObjLst[1]);
-          await refViewFeatureFlds1_Edit.value.GetDataFromViewFeatureFldsClass(arrObjLst[0]);
-        } else if (arrObjLst.length == 1) {
-          isShowViewFeatureFlds2.value = false;
-          isShowViewFeatureFlds1.value = true;
-          await refViewFeatureFlds1_Edit.value.GetDataFromViewFeatureFldsClass(arrObjLst[0]);
-        }
-        console.error('isShowViewFeatureFlds1', isShowViewFeatureFlds1.value);
-        console.error('isShowViewFeatureFlds2', isShowViewFeatureFlds2.value);
-        // console.error(arrBindData.value.ctlTypeLst);
-      };
       function btn_Click(strCommandName: string, strKeyId: string) {
         console.log(strCommandName, strKeyId);
+
         switch (strCommandName) {
           case 'Detail':
             break;
           case 'Create':
+            break;
           case 'AddNewRecordWithMaxId':
+            break;
           case 'CreateWithMaxId':
+            break;
           case 'Update':
+            break;
           case 'UpdateRecord':
+            break;
           case 'UpdateRecordInTab':
             break;
+
           case 'Update_ViewRegion':
             FeatureRegionFldsCRUDEx.EditRegionRef = refViewRegion_Edit_Sim;
 
             break;
+
           default:
             break;
         }
+
         FeatureRegionFldsCRUDEx.btn_Click(strCommandName, strKeyId);
       }
+
       // Example method to get data from component refs
+
       const getDataFromViewFeatureFlds_Coms = (): Array<clsViewFeatureFldsEN> => {
         const arrObjLst = new Array<clsViewFeatureFldsEN>();
-        // refViewFeatureFlds_EditLst.value.forEach((componentRef) => {
-        //   // Access data or methods from each component
-        //   if (componentRef != null) {
-        //     const objData = (componentRef as any).getObjData();
-        //     // const objData = (componentRef as any).objData;
-        //     console.log(objData);
-        //     arrObjLst.push(objData);
-        //   }
-        //   // ... do something with objData
-        // });
+
         return arrObjLst;
       };
+
       return {
         strTitle,
+
         btn_Click,
-        refViewFeatureFlds2_Edit,
-        refViewFeatureFlds1_Edit,
+
         refFeatureRegionFlds_Edit_SetValue,
 
         refViewRegion_Detail_Sim,
+
         refViewRegion_Edit_Sim,
+
         refDivVisualEffects,
+
         refDivLayoutTop,
 
         refDivLeftMenu,
+
         refDivFeatureButtonLst,
+
         refDivDataLst,
+
         editTabs,
+
         editActiveTabId,
+
         editChangeTab,
+
         showTabs,
+
         showActiveTabId,
+
         showChangeTab,
+
         arrViewFeatureFlds,
-        ShowLst,
-        arrBindData,
+
         getDataFromViewFeatureFlds_Coms,
-        HideViewFeatureFlds,
-        isShowViewFeatureFlds1,
-        isShowViewFeatureFlds2,
+
+        fieldTypeOptions,
+
+        childDialogVisible,
+
+        childDialogMode,
+
+        childDialogTitle,
+
+        selectedFieldTypeId,
+
+        childEditorRef,
+
+        openCreateChildField,
+
+        openEditChildField,
+
+        closeChildDialog,
+
+        saveChildField,
+
+        deleteChildField,
+
+        getFieldTypeName,
+
+        getRelaFieldName,
+
+        getCtlTypeName,
+
+        prepareCreateChildEditor,
+
+        reloadChildFieldList,
 
         ...divVarSet,
+
         refDivLayout,
+
         refDivQuery,
+
         refDivFunction,
+
         refDivList,
+
         refFeatureRegionFlds_Detail,
+
         refFeatureRegionFlds_Edit,
-        HideViewFeatureFldCom,
       };
     },
+
     watch: {
       // 数据监听
     },
+
     mounted() {},
+
     methods: {
       // 方法定义
     },
   });
 </script>
+
 <style>
   .tab-header {
     display: flex;
@@ -672,6 +1276,7 @@
 
   .tab-header div {
     padding: 10px;
+
     cursor: pointer;
   }
 
@@ -681,5 +1286,9 @@
 
   .tab-content {
     margin-top: 10px;
+  }
+
+  .child-field-break {
+    white-space: pre-line;
   }
 </style>

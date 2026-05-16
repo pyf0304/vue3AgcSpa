@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <a-modal v-model:visible="dialogVisible" :width="dialogWidth" :title="strTitle">
     <div id="divEditDialog_SetFieldValue" ref="refDivEdit" class="tab_layout">
       <table

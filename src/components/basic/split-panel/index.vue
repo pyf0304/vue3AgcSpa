@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="split-wrapper">
     <div ref="scalable" class="scalable">
       <div class="left-content">

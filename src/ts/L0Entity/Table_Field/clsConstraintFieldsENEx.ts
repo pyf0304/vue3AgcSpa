@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 类名:clsConstraintFieldsENEx
  * 表名:ConstraintFields(00050334)
  * 版本:2025.06.13.1(服务器:WIN-SRV103-116)

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <SchemaForm
       v-if="search"

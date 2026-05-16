@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="box">
     <img src="~@/assets/analysis.svg" />
     <Descriptions title="系统信息" bordered>

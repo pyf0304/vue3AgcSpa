@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <teleport :to="getContainer()">
     <div ref="modalWrapRef" class="draggable-modal" :class="{ fullscreen: fullscreenModel }">
       <Modal

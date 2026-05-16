@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 格式化参数
  */
 function formatParams(data = {}) {

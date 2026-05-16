@@ -1,1 +1,1 @@
-export { TableCommandRegion, TableCommandSpec } from './TableSpecCommand';
+﻿export { TableCommandRegion, TableCommandSpec } from './TableSpecCommand';

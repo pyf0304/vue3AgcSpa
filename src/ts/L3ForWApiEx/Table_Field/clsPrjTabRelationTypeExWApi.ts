@@ -8,7 +8,7 @@
 import { clsPrjTabRelationTypeEN } from '@/ts/L0Entity/Table_Field/clsPrjTabRelationTypeEN';
 import { clsPrjTabRelationTypeENEx } from '@/ts/L0Entity/Table_Field/clsPrjTabRelationTypeENEx';
 import {
-  PrjTabRelationType_GetObjLstAsync,
+  PrjTabRelationType_GetObjLstByPagerAsync,
   PrjTabRelationType_SortFunByKey,
 } from '@/ts/L3ForWApi/Table_Field/clsPrjTabRelationTypeWApi';
 import { clsSysPara4WebApi } from '@/ts/PubConfig/clsSysPara4WebApi';
@@ -86,8 +86,8 @@ export async function PrjTabRelationTypeEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsPrjTabRelationTypeENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrPrjTabRelationTypeExObjLst = await PrjTabRelationType_GetObjLstAsync(
-    objPagerPara.whereCond,
+  const arrPrjTabRelationTypeExObjLst = await PrjTabRelationType_GetObjLstByPagerAsync(
+    objPagerPara,
   );
   const objSortInfo = GetSortExpressInfo(objPagerPara);
   if (

@@ -1,4 +1,4 @@
-import DynamicTable from './src/dynamic-table.vue';
+﻿import DynamicTable from './src/dynamic-table.vue';
 import type { DefineComponent, Ref } from 'vue';
 import type { DynamicTableInstance, DynamicTableProps } from './src/dynamic-table';
 export { DynamicTable };

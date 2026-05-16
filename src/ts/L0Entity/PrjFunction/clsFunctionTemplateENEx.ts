@@ -2,8 +2,8 @@
  * 类名:clsFunctionTemplateENEx
  * 表名:FunctionTemplate(00050312)
  * 版本:2026.04.19(服务器:WIN-SRV103-116)
- * 日期:2026/04/28 23:40:17
- * 生成者:pyf
+ * 日期:2026/05/16 14:42:58
+ * 生成者:pyf2
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
  * 相关数据库:109.244.40.104,8433AGC_CS12
@@ -42,6 +42,8 @@ export class clsFunctionTemplateENEx extends clsFunctionTemplateEN {
         return '';
       case clsFunctionTemplateENEx.con_ProgLangTypeName:
         return this.progLangTypeName;
+      case clsFunctionTemplateENEx.con_DateTimeSim:
+        return this.dateTimeSim;
       default:
         strValue = super.GetFldValue(strFldName);
         return strValue;
@@ -54,7 +56,14 @@ export class clsFunctionTemplateENEx extends clsFunctionTemplateEN {
    */
   public static readonly con_ProgLangTypeName = 'progLangTypeName'; //编程语言类型名
 
+  /**
+   * 常量:"DateTimeSim"
+   * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
+   */
+  public static readonly con_DateTimeSim = 'dateTimeSim'; //简化日期时间
+
   public progLangTypeName = ''; //编程语言类型名
+  public dateTimeSim = ''; //简化日期时间
 
   /**
    * 判断一个字符串是否是类的属性

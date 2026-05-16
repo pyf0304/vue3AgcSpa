@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="huawei-charge">
     <div class="number">{{ battery.level.toFixed(0) }}%</div>
     <div class="contrast">

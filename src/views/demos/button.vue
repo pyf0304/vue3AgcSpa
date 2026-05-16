@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <Alert message="扩展antd按钮样式" type="info" show-icon style="margin-bottom: 12px" />
     <Card>

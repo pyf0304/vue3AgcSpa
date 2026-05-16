@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia';
+﻿import { defineStore } from 'pinia';
 
 import { enumComparisonOp } from '@/ts/PubFun/enumComparisonOp';
 import { clsvFieldTab_Sim2 } from '@/ts/L0Entity/Table_Field/clsvFieldTab_Sim2';

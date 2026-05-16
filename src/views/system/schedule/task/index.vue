@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <DynamicTable
       row-key="id"

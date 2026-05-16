@@ -1,4 +1,4 @@
-import type { FormSchema } from '@/components/core/schema-form/';
+﻿import type { FormSchema } from '@/components/core/schema-form/';
 import { getRoleList } from '@/api/system/role';
 
 export const deptSchemas: FormSchema<API.CreateDeptParams>[] = [

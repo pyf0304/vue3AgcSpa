@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Popover placement="bottomLeft" trigger="click" overlay-class-name="__multiple-cascader">
     <template #content>
       <NodePanel ref="nodePanelRef" :options="myOptions" />

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <h6
     ><span class="text-primary">从调用者传递的信息(msg):</span
     ><span class="text-secondary">{{ msg }}</span></h6

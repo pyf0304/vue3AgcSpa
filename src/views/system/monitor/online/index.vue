@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <DynamicTable
     ref="dynamicTableRef"
     header-title="在线用户"

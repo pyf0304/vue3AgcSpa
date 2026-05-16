@@ -1,4 +1,4 @@
-import { isObject } from './is';
+﻿import { isObject } from './is';
 import type { App, Component, Plugin } from 'vue';
 
 export function getFileExtension(filename) {

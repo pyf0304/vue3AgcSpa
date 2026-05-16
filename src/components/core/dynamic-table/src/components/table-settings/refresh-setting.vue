@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Tooltip placement="top">
     <template #title>
       <span>{{ $t('common.redo') }}</span>

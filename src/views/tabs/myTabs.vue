@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <ul class="tabs">
       <li

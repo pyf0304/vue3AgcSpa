@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div id="container">
     <div id="graph-container">
       <div id="graph"></div>

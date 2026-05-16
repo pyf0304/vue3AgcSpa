@@ -1,4 +1,4 @@
-import { reactive, ref } from 'vue';
+﻿import { reactive, ref } from 'vue';
 import { Format } from '@/ts/PubFun/clsString';
 import { clsViewIdGCVariableRelaEN } from '@/ts/L0Entity/GeneCode/clsViewIdGCVariableRelaEN';
 import { clsViewIdGCVariableRelaENEx } from '@/ts/L0Entity/GeneCode/clsViewIdGCVariableRelaENEx';

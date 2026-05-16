@@ -7,7 +7,7 @@
 //import $ from "jquery";
 
 import {
-  vPrjTabFld_DnPathId_GetObjLstAsync,
+  vPrjTabFld_DnPathId_GetObjLstByPagerAsync,
   vPrjTabFld_DnPathId_SortFunByKey,
 } from '@/ts/L3ForWApi/Table_Field/clsvPrjTabFld_DnPathIdWApi';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
@@ -89,8 +89,8 @@ export async function vPrjTabFld_DnPathIdEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsvPrjTabFld_DnPathIdENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrvPrjTabFld_DnPathIdObjLst = await vPrjTabFld_DnPathId_GetObjLstAsync(
-    objPagerPara.whereCond,
+  const arrvPrjTabFld_DnPathIdObjLst = await vPrjTabFld_DnPathId_GetObjLstByPagerAsync(
+    objPagerPara,
   );
   const arrvPrjTabFld_DnPathIdExObjLst = arrvPrjTabFld_DnPathIdObjLst.map(
     vPrjTabFld_DnPathIdEx_CopyToEx,

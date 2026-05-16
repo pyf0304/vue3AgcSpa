@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <SplitPanel>
     <template #left-content>
       <div class="flex justify-between">

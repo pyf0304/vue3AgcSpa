@@ -1,4 +1,4 @@
-export const sysParamConfig = {
+﻿export const sysParamConfig = {
   page: 'sys/param-config/page',
   info: 'sys/param-config/info',
   add: 'sys/param-config/add',

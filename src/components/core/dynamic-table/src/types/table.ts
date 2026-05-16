@@ -1,4 +1,4 @@
-import type { TableProps } from 'ant-design-vue';
+﻿import type { TableProps } from 'ant-design-vue';
 import type { TablePaginationConfig } from 'ant-design-vue/es/table';
 
 /**

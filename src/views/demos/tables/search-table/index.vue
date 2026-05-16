@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <Alert message="查询表格" type="info" show-icon>
       <template #description> 查询表格-查询表单使用示例 </template>

@@ -1,4 +1,4 @@
-export interface AdvanceState {
+﻿export interface AdvanceState {
   isAdvanced: boolean;
   hideAdvanceBtn: boolean;
   isLoad: boolean;

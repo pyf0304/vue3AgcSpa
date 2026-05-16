@@ -49,7 +49,9 @@ export async function PubDataBase_GetFieldValue(
   strWhere: string,
 ): Promise<Array<string>> {
   const strThisFuncName = 'PubDataBase_GetFieldValue';
-
+  if (IsNullOrEmpty(strWhere) == true) {
+    strWhere = '1=1';
+  }
   //public JObject GetDataTable(string strCurrPrjDataBaseId, string strTabName, int intRecNum, string strWhereCond, string strOrderBy) {
   const strAction = 'GetFieldValue';
   const strUrl = GetWebApiUrl(pubDataBaseApiController, strAction);

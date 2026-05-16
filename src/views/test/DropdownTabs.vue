@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div id="tabs-container">
     <div id="tabs">
       <div v-for="(group, index) in groups" :key="index" class="tab">

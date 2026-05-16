@@ -1,4 +1,4 @@
-import { ViewIdGCVariableRelaCRUD } from '@/viewsBase/GeneCode/ViewIdGCVariableRelaCRUD';
+﻿import { ViewIdGCVariableRelaCRUD } from '@/viewsBase/GeneCode/ViewIdGCVariableRelaCRUD';
 
 import {
   GetCheckedKeyLstsInDivObj,
@@ -139,6 +139,12 @@ export default class ViewIdGCVariableRelaCRUDEx
         break;
       case 'varTypeName|Ex':
         viewVarSet.sortViewIdGCVariableRelaBy = `GCVariable|varTypeName ${sortDirection}|ViewIdGCVariableRela.VarId = GCVariable.VarId,GCVariable.VarTypeId = GCVariableType.VarTypeId`;
+        break;
+      case 'dsTabId|Ex':
+        viewVarSet.sortViewIdGCVariableRelaBy = `GCVariable|dsTabId ${sortDirection}|ViewIdGCVariableRela.VarId = GCVariable.VarId`;
+        break;
+      case 'initValue|Ex':
+        viewVarSet.sortViewIdGCVariableRelaBy = `GCVariable|initValue ${sortDirection}|ViewIdGCVariableRela.VarId = GCVariable.VarId`;
         break;
       case 'retrievalMethodName|Ex':
         viewVarSet.sortViewIdGCVariableRelaBy = `RetrievalMethod|retrievalMethodName ${sortDirection}|ViewIdGCVariableRela.RetrievalMethodId = RetrievalMethod.RetrievalMethodId`;

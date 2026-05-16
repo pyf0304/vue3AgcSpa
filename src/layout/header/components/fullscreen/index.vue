@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Tooltip :title="getTitle" placement="bottom" :mouse-enter-delay="0.5">
     <span @click="toggle">
       <FullscreenOutlined v-if="!isFullscreen" />

@@ -1,4 +1,4 @@
-import { request } from '@/utils/request';
+﻿import { request } from '@/utils/request';
 import Api from '@/core/permission/modules/sys/menu';
 
 export function getMenuList() {

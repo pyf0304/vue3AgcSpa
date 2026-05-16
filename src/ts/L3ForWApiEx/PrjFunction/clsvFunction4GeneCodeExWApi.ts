@@ -25,7 +25,7 @@
 import { ObjectAssign, GetSortExpressInfo } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsvFunction4GeneCodeENEx } from '@/ts/L0Entity/PrjFunction/clsvFunction4GeneCodeENEx';
 import {
-  vFunction4GeneCode_GetObjLstAsync,
+  vFunction4GeneCode_GetObjLstByPagerAsync,
   vFunction4GeneCode_SortFunByKey,
 } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4GeneCodeWApi';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
@@ -104,9 +104,7 @@ export async function vFunction4GeneCodeEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsvFunction4GeneCodeENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrvFunction4GeneCodeObjLst = await vFunction4GeneCode_GetObjLstAsync(
-    objPagerPara.whereCond,
-  );
+  const arrvFunction4GeneCodeObjLst = await vFunction4GeneCode_GetObjLstByPagerAsync(objPagerPara);
   const arrvFunction4GeneCodeExObjLst = arrvFunction4GeneCodeObjLst.map(
     vFunction4GeneCodeEx_CopyToEx,
   );

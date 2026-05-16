@@ -1,4 +1,4 @@
-import type { RowProps } from 'ant-design-vue';
+﻿import type { RowProps } from 'ant-design-vue';
 import type { NamePath, RuleObject } from 'ant-design-vue/es/form/interface';
 import type { FormItemProps } from 'ant-design-vue/es/form/FormItem';
 import type { Component, VNode } from 'vue';

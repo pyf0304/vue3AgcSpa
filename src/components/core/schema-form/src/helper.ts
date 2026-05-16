@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+﻿import dayjs from 'dayjs';
 import type { RuleObject } from 'ant-design-vue/es/form/';
 import type { ComponentMapType } from './types/component';
 import { isNumber } from '@/utils/is';

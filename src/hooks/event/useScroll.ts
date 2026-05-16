@@ -1,4 +1,4 @@
-import { ref, onMounted, watch, onUnmounted } from 'vue';
+﻿import { ref, onMounted, watch, onUnmounted } from 'vue';
 import { useThrottleFn } from '@vueuse/core';
 import type { Ref } from 'vue';
 

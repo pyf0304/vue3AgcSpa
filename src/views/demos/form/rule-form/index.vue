@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <Alert
       message="验证表单"

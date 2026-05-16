@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Form
     ref="schemaFormRef"
     v-bind="pick(getFormProps, aFormPropKeys)"

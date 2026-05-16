@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 功能:用于WebApi的参数定义
  * 版本:2019-07-24-01
  * 作者:潘以锋
@@ -40,15 +40,15 @@ export class clsSysPara4WebApi {
   public static CurrIPAddressAndPort_GP = 'https://www.sh-tz.com'; // getHostAddressweb();// "http://Localhost:2408";
   public static CurrIPAddressAndPort_GPBak = 'http://103.116.76.183:8080'; // getHostAddressweb();// "http://Localhost:2408";
   //public static CurrIPAddressAndPort_Local_GP = "http://103.116.76.183:8080";// getHostAddressweb();// "http://Localhost:2408";
-  public static CurrIPAddressAndPort_Local_GP = 'https://www.sh-tz.com'; // getHostAddressweb();// "http://Localhost:2408";
-  // public static CurrIPAddressAndPort_Local_GP = 'http://tzar.ddns.net:27109'; // getHostAddressweb();// "http://Localhost:2408";
-  // public static CurrIPAddressAndPort_Local_GP = 'http://192.168.1.20:7109'; // getHostAddressweb();// "http://Localhost:2408";
+  // public static CurrIPAddressAndPort_Local_GP = 'https://www.sh-tz.com'; // getHostAddressweb();// "http://Localhost:2408";
+  // public static CurrIPAddressAndPort_Local_GP = 'http://tzar.ddns.net:27111'; // getHostAddressweb();// "http://Localhost:2408";
+  public static CurrIPAddressAndPort_Local_GP = 'http://192.168.1.20:7111'; // getHostAddressweb();// "http://Localhost:2408";
 
   //localhost
   // public static CurrIPAddressAndPort_Local = 'http://localhost:28523'; // getHostAddressweb();// "http://Localhost:2408";
-  // public static CurrIPAddressAndPort_Local = 'http://192.168.1.20:7109'; // getHostAddressweb();// "http://Localhost:2408";
+  public static CurrIPAddressAndPort_Local = 'http://192.168.1.20:7109'; // getHostAddressweb();// "http://Localhost:2408";
 
-  public static CurrIPAddressAndPort_Local = 'http://tzar.ddns.net:27109'; // getHostAddressweb();// "http://Localhost:2408";
+  // public static CurrIPAddressAndPort_Local = 'http://tzar.ddns.net:27109'; // getHostAddressweb();// "http://Localhost:2408";
 
   //public static CurrIPAddressAndPort_Local_GP: string = "http://localhost:49540";// getHostAddressweb();// "http://Localhost:2408";
 

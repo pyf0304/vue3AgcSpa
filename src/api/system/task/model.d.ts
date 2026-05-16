@@ -1,4 +1,4 @@
-declare namespace API {
+﻿declare namespace API {
   /** 任务列表项 */
   export type SysTaskListItem = {
     createdAt: string;

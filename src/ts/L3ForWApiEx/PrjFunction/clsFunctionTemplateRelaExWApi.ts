@@ -11,6 +11,7 @@ import { vCodeType_Sim_func } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi
 
 import {
   FunctionTemplateRela_GetObjLstAsync,
+  FunctionTemplateRela_GetObjLstByPagerAsync,
   FunctionTemplateRela_SortFunByKey,
 } from '@/ts/L3ForWApi/PrjFunction/clsFunctionTemplateRelaWApi';
 import { FunctionTemplate_func } from '@/ts/L3ForWApi/PrjFunction/clsFunctionTemplateWApi';
@@ -126,8 +127,8 @@ export async function FunctionTemplateRelaEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsFunctionTemplateRelaENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrFunctionTemplateRelaObjLst = await FunctionTemplateRela_GetObjLstAsync(
-    objPagerPara.whereCond,
+  const arrFunctionTemplateRelaObjLst = await FunctionTemplateRela_GetObjLstByPagerAsync(
+    objPagerPara,
   );
   const arrFunctionTemplateRelaExObjLst = arrFunctionTemplateRelaObjLst.map(
     FunctionTemplateRelaEx_CopyToEx,
@@ -136,7 +137,7 @@ export async function FunctionTemplateRelaEx_GetObjExLstByPagerAsync(
   const objSortInfo = GetSortExpressInfo(objPagerPara);
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsFunctionTemplateRelaEN.AttributeName.indexOf(objSortInfo.SortFld) == -1
+    clsFunctionTemplateRelaEN._AttributeName.indexOf(objSortInfo.SortFld) == -1
   ) {
     for (const objInFor of arrFunctionTemplateRelaExObjLst) {
       await FunctionTemplateRelaEx_FuncMapByFldName(objSortInfo.SortFld, objInFor);
@@ -190,7 +191,7 @@ export function FunctionTemplateRelaEx_FuncMapByFldName(
   const strThisFuncName = FunctionTemplateRelaEx_FuncMapByFldName.name;
   let strMsg = '';
   //如果是本表中字段，不需要映射
-  const arrFldName = clsFunctionTemplateRelaEN.AttributeName;
+  const arrFldName = clsFunctionTemplateRelaEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {

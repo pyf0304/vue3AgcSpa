@@ -1,4 +1,4 @@
-declare namespace API {
+﻿declare namespace API {
   /** 新增角色 */
   type CreateRoleParams = {
     name: string;

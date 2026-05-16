@@ -1,4 +1,4 @@
-declare namespace API {
+﻿declare namespace API {
   /** 登录日志项结果 */
   type LoginLogListItemResult = {
     id: number;

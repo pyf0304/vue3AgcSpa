@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="page-container">
     <div>
       <h1>404</h1>

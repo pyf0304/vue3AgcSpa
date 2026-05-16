@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Card class="header-item-card" hoverable>
     <div class="title">{{ title }}</div>
     <Statistic class="value" :value="value" :duration="2000" />

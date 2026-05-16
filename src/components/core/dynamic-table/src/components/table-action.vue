@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <template v-for="(actionItem, index) in actionFilters" :key="`${index}-${actionItem.label}`">
     <component
       :is="actionItem.popConfirm ? 'a-popconfirm' : 'span'"

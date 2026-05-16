@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <i18n-t tag="span" :keypath="getTitle" scope="global" />
 </template>
 

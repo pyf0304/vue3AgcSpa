@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 根据表内容设置enum列表
  * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_GeneEnumConstList)
  **/

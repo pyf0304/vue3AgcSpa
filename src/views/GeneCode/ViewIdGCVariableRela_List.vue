@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <span v-if="emptyRecNumInfo !== '' && items.length === 0">{ emptyRecNumInfo }</span>
     <template v-else>
@@ -32,6 +32,20 @@
           <th @click="sortColumn('')">
             变量类型名
             <span v-if="sortColumnKey === ''">
+              <i :class="sortDirection === 'Asc' ? 'arrow-up' : 'arrow-down'"></i>
+            </span>
+          </th>
+
+          <th @click="sortColumn('dsTabId|Ex')">
+            数据源表ID
+            <span v-if="sortColumnKey === 'dsTabId|Ex'">
+              <i :class="sortDirection === 'Asc' ? 'arrow-up' : 'arrow-down'"></i>
+            </span>
+          </th>
+
+          <th @click="sortColumn('initValue|Ex')">
+            InitValue
+            <span v-if="sortColumnKey === 'initValue|Ex'">
               <i :class="sortDirection === 'Asc' ? 'arrow-up' : 'arrow-down'"></i>
             </span>
           </th>
@@ -97,6 +111,10 @@
           <td v-html="item.varName"></td>
 
           <td v-html="item.varTypeName"></td>
+
+          <td v-html="item.dsTabId"></td>
+
+          <td v-html="item.initValue"></td>
 
           <td v-html="item.retrievalMethodName"></td>
 

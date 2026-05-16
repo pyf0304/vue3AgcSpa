@@ -1,4 +1,4 @@
-import type { SysLogPerms } from './log';
+﻿import type { SysLogPerms } from './log';
 import type { SysDeptPerms } from './dept';
 import type { SysMenuPerms } from './menu';
 import type { SysOnlinePerms } from './online';

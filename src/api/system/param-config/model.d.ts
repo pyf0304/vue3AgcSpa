@@ -1,4 +1,4 @@
-declare namespace API {
+﻿declare namespace API {
   /** 新增参数配置 */
   type CreateParamConfigParams = {
     name: string;

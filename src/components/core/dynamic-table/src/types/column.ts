@@ -1,4 +1,4 @@
-import type { ColumnsType } from 'ant-design-vue/es/table';
+﻿import type { ColumnsType } from 'ant-design-vue/es/table';
 import type { FormSchema } from '@/components/core/schema-form';
 import type { ActionItem } from './tableAction';
 import type { TableActionType } from '@/components/core/dynamic-table/src/types';

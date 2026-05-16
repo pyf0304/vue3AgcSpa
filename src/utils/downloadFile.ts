@@ -1,4 +1,4 @@
-/**
+﻿/**
  * URL方式保存文件到本地
  * @param data 文件的blob数据
  * @param name 文件名

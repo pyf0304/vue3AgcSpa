@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="login-box">
     <div class="login-logo">
       <!-- <svg-icon name="logo" :size="45" /> -->

@@ -10,7 +10,7 @@ import { Storage } from '@/utils/Storage';
 import { ObjectAssign, GetSortExpressInfo } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsViewIdGCVariableRelaENEx } from '@/ts/L0Entity/GeneCode/clsViewIdGCVariableRelaENEx';
 import {
-  ViewIdGCVariableRela_GetObjLstAsync,
+  ViewIdGCVariableRela_GetObjLstByPagerAsync,
   ViewIdGCVariableRela_SortFunByKey,
 } from '@/ts/L3ForWApi/GeneCode/clsViewIdGCVariableRelaWApi';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
@@ -105,8 +105,8 @@ export async function ViewIdGCVariableRelaEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsViewIdGCVariableRelaENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrViewIdGCVariableRelaObjLst = await ViewIdGCVariableRela_GetObjLstAsync(
-    objPagerPara.whereCond,
+  const arrViewIdGCVariableRelaObjLst = await ViewIdGCVariableRela_GetObjLstByPagerAsync(
+    objPagerPara,
   );
   const arrViewIdGCVariableRelaExObjLst = arrViewIdGCVariableRelaObjLst.map(
     ViewIdGCVariableRelaEx_CopyToEx,
@@ -114,7 +114,7 @@ export async function ViewIdGCVariableRelaEx_GetObjExLstByPagerAsync(
   const objSortInfo = GetSortExpressInfo(objPagerPara);
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsViewIdGCVariableRelaEN.AttributeName.indexOf(objSortInfo.SortFld) == -1
+    clsViewIdGCVariableRelaEN._AttributeName.indexOf(objSortInfo.SortFld) == -1
   ) {
     for (const objInFor of arrViewIdGCVariableRelaExObjLst) {
       await ViewIdGCVariableRelaEx_FuncMapByFldName(objSortInfo.SortFld, objInFor);
@@ -218,6 +218,68 @@ export async function ViewIdGCVariableRelaEx_FuncMapVarTypeName(
     alert(strMsg);
   }
 }
+
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objViewIdGCVariableRelaS:源对象
+ **/
+export async function ViewIdGCVariableRelaEx_FuncMapDsTabId(
+  objViewIdGCVariableRela: clsViewIdGCVariableRelaENEx,
+) {
+  const strThisFuncName = ViewIdGCVariableRelaEx_FuncMapDsTabId.name;
+  try {
+    if (IsNullOrEmpty(objViewIdGCVariableRela.dsTabId) == true) {
+      const GCVariableVarId = objViewIdGCVariableRela.varId;
+      const strDsTabId = await GCVariable_func(
+        clsGCVariableEN.con_VarId,
+        'dsTabId',
+        GCVariableVarId,
+      );
+      objViewIdGCVariableRela.dsTabId = strDsTabId;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl000301)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      viewIdGCVariableRelaEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objViewIdGCVariableRelaS:源对象
+ **/
+export async function ViewIdGCVariableRelaEx_FuncMapInitValue(
+  objViewIdGCVariableRela: clsViewIdGCVariableRelaENEx,
+) {
+  const strThisFuncName = ViewIdGCVariableRelaEx_FuncMapInitValue.name;
+  try {
+    if (IsNullOrEmpty(objViewIdGCVariableRela.initValue) == true) {
+      const GCVariableVarId = objViewIdGCVariableRela.varId;
+      const strInitValue = await GCVariable_func(
+        clsGCVariableEN.con_VarId,
+        clsGCVariableEN.con_InitValue,
+        GCVariableVarId,
+      );
+      objViewIdGCVariableRela.initValue = strInitValue;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl000301)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      viewIdGCVariableRelaEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
 /**
  * 把一个扩展类的部分属性进行函数转换
  * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
@@ -300,6 +362,14 @@ export function ViewIdGCVariableRelaEx_SortFunByKey(strKey: string, AscOrDesc: s
         return (a: clsViewIdGCVariableRelaENEx, b: clsViewIdGCVariableRelaENEx) => {
           return a.varTypeName.localeCompare(b.varTypeName);
         };
+      case clsViewIdGCVariableRelaENEx.con_DsTabId:
+        return (a: clsViewIdGCVariableRelaENEx, b: clsViewIdGCVariableRelaENEx) => {
+          return a.dsTabId.localeCompare(b.dsTabId);
+        };
+      case clsViewIdGCVariableRelaENEx.con_InitValue:
+        return (a: clsViewIdGCVariableRelaENEx, b: clsViewIdGCVariableRelaENEx) => {
+          return a.initValue.localeCompare(b.initValue);
+        };
       case clsViewIdGCVariableRelaENEx.con_RetrievalMethodName:
         return (a: clsViewIdGCVariableRelaENEx, b: clsViewIdGCVariableRelaENEx) => {
           return a.retrievalMethodName.localeCompare(b.retrievalMethodName);
@@ -320,6 +390,14 @@ export function ViewIdGCVariableRelaEx_SortFunByKey(strKey: string, AscOrDesc: s
       case clsViewIdGCVariableRelaENEx.con_VarTypeName:
         return (a: clsViewIdGCVariableRelaENEx, b: clsViewIdGCVariableRelaENEx) => {
           return b.varTypeName.localeCompare(a.varTypeName);
+        };
+      case clsViewIdGCVariableRelaENEx.con_DsTabId:
+        return (a: clsViewIdGCVariableRelaENEx, b: clsViewIdGCVariableRelaENEx) => {
+          return b.dsTabId.localeCompare(a.dsTabId);
+        };
+      case clsViewIdGCVariableRelaENEx.con_InitValue:
+        return (a: clsViewIdGCVariableRelaENEx, b: clsViewIdGCVariableRelaENEx) => {
+          return b.initValue.localeCompare(a.initValue);
         };
       case clsViewIdGCVariableRelaENEx.con_RetrievalMethodName:
         return (a: clsViewIdGCVariableRelaENEx, b: clsViewIdGCVariableRelaENEx) => {
@@ -351,7 +429,7 @@ export function ViewIdGCVariableRelaEx_FuncMapByFldName(
   const strThisFuncName = ViewIdGCVariableRelaEx_FuncMapByFldName.name;
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsViewIdGCVariableRelaEN.AttributeName;
+  const arrFldName = clsViewIdGCVariableRelaEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -359,6 +437,10 @@ export function ViewIdGCVariableRelaEx_FuncMapByFldName(
       return ViewIdGCVariableRelaEx_FuncMapVarName(objViewIdGCVariableRelaEx);
     case clsViewIdGCVariableRelaENEx.con_VarTypeName:
       return ViewIdGCVariableRelaEx_FuncMapVarTypeName(objViewIdGCVariableRelaEx);
+    case clsViewIdGCVariableRelaENEx.con_DsTabId:
+      return ViewIdGCVariableRelaEx_FuncMapDsTabId(objViewIdGCVariableRelaEx);
+    case clsViewIdGCVariableRelaENEx.con_InitValue:
+      return ViewIdGCVariableRelaEx_FuncMapInitValue(objViewIdGCVariableRelaEx);
     case clsViewIdGCVariableRelaENEx.con_RetrievalMethodName:
       return ViewIdGCVariableRelaEx_FuncMapRetrievalMethodName(objViewIdGCVariableRelaEx);
     case clsViewIdGCVariableRelaENEx.con_ViewName:

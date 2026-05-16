@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia';
+﻿import { defineStore } from 'pinia';
 
 import { clsTabFeatureFlds } from '@/ts/L0Entity/Table_Field/clsTabFeatureFlds';
 

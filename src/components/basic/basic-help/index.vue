@@ -1,4 +1,4 @@
-<script lang="tsx">
+﻿<script lang="tsx">
   import { defineComponent, computed, unref } from 'vue';
   import { InfoCircleOutlined } from '@ant-design/icons-vue';
   import { Tooltip } from 'ant-design-vue';

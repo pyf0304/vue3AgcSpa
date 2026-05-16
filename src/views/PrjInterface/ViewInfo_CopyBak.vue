@@ -1,4 +1,4 @@
-已完成恢复，并已写入目标文件。该文件当前通过本地错误检查（无报错）。完整内容如下：
+﻿已完成恢复，并已写入目标文件。该文件当前通过本地错误检查（无报错）。完整内容如下：
 
 <template>
   <div class="view-info-copy-page container-fluid py-3">

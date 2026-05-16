@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <DownOutlined class="collapse-icon" />
 </template>
 

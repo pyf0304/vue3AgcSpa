@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <DynamicTable
     header-title="请求日志"
     title-tooltip="这是mock数据"

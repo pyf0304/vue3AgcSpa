@@ -182,7 +182,7 @@ export abstract class FunctionTemplateRela_Edit {
       this.opType = 'Add';
       const bolIsSuccess = await this.ShowDialog_FunctionTemplateRela(this.opType);
       if (bolIsSuccess == false) return;
-      if (['02', '03', '06'].indexOf(clsFunctionTemplateRelaEN.PrimaryTypeId) > -1) {
+      if (['02', '03', '06'].indexOf(clsFunctionTemplateRelaEN._PrimaryTypeId) > -1) {
         await this.AddNewRecordWithMaxId();
       } else {
         await this.AddNewRecord();
@@ -282,7 +282,7 @@ export abstract class FunctionTemplateRela_Edit {
         case '确认添加':
           //这是一个单表的插入的代码,由于逻辑层太简单,
           //就把逻辑层合并到控制层,
-          if (['02', '03', '06'].indexOf(clsFunctionTemplateRelaEN.PrimaryTypeId) > -1) {
+          if (['02', '03', '06'].indexOf(clsFunctionTemplateRelaEN._PrimaryTypeId) > -1) {
             const returnKeyId = await this.AddNewRecordWithReturnKeySave();
             if (returnKeyId != 0) {
               refFunctionTemplateRela_Edit.value.hideDialog();

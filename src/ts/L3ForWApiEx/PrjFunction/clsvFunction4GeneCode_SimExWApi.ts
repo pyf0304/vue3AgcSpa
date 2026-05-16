@@ -4,6 +4,7 @@ import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
 import { Storage } from '@/utils/Storage';
 
 import {
+  vFunction4GeneCode_Sim_GetObjFromJsonObj,
   vFunction4GeneCode_Sim_GetObjLstCache,
   vFunction4GeneCode_Sim_ReFreshThisCache,
   vFunction4GeneCode_Sim_SortFunByKey,
@@ -147,7 +148,8 @@ export async function vFunction4GeneCode_SimEx_GetObjByFuncId4GCEx(
     if (data.errorId == 0) {
       const returnObj = data.returnObj;
       //console.log(returnObj);
-      return returnObj;
+      const objvFunction4GeneCode_Sim = vFunction4GeneCode_Sim_GetObjFromJsonObj(returnObj);
+      return objvFunction4GeneCode_Sim;
     } else {
       console.error(data.errorMsg);
       throw data.errorMsg;

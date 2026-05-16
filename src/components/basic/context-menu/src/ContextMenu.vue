@@ -1,4 +1,4 @@
-<script lang="tsx">
+﻿<script lang="tsx">
   import { defineComponent, nextTick, onMounted, computed, ref, unref, onUnmounted } from 'vue';
   import { Menu, Divider } from 'ant-design-vue';
   import type { ContextMenuItem, ItemContentProps, Axis } from './typing';

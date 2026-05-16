@@ -1,4 +1,4 @@
-declare namespace API {
+﻿declare namespace API {
   type Menu = {
     createTime: Date;
     updateTime: Date;

@@ -1,4 +1,4 @@
-import antdLocale from 'ant-design-vue/es/locale/en_US';
+﻿import antdLocale from 'ant-design-vue/es/locale/en_US';
 import { genMessage } from '../helper';
 
 const modulesFiles = import.meta.glob<Recordable>('./en-US/**/*.ts', {

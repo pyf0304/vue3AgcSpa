@@ -1,7 +1,7 @@
 ﻿import { clsvFunctionTemplateRela_SimEN } from '@/ts/L0Entity/PrjFunction/clsvFunctionTemplateRela_SimEN';
 import { clsvFunctionTemplateRela_SimENEx } from '@/ts/L0Entity/PrjFunction/clsvFunctionTemplateRela_SimENEx';
 import {
-  vFunctionTemplateRela_Sim_GetObjLstAsync,
+  vFunctionTemplateRela_Sim_GetObjLstByPagerAsync,
   vFunctionTemplateRela_Sim_SortFunByKey,
 } from '@/ts/L3ForWApi/PrjFunction/clsvFunctionTemplateRela_SimWApi';
 import { GetSortExpressInfo, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
@@ -48,8 +48,8 @@ export async function vFunctionTemplateRela_SimEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsvFunctionTemplateRela_SimENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrvFunctionTemplateRela_SimObjLst = await vFunctionTemplateRela_Sim_GetObjLstAsync(
-    objPagerPara.whereCond,
+  const arrvFunctionTemplateRela_SimObjLst = await vFunctionTemplateRela_Sim_GetObjLstByPagerAsync(
+    objPagerPara,
   );
   const arrvFunctionTemplateRela_SimExObjLst = arrvFunctionTemplateRela_SimObjLst.map(
     vFunctionTemplateRela_SimEx_CopyToEx,

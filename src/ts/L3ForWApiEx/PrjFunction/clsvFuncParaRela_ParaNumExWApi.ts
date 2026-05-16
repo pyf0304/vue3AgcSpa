@@ -25,7 +25,7 @@
 //import $ from "jquery";
 import { ObjectAssign, GetSortExpressInfo } from '@/ts/PubFun/clsCommFunc4Web';
 import {
-  vFuncParaRela_ParaNum_GetObjLstAsync,
+  vFuncParaRela_ParaNum_GetObjLstByPagerAsync,
   vFuncParaRela_ParaNum_SortFunByKey,
 } from '@/ts/L3ForWApi/PrjFunction/clsvFuncParaRela_ParaNumWApi';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
@@ -103,8 +103,8 @@ export async function vFuncParaRela_ParaNumEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsvFuncParaRela_ParaNumENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrvFuncParaRela_ParaNumObjLst = await vFuncParaRela_ParaNum_GetObjLstAsync(
-    objPagerPara.whereCond,
+  const arrvFuncParaRela_ParaNumObjLst = await vFuncParaRela_ParaNum_GetObjLstByPagerAsync(
+    objPagerPara,
   );
   const arrvFuncParaRela_ParaNumExObjLst = arrvFuncParaRela_ParaNumObjLst.map(
     vFuncParaRela_ParaNumEx_CopyToEx,

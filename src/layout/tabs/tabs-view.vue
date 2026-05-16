@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="tabs-view">
     <Tabs
       :active-key="activeKey"

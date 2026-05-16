@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   okText: '确认',
   closeText: '关闭',
   cancelText: '取消',

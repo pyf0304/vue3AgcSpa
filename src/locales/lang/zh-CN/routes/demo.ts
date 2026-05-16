@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   demo: 'demo演示',
   button: '按钮的扩展',
   modal: '可拖拽弹窗',

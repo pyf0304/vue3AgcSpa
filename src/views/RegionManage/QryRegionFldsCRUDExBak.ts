@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 类名:QryRegionFldsCRUDEx(界面:QryRegionFldsCRUD,00050244)
  * 表名:QryRegionFlds(00050115)
  * 版本:2024.09.11.1(服务器:WIN-SRV103-116)

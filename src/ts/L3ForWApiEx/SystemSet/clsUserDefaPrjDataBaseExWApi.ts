@@ -9,7 +9,7 @@ import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
 import { Storage } from '@/utils/Storage';
 import { ObjectAssign, GetSortExpressInfo } from '@/ts/PubFun/clsCommFunc4Web';
 import {
-  UserDefaPrjDataBase_GetObjLstAsync,
+  UserDefaPrjDataBase_GetObjLstByPagerAsync,
   UserDefaPrjDataBase_SortFunByKey,
   UserDefaPrjDataBase_GetFirstObjAsync,
 } from '@/ts/L3ForWApi/SystemSet/clsUserDefaPrjDataBaseWApi';
@@ -89,8 +89,8 @@ export async function UserDefaPrjDataBaseEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsUserDefaPrjDataBaseENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrUserDefaPrjDataBaseObjLst = await UserDefaPrjDataBase_GetObjLstAsync(
-    objPagerPara.whereCond,
+  const arrUserDefaPrjDataBaseObjLst = await UserDefaPrjDataBase_GetObjLstByPagerAsync(
+    objPagerPara,
   );
   const arrUserDefaPrjDataBaseExObjLst = arrUserDefaPrjDataBaseObjLst.map(
     UserDefaPrjDataBaseEx_CopyToEx,

@@ -1,4 +1,4 @@
-import { formProps, type FormProps } from 'ant-design-vue/es/form';
+﻿import { formProps, type FormProps } from 'ant-design-vue/es/form';
 import type SchemaForm from './schema-form.vue';
 import type { ColEx } from './types/component';
 import type { ExtractPropTypes, ComponentInternalInstance, CSSProperties } from 'vue';

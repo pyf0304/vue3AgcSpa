@@ -177,7 +177,7 @@ export abstract class ViewIdGCVariableRela_Edit {
       this.opType = 'Add';
       const bolIsSuccess = await this.ShowDialog_ViewIdGCVariableRela(this.opType);
       if (bolIsSuccess == false) return;
-      if (['02', '03', '06'].indexOf(clsViewIdGCVariableRelaEN.PrimaryTypeId) > -1) {
+      if (['02', '03', '06'].indexOf(clsViewIdGCVariableRelaEN._PrimaryTypeId) > -1) {
         await this.AddNewRecordWithMaxId();
       } else {
         await this.AddNewRecord();

@@ -1,4 +1,4 @@
-import type { FormSchema } from '@/components/core/schema-form/';
+﻿import type { FormSchema } from '@/components/core/schema-form/';
 import { waitTime } from '@/utils/common';
 
 export const schemas: FormSchema[] = [

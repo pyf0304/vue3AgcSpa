@@ -1,4 +1,4 @@
-export interface TreeNode {
+﻿export interface TreeNode {
   id: string;
   label: string;
   type: string;

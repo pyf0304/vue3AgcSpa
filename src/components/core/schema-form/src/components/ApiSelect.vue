@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Select
     v-bind="getProps"
     :options="getOptions"

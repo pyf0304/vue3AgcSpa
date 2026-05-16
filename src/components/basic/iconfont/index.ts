@@ -1,2 +1,2 @@
-import IconFont from './icon-font';
+﻿import IconFont from './icon-font';
 export { IconFont };

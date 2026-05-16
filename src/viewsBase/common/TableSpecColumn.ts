@@ -1,4 +1,4 @@
-/** 通用表列字段来源定义。 */
+﻿/** 通用表列字段来源定义。 */
 export type TableColumnFieldSource = 'entity' | 'related' | 'computed';
 
 /** 通用表列规格：用于统一生成列表列和导出列。 */

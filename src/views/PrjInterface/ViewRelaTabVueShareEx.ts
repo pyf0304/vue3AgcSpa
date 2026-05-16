@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+﻿import { ref } from 'vue';
 
 // Extension-only state: avoid modifying generated ViewRelaTabVueShare.ts
 export const selectedRelaTabId = ref('');

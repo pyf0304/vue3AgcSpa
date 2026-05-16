@@ -1,4 +1,4 @@
-import { tableProps } from 'ant-design-vue/es/table';
+﻿import { tableProps } from 'ant-design-vue/es/table';
 import type DynamicTable from './dynamic-table.vue';
 import type { PropType, ExtractPropTypes } from 'vue';
 import type { BookType } from 'xlsx';

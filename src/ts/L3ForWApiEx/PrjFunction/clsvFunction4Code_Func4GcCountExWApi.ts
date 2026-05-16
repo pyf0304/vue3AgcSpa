@@ -25,7 +25,7 @@
 //import $ from "jquery";
 import { ObjectAssign, GetSortExpressInfo } from '@/ts/PubFun/clsCommFunc4Web';
 import {
-  vFunction4Code_Func4GcCount_GetObjLstAsync,
+  vFunction4Code_Func4GcCount_GetObjLstByPagerAsync,
   vFunction4Code_Func4GcCount_SortFunByKey,
 } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4Code_Func4GcCountWApi';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
@@ -103,9 +103,8 @@ export async function vFunction4Code_Func4GcCountEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsvFunction4Code_Func4GcCountENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrvFunction4Code_Func4GcCountObjLst = await vFunction4Code_Func4GcCount_GetObjLstAsync(
-    objPagerPara.whereCond,
-  );
+  const arrvFunction4Code_Func4GcCountObjLst =
+    await vFunction4Code_Func4GcCount_GetObjLstByPagerAsync(objPagerPara);
   const arrvFunction4Code_Func4GcCountExObjLst = arrvFunction4Code_Func4GcCountObjLst.map(
     vFunction4Code_Func4GcCountEx_CopyToEx,
   );

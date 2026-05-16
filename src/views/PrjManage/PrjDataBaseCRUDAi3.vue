@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div id="divLayout" ref="refDivLayout" class="div_layout">
     <div style="position: relative; width: 648px; height: 37px; left: 0px; top: 0px">
       <label id="lblViewTitle" name="lblViewTitle" class="h5">{{ strTitle }} </label>

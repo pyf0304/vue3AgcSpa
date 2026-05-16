@@ -1,1 +1,1 @@
-export { default as DraggableModal } from './index.vue';
+﻿export { default as DraggableModal } from './index.vue';

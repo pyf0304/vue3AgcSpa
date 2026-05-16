@@ -1,4 +1,4 @@
-// generate components map
+﻿// generate components map
 export const constantRouterComponents = {};
 
 // auto load

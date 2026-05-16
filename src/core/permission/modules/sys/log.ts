@@ -1,4 +1,4 @@
-export const sysLog = {
+﻿export const sysLog = {
   req: 'sys/log/req/page',
   login: 'sys/log/login/page',
   task: 'sys/log/task/page',

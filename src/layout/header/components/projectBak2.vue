@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Dropdown placement="bottomRight">
     <!-- <SvgIcon name="locale" /> -->
     <span class="ml-1">当前工程: {{ getLocaleText }}{{ Addi }}</span>

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <template v-for="item in filterMenus" :key="item.name || item.fullPath">
     <!-- 目录 -->
     <template v-if="isShowSubMenu(item)">

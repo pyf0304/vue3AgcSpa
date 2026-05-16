@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Button
     v-bind="{ ...$attrs, ...props }"
     :type="buttonType"

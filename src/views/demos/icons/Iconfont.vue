@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <Alert
       message="自定义图标"

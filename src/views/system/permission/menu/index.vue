@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <DynamicTable header-title="菜单管理" :data-request="loadTableData" :columns="columns">
       <template #toolbar>

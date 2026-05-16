@@ -151,6 +151,7 @@ import { FeatureRegionFldsEx_GetObjExLstByPagerCache } from '@/ts/L3ForWApiEx/Re
 */
 export default class FeatureRegionFldsCRUDEx extends FeatureRegionFldsCRUD implements IShowList {
   public static GetPropValueV2: (strPropName: string) => any;
+  public static OnCurrentFeatureChanged?: () => void;
   public static EditRegionRef: Ref<any>;
   public static SelectedKeyIds = '';
   //public selCtrlId = "";
@@ -292,6 +293,7 @@ export default class FeatureRegionFldsCRUDEx extends FeatureRegionFldsCRUD imple
         // FeatureRegionFldsCRUDEx.objPageEdit.divEdit =
         //   FeatureRegionFldsCRUDEx.GetPropValueV2('editDiv');
         FeatureRegionFldsCRUDEx.objPageEdit.btnUpdateRecord_Click(strKeyId);
+        FeatureRegionFldsCRUDEx.OnCurrentFeatureChanged?.();
         break;
       case 'CopyRecord': //复制记录
       case 'Clone': //复制记录
@@ -600,8 +602,8 @@ export default class FeatureRegionFldsCRUDEx extends FeatureRegionFldsCRUD imple
         TabId4Region_Static.value = objViewRegion_Feature.tabId;
         TabId_Static.value = objViewRegion_Feature.tabId;
         TabId_Static_ViewIdGcVar.value = objViewRegion_Feature.tabId;
-        refViewFeatureFlds1_Edit.value.BindDdl4EditRegion(TabId4Region_Static.value);
-        refViewFeatureFlds2_Edit.value.BindDdl4EditRegion(TabId4Region_Static.value);
+        (refViewFeatureFlds1_Edit.value as any)?.BindDdl4EditRegion?.(TabId4Region_Static.value);
+        (refViewFeatureFlds2_Edit.value as any)?.BindDdl4EditRegion?.(TabId4Region_Static.value);
       }
       // await this.AddDPV_Detail4ViewRegion(this.divName4Detail4ViewRegion);
       const objViewRegion_Detail = new ViewRegion_Detail_SimEx(this);

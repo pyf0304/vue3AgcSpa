@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Popover v-model:visible="visible" placement="bottomLeft" trigger="focus">
     <template #content>
       <div class="select-box">

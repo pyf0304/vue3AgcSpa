@@ -1,4 +1,4 @@
-import type { FormSchema } from '@/components/core/schema-form/';
+﻿import type { FormSchema } from '@/components/core/schema-form/';
 import type { TableListItem } from './columns';
 
 export const getRenameSchemas = (row: TableListItem): FormSchema<API.FileRenameParams>[] => [

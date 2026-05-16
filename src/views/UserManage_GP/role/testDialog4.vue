@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <button @click="showDialog">打开对话框</button>
 

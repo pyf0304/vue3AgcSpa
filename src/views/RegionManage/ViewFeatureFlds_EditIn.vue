@@ -209,6 +209,7 @@
   import { clsvFieldTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvFieldTab_SimEN';
   import {
     vFieldTab_Sim_GetNameByFldIdCache,
+    vFieldTab_Sim_GetObjLstAsync,
     vFieldTab_Sim_GetObjLstCache,
   } from '@/ts/L3ForWApi/Table_Field/clsvFieldTab_SimWApi';
   import { PrjTabFld_GetObjLstCache } from '@/ts/L3ForWApi/Table_Field/clsPrjTabFldWApi';
@@ -306,22 +307,36 @@
         ctlTypeId.value = '0';
       }
       async function getArrvFieldTab_Sim(strTabId: string) {
-        const strPrjId = clsPrivateSessionStorage.currSelPrjId;
+        const strPrjId = clsPrivateSessionStorage.currSelPrjId || clsPrivateSessionStorage.cmPrjId;
+        if (IsNullOrEmpty(strPrjId)) {
+          arrvFieldTab_Sim.value = [];
+          const obj0 = new clsvFieldTab_SimEN();
+          obj0.fldId = '0';
+          obj0.fldName = '字段表...';
+          arrvFieldTab_Sim.value.push(obj0);
+          releFldId.value = '0';
+          return;
+        }
         // let arrvPrjTab_Sim0 = await vPrjTab_Sim_GetObjLstCache(strPrjId);
         // if (arrvPrjTab_Sim0 == null) return;
         // arrvPrjTab_Sim0 = arrvPrjTab_Sim0.sort((x, y) => x.tabName.localeCompare(y.tabName));
 
-        const arrPrjTabFld = await PrjTabFld_GetObjLstCache(strTabId);
-        //arrPrjTabFld = arrPrjTabFld.filter(x => x.tabId == strTabId);
-        const arrFldId = arrPrjTabFld.map((x) => x.fldId);
-
         // const strWhere = `${clsvFieldTab_SimEN.con_PrjId} = '${strPrjId}'`;
         let arrObjLstSel = await vFieldTab_Sim_GetObjLstCache(strPrjId);
-        arrObjLstSel = arrObjLstSel
-          .filter((x) => arrFldId.indexOf(x.fldId) > -1)
-          .sort((x, y) => x.fldName.localeCompare(y.fldName));
+        if (arrObjLstSel == null || arrObjLstSel.length == 0) {
+          const strWhere = Format(clsvFieldTab_SimEN._WhereFormat, strPrjId);
+          arrObjLstSel = await vFieldTab_Sim_GetObjLstAsync(strWhere);
+        }
+        arrObjLstSel = arrObjLstSel || [];
+        if (IsNullOrEmpty(strTabId) == false) {
+          const arrPrjTabFld = await PrjTabFld_GetObjLstCache(strTabId);
+          if (arrPrjTabFld.length > 0) {
+            const arrFldId = arrPrjTabFld.map((x) => x.fldId);
+            arrObjLstSel = arrObjLstSel.filter((x) => arrFldId.indexOf(x.fldId) > -1);
+          }
+        }
+        arrObjLstSel = arrObjLstSel.sort((x, y) => x.fldName.localeCompare(y.fldName));
 
-        if (arrObjLstSel == null) return;
         arrvFieldTab_Sim.value.length = 0;
         const obj0 = new clsvFieldTab_SimEN();
         obj0.fldId = '0';

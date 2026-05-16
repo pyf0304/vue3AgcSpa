@@ -1,4 +1,4 @@
-declare namespace API {
+﻿declare namespace API {
   type MenuListResultItem = {
     createTime: string;
     updatedAt: string;

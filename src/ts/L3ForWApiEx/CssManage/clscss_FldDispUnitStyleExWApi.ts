@@ -30,7 +30,7 @@ import { clscss_StyleEN } from '@/ts/L0Entity/CssManage/clscss_StyleEN';
 import { clsCtlTypeEN, enumCtlType } from '@/ts/L0Entity/PrjInterface/clsCtlTypeEN';
 import {
   css_FldDispUnitStyle_GetObjByFldDispUnitStyleIdCache,
-  css_FldDispUnitStyle_GetObjLstAsync,
+  css_FldDispUnitStyle_GetObjLstByPagerAsync,
   css_FldDispUnitStyle_SortFunByKey,
 } from '@/ts/L3ForWApi/CssManage/clscss_FldDispUnitStyleWApi';
 import { css_Style_func } from '@/ts/L3ForWApi/CssManage/clscss_StyleWApi';
@@ -129,8 +129,8 @@ export async function css_FldDispUnitStyleEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clscss_FldDispUnitStyleENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrcss_FldDispUnitStyleObjLst = await css_FldDispUnitStyle_GetObjLstAsync(
-    objPagerPara.whereCond,
+  const arrcss_FldDispUnitStyleObjLst = await css_FldDispUnitStyle_GetObjLstByPagerAsync(
+    objPagerPara,
   );
   const arrcss_FldDispUnitStyleExObjLst = arrcss_FldDispUnitStyleObjLst.map(
     css_FldDispUnitStyleEx_CopyToEx,

@@ -1,4 +1,4 @@
-import { Result } from 'ant-design-vue';
+﻿import { Result } from 'ant-design-vue';
 import { notFound, errorRoute } from './staticModules/error';
 import { REDIRECT_ROUTE } from './staticModules/besidesLayout';
 import outsideLayout from './outsideLayout';

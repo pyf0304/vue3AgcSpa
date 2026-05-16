@@ -1,4 +1,4 @@
-export const sysDept = {
+﻿export const sysDept = {
   /** 获取部门列表 */
   list: 'sys/dept/list',
   /** 移动部门 */

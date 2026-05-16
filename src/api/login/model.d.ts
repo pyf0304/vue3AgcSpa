@@ -1,4 +1,4 @@
-declare namespace API {
+﻿declare namespace API {
   /** 登录参数 */
   type LoginParams = {
     captchaId: string;

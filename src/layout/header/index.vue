@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Layout.Header :style="headerStyle" class="layout-header">
     <Space :size="20">
       <slot>

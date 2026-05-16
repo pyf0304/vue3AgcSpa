@@ -1,4 +1,4 @@
-import { unref, computed, watchEffect } from 'vue';
+﻿import { unref, computed, watchEffect } from 'vue';
 import { ColumnKeyFlag } from '../types/column';
 import type { TableMethods } from './useTableMethods';
 import type { TableState } from './useTableState';

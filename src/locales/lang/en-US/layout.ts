@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   footer: { onlinePreview: 'Preview', onlineDocument: 'Document' },
   header: {
     // user dropdown

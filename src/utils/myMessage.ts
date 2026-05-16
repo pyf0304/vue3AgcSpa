@@ -1,4 +1,4 @@
-// import { ElMessage } from 'element-plus';
+﻿// import { ElMessage } from 'element-plus';
 import { message } from 'ant-design-vue';
 export class myMessage {
   public static warning(strMsg: string) {

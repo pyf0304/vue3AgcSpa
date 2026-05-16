@@ -1,4 +1,4 @@
-import { UploadOutlined } from '@ant-design/icons-vue';
+﻿import { UploadOutlined } from '@ant-design/icons-vue';
 import { Radio, Button } from 'ant-design-vue';
 import type { FormSchema } from '@/components/core/schema-form';
 import { optionsListApi } from '@/api/demos/select';

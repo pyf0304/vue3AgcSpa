@@ -1,4 +1,4 @@
-export const sysServe = {
+﻿export const sysServe = {
   stat: 'sys/serve/stat',
 } as const;
 

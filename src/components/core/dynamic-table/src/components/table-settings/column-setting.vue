@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Tooltip placement="top">
     <template #title>
       <span>{{ $t('component.table.settingColumn') }}</span>

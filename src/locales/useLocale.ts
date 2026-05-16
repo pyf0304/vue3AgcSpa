@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Multi-language related operations
  */
 import { unref, computed } from 'vue';

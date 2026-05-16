@@ -1,4 +1,4 @@
-// store/divVarSet.ts
+﻿// store/divVarSet.ts
 import { ref, reactive } from 'vue';
 import { defineStore } from 'pinia';
 

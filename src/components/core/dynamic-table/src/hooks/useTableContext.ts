@@ -1,4 +1,4 @@
-import { provide, inject } from 'vue';
+﻿import { provide, inject } from 'vue';
 import type { DynamicTableType } from './index';
 
 const key = Symbol('dynamic-table');

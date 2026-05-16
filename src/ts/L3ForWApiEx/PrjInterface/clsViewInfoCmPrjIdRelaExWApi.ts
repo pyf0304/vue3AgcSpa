@@ -13,7 +13,7 @@ import { Storage } from '@/utils/Storage';
 import { GetSortExpressInfo, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsViewInfoCmPrjIdRelaENEx } from '@/ts/L0Entity/PrjInterface/clsViewInfoCmPrjIdRelaENEx';
 import {
-  ViewInfoCmPrjIdRela_GetObjLstAsync,
+  ViewInfoCmPrjIdRela_GetObjLstByPagerAsync,
   ViewInfoCmPrjIdRela_SortFunByKey,
 } from '@/ts/L3ForWApi/PrjInterface/clsViewInfoCmPrjIdRelaWApi';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
@@ -94,8 +94,8 @@ export async function ViewInfoCmPrjIdRelaEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsViewInfoCmPrjIdRelaENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrViewInfoCmPrjIdRelaObjLst = await ViewInfoCmPrjIdRela_GetObjLstAsync(
-    objPagerPara.whereCond,
+  const arrViewInfoCmPrjIdRelaObjLst = await ViewInfoCmPrjIdRela_GetObjLstByPagerAsync(
+    objPagerPara,
   );
   const arrViewInfoCmPrjIdRelaExObjLst = arrViewInfoCmPrjIdRelaObjLst.map(
     ViewInfoCmPrjIdRelaEx_CopyToEx,

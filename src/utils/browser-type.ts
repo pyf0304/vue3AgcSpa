@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @description 获取用户浏览器版本及系统信息
  * @param {string='zh-cn' | 'en'} lang 返回中文的信息还是英文的
  * @constructor

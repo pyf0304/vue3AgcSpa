@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   settings: '个人设置',
   about: '关于',
   selectPrj: '项目选择',

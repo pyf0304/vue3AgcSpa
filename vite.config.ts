@@ -20,6 +20,9 @@ import pkg from './package.json';
 import type { UserConfig, ConfigEnv } from 'vite';
 
 const CWD = process.cwd();
+const LOCKSCREEN_COMPONENT_PATH =
+  /src[\\/]components[\\/]basic[\\/]lockscreen[\\/]lockscreen\.vue$/;
+const MOCKJS_DIST_PATH = /node_modules[\\/]mockjs[\\/]dist[\\/]mock\.js$/;
 
 // 环境变量
 // const BASE_ENV_CONFIG = loadEnv('', CWD);
@@ -93,6 +96,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       {
         ...Components({
           resolvers: [AntDesignVueResolver()],
+          exclude: [LOCKSCREEN_COMPONENT_PATH],
         }),
         apply: 'build',
       },
@@ -182,13 +186,19 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       },
     },
     build: {
-      target: 'es2017',
       minify: 'esbuild',
       cssTarget: 'chrome79',
       chunkSizeWarningLimit: 4000,
       outDir: 'dist', // 输出目录，默认为 dist
       assetsDir: 'assets', // 静态资源目录，默认为 assets
       rollupOptions: {
+        onwarn(warning, defaultHandler) {
+          const warningId = 'id' in warning ? warning.id : undefined;
+          if (warning.code === 'EVAL' && warningId && MOCKJS_DIST_PATH.test(warningId)) {
+            return;
+          }
+          defaultHandler(warning);
+        },
         output: {
           // 增加内存限制
           manualChunks: undefined,

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <Alert message="基础表单示例" type="info" show-icon style="margin-bottom: 12px">
       <template #description>

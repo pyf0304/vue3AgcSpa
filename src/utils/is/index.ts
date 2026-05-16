@@ -1,4 +1,4 @@
-const toString = Object.prototype.toString;
+﻿const toString = Object.prototype.toString;
 
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 

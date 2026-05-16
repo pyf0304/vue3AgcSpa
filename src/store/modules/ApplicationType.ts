@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia';
+﻿import { defineStore } from 'pinia';
 
 import { ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { Format } from '@/ts/PubFun/clsString';

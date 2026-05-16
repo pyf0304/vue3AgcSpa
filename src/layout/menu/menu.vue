@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="menu-container" :class="{ 'is-side-menu': isSideMenu }">
     <Menu
       v-model:selected-keys="state.selectedKeys"

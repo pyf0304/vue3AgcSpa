@@ -1,4 +1,4 @@
-import { computed, onMounted, reactive } from 'vue';
+﻿import { computed, onMounted, reactive } from 'vue';
 
 export type Battery = {
   charging: boolean; // 当前电池是否正在充电

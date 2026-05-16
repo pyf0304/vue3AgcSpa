@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <SettingOutlined @click="showDrawer" />
   <Drawer v-model:visible="visible" placement="right" :closable="false">
     <Descriptions title="整体风格" :column="5">

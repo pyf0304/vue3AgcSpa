@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="file-upload-drawer-container">
     <Drawer
       :title="title"

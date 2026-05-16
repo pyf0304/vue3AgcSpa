@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     :class="{ unLockLogin: state.isShowLogin }"
     class="lockscreen"

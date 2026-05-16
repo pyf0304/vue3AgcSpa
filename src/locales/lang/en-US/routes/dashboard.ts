@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   dashboard: 'Dashboard',
   about: 'About',
   workbench: 'Workbench',

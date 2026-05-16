@@ -1,4 +1,4 @@
-import { Format } from '@/ts/PubFun/clsString';
+﻿import { Format } from '@/ts/PubFun/clsString';
 import { IShowList } from '@/ts/PubFun/IShowList';
 import {
   divVarSet,

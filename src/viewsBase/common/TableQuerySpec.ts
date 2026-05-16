@@ -1,1 +1,1 @@
-export { QueryControlType } from './TableSpecQuery';
+﻿export { QueryControlType } from './TableSpecQuery';

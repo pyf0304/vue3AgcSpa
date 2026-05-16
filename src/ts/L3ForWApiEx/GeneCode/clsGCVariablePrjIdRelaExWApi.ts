@@ -28,7 +28,7 @@ import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
 import { Storage } from '@/utils/Storage';
 import { GetSortExpressInfo, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import {
-  GCVariablePrjIdRela_GetObjLstAsync,
+  GCVariablePrjIdRela_GetObjLstByPagerAsync,
   GCVariablePrjIdRela_SortFunByKey,
 } from '@/ts/L3ForWApi/GeneCode/clsGCVariablePrjIdRelaWApi';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
@@ -124,8 +124,8 @@ export async function GCVariablePrjIdRelaEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsGCVariablePrjIdRelaENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrGCVariablePrjIdRelaObjLst = await GCVariablePrjIdRela_GetObjLstAsync(
-    objPagerPara.whereCond,
+  const arrGCVariablePrjIdRelaObjLst = await GCVariablePrjIdRela_GetObjLstByPagerAsync(
+    objPagerPara,
   );
   const arrGCVariablePrjIdRelaExObjLst = arrGCVariablePrjIdRelaObjLst.map(
     GCVariablePrjIdRelaEx_CopyToEx,

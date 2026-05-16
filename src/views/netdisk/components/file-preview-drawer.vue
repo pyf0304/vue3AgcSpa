@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Drawer title="文件详情" :width="500" :visible="visible" @close="handleClose">
     <Spin :spinning="loading" class="preview-drawer-inner-box">
       <Space direction="vertical">

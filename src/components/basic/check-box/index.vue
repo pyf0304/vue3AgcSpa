@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Checkbox v-bind="getProps" v-model:checked="checkedModel" @change="handleChange">
     <slot></slot>
   </Checkbox>

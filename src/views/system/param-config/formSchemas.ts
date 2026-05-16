@@ -1,4 +1,4 @@
-import type { FormSchema } from '@/components/core/schema-form/';
+﻿import type { FormSchema } from '@/components/core/schema-form/';
 
 export const getSchemas = (configId = -1): FormSchema<API.CreateParamConfigParams>[] => [
   {

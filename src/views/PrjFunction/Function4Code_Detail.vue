@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <a-modal v-model:visible="dialogVisible" :width="dialogWidth" :title="strTitle">
     <!--使用头部插槽来自定义对话框的标题-->
     <template #header>

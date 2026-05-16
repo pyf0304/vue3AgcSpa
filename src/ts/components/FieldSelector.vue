@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <div>
       <label for="availableFields">可选字段：</label>

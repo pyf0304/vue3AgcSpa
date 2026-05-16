@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="flex justify-between p-16px">
     <slot name="headerTitle">
       <div class="title">

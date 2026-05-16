@@ -1,4 +1,4 @@
-import type { ModalProps } from 'ant-design-vue';
+﻿import type { ModalProps } from 'ant-design-vue';
 
 // 普通模态框
 export interface HookModalProps extends Partial<ModalProps> {

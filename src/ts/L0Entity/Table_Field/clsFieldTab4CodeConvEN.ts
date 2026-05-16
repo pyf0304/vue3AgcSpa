@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 类名:clsFieldTab4CodeConvEN
  * 表名:FieldTab4CodeConv(00050593)
  * 版本:2025.06.13.1(服务器:WIN-SRV103-116)

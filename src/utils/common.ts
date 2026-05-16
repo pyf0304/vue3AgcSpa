@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+﻿import dayjs from 'dayjs';
 
 /**
  * @description 处理首字母大写 abc => Abc

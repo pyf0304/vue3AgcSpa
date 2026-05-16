@@ -1,4 +1,4 @@
-export const themeStyle = [
+﻿export const themeStyle = [
   {
     label: '亮色主题风格',
     value: 'light',

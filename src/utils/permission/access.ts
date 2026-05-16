@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { App } from 'vue';
 import { store } from '@/store';
 

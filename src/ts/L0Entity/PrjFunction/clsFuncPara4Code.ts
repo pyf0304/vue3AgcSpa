@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 类名:clsFuncPara4Code
  * 表名:FuncPara4Code(00050384)
  * 版本:2024.02.03.1(服务器:WIN-SRV103-116)

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="info-dropdown">
     <a-dropdown trigger="click" @visible-change="handleDropdownVisibleChange">
       <template #overlay>

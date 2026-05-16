@@ -1,4 +1,4 @@
-import { TableCommandSpec } from '@/viewsBase/common/TableSpecCommand';
+﻿import { TableCommandSpec } from '@/viewsBase/common/TableSpecCommand';
 
 /** Ai4 场景下可用的命令标识。 */
 export type PrjDataBaseCommandIdAi4 =

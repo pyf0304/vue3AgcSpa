@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <svg v-bind="$attrs" class="svg-icon" :style="getStyle" aria-hidden="true">
     <use :xlink:href="symbolId" />
   </svg>

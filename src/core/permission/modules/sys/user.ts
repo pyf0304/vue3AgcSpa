@@ -1,4 +1,4 @@
-export const sysUser = {
+﻿export const sysUser = {
   add: 'sys/user/add',
   page: 'sys/user/page',
   info: 'sys/user/info',

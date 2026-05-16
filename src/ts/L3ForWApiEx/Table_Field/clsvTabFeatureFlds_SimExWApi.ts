@@ -13,7 +13,7 @@ import {
   vTabFeatureFlds_Sim_GetObjBymIdAsync,
   vTabFeatureFlds_Sim_GetObjLstByJSONObjLst,
   vTabFeatureFlds_Sim_ReFreshThisCache,
-  vTabFeatureFlds_Sim_GetObjLstAsync,
+  vTabFeatureFlds_Sim_GetObjLstByPagerAsync,
   vTabFeatureFlds_Sim_SortFunByKey,
   vTabFeatureFlds_Sim_GetObjLstCache,
 } from '@/ts/L3ForWApi/Table_Field/clsvTabFeatureFlds_SimWApi';
@@ -99,8 +99,8 @@ export async function vTabFeatureFlds_SimEx_GetObjExLstByPagerAsync(
   objPagerPara: stuPagerPara,
 ): Promise<Array<clsvTabFeatureFlds_SimENEx>> {
   const strThisFuncName = 'GetObjExLstByPagerAsync';
-  const arrvTabFeatureFlds_SimExObjLst = await vTabFeatureFlds_Sim_GetObjLstAsync(
-    objPagerPara.whereCond,
+  const arrvTabFeatureFlds_SimExObjLst = await vTabFeatureFlds_Sim_GetObjLstByPagerAsync(
+    objPagerPara,
   );
   const objSortInfo = GetSortExpressInfo(objPagerPara);
   if (

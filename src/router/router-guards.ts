@@ -1,4 +1,4 @@
-import { isNavigationFailure } from 'vue-router';
+﻿import { isNavigationFailure } from 'vue-router';
 import NProgress from 'nprogress'; // progress bar
 import { LOGIN_NAME, REDIRECT_NAME } from './constant';
 import type { WhiteNameList } from './constant';

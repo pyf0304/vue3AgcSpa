@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Space>
     <a-button v-show="copyMode || cutMode" :disabled="disabledPasteButton" @click="handlePaste">
       <DeliveredProcedureOutlined />粘贴</a-button

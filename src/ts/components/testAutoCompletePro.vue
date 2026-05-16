@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <Autocomplete ref="autocompleteRef" :suggestions="autocompleteSuggestions" />
     <button @click="getSelectedValue">Get Selected Value</button>

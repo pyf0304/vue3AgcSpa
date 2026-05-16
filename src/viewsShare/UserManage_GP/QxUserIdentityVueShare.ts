@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 类名:QxUserIdentityVueShare(界面:QxUserIdentityCRUD,00140039)
  * 表名:QxUserIdentity(00140042)
  * 版本:2025.05.26.1(服务器:WIN-SRV103-116)

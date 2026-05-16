@@ -1,4 +1,4 @@
-export const sysOnline = {
+﻿export const sysOnline = {
   list: 'sys/online/list',
   kick: 'sys/online/kick',
 } as const;

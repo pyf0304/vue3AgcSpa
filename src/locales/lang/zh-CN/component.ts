@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   excel: {
     exportModalTitle: '导出数据',
     fileType: '文件类型',
