@@ -21,12 +21,15 @@ import {
   FunctionTemplateRela_GetUniCondStr4Update,
   FunctionTemplateRela_AddNewRecordWithReturnKeyAsync,
   FunctionTemplateRela_IsExistAsync,
-  FunctionTemplateRela_GetObjBymIdAsync,
+  FunctionTemplateRela_GetObjByKeyAsync,
   FunctionTemplateRela_CheckProperty4Update,
   FunctionTemplateRela_UpdateRecordAsync,
   FunctionTemplateRela_EditRecordExAsync,
 } from '@/ts/L3ForWApi/PrjFunction/clsFunctionTemplateRelaWApi';
-import { clsFunctionTemplateRelaEN } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateRelaEN';
+import {
+  clsFunctionTemplateRelaEN,
+  FunctionTemplateRelaKey,
+} from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateRelaEN';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
 import {
   divVarSet,
@@ -544,7 +547,7 @@ export abstract class FunctionTemplateRela_Edit {
    * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_ShowData)
    * @param lngmId: 表记录的关键字,显示该表关键字的内容
    **/
-  public async ShowData(lngmId: number) {
+  public async ShowData(key: FunctionTemplateRelaKey) {
     const strThisFuncName = this.ShowData.name;
     //操作步骤:
     //1、检查关键字是否为空；
@@ -555,9 +558,9 @@ export abstract class FunctionTemplateRela_Edit {
     //2、检查该关键字的记录是否存在,如果不存在就返回不显示；
     let objFunctionTemplateRelaEN = new clsFunctionTemplateRelaEN();
     try {
-      const returnBool = await FunctionTemplateRela_IsExistAsync(lngmId);
+      const returnBool = await FunctionTemplateRela_IsExistAsync(key);
       if (returnBool == false) {
-        const strInfo = Format('关键字:[{0}] 的记录不存在!', lngmId);
+        const strInfo = Format('关键字:[{0}] 的记录不存在!', key.mId);
         //显示信息框
         alert(strInfo);
       }
@@ -572,7 +575,9 @@ export abstract class FunctionTemplateRela_Edit {
       alert(strMsg);
     }
     try {
-      const objFunctionTemplateRelaENConst = await FunctionTemplateRela_GetObjBymIdAsync(lngmId);
+      const objFunctionTemplateRelaENConst = await FunctionTemplateRela_GetObjByKeyAsync({
+        mId: key.mId,
+      });
       if (objFunctionTemplateRelaENConst == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -608,7 +613,9 @@ export abstract class FunctionTemplateRela_Edit {
     const strThisFuncName = this.UpdateRecord.name;
     this.keyId = lngmId;
     try {
-      const objFunctionTemplateRelaEN = await FunctionTemplateRela_GetObjBymIdAsync(lngmId);
+      const objFunctionTemplateRelaEN = await FunctionTemplateRela_GetObjByKeyAsync({
+        mId: lngmId,
+      });
       if (objFunctionTemplateRelaEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

@@ -18,6 +18,34 @@
         class="table table-bordered table-hover table td table-sm"
       >
         <tbody>
+          <tr id="trProgLangTypeId">
+            <td class="text-right">
+              <label
+                id="lblProgLangTypeId"
+                name="lblProgLangTypeId"
+                class="col-form-label text-right"
+                style="width: 90px"
+                >语言类型
+              </label>
+            </td>
+            <td class="text-left">
+              <select
+                id="ddlProgLangTypeId"
+                v-model="progLangTypeId"
+                class="form-control form-control-sm"
+                style="width: 150px"
+              >
+                <option
+                  v-for="(item, index) in arrProgLangType"
+                  :key="index"
+                  :value="item.progLangTypeId"
+                >
+                  {{ item.progLangTypeSimName || item.progLangTypeName }}
+                </option></select
+              >
+            </td>
+            <td class="text-left" ColSpan="2"></td>
+          </tr>
           <tr id="trCodeTypeId">
             <td class="text-right">
               <label
@@ -209,7 +237,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { defineComponent, ref, watch } from 'vue';
   import { clsDateTime } from '@/ts/PubFun/clsDateTime';
   import FunctionTemplateRela_EditAiEx from '@/views/PrjFunction/FunctionTemplateRela_EditAiEx';
   import { clsFunctionTemplateRelaEN } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateRelaEN';
@@ -218,18 +246,20 @@
   import { clsRegionTypeEN } from '@/ts/L0Entity/RegionManage/clsRegionTypeEN';
   import { clsvCodeType_SimEN } from '@/ts/L0Entity/GeneCode/clsvCodeType_SimEN';
   import { clsFunction4GeneCodeEN } from '@/ts/L0Entity/PrjFunction/clsFunction4GeneCodeEN';
+  import { clsProgLangTypeEN } from '@/ts/L0Entity/SysPara/clsProgLangTypeEN';
   import { FunctionTemplate_GetArrFunctionTemplate } from '@/ts/L3ForWApi/PrjFunction/clsFunctionTemplateWApi';
   import { CodeType_GetArrCodeTypeByProgLangTypeId } from '@/ts/L3ForWApi/GeneCode/clsCodeTypeWApi';
   import { RegionType_GetArrRegionType } from '@/ts/L3ForWApi/RegionManage/clsRegionTypeWApi';
   import { vCodeType_Sim_GetArrvCodeType_SimByProgLangTypeId } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
   import { Function4GeneCode_GetArrFunction4GeneCodeByFuncCodeTypeId } from '@/ts/L3ForWApi/PrjFunction/clsFunction4GeneCodeWApi';
+  import { ProgLangType_GetArrProgLangTypeByIsVisible } from '@/ts/L3ForWApi/SysPara/clsProgLangTypeWApi';
   import {
     CodeTypeId_Static,
     ProgLangTypeId_Static,
     refDivEdit,
   } from '@/views/PrjFunction/FunctionTemplateRelaVueShare';
   import { useUserStore } from '@/store/modulesShare/user';
-  import { Format, IsNullOrEmptyEq0, Is0EqEmpty } from '@/ts/PubFun/clsString';
+  import { Format, IsNullOrEmpty, IsNullOrEmptyEq0, Is0EqEmpty } from '@/ts/PubFun/clsString';
   import { FunctionTemplateRela_EditAi } from '@/viewsBase/PrjFunction/FunctionTemplateRela_EditAi';
   import { enumPageDispMode } from '@/ts/PubFun/enumPageDispMode';
   export default defineComponent({
@@ -250,6 +280,7 @@
       const dialogWidth = ref('800px'); // 设置对话框的宽度
 
       const functionTemplateId = ref('');
+      const progLangTypeId = ref('');
       const codeTypeId = ref('');
       const regionTypeId = ref('');
       const funcCodeTypeId = ref('');
@@ -261,35 +292,88 @@
       const memo = ref('');
 
       const arrFunctionTemplate = ref<clsFunctionTemplateEN[] | null>([]);
+      const arrProgLangType = ref<clsProgLangTypeEN[] | null>([]);
       const arrCodeType = ref<clsCodeTypeEN[] | null>([]);
       const arrRegionType = ref<clsRegionTypeEN[] | null>([]);
       const arrvCodeType_Sim = ref<clsvCodeType_SimEN[] | null>([]);
       const arrFunction4GeneCode = ref<clsFunction4GeneCodeEN[] | null>([]);
+
+      async function syncFunctionByFuncCodeTypeId(strFuncCodeTypeId: string) {
+        if (strFuncCodeTypeId == null || strFuncCodeTypeId === '' || strFuncCodeTypeId === '0') {
+          arrFunction4GeneCode.value = [];
+          funcId4GC.value = '0';
+          return;
+        }
+        arrFunction4GeneCode.value =
+          await Function4GeneCode_GetArrFunction4GeneCodeByFuncCodeTypeId(strFuncCodeTypeId);
+        if (!arrFunction4GeneCode.value || arrFunction4GeneCode.value.length === 0) {
+          funcId4GC.value = '0';
+          return;
+        }
+        const hasCurrent = arrFunction4GeneCode.value.some((x) => x.funcId4GC === funcId4GC.value);
+        if (!hasCurrent) {
+          funcId4GC.value = arrFunction4GeneCode.value[0].funcId4GC;
+        }
+      }
+
+      async function syncCodeTypesByProgLangType(
+        strProgLangTypeId: string,
+        preserveCurrentSelection = false,
+      ) {
+        ProgLangTypeId_Static.value = strProgLangTypeId;
+
+        arrCodeType.value = await CodeType_GetArrCodeTypeByProgLangTypeId(strProgLangTypeId);
+        if (!arrCodeType.value || arrCodeType.value.length === 0) {
+          codeTypeId.value = '0';
+        } else if (preserveCurrentSelection === false) {
+          codeTypeId.value = arrCodeType.value[0].codeTypeId;
+        } else if (!arrCodeType.value.some((x) => x.codeTypeId === codeTypeId.value)) {
+          codeTypeId.value = arrCodeType.value[0].codeTypeId;
+        }
+        CodeTypeId_Static.value = codeTypeId.value;
+
+        arrvCodeType_Sim.value = await vCodeType_Sim_GetArrvCodeType_SimByProgLangTypeId(
+          strProgLangTypeId,
+        );
+        if (!arrvCodeType_Sim.value || arrvCodeType_Sim.value.length === 0) {
+          funcCodeTypeId.value = '0';
+          await syncFunctionByFuncCodeTypeId('0');
+          return;
+        }
+        if (preserveCurrentSelection === false) {
+          funcCodeTypeId.value = arrvCodeType_Sim.value[0].codeTypeId;
+        } else if (!arrvCodeType_Sim.value.some((x) => x.codeTypeId === funcCodeTypeId.value)) {
+          funcCodeTypeId.value = arrvCodeType_Sim.value[0].codeTypeId;
+        }
+        await syncFunctionByFuncCodeTypeId(funcCodeTypeId.value);
+      }
 
       /** 函数功能:为编辑区绑定下拉框
        * (AutoGCLib.Vue_ViewScript_EditAi4Html:Gen_Edit_Setup_BindDdl4EditRegionInDiv)
        **/
       async function BindDdl4EditRegionInDiv() {
         const strProgLangTypeId_Static = ProgLangTypeId_Static.value; //静态变量;//静态变量
-        const strCodeTypeId_Static = CodeTypeId_Static.value; //静态变量;//静态变量
 
         arrFunctionTemplate.value = await FunctionTemplate_GetArrFunctionTemplate(); //编辑区域
         functionTemplateId.value = '0';
 
-        arrCodeType.value = await CodeType_GetArrCodeTypeByProgLangTypeId(strProgLangTypeId_Static); //编辑区域
-        codeTypeId.value = '0';
+        arrProgLangType.value = await ProgLangType_GetArrProgLangTypeByIsVisible(); //编辑区域
+        progLangTypeId.value = strProgLangTypeId_Static || '0';
+        if (
+          progLangTypeId.value === '0' &&
+          arrProgLangType.value &&
+          arrProgLangType.value.length > 0
+        ) {
+          progLangTypeId.value = arrProgLangType.value[0].progLangTypeId;
+        }
 
         arrRegionType.value = await RegionType_GetArrRegionType(); //编辑区域
         regionTypeId.value = '0';
 
-        arrvCodeType_Sim.value = await vCodeType_Sim_GetArrvCodeType_SimByProgLangTypeId(
-          strProgLangTypeId_Static,
-        ); //编辑区域
+        codeTypeId.value = CodeTypeId_Static.value || '0';
         funcCodeTypeId.value = '0';
-
-        arrFunction4GeneCode.value =
-          await Function4GeneCode_GetArrFunction4GeneCodeByFuncCodeTypeId(strCodeTypeId_Static); //编辑区域
         funcId4GC.value = '0';
+        await syncCodeTypesByProgLangType(progLangTypeId.value, true);
       }
 
       /** 函数功能:把界面上的属性数据传到类对象中
@@ -336,6 +420,7 @@
        **/
       function Clear() {
         functionTemplateId.value = '0';
+        progLangTypeId.value = '0';
         codeTypeId.value = '0';
         regionTypeId.value = '0';
         funcCodeTypeId.value = '0';
@@ -464,6 +549,24 @@
         dialogVisible.value = false;
       };
 
+      watch(
+        progLangTypeId,
+        (newVal, oldVal) => {
+          if (newVal === oldVal) return;
+          syncCodeTypesByProgLangType(newVal, false).catch((error) => console.error(error));
+        },
+        { flush: 'post' },
+      );
+
+      watch(
+        funcCodeTypeId,
+        (newVal, oldVal) => {
+          if (newVal === oldVal) return;
+          syncFunctionByFuncCodeTypeId(newVal).catch((error) => console.error(error));
+        },
+        { flush: 'post' },
+      );
+
       return {
         refDivEdit,
         objPage_Edit,
@@ -480,6 +583,7 @@
         Clear,
         btnSubmit_Click,
         functionTemplateId,
+        progLangTypeId,
         codeTypeId,
         regionTypeId,
         funcCodeTypeId,
@@ -490,6 +594,7 @@
         updUser,
         memo,
         arrFunctionTemplate,
+        arrProgLangType,
         arrCodeType,
         arrRegionType,
         arrvCodeType_Sim,
@@ -519,7 +624,11 @@
           alert(strMsg);
           return;
         }
-        objPageEdit.btnEdit_Click(strCommandName, strKeyId);
+        if (IsNullOrEmpty(strKeyId) == false) {
+          objPageEdit.btnEdit_Click(strCommandName, { mId: Number(strKeyId) });
+        } else {
+          objPageEdit.btnEdit_Click(strCommandName, { mId: 0 });
+        }
       },
     },
   });

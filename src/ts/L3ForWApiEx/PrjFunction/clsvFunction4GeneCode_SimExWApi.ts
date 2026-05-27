@@ -215,7 +215,7 @@ export async function vFunction4GeneCode_SimEx_GetObjByFuncId4GCCacheEx(
 
   try {
     const arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimObjLstCache.filter(
-      (x) => x.funcId4Code == strFuncId4GC,
+      (x) => x.funcId4GC == strFuncId4GC,
     );
     let objvFunction4GeneCode_Sim: clsvFunction4GeneCode_SimEN;
     if (arrvFunction4GeneCode_SimSel.length > 0) {

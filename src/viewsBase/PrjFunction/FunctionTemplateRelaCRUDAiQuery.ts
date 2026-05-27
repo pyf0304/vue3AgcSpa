@@ -4,6 +4,8 @@ import { FunctionTemplate_GetArrFunctionTemplate } from '@/ts/L3ForWApi/PrjFunct
 import { RegionType_GetArrRegionType } from '@/ts/L3ForWApi/RegionManage/clsRegionTypeWApi';
 import { vCodeType_Sim_GetArrvCodeType_SimByProgLangTypeId } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
 import { Function4GeneCode_GetArrFunction4GeneCodeByFuncCodeTypeId } from '@/ts/L3ForWApi/PrjFunction/clsFunction4GeneCodeWApi';
+import { ProgLangType_GetArrProgLangTypeByIsVisible } from '@/ts/L3ForWApi/SysPara/clsProgLangTypeWApi';
+import { clsProgLangTypeEN } from '@/ts/L0Entity/SysPara/clsProgLangTypeEN';
 import {
   ProgLangTypeId_Static,
   CodeTypeId_Static,
@@ -15,6 +17,7 @@ import { QueryControlType } from '@/viewsBase/common/TableSpecQuery';
 export type FunctionTemplateRelaQueryFieldKeyAi =
   | 'functionTemplateId_q'
   | 'regionTypeId_q'
+  | 'progLangTypeId_q'
   | 'codeTypeId_q'
   | 'funcId4GC_q'
   | 'isGeneCode_q';
@@ -28,7 +31,12 @@ export interface FunctionTemplateRelaQueryFieldSpecAi {
   row: number;
   order: number;
   visibleInQuery?: boolean;
-  optionsKey?: 'functionTemplate' | 'regionType' | 'vCodeType_Sim' | 'function4GeneCode';
+  optionsKey?:
+    | 'functionTemplate'
+    | 'regionType'
+    | 'progLangType'
+    | 'vCodeType_Sim'
+    | 'function4GeneCode';
 }
 
 export const FUNCTIONTEMPLATERELA_QUERY_SPECS_AI: Array<FunctionTemplateRelaQueryFieldSpecAi> = [
@@ -53,13 +61,23 @@ export const FUNCTIONTEMPLATERELA_QUERY_SPECS_AI: Array<FunctionTemplateRelaQuer
     optionsKey: 'regionType',
   },
   {
+    key: 'progLangTypeId_q',
+    label: '语言类型',
+    id: 'ddlProgLangType_q',
+    controlType: 'select',
+    width: 120,
+    row: 1,
+    order: 3,
+    optionsKey: 'progLangType',
+  },
+  {
     key: 'codeTypeId_q',
     label: '代码类型',
     id: 'ddlCodeTypeId_q',
     controlType: 'select',
     width: 120,
     row: 1,
-    order: 3,
+    order: 4,
     optionsKey: 'vCodeType_Sim',
   },
   {
@@ -69,7 +87,7 @@ export const FUNCTIONTEMPLATERELA_QUERY_SPECS_AI: Array<FunctionTemplateRelaQuer
     controlType: 'select',
     width: 120,
     row: 1,
-    order: 4,
+    order: 5,
     optionsKey: 'function4GeneCode',
   },
   {
@@ -86,26 +104,54 @@ export const FUNCTIONTEMPLATERELA_QUERY_SPECS_AI: Array<FunctionTemplateRelaQuer
 export function initQueryDefaultsAi(queryRefs: {
   functionTemplateId_q: Ref<string>;
   regionTypeId_q: Ref<string>;
+  progLangTypeId_q: Ref<string>;
   codeTypeId_q: Ref<string>;
   funcId4GC_q: Ref<string>;
   isGeneCode_q: Ref<string>;
 }) {
   queryRefs.functionTemplateId_q.value = '0';
   queryRefs.regionTypeId_q.value = '0';
+  queryRefs.progLangTypeId_q.value = ProgLangTypeId_Static.value || '0';
   queryRefs.codeTypeId_q.value = '0';
   queryRefs.funcId4GC_q.value = '0';
   queryRefs.isGeneCode_q.value = '0';
 }
 
+export async function loadCodeTypeOptionsByProgLangTypeAi(strProgLangTypeId: string) {
+  if (strProgLangTypeId == null || strProgLangTypeId === '' || strProgLangTypeId === '0') {
+    return [];
+  }
+  return await vCodeType_Sim_GetArrvCodeType_SimByProgLangTypeId(strProgLangTypeId);
+}
+
+export async function loadFunctionOptionsByCodeTypeAi(strCodeTypeId: string) {
+  if (strCodeTypeId == null || strCodeTypeId === '' || strCodeTypeId === '0') {
+    return [];
+  }
+  return await Function4GeneCode_GetArrFunction4GeneCodeByFuncCodeTypeId(strCodeTypeId);
+}
+
 export async function loadQueryOptionsAi() {
-  const [arrFunctionTemplate, arrRegionType, arrvCodeType_Sim, arrFunction4GeneCode] =
-    await Promise.all([
-      FunctionTemplate_GetArrFunctionTemplate(),
-      RegionType_GetArrRegionType(),
-      vCodeType_Sim_GetArrvCodeType_SimByProgLangTypeId(ProgLangTypeId_Static.value),
-      Function4GeneCode_GetArrFunction4GeneCodeByFuncCodeTypeId(CodeTypeId_Static.value),
-    ]);
-  return { arrFunctionTemplate, arrRegionType, arrvCodeType_Sim, arrFunction4GeneCode };
+  const [
+    arrFunctionTemplate,
+    arrRegionType,
+    arrProgLangType,
+    arrvCodeType_Sim,
+    arrFunction4GeneCode,
+  ] = await Promise.all([
+    FunctionTemplate_GetArrFunctionTemplate(),
+    RegionType_GetArrRegionType(),
+    ProgLangType_GetArrProgLangTypeByIsVisible(),
+    loadCodeTypeOptionsByProgLangTypeAi(ProgLangTypeId_Static.value),
+    loadFunctionOptionsByCodeTypeAi(CodeTypeId_Static.value),
+  ]);
+  return {
+    arrFunctionTemplate,
+    arrRegionType,
+    arrProgLangType: (arrProgLangType || []) as clsProgLangTypeEN[],
+    arrvCodeType_Sim,
+    arrFunction4GeneCode,
+  };
 }
 
 export async function loadFeatureOptionsAi() {

@@ -27,7 +27,7 @@ import {
   ViewIdGCVariableRela_GetRecCountByCondAsync,
   ViewIdGCVariableRela_GetObjLstAsync,
   ViewIdGCVariableRela_DelRecKeyLstAsync,
-  ViewIdGCVariableRela_GetObjByKeyLstAsync,
+  ViewIdGCVariableRela_GetObjByKeyAsync,
   ViewIdGCVariableRela_SplitKeyLst,
   ViewIdGCVariableRela_UpdateRecordAsync,
   ViewIdGCVariableRela_DelRecKeyLstsAsync,
@@ -592,10 +592,10 @@ export abstract class ViewIdGCVariableRelaCRUD implements clsOperateList {
   public async SelectRecord(strVarId: string, strViewId: string) {
     const strThisFuncName = this.SelectRecord.name;
     try {
-      const objViewIdGCVariableRelaEN = await ViewIdGCVariableRela_GetObjByKeyLstAsync(
-        strVarId,
-        strViewId,
-      );
+      const objViewIdGCVariableRelaEN = await ViewIdGCVariableRela_GetObjByKeyAsync({
+        varId: strVarId,
+        viewId: strViewId,
+      });
       console.log('完成SelectRecord!', objViewIdGCVariableRelaEN);
       Redirect('/Index/Main_ViewIdGCVariableRela');
     } catch (e) {
@@ -1327,10 +1327,10 @@ export abstract class ViewIdGCVariableRelaCRUD implements clsOperateList {
     }
     try {
       const objKeyLst = ViewIdGCVariableRela_SplitKeyLst(strKeyLst);
-      const objViewIdGCVariableRelaEN = await ViewIdGCVariableRela_GetObjByKeyLstAsync(
-        objKeyLst.varId,
-        objKeyLst.viewId,
-      );
+      const objViewIdGCVariableRelaEN = await ViewIdGCVariableRela_GetObjByKeyAsync({
+        varId: objKeyLst.varId,
+        viewId: objKeyLst.viewId,
+      });
       let intCount = 0;
       if (objViewIdGCVariableRelaEN == null) return false;
       objViewIdGCVariableRelaEN.SetVarId(objKeyLst.varId);

@@ -27,7 +27,7 @@ import {
   DataNode_GetRecCountByCondAsync,
   DataNode_GetObjLstAsync,
   DataNode_DelRecordAsync,
-  DataNode_GetObjByDataNodeIdAsync,
+  DataNode_GetObjByKeyAsync,
   DataNode_GetObjLstByDataNodeIdLstAsync,
   DataNode_AddNewRecordAsync,
   DataNode_DelDataNodesAsync,
@@ -556,7 +556,7 @@ export abstract class DataNodeCRUD implements clsOperateList {
   public async SelectRecord(lngDataNodeId: number) {
     const strThisFuncName = this.SelectRecord.name;
     try {
-      const objDataNodeEN = await DataNode_GetObjByDataNodeIdAsync(lngDataNodeId);
+      const objDataNodeEN = await DataNode_GetObjByKeyAsync({ dataNodeId: lngDataNodeId });
       console.log('完成SelectRecord!', objDataNodeEN);
       Redirect('/Index/Main_DataNode');
     } catch (e) {

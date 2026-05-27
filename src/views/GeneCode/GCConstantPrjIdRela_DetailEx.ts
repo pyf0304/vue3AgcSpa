@@ -16,6 +16,7 @@
 //import * as QQ from "q";
 import { GCConstantPrjIdRela_Detail } from '@/viewsBase/GeneCode/GCConstantPrjIdRela_Detail';
 import GCConstantPrjIdRelaCRUDEx from '@/views/GeneCode/GCConstantPrjIdRelaCRUDEx';
+import { GCConstantPrjIdRelaKey } from '@/ts/L0Entity/GeneCode/clsGCConstantPrjIdRelaEN';
 /* GCConstantPrjIdRela_DetailEx 的摘要说明。其中Q代表查询,U代表修改
   (AutoGCLib.Vue_ViewScript_DetailCSEx_TS4TypeScript:GeneCode)
 */
@@ -24,17 +25,17 @@ export default class GCConstantPrjIdRela_DetailEx extends GCConstantPrjIdRela_De
   按钮单击,用于调用Js函数中btnClick
  (AutoGCLib.Vue_ViewScript_DetailCSEx_TS4TypeScript:Gen_Vue_TS_btnDetail_Click)
  **/
-  public static btnDetail_Click(strCommandName: string, strKeyId: string) {
+  public static btnDetail_Click(strCommandName: string, key: GCConstantPrjIdRelaKey) {
     const strThisFuncName = this.btnDetail_Click.name;
     const objGCConstantPrjIdRelaCRUD: GCConstantPrjIdRelaCRUDEx = new GCConstantPrjIdRelaCRUDEx();
     const objPage: GCConstantPrjIdRela_DetailEx = new GCConstantPrjIdRela_DetailEx(
       objGCConstantPrjIdRelaCRUD,
     );
-    console.log(strKeyId, strThisFuncName, objPage);
+    console.log(key, strThisFuncName, objPage);
     let strMsg;
     switch (strCommandName) {
       case 'Detail': //详细信息
-        objPage.btnDetailRecord_Click(strKeyId, '');
+        objPage.btnDetailRecord_Click(key);
         break;
       default:
         strMsg = `命令:${strCommandName} 在函数(GCConstantPrjIdRela_Detail.btnClick)中没有被处理!`;

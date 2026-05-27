@@ -1,8 +1,8 @@
 ﻿/**
  * 类名:FunctionTemplateRela_EditEx(界面:FunctionTemplateRelaCRUD,00050327)
  * 表名:FunctionTemplateRela(0005)
- * 版本:2026.05.13(服务器:PYF-AI)
- * 日期:2026/05/13 22:38:55
+ * 版本:2026.05.21(服务器:PYF-AI)
+ * 日期:2026/05/21 02:21:48
  * 生成者:
  * 工程名称:AGC(0005)
  * CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
@@ -14,7 +14,9 @@
  **/
 //import $ from "jquery";
 // import { myMessage } from '@/utils/myMessage';
-import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
+import { Format } from '@/ts/PubFun/clsString';
+import { FunctionTemplateRelaKey } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateRelaEN';
+
 import { FunctionTemplateRela_EditAi } from '@/viewsBase/PrjFunction/FunctionTemplateRela_EditAi';
 
 /**
@@ -26,13 +28,13 @@ import { FunctionTemplateRela_EditAi } from '@/viewsBase/PrjFunction/FunctionTem
  * 2、可在此类中添加自定义业务逻辑
  * 3、不会被代码生成器覆盖
  */
-export default class FunctionTemplateRela_EditAiEx extends FunctionTemplateRela_EditAi {
+export default class FunctionTemplateRela_EditExAi extends FunctionTemplateRela_EditAi {
   /**
    * 构造函数
    * (AutoGCLib.Vue_ViewScript_EditCSExAi_TS4TypeScript:Gen_Constructor)
    */
   constructor(objShowList: any) {
-    super('FunctionTemplateRela_EditAiEx', objShowList);
+    super('FunctionTemplateRela_EditExAi', objShowList);
   }
 
   /**
@@ -43,7 +45,7 @@ export default class FunctionTemplateRela_EditAiEx extends FunctionTemplateRela_
    * @param strCommandName 命令名称（Submit/Create/Update/Delete等）
    * @param strKeyId 关键字ID
    */
-  public btnEdit_Click(strCommandName: string, strKeyId: string) {
+  public btnEdit_Click(strCommandName: string, key: FunctionTemplateRelaKey) {
     const strThisFuncName = this.btnEdit_Click.name;
     let strMsg = '';
 
@@ -61,16 +63,16 @@ export default class FunctionTemplateRela_EditAiEx extends FunctionTemplateRela_
       case 'UpdateRecord': // 修改记录
       case 'Update': // 修改记录
       case 'UpdateRecordInTab': // 修改记录InTab
-        if (IsNullOrEmpty(strKeyId) == true) {
+        if (key.mId == 0) {
           const strMsg = '请选择需要修改的记录!';
           console.error(strMsg);
           alert(strMsg);
           return;
         }
         if (strCommandName == 'UpdateRecordInTab') {
-          this.btnUpdateRecordInTab_Click(Number(strKeyId)); // ✅ 数字型需要转换
+          this.btnUpdateRecordInTab_Click(key); // ✅ 数字型需要转换
         } else {
-          this.btnUpdateRecord_Click(Number(strKeyId)); // ✅ 数字型需要转换
+          this.btnUpdateRecord_Click(key); // ✅ 字符串型直接使用
         }
         break;
 
@@ -78,7 +80,7 @@ export default class FunctionTemplateRela_EditAiEx extends FunctionTemplateRela_
         strMsg = Format(
           '命令:{0}, 关键字: {1}, 在函数({2}.{3})中没有被处理!',
           strCommandName,
-          strKeyId,
+          key.mId,
           this.constructor.name,
           strThisFuncName,
         );

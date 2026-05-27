@@ -204,7 +204,7 @@
   import 'bootstrap/dist/css/bootstrap.css';
   import { defineComponent, onMounted, ref } from 'vue';
   //import { Format, IsNullOrEmpty } from "@/ts/PubFun/clsString"
-  import FunctionTemplateRelaCRUDEx from '@/views/PrjFunction/FunctionTemplateRelaCRUDEx';
+  import FunctionTemplateRelaCRUDEx from '@/views/PrjFunction/FunctionTemplateRelaCRUDExBak';
 
   import FunctionTemplateRela_EditCom from '@/views/PrjFunction/FunctionTemplateRela_Edit.vue';
   import FunctionTemplateRela_DetailCom from '@/views/PrjFunction/FunctionTemplateRela_Detail.vue';

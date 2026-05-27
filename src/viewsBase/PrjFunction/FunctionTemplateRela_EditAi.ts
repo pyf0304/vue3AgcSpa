@@ -1,7 +1,7 @@
 ﻿/**
  * 类名:FunctionTemplateRela_EditAi(界面:FunctionTemplateRelaCRUD,00050327)
  * 表名:FunctionTemplateRela
- * 版本:2026.05.13
+ * 版本:2026.05.27
  * 生成者:
  * 模块中文名:PrjFunction
  * 编程语言:TypeScript
@@ -15,12 +15,15 @@ import {
   FunctionTemplateRela_IsExistRecordAsync,
   FunctionTemplateRela_GetUniCondStr4Update,
   FunctionTemplateRela_IsExistAsync,
-  FunctionTemplateRela_GetObjBymIdAsync,
+  FunctionTemplateRela_GetObjByKeyAsync,
   FunctionTemplateRela_CheckProperty4Update,
   FunctionTemplateRela_UpdateRecordAsync,
   FunctionTemplateRela_EditRecordExAsync,
 } from '@/ts/L3ForWApi/PrjFunction/clsFunctionTemplateRelaWApi';
-import { clsFunctionTemplateRelaEN } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateRelaEN';
+import {
+  clsFunctionTemplateRelaEN,
+  FunctionTemplateRelaKey,
+} from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateRelaEN';
 import {
   divVarSet,
   refFunctionTemplateRela_Edit,
@@ -40,7 +43,7 @@ export abstract class FunctionTemplateRela_EditAi {
 
   public static times4TestShowDialog = 0;
   public opType = '';
-  public keyId = 0; // 🔥 数字型关键字
+  public keyId = { mId: 0 }; // 🔥 数字型关键字
   public isShowMsg = true;
   public tag = '';
   public static strPageDispModeId = '01';
@@ -119,9 +122,9 @@ export abstract class FunctionTemplateRela_EditAi {
   }
 
   /** 在数据表里修改记录 */
-  public async btnUpdateRecordInTab_Click(lngmId: number) {
+  public async btnUpdateRecordInTab_Click(key: FunctionTemplateRelaKey) {
     const strThisFuncName = this.btnUpdateRecordInTab_Click.name;
-    if (lngmId == 0 || lngmId == undefined) {
+    if (key.mId == 0 || key.mId == undefined) {
       alert('请选择需要修改的记录!');
       return;
     }
@@ -130,7 +133,7 @@ export abstract class FunctionTemplateRela_EditAi {
       const bolIsSuccess = await this.ShowDialog_FunctionTemplateRela(this.opType);
       if (bolIsSuccess == false) return;
       this.bolIsLoadEditRegion = true;
-      const update = await this.UpdateRecord(lngmId);
+      const update = await this.UpdateRecord(key);
       if (update == false) {
         const strMsg = Format('在修改记录时,显示记录数据不成功!');
         console.error(strMsg);
@@ -150,9 +153,9 @@ export abstract class FunctionTemplateRela_EditAi {
   }
 
   /** 修改记录 */
-  public async btnUpdateRecord_Click(lngmId: number) {
+  public async btnUpdateRecord_Click(key: FunctionTemplateRelaKey) {
     const strThisFuncName = this.btnUpdateRecord_Click.name;
-    if (lngmId == 0 || lngmId == undefined) {
+    if (key.mId == 0 || key.mId == undefined) {
       const strMsg = '修改记录的关键字为空,请检查!';
       console.error(strMsg);
       alert(strMsg);
@@ -163,7 +166,7 @@ export abstract class FunctionTemplateRela_EditAi {
       const bolIsSuccess = await this.ShowDialog_FunctionTemplateRela(this.opType);
       if (bolIsSuccess == false) return;
       this.bolIsLoadEditRegion = true;
-      const update = await this.UpdateRecord(lngmId);
+      const update = await this.UpdateRecord(key);
       if (update == false) {
         const strMsg = Format('在修改记录时,显示记录数据不成功!');
         console.error(strMsg);
@@ -456,13 +459,13 @@ export abstract class FunctionTemplateRela_EditAi {
   }
 
   /** 显示指定记录的数据 */
-  public async ShowData(lngmId: number) {
+  public async ShowData(key: FunctionTemplateRelaKey) {
     const strThisFuncName = this.ShowData.name;
     let objFunctionTemplateRelaEN = new clsFunctionTemplateRelaEN();
     try {
-      const returnBool = await FunctionTemplateRela_IsExistAsync(lngmId);
+      const returnBool = await FunctionTemplateRela_IsExistAsync(key);
       if (returnBool == false) {
-        const strInfo = Format('关键字:[{0}] 的记录不存在!', lngmId);
+        const strInfo = Format('关键字:[{0}] 的记录不存在!', key.mId);
         alert(strInfo);
         return;
       }
@@ -477,7 +480,7 @@ export abstract class FunctionTemplateRela_EditAi {
       alert(strMsg);
     }
     try {
-      const objFunctionTemplateRelaENConst = await FunctionTemplateRela_GetObjBymIdAsync(lngmId);
+      const objFunctionTemplateRelaENConst = await FunctionTemplateRela_GetObjByKeyAsync(key);
       if (objFunctionTemplateRelaENConst == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -505,11 +508,11 @@ export abstract class FunctionTemplateRela_EditAi {
   }
 
   /** 修改记录（显示数据） */
-  public async UpdateRecord(lngmId: number): Promise<boolean> {
+  public async UpdateRecord(key: FunctionTemplateRelaKey): Promise<boolean> {
     const strThisFuncName = this.UpdateRecord.name;
-    this.keyId = lngmId;
+    this.keyId = key;
     try {
-      const objFunctionTemplateRelaEN = await FunctionTemplateRela_GetObjBymIdAsync(lngmId);
+      const objFunctionTemplateRelaEN = await FunctionTemplateRela_GetObjByKeyAsync(key);
       if (objFunctionTemplateRelaEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -542,7 +545,8 @@ export abstract class FunctionTemplateRela_EditAi {
     const strThisFuncName = this.UpdateRecordSave.name;
     const objFunctionTemplateRelaEN =
       await refFunctionTemplateRela_Edit.value.GetEditDataFunctionTemplateRelaObj();
-    objFunctionTemplateRelaEN.SetmId(this.keyId);
+    // 🔥 单关键字段：直接使用
+    objFunctionTemplateRelaEN.SetmId(this.keyId.mId);
     objFunctionTemplateRelaEN.sfUpdFldSetStr = objFunctionTemplateRelaEN.updFldString;
     if (objFunctionTemplateRelaEN.mId == 0 || objFunctionTemplateRelaEN.mId == undefined) {
       console.error('关键字不能为空!');
@@ -590,7 +594,9 @@ export abstract class FunctionTemplateRela_EditAi {
     const strThisFuncName = this.EditRecordExSave.name;
     const objFunctionTemplateRelaEN =
       await refFunctionTemplateRela_Edit.value.GetEditDataFunctionTemplateRelaObj();
-    objFunctionTemplateRelaEN.SetmId(this.keyId);
+
+    // 🔥 单关键字段：直接使用
+    objFunctionTemplateRelaEN.SetmId(this.keyId.mId);
     objFunctionTemplateRelaEN.sfUpdFldSetStr = objFunctionTemplateRelaEN.updFldString;
     if (objFunctionTemplateRelaEN.mId == 0 || objFunctionTemplateRelaEN.mId == undefined) {
       console.error('关键字不能为空!');

@@ -34,7 +34,7 @@ import {
   myShowErrorMsg,
 } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsDataNodeENEx } from '@/ts/L0Entity/AIModule/clsDataNodeENEx';
-import { clsDataNodeEN } from '@/ts/L0Entity/AIModule/clsDataNodeEN';
+import { clsDataNodeEN, DataNodeKey } from '@/ts/L0Entity/AIModule/clsDataNodeEN';
 import { Format, GetStrLen, tzDataType, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { vFieldTab_Sim_func } from '@/ts/L3ForWApi/Table_Field/clsvFieldTab_SimWApi';
 import { clsvFieldTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvFieldTab_SimEN';
@@ -54,12 +54,10 @@ export const dataNode_ConstructorName = 'dataNode';
  * @param lngDataNodeId:关键字
  * @returns 对象
  **/
-export async function DataNode_GetObjByDataNodeIdAsync(
-  lngDataNodeId: number,
-): Promise<clsDataNodeEN | null> {
+export async function DataNode_GetObjByKeyAsync(key: DataNodeKey): Promise<clsDataNodeEN | null> {
   const strThisFuncName = 'GetObjByDataNodeIdAsync';
 
-  if (lngDataNodeId == 0) {
+  if (key.dataNodeId == 0) {
     const strMsg = Format(
       '参数:[lngDataNodeId]不能为空!(In clsDataNodeWApi.GetObjByDataNodeIdAsync)',
     );
@@ -76,7 +74,7 @@ export async function DataNode_GetObjByDataNodeIdAsync(
       Authorization: `${token}`,
     },
     params: {
-      lngDataNodeId,
+      lngDataNodeId: key.dataNodeId,
     },
   };
   try {
@@ -122,6 +120,7 @@ export async function DataNode_GetObjByDataNodeIdAsync(
     }
   }
 }
+
 //该表没有使用Cache,不需要生成[GetObjByDataNodeIdlocalStorage]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
 //该表没有使用Cache,不需要生成[GetObjByDataNodeIdCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache )
 //该表没有使用Cache,不需要生成[UpdateObjInLstCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_UpdateObjInLstCache

@@ -12,7 +12,7 @@
  * 框架-层名:Vue_详细信息后台_TS(TS)(Vue_ViewScript_DetailCS_TS,0260)
  * 编程语言:TypeScript
  **/
-import { DataNode_GetObjByDataNodeIdAsync } from '@/ts/L3ForWApi/AIModule/clsDataNodeWApi';
+import { DataNode_GetObjByKeyAsync } from '@/ts/L3ForWApi/AIModule/clsDataNodeWApi';
 import { ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { DataNodeEx_FuncMapByFldName } from '@/ts/L3ForWApiEx/AIModule/clsDataNodeExWApi';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
@@ -140,7 +140,7 @@ export abstract class DataNode_Detail {
     const strThisFuncName = this.DetailRecord4Func.name;
     this.btnCancelDataNode = '关闭';
     try {
-      const objDataNodeEN = await DataNode_GetObjByDataNodeIdAsync(lngDataNodeId);
+      const objDataNodeEN = await DataNode_GetObjByKeyAsync({ dataNodeId: lngDataNodeId });
       const objDataNodeENEx = new clsDataNodeENEx();
       ObjectAssign(objDataNodeENEx, objDataNodeEN);
       await DataNodeEx_FuncMapByFldName(clsDataNodeENEx.con_CmPrjName, objDataNodeENEx);

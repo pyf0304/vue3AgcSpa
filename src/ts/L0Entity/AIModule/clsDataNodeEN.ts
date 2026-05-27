@@ -16,9 +16,12 @@
  * 数据结点(DataNode)
  * (AutoGCLib.EntityLayer4TypeScript:GeneCode)
  **/
+import { IEntityKey } from '@/ts/FunClass/IEntityKey';
 import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
-
-export class clsDataNodeEN extends clsGeneralTab {
+export type DataNodeKey = {
+  dataNodeId: number;
+};
+export class clsDataNodeEN extends clsGeneralTab implements IEntityKey {
   public static _RefreshTimeLst = new Array<string>();
   public static CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
   public static CacheModeId = '05'; //未知
@@ -60,6 +63,11 @@ export class clsDataNodeEN extends clsGeneralTab {
     super();
   }
 
+  toKeyObject() {
+    return {
+      id: this.dataNodeId,
+    };
+  }
   /**
    * 设置对象中私有属性.
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsPrivateVar)

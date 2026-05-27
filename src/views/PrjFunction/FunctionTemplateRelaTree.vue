@@ -37,7 +37,7 @@
               :key="fn.funcId4GC"
               :value="fn.funcId4GC"
             >
-              {{ fn.funcName }} ({{ fn.funcId4GC }})
+              {{ fn.funcName }} ({{ fn.funcId4GC }}) [{{ getFuncCodeTypeName(fn) }}]
             </option>
           </select>
           <label class="toolbar-label ml-2">
@@ -128,12 +128,15 @@
   import {
     FunctionTemplateRela_AddNewRecordAsync,
     FunctionTemplateRela_DelRecordAsync,
-    FunctionTemplateRela_GetObjBymIdAsync,
+    FunctionTemplateRela_GetObjByKeyAsync,
     FunctionTemplateRela_GetObjLstAsync,
     FunctionTemplateRela_UpdateRecordAsync,
   } from '@/ts/L3ForWApi/PrjFunction/clsFunctionTemplateRelaWApi';
   import { FunctionTemplate_GetObjLstCache } from '@/ts/L3ForWApi/PrjFunction/clsFunctionTemplateWApi';
-  import { vFunction4GeneCode_Sim_GetObjLstCache } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4GeneCode_SimWApi';
+  import {
+    vFunction4GeneCode_Sim_GetObjByFuncId4GCCache,
+    vFunction4GeneCode_Sim_GetObjLstCache,
+  } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4GeneCode_SimWApi';
   import {
     vFunctionTemplateRela_Sim_GetObjLstCache,
     vFunctionTemplateRela_Sim_ReFreshThisCache,
@@ -152,6 +155,7 @@
   interface FunctionRow {
     key: string;
     mId: number;
+    codeTypeId: string;
     funcId4GC: string;
     funcName: string;
     codeTypeName: string;
@@ -192,19 +196,50 @@
 
       const relationMap = new Map<string, clsvFunctionTemplateRela_SimEN[]>();
       const functionMap = new Map<string, clsvFunction4GeneCode_SimEN>();
+      const functionMapByNormalizedKey = new Map<string, clsvFunction4GeneCode_SimEN>();
       const codeTypeMap = new Map<string, clsvCodeType_SimEN>();
       const progLangTypeMap = new Map<string, clsProgLangTypeEN>();
       const codeTypeNodeMeta = new Map<string, SelectedCodeType>();
 
+      const normalizeFuncKey = (value: string): string => (value || '').trim().toLowerCase();
+
+      const indexFunction = (func: clsvFunction4GeneCode_SimEN) => {
+        const keyId4GC = normalizeFuncKey(func.funcId4GC);
+        if (keyId4GC) {
+          functionMapByNormalizedKey.set(keyId4GC, func);
+        }
+        const keyId4Code = normalizeFuncKey(func.funcId4Code || '');
+        if (keyId4Code && !functionMapByNormalizedKey.has(keyId4Code)) {
+          functionMapByNormalizedKey.set(keyId4Code, func);
+        }
+      };
+
+      const getFunctionByKey = (funcId4GC: string): clsvFunction4GeneCode_SimEN | undefined => {
+        const rawKey = funcId4GC || '';
+        const trimmedKey = rawKey.trim();
+        return (
+          functionMap.get(rawKey) ||
+          functionMap.get(trimmedKey) ||
+          functionMapByNormalizedKey.get(normalizeFuncKey(trimmedKey))
+        );
+      };
+
       const candidateFunctions = computed(() => {
         const meta = selectedCodeType.value;
         if (meta == null) return [] as clsvFunction4GeneCode_SimEN[];
-        const existingSet = new Set(functionRows.value.map((x) => x.funcId4GC));
+        const relas = relationMap.get(meta.templateId) ?? [];
+        const existingSet = new Set(
+          relas.filter((x) => x.codeTypeId === meta.codeTypeId).map((x) => x.funcId4GC),
+        );
         return Array.from(functionMap.values())
-          .filter((x) => x.funcCodeTypeId === meta.codeTypeId)
           .filter((x) => !existingSet.has(x.funcId4GC))
           .sort((a, b) => a.funcName.localeCompare(b.funcName));
       });
+
+      const getFuncCodeTypeName = (func: clsvFunction4GeneCode_SimEN): string => {
+        const codeType = codeTypeMap.get(func.funcCodeTypeId || '');
+        return codeType?.codeTypeName || func.funcCodeTypeId || '未设置代码类型';
+      };
 
       const candidateFunctionsFiltered = computed(() => {
         const kw = addSearchKeyword.value.trim().toLowerCase();
@@ -225,16 +260,6 @@
         if (value.toLowerCase() === 'back') return '后端';
         if (value === '') return '未分类';
         return value;
-      };
-
-      const getWhereCondByTemplateAndCodeType = (meta: SelectedCodeType) => {
-        return Format(
-          "{0}='{1}' And {2}='{3}'",
-          clsFunctionTemplateRelaEN.con_FunctionTemplateId,
-          meta.templateId,
-          clsFunctionTemplateRelaEN.con_CodeTypeId,
-          meta.codeTypeId,
-        );
       };
 
       const getNodeIdByMeta = (meta: SelectedCodeType) => {
@@ -288,21 +313,27 @@
 
       const buildFunctionRows = (meta: SelectedCodeType): FunctionRow[] => {
         const relas = relationMap.get(meta.templateId) ?? [];
-        const keyedByFuncId = new Map<string, clsvFunctionTemplateRela_SimEN>();
-        relas
-          .filter((x) => x.codeTypeId === meta.codeTypeId)
-          .forEach((x) => keyedByFuncId.set(x.funcId4GC, x));
+        const keyedByRela = new Map<string, clsvFunctionTemplateRela_SimEN>();
+        relas.forEach((x) => {
+          const func = getFunctionByKey(x.funcId4GC);
+          const isMatchByRelaCodeType = x.codeTypeId === meta.codeTypeId;
+          const isMatchByFuncCodeType = func?.funcCodeTypeId === meta.codeTypeId;
+          if (!isMatchByRelaCodeType && !isMatchByFuncCodeType) return;
+          keyedByRela.set(`${x.codeTypeId}|${x.funcId4GC}`, x);
+        });
 
-        const rowsFromView = Array.from(keyedByFuncId.values()).map((x) => {
-          const func = functionMap.get(x.funcId4GC);
+        const rowsFromView = Array.from(keyedByRela.values()).map((x) => {
+          const func = getFunctionByKey(x.funcId4GC);
+          const codeType = codeTypeMap.get(x.codeTypeId);
           const funcCodeType = codeTypeMap.get(func?.funcCodeTypeId || '');
           const progLangType = progLangTypeMap.get(func?.progLangTypeId || '');
           return {
-            key: `${meta.templateId}|${x.funcId4GC}`,
+            key: `${meta.templateId}|${x.codeTypeId}|${x.funcId4GC}`,
             mId: 0,
+            codeTypeId: x.codeTypeId,
             funcId4GC: x.funcId4GC,
             funcName: func?.funcName || x.funcId4GC,
-            codeTypeName: meta.codeTypeName,
+            codeTypeName: codeType?.codeTypeName || x.codeTypeId,
             funcCodeTypeName: funcCodeType?.codeTypeName || func?.funcCodeTypeId || '',
             progLangTypeName: progLangType?.progLangTypeSimName || func?.progLangTypeId || '',
             frontOrBack: meta.frontOrBack,
@@ -310,6 +341,33 @@
           } as FunctionRow;
         });
         return rowsFromView.sort((a, b) => a.funcName.localeCompare(b.funcName));
+      };
+
+      const ensureFunctionsForCodeTypeLoaded = async (
+        relas: clsvFunctionTemplateRela_SimEN[],
+        codeTypeId: string,
+      ) => {
+        const missingFuncIds = Array.from(
+          new Set(
+            relas
+              .filter((x) => x.codeTypeId === codeTypeId)
+              .map((x) => x.funcId4GC)
+              .filter((funcId4GC) => !getFunctionByKey(funcId4GC)),
+          ),
+        );
+
+        if (missingFuncIds.length === 0) return;
+
+        const loadedFunctions = await Promise.allSettled(
+          missingFuncIds.map((funcId4GC) =>
+            vFunction4GeneCode_Sim_GetObjByFuncId4GCCache(funcId4GC),
+          ),
+        );
+        loadedFunctions.forEach((ret) => {
+          if (ret.status !== 'fulfilled' || !ret.value) return;
+          functionMap.set(ret.value.funcId4GC, ret.value);
+          indexFunction(ret.value);
+        });
       };
 
       const refreshCurrentSelectionRows = async () => {
@@ -322,16 +380,21 @@
 
         const relas = await vFunctionTemplateRela_Sim_GetObjLstCache(meta.templateId);
         relationMap.set(meta.templateId, relas);
+        await ensureFunctionsForCodeTypeLoaded(relas, meta.codeTypeId);
         functionRows.value = buildFunctionRows(meta);
 
         try {
-          const whereCond = getWhereCondByTemplateAndCodeType(meta);
+          const whereCond = Format(
+            "{0}='{1}'",
+            clsFunctionTemplateRelaEN.con_FunctionTemplateId,
+            meta.templateId,
+          );
           const arrDbRows = await FunctionTemplateRela_GetObjLstAsync(whereCond);
           const mIdMap = new Map<string, number>();
-          arrDbRows.forEach((x) => mIdMap.set(x.funcId4GC, x.mId));
+          arrDbRows.forEach((x) => mIdMap.set(`${x.codeTypeId}|${x.funcId4GC}`, x.mId));
           functionRows.value = functionRows.value.map((x) => ({
             ...x,
-            mId: mIdMap.get(x.funcId4GC) || 0,
+            mId: mIdMap.get(`${x.codeTypeId}|${x.funcId4GC}`) || 0,
           }));
           selectedRowKeys.value = selectedRowKeys.value.filter((key) =>
             functionRows.value.some((x) => x.key === key),
@@ -355,7 +418,11 @@
           codeTypes.forEach((x) => codeTypeMap.set(x.codeTypeId, x));
 
           functionMap.clear();
-          allFunctions.forEach((x) => functionMap.set(x.funcId4GC, x));
+          functionMapByNormalizedKey.clear();
+          allFunctions.forEach((x) => {
+            functionMap.set(x.funcId4GC, x);
+            indexFunction(x);
+          });
 
           progLangTypeMap.clear();
           progLangTypes.forEach((x) => progLangTypeMap.set(x.progLangTypeId, x));
@@ -369,27 +436,26 @@
               template.functionTemplateId,
             );
             relationMap.set(template.functionTemplateId, relationRows);
-            const groupedByFront = new Map<string, clsvFunctionTemplateRela_SimEN[]>();
+            const groupedByFront = new Map<string, Set<string>>();
 
             for (const row of relationRows) {
-              const codeType = codeTypeMap.get(row.codeTypeId);
-              const frontOrBack = normalizeFrontOrBack(codeType?.frontOrBack ?? '');
-              if (!groupedByFront.has(frontOrBack)) groupedByFront.set(frontOrBack, []);
-              groupedByFront.get(frontOrBack)?.push(row);
+              const func = getFunctionByKey(row.funcId4GC);
+              const codeTypeIds = new Set<string>([row.codeTypeId]);
+              if (func?.funcCodeTypeId) codeTypeIds.add(func.funcCodeTypeId);
+
+              codeTypeIds.forEach((codeTypeId) => {
+                const codeType = codeTypeMap.get(codeTypeId);
+                const frontOrBack = normalizeFrontOrBack(codeType?.frontOrBack ?? '');
+                if (!groupedByFront.has(frontOrBack)) groupedByFront.set(frontOrBack, new Set());
+                groupedByFront.get(frontOrBack)?.add(codeTypeId);
+              });
             }
 
             const frontNodes: TreeNode[] = [];
-            groupedByFront.forEach((rows, frontOrBack) => {
+            groupedByFront.forEach((codeTypeIdSet, frontOrBack) => {
               const codeTypeNodes: TreeNode[] = [];
-              const groupedByCodeType = new Map<string, clsvFunctionTemplateRela_SimEN[]>();
 
-              rows.forEach((row) => {
-                if (!groupedByCodeType.has(row.codeTypeId))
-                  groupedByCodeType.set(row.codeTypeId, []);
-                groupedByCodeType.get(row.codeTypeId)?.push(row);
-              });
-
-              groupedByCodeType.forEach((_, codeTypeId) => {
+              Array.from(codeTypeIdSet).forEach((codeTypeId) => {
                 const codeType = codeTypeMap.get(codeTypeId);
                 const codeTypeName = codeType?.codeTypeName || codeTypeId;
                 const nodeId = `${template.functionTemplateId}|${frontOrBack}|${codeTypeId}`;
@@ -559,7 +625,7 @@
           return;
         }
         try {
-          const obj = await FunctionTemplateRela_GetObjBymIdAsync(row.mId);
+          const obj = await FunctionTemplateRela_GetObjByKeyAsync({ mId: row.mId });
           if (obj == null) {
             alert('未找到要更新的关系记录。');
             return;
@@ -602,6 +668,7 @@
         selectedFuncIdToAdd,
         addSearchKeyword,
         newRelIsGeneCode,
+        getFuncCodeTypeName,
         candidateFunctionsFiltered,
         selectedRowKeys,
         isAllSelected,

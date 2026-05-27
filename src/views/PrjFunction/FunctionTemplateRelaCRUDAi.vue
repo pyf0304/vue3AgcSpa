@@ -178,6 +178,7 @@
     dataColumn,
     functionTemplateId_q,
     regionTypeId_q,
+    progLangTypeId_q,
     codeTypeId_q,
     funcId4GC_q,
     isGeneCode_q,
@@ -189,17 +190,21 @@
   import FunctionTemplateRela_EditCom from '@/views/PrjFunction/FunctionTemplateRela_EditAi.vue';
   import FunctionTemplateRela_DetailCom from '@/views/PrjFunction/FunctionTemplateRela_DetailAi.vue';
   import FunctionTemplateRela_ListCom from '@/views/PrjFunction/FunctionTemplateRela_ListAi.vue';
+  import { FunctionTemplateRelaKey } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateRelaEN';
 
   import { clsFunctionTemplateEN } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateEN';
   import { clsRegionTypeEN } from '@/ts/L0Entity/RegionManage/clsRegionTypeEN';
   import { clsvCodeType_SimEN } from '@/ts/L0Entity/GeneCode/clsvCodeType_SimEN';
   import { clsFunction4GeneCodeEN } from '@/ts/L0Entity/PrjFunction/clsFunction4GeneCodeEN';
+  import { clsProgLangTypeEN, enumProgLangType } from '@/ts/L0Entity/SysPara/clsProgLangTypeEN';
   import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
-  import FunctionTemplateRelaCRUDExAi from '@/views/PrjFunction/FunctionTemplateRelaCRUDExAi';
+  import FunctionTemplateRelaCRUDAiEx from '@/views/PrjFunction/FunctionTemplateRelaCRUDAiEx';
   import {
     getQueryRowsAi,
     initQueryDefaultsAi,
+    loadCodeTypeOptionsByProgLangTypeAi,
     loadFeatureOptionsAi,
+    loadFunctionOptionsByCodeTypeAi,
     loadQueryOptionsAi,
     FunctionTemplateRelaQueryFieldSpecAi,
   } from '@/viewsBase/PrjFunction/FunctionTemplateRelaCRUDAiQuery';
@@ -218,14 +223,15 @@
       FunctionTemplateRela_ListCom,
     },
     setup() {
-      ProgLangTypeId_Static.value = '01';
+      ProgLangTypeId_Static.value = enumProgLangType.TypeScript_09;
       CodeTypeId_Static.value = '0254';
       FunctionTemplateId_Static.value = '0001';
 
       const strTitle = ref('函数与模板关系维护(Ai4版-命令Schema)');
-      const objPage = ref<FunctionTemplateRelaCRUDExAi>();
+      const objPage = ref<FunctionTemplateRelaCRUDAiEx>();
       const arrFunctionTemplate = ref<clsFunctionTemplateEN[] | null>([]);
       const arrRegionType = ref<clsRegionTypeEN[] | null>([]);
+      const arrProgLangType = ref<clsProgLangTypeEN[] | null>([]);
       const arrvCodeType_Sim = ref<clsvCodeType_SimEN[] | null>([]);
       const arrFunction4GeneCode = ref<clsFunction4GeneCodeEN[] | null>([]);
 
@@ -249,7 +255,7 @@
         return lines[3] ?? lines[2] ?? 'unknown';
       };
 
-      const ensurePage = (strCaller: string): FunctionTemplateRelaCRUDExAi | null => {
+      const ensurePage = (strCaller: string): FunctionTemplateRelaCRUDAiEx | null => {
         if (objPage.value == null) {
           const caller = getEnsurePageCaller();
           const errorMessage = `页面初始化不成功,请联系管理员! 调用者: ${strCaller}, 调用栈: ${caller}`;
@@ -268,6 +274,8 @@
             return regionTypeId_q.value;
           case 'codeTypeId_q':
             return codeTypeId_q.value;
+          case 'progLangTypeId_q':
+            return progLangTypeId_q.value;
           case 'funcId4GC_q':
             return funcId4GC_q.value;
           case 'isGeneCode_q':
@@ -285,8 +293,14 @@
           case 'regionTypeId_q':
             regionTypeId_q.value = value;
             break;
+          case 'progLangTypeId_q':
+            progLangTypeId_q.value = value;
+            syncCodeTypeByProgLangType(value).catch((error) => console.error(error));
+            break;
           case 'codeTypeId_q':
             codeTypeId_q.value = value;
+            CodeTypeId_Static.value = value;
+            syncFunctionByCodeType(value).catch((error) => console.error(error));
             break;
           case 'funcId4GC_q':
             funcId4GC_q.value = value;
@@ -300,13 +314,20 @@
       };
 
       const getSelectOptions = (
-        optionsKey?: 'functionTemplate' | 'regionType' | 'vCodeType_Sim' | 'function4GeneCode',
+        optionsKey?:
+          | 'functionTemplate'
+          | 'regionType'
+          | 'progLangType'
+          | 'vCodeType_Sim'
+          | 'function4GeneCode',
       ) => {
         switch (optionsKey) {
           case 'functionTemplate':
             return arrFunctionTemplate.value ?? [];
           case 'regionType':
             return arrRegionType.value ?? [];
+          case 'progLangType':
+            return arrProgLangType.value ?? [];
           case 'vCodeType_Sim':
             return arrvCodeType_Sim.value ?? [];
           case 'function4GeneCode':
@@ -318,13 +339,20 @@
 
       const getSelectValue = (
         item: any,
-        optionsKey?: 'functionTemplate' | 'regionType' | 'vCodeType_Sim' | 'function4GeneCode',
+        optionsKey?:
+          | 'functionTemplate'
+          | 'regionType'
+          | 'progLangType'
+          | 'vCodeType_Sim'
+          | 'function4GeneCode',
       ) => {
         switch (optionsKey) {
           case 'functionTemplate':
             return item.functionTemplateId;
           case 'regionType':
             return item.regionTypeId;
+          case 'progLangType':
+            return item.progLangTypeId;
           case 'vCodeType_Sim':
             return item.codeTypeId;
           case 'function4GeneCode':
@@ -336,13 +364,20 @@
 
       const getSelectText = (
         item: any,
-        optionsKey?: 'functionTemplate' | 'regionType' | 'vCodeType_Sim' | 'function4GeneCode',
+        optionsKey?:
+          | 'functionTemplate'
+          | 'regionType'
+          | 'progLangType'
+          | 'vCodeType_Sim'
+          | 'function4GeneCode',
       ) => {
         switch (optionsKey) {
           case 'functionTemplate':
             return item.functionTemplateName;
           case 'regionType':
             return item.regionTypeName;
+          case 'progLangType':
+            return item.progLangTypeSimName || item.progLangTypeName;
           case 'vCodeType_Sim':
             return item.codeTypeName;
           case 'function4GeneCode':
@@ -350,6 +385,37 @@
           default:
             return '';
         }
+      };
+
+      const syncFunctionByCodeType = async (strCodeTypeId: string) => {
+        arrFunction4GeneCode.value = await loadFunctionOptionsByCodeTypeAi(strCodeTypeId);
+        if (!arrFunction4GeneCode.value || arrFunction4GeneCode.value.length === 0) {
+          funcId4GC_q.value = '0';
+          return;
+        }
+        const hasCurrent = arrFunction4GeneCode.value.some(
+          (x) => x.funcId4GC === funcId4GC_q.value,
+        );
+        if (!hasCurrent) {
+          funcId4GC_q.value = arrFunction4GeneCode.value[0].funcId4GC;
+        }
+      };
+
+      const syncCodeTypeByProgLangType = async (strProgLangTypeId: string) => {
+        ProgLangTypeId_Static.value = strProgLangTypeId;
+        arrvCodeType_Sim.value = await loadCodeTypeOptionsByProgLangTypeAi(strProgLangTypeId);
+        if (!arrvCodeType_Sim.value || arrvCodeType_Sim.value.length === 0) {
+          codeTypeId_q.value = '0';
+          CodeTypeId_Static.value = '0';
+          await syncFunctionByCodeType('0');
+          return;
+        }
+        const hasCurrent = arrvCodeType_Sim.value.some((x) => x.codeTypeId === codeTypeId_q.value);
+        if (!hasCurrent) {
+          codeTypeId_q.value = arrvCodeType_Sim.value[0].codeTypeId;
+        }
+        CodeTypeId_Static.value = codeTypeId_q.value;
+        await syncFunctionByCodeType(codeTypeId_q.value);
       };
 
       const exportToExcel = (
@@ -393,14 +459,15 @@
         }
       }
 
-      function btn_Click(strCommandName: string, strKeyId: string) {
-        FunctionTemplateRelaCRUDExAi.btn_Click(strCommandName, strKeyId);
+      function btn_Click(strCommandName: string, key: FunctionTemplateRelaKey) {
+        FunctionTemplateRelaCRUDAiEx.btn_Click(strCommandName, key);
       }
 
       onMounted(async () => {
         initQueryDefaultsAi({
           functionTemplateId_q,
           regionTypeId_q,
+          progLangTypeId_q,
           codeTypeId_q,
           funcId4GC_q,
           isGeneCode_q,
@@ -409,16 +476,26 @@
         const queryOptions = await loadQueryOptionsAi();
         arrFunctionTemplate.value = queryOptions.arrFunctionTemplate;
         arrRegionType.value = queryOptions.arrRegionType;
+        arrProgLangType.value = queryOptions.arrProgLangType;
         arrvCodeType_Sim.value = queryOptions.arrvCodeType_Sim;
         arrFunction4GeneCode.value = queryOptions.arrFunction4GeneCode;
+
+        if (
+          progLangTypeId_q.value === '0' &&
+          arrProgLangType.value &&
+          arrProgLangType.value.length > 0
+        ) {
+          progLangTypeId_q.value = arrProgLangType.value[0].progLangTypeId;
+        }
+        await syncCodeTypeByProgLangType(progLangTypeId_q.value);
 
         const featureOptions = await loadFeatureOptionsAi();
         console.log('featureOptions:', featureOptions);
         functionTemplateId_f.value = '0';
 
-        FunctionTemplateRelaCRUDExAi.vuebtn_Click = btn_Click;
-        FunctionTemplateRelaCRUDExAi.GetPropValue = GetPropValue;
-        objPage.value = new FunctionTemplateRelaCRUDExAi();
+        FunctionTemplateRelaCRUDAiEx.vuebtn_Click = btn_Click;
+        FunctionTemplateRelaCRUDAiEx.GetPropValue = GetPropValue;
+        objPage.value = new FunctionTemplateRelaCRUDAiEx();
         await objPage.value.PageLoadCache();
       });
 
@@ -451,6 +528,7 @@
 
         arrFunctionTemplate,
         arrRegionType,
+        arrProgLangType,
         arrvCodeType_Sim,
         arrFunction4GeneCode,
         queryRow1,

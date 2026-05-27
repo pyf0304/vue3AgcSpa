@@ -26,7 +26,7 @@ import {
   FunctionTemplateRela_GetRecCountByCondAsync,
   FunctionTemplateRela_GetObjLstAsync,
   FunctionTemplateRela_DelRecordAsync,
-  FunctionTemplateRela_GetObjBymIdAsync,
+  FunctionTemplateRela_GetObjByKeyAsync,
   FunctionTemplateRela_GetObjLstBymIdLstAsync,
   FunctionTemplateRela_AddNewRecordAsync,
   FunctionTemplateRela_UpdateRecordAsync,
@@ -496,7 +496,9 @@ export abstract class FunctionTemplateRelaCRUD implements clsOperateList {
   public async SelectRecord(lngmId: number) {
     const strThisFuncName = this.SelectRecord.name;
     try {
-      const objFunctionTemplateRelaEN = await FunctionTemplateRela_GetObjBymIdAsync(lngmId);
+      const objFunctionTemplateRelaEN = await FunctionTemplateRela_GetObjByKeyAsync({
+        mId: lngmId,
+      });
       console.log('完成SelectRecord!', objFunctionTemplateRelaEN);
       Redirect('/Index/Main_FunctionTemplateRela');
     } catch (e) {

@@ -1,9 +1,9 @@
 ﻿/**
  * 类名:clsFunctionTemplateRelaEN
  * 表名:FunctionTemplateRela(00050313)
- * 版本:2026.04.19(服务器:WIN-SRV103-116)
- * 日期:2026/05/16 14:41:49
- * 生成者:pyf2
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/27 06:16:20
+ * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
  * 相关数据库:109.244.40.104,8433AGC_CS12
@@ -18,6 +18,13 @@
  **/
 import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
+/**
+ * 函数与模板关系主键类型定义
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_KeyType)
+ **/
+export type FunctionTemplateRelaKey = {
+  mId: number;
+};
 export class clsFunctionTemplateRelaEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
   public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件

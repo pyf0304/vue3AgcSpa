@@ -17,7 +17,7 @@ import {
   GCConstantPrjIdRela_CheckPropertyNew,
   GCConstantPrjIdRela_IsExistAsync,
   GCConstantPrjIdRela_AddNewRecordAsync,
-  GCConstantPrjIdRela_GetObjByKeyLstAsync,
+  GCConstantPrjIdRela_GetObjByKeyAsync,
   GCConstantPrjIdRela_CheckProperty4Update,
   GCConstantPrjIdRela_UpdateRecordAsync,
 } from '@/ts/L3ForWApi/GeneCode/clsGCConstantPrjIdRelaWApi';
@@ -25,7 +25,10 @@ import {
   divVarSet,
   refGCConstantPrjIdRela_Edit,
 } from '@/views/GeneCode/GCConstantPrjIdRelaVueShare';
-import { clsGCConstantPrjIdRelaEN } from '@/ts/L0Entity/GeneCode/clsGCConstantPrjIdRelaEN';
+import {
+  clsGCConstantPrjIdRelaEN,
+  GCConstantPrjIdRelaKey,
+} from '@/ts/L0Entity/GeneCode/clsGCConstantPrjIdRelaEN';
 import { Format } from '@/ts/PubFun/clsString';
 import { IShowList } from '@/ts/PubFun/IShowList';
 import { enumPageDispMode } from '@/ts/PubFun/enumPageDispMode';
@@ -40,7 +43,7 @@ export abstract class GCConstantPrjIdRela_Edit {
   }
   public static times4TestShowDialog = 0;
   public opType = '';
-  public keyId = '';
+  public keyId = { constId: '', prjId: '' };
   public isShowMsg = true; //编辑记录时是否显示提示信息
   public tag = ''; //编辑对象的标志，用于存放或者标志一些信息
   public static strPageDispModeId = '01'; //PopupBox(弹出框)
@@ -197,13 +200,13 @@ export abstract class GCConstantPrjIdRela_Edit {
   /** 在数据表里修改记录
    * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_btnUpdateRecordInTab_Click)
    **/
-  public async btnUpdateRecordInTab_Click(strConstId: string, strPrjId: string) {
+  public async btnUpdateRecordInTab_Click(key: GCConstantPrjIdRelaKey) {
     const strThisFuncName = this.btnUpdateRecordInTab_Click.name;
     try {
       this.opType = 'Update';
       const bolIsSuccess = await this.ShowDialog_GCConstantPrjIdRela(this.opType);
       if (bolIsSuccess == false) return;
-      this.UpdateRecord(strConstId, strPrjId);
+      this.UpdateRecord(key);
     } catch (e) {
       const strMsg = Format(
         '(errid: WiTsCs0034)在修改记录时出错!请联系管理员!{0}.(in {1}.{2})',
@@ -219,14 +222,14 @@ export abstract class GCConstantPrjIdRela_Edit {
   /** 修改记录
    * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_btnUpdateRecord_Click)
    **/
-  public async btnUpdateRecord_Click(strConstId: string, strPrjId: string) {
+  public async btnUpdateRecord_Click(key: GCConstantPrjIdRelaKey) {
     const strThisFuncName = this.btnUpdateRecord_Click.name;
     try {
       this.opType = 'Update';
       const bolIsSuccess = await this.ShowDialog_GCConstantPrjIdRela(this.opType);
       if (bolIsSuccess == false) return;
       this.bolIsLoadEditRegion = true; //
-      const update = await this.UpdateRecord(strConstId, strPrjId);
+      const update = await this.UpdateRecord(key);
       if (update == false) {
         const strMsg = Format('在修改记录时,显示记录数据不成功!');
         console.error(strMsg);
@@ -271,7 +274,7 @@ export abstract class GCConstantPrjIdRela_Edit {
               refGCConstantPrjIdRela_Edit.value.hideDialog();
             }
             if (this.iShowList != null)
-              this.iShowList.BindGv(clsGCConstantPrjIdRelaEN._CurrTabName, this.keyId);
+              this.iShowList.BindGv(clsGCConstantPrjIdRelaEN._CurrTabName, this.keyId.constId);
           }
           break;
         case '确认修改':
@@ -287,7 +290,7 @@ export abstract class GCConstantPrjIdRela_Edit {
               refGCConstantPrjIdRela_Edit.value.hideDialog();
             }
             if (this.iShowList != null)
-              this.iShowList.BindGv(clsGCConstantPrjIdRelaEN._CurrTabName, this.keyId);
+              this.iShowList.BindGv(clsGCConstantPrjIdRelaEN._CurrTabName, this.keyId.constId);
           }
           break;
         default:
@@ -377,10 +380,10 @@ export abstract class GCConstantPrjIdRela_Edit {
     try {
       //检查唯一性条件
       let returnBool = false;
-      const bolIsExist = await GCConstantPrjIdRela_IsExistAsync(
-        objGCConstantPrjIdRelaEN.constId,
-        objGCConstantPrjIdRelaEN.prjId,
-      );
+      const bolIsExist = await GCConstantPrjIdRela_IsExistAsync({
+        constId: objGCConstantPrjIdRelaEN.constId,
+        prjId: objGCConstantPrjIdRelaEN.prjId,
+      });
       if (bolIsExist == true) {
         const strMsg = Format('添加记录时,关键字：{0}已经存在!', objGCConstantPrjIdRelaEN.constId);
         console.error(strMsg);
@@ -416,14 +419,11 @@ export abstract class GCConstantPrjIdRela_Edit {
    * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:Gen_Vue_Ts_UpdateRecord)
    * @param sender">参数列表</param>
    **/
-  public async UpdateRecord(strConstId: string, strPrjId: string): Promise<boolean> {
+  public async UpdateRecord(key: GCConstantPrjIdRelaKey): Promise<boolean> {
     const strThisFuncName = this.UpdateRecord.name;
-    this.keyId = strConstId;
+    this.keyId = key; //把主键值赋给keyId,以便在编辑区里使用
     try {
-      const objGCConstantPrjIdRelaEN = await GCConstantPrjIdRela_GetObjByKeyLstAsync(
-        strConstId,
-        strPrjId,
-      );
+      const objGCConstantPrjIdRelaEN = await GCConstantPrjIdRela_GetObjByKeyAsync(key);
       if (objGCConstantPrjIdRelaEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

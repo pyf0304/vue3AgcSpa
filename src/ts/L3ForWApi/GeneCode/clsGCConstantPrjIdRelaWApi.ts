@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsGCConstantPrjIdRelaWApi
  * 表名:GCConstantPrjIdRela(00050641)
- * 版本:2025.07.05.1(服务器:WIN-SRV103-116)
- * 日期:2025/07/05 09:37:34
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/27 07:04:09
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:生成代码(GeneCode)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,17 +20,20 @@
 /**
  * GC常量工程关系(GCConstantPrjIdRela)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年07月05日.
+ * Created by pyf on 2026年05月27日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
 import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
 import { Storage } from '@/utils/Storage';
-import { IsNullOrEmpty, Format, GetStrLen, tzDataType } from '@/ts/PubFun/clsString';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 import { ObjectAssign, GetExceptionStr, myShowErrorMsg } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsGCConstantPrjIdRelaENEx } from '@/ts/L0Entity/GeneCode/clsGCConstantPrjIdRelaENEx';
-import { clsGCConstantPrjIdRelaEN } from '@/ts/L0Entity/GeneCode/clsGCConstantPrjIdRelaEN';
+import {
+  clsGCConstantPrjIdRelaEN,
+  GCConstantPrjIdRelaKey,
+} from '@/ts/L0Entity/GeneCode/clsGCConstantPrjIdRelaEN';
+import { Format, GetStrLen, tzDataType, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { Projects_func } from '@/ts/L3ForWApi/PrjManage/clsProjectsWApi';
 import { clsProjectsEN } from '@/ts/L0Entity/PrjManage/clsProjectsEN';
 import { GCDefaConstants_func } from '@/ts/L3ForWApi/GeneCode/clsGCDefaConstantsWApi';
@@ -81,45 +84,30 @@ export function GCConstantPrjIdRela_SplitKeyLst(strKeyLst: string) {
 /**
  * 根据关键字获取相应记录的对象
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdAsync)
- * @param strConstId:关键字
+ * @param key:包含关键字的对象
  * @returns 对象
  **/
-export async function GCConstantPrjIdRela_GetObjByKeyLstAsync(
-  strConstId: string,
-  strPrjId: string,
+export async function GCConstantPrjIdRela_GetObjByKeyAsync(
+  key: GCConstantPrjIdRelaKey,
 ): Promise<clsGCConstantPrjIdRelaEN | null> {
-  const strThisFuncName = 'GetObjByKeyLstAsync';
-
-  if (IsNullOrEmpty(strConstId) == true) {
+  const strThisFuncName = 'GetObjByKeyAsync';
+  if (key.constId === undefined || key.constId === null || key.constId === '') {
     const strMsg = Format(
-      '参数:[strConstId]不能为空!(In clsGCConstantPrjIdRelaWApi.GetObjByKeyLstAsync)',
+      '关键字段[ConstId]不能为空!(in {0}.{1})',
+      gCConstantPrjIdRela_ConstructorName,
+      strThisFuncName,
     );
     console.error(strMsg);
-    throw strMsg;
+    throw new Error(strMsg);
   }
-  if (strConstId.length != 8) {
+  if (key.prjId === undefined || key.prjId === null || key.prjId === '') {
     const strMsg = Format(
-      '缓存分类变量:[strConstId]的长度:[{0}]不正确!(clsGCConstantPrjIdRelaWApi.GetObjByKeyLstAsync)',
-      strConstId.length,
+      '关键字段[PrjId]不能为空!(in {0}.{1})',
+      gCConstantPrjIdRela_ConstructorName,
+      strThisFuncName,
     );
     console.error(strMsg);
-    throw strMsg;
-  }
-
-  if (IsNullOrEmpty(strPrjId) == true) {
-    const strMsg = Format(
-      '参数:[strPrjId]不能为空!(In clsGCConstantPrjIdRelaWApi.GetObjByKeyLstAsync)',
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  if (strPrjId.length != 4) {
-    const strMsg = Format(
-      '缓存分类变量:[strPrjId]的长度:[{0}]不正确!(clsGCConstantPrjIdRelaWApi.GetObjByKeyLstAsync)',
-      strPrjId.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
+    throw new Error(strMsg);
   }
   const strAction = 'GetObjByKeyLst';
   const strUrl = GetWebApiUrl(gCConstantPrjIdRela_Controller, strAction);
@@ -131,8 +119,8 @@ export async function GCConstantPrjIdRela_GetObjByKeyLstAsync(
       Authorization: `${token}`,
     },
     params: {
-      strConstId,
-      strPrjId,
+      strConstId: key.constId,
+      strPrjId: key.prjId,
     },
   };
   try {
@@ -185,7 +173,7 @@ export async function GCConstantPrjIdRela_GetObjByKeyLstAsync(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-07-05
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -200,7 +188,7 @@ export function GCConstantPrjIdRela_SortFunDefa(
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-07-05
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -217,7 +205,7 @@ export function GCConstantPrjIdRela_SortFunDefa2Fld(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-07-05
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -299,7 +287,7 @@ export function GCConstantPrjIdRela_SortFunByKey(strKey: string, AscOrDesc: stri
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-07-05
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -1033,7 +1021,7 @@ export function GCConstantPrjIdRela_CopyToEx(
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2025-07-05
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -1078,7 +1066,7 @@ export function GCConstantPrjIdRela_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-07-05
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -1602,10 +1590,10 @@ export async function GCConstantPrjIdRela_AddNewObjSave(
   try {
     //检查唯一性条件
     let returnBool = false;
-    const bolIsExist = await GCConstantPrjIdRela_IsExistAsync(
-      objGCConstantPrjIdRelaEN.constId,
-      objGCConstantPrjIdRelaEN.prjId,
-    );
+    const bolIsExist = await GCConstantPrjIdRela_IsExistAsync({
+      constId: objGCConstantPrjIdRelaEN.constId,
+      prjId: objGCConstantPrjIdRelaEN.prjId,
+    });
     if (bolIsExist == true) {
       const strMsg = Format('添加记录时,关键字：{0}已经存在!', objGCConstantPrjIdRelaEN.constId);
       console.error(strMsg);
@@ -1997,12 +1985,11 @@ export async function GCConstantPrjIdRela_IsExistRecordAsync(
 /**
  * 根据关键字判断是否存在记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistAsync)
- * @param strConstId:关键字
+ * @param key:包含关键字的对象
  * @returns 是否存在?存在返回True
  **/
 export async function GCConstantPrjIdRela_IsExistAsync(
-  strConstId: string,
-  strPrjId: string,
+  key: GCConstantPrjIdRelaKey,
 ): Promise<boolean> {
   const strThisFuncName = 'IsExistAsync';
   //检测记录是否存在
@@ -2016,8 +2003,8 @@ export async function GCConstantPrjIdRela_IsExistAsync(
       Authorization: `${token}`,
     },
     params: {
-      strConstId,
-      strPrjId,
+      strConstId: key.constId,
+      strPrjId: key.prjId,
     },
   };
   try {
@@ -2434,7 +2421,7 @@ export function GCConstantPrjIdRela_CheckProperty4Update(
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-07-05
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -2457,7 +2444,7 @@ export function GCConstantPrjIdRela_GetJSONStrByObj(
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-07-05
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -2480,7 +2467,7 @@ export function GCConstantPrjIdRela_GetObjLstByJSONStr(
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-07-05
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrGCConstantPrjIdRelaObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -2500,7 +2487,7 @@ export function GCConstantPrjIdRela_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-07-05
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

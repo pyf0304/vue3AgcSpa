@@ -157,31 +157,6 @@
       const strTitle = ref('函数与模板关系详细信息');
       const refDivDetail = ref();
       const strCancelButtonText = ref('取消');
-      const SetButtonText = (strButtonId: string, strNewValue: string) => {
-        let strMsg;
-        switch (strButtonId) {
-          case 'btnCancelFunctionTemplateRela':
-            strCancelButtonText.value = strNewValue;
-            break;
-          default:
-            strMsg = `按钮Id:${strButtonId} 在函数中没有被处理!`;
-            console.error(strMsg);
-            alert(strMsg);
-            break;
-        }
-      };
-      const GetButtonText = (strButtonId: string) => {
-        let strMsg;
-        switch (strButtonId) {
-          case 'btnCancelFunctionTemplateRela':
-            return strCancelButtonText.value;
-          default:
-            strMsg = `按钮Id:${strButtonId} 在函数中没有被处理!`;
-            console.error(strMsg);
-            alert(strMsg);
-            break;
-        }
-      };
       const dialogVisible = ref(false);
       const dialogWidth = ref('800px'); // 设置对话框的宽度
       const functionTemplateId = ref('');
@@ -244,8 +219,7 @@
         showDialog,
         hideDialog,
         strCancelButtonText,
-        SetButtonText,
-        GetButtonText,
+
         ShowDataFromFunctionTemplateRelaObj,
         functionTemplateId,
         codeTypeId,

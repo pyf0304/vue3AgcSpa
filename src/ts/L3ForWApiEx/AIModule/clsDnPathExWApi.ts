@@ -25,7 +25,7 @@ import { clsvDnPath_SimEN } from '@/ts/L0Entity/AIModule/clsvDnPath_SimEN';
 import { clsvFieldTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvFieldTab_SimEN';
 import { AssociationMapping_func } from '@/ts/L3ForWApi/AIModule/clsAssociationMappingWApi';
 import {
-  DataNode_GetObjByDataNodeIdAsync,
+  DataNode_GetObjByKeyAsync,
   DataNode_GetObjLstByJSONObjLst,
 } from '@/ts/L3ForWApi/AIModule/clsDataNodeWApi';
 import { DnFunction_GetObjByDnFunctionIdCache } from '@/ts/L3ForWApi/AIModule/clsDnFunctionWApi';
@@ -853,7 +853,7 @@ export async function DnPathEx_CreateGraph4DnPath_IncludeErr(
         await DnPathEx_SetIsHasError(strDnPathId, clsPrivateSessionStorage.currSelPrjId);
         //return divDnPath;
 
-        const objDataNode_S = await DataNode_GetObjByDataNodeIdAsync(strDataNodeId_i);
+        const objDataNode_S = await DataNode_GetObjByKeyAsync({ dataNodeId: strDataNodeId_i });
         spnDataNode = GetSpan_Empty('text-danger');
         if (objDataNode_S == null) {
           spnDataNode.innerHTML = Format('结点Id:{0}不存在！', strDataNodeId_i);

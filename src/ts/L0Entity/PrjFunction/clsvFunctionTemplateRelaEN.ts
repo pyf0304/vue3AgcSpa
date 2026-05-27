@@ -17,7 +17,9 @@
  * (AutoGCLib.EntityLayer4TypeScript:GeneCode)
  **/
 import { clsGeneralTabV } from '@/ts/PubFun/clsGeneralTabV';
-
+export type vFunctionTemplateRelaKey = {
+  mId: number;
+};
 export class clsvFunctionTemplateRelaEN extends clsGeneralTabV {
   public static CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
   public static CacheModeId = '05'; //未知

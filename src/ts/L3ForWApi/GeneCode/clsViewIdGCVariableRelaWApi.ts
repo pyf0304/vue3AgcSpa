@@ -30,7 +30,10 @@ import { IsNullOrEmpty, Format, GetStrLen, tzDataType } from '@/ts/PubFun/clsStr
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 import { ObjectAssign, GetExceptionStr, myShowErrorMsg } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsViewIdGCVariableRelaENEx } from '@/ts/L0Entity/GeneCode/clsViewIdGCVariableRelaENEx';
-import { clsViewIdGCVariableRelaEN } from '@/ts/L0Entity/GeneCode/clsViewIdGCVariableRelaEN';
+import {
+  clsViewIdGCVariableRelaEN,
+  ViewIdGCVariableRelaKey,
+} from '@/ts/L0Entity/GeneCode/clsViewIdGCVariableRelaEN';
 import { GCVariable_func } from '@/ts/L3ForWApi/GeneCode/clsGCVariableWApi';
 import { clsGCVariableEN } from '@/ts/L0Entity/GeneCode/clsGCVariableEN';
 import { GCVariableType_func } from '@/ts/L3ForWApi/GeneCode/clsGCVariableTypeWApi';
@@ -85,39 +88,38 @@ export function ViewIdGCVariableRela_SplitKeyLst(strKeyLst: string) {
  * @param strVarId:关键字
  * @returns 对象
  **/
-export async function ViewIdGCVariableRela_GetObjByKeyLstAsync(
-  strVarId: string,
-  strViewId: string,
+export async function ViewIdGCVariableRela_GetObjByKeyAsync(
+  key: ViewIdGCVariableRelaKey,
 ): Promise<clsViewIdGCVariableRelaEN | null> {
   const strThisFuncName = 'GetObjByKeyLstAsync';
 
-  if (IsNullOrEmpty(strVarId) == true) {
+  if (IsNullOrEmpty(key.varId) == true) {
     const strMsg = Format(
       '参数:[strVarId]不能为空!(In clsViewIdGCVariableRelaWApi.GetObjByKeyLstAsync)',
     );
     console.error(strMsg);
     throw strMsg;
   }
-  if (strVarId.length != 8) {
+  if (key.varId.length != 8) {
     const strMsg = Format(
       '缓存分类变量:[strVarId]的长度:[{0}]不正确!(clsViewIdGCVariableRelaWApi.GetObjByKeyLstAsync)',
-      strVarId.length,
+      key.varId.length,
     );
     console.error(strMsg);
     throw strMsg;
   }
 
-  if (IsNullOrEmpty(strViewId) == true) {
+  if (IsNullOrEmpty(key.viewId) == true) {
     const strMsg = Format(
       '参数:[strViewId]不能为空!(In clsViewIdGCVariableRelaWApi.GetObjByKeyLstAsync)',
     );
     console.error(strMsg);
     throw strMsg;
   }
-  if (strViewId.length != 8) {
+  if (key.viewId.length != 8) {
     const strMsg = Format(
       '缓存分类变量:[strViewId]的长度:[{0}]不正确!(clsViewIdGCVariableRelaWApi.GetObjByKeyLstAsync)',
-      strViewId.length,
+      key.viewId.length,
     );
     console.error(strMsg);
     throw strMsg;
@@ -132,8 +134,8 @@ export async function ViewIdGCVariableRela_GetObjByKeyLstAsync(
       Authorization: `${token}`,
     },
     params: {
-      strVarId,
-      strViewId,
+      strVarId: key.varId,
+      strViewId: key.viewId,
     },
   };
   try {

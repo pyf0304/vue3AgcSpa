@@ -27,7 +27,7 @@ import {
   GCConstantPrjIdRela_GetRecCountByCondAsync,
   GCConstantPrjIdRela_GetObjLstAsync,
   GCConstantPrjIdRela_DelRecKeyLstAsync,
-  GCConstantPrjIdRela_GetObjByKeyLstAsync,
+  GCConstantPrjIdRela_GetObjByKeyAsync,
   GCConstantPrjIdRela_FuncMapByFldName,
   GCConstantPrjIdRela_DelRecKeyLstsAsync,
 } from '@/ts/L3ForWApi/GeneCode/clsGCConstantPrjIdRelaWApi';
@@ -537,10 +537,10 @@ export abstract class GCConstantPrjIdRelaCRUD implements clsOperateList {
   public async SelectRecord(strConstId: string, strPrjId: string) {
     const strThisFuncName = this.SelectRecord.name;
     try {
-      const objGCConstantPrjIdRelaEN = await GCConstantPrjIdRela_GetObjByKeyLstAsync(
-        strConstId,
-        strPrjId,
-      );
+      const objGCConstantPrjIdRelaEN = await GCConstantPrjIdRela_GetObjByKeyAsync({
+        constId: strConstId,
+        prjId: strPrjId,
+      });
       console.log('完成SelectRecord!', objGCConstantPrjIdRelaEN);
       Redirect('/Index/Main_GCConstantPrjIdRela');
     } catch (e) {

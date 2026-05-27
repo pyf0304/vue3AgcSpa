@@ -21,8 +21,8 @@
           <td class="text-left">
             <select
               id="ddlFunctionTemplateId"
-              name="ddlFunctionTemplateId"
               v-model="formData.FunctionTemplateId"
+              name="ddlFunctionTemplateId"
               class="form-control form-control-sm"
               style="width: 150px"
             ></select>
@@ -39,8 +39,8 @@
           <td class="text-left">
             <select
               id="ddlCodeTypeId"
-              name="ddlCodeTypeId"
               v-model="formData.CodeTypeId"
+              name="ddlCodeTypeId"
               class="form-control form-control-sm"
               style="width: 150px"
             ></select>
@@ -59,8 +59,8 @@
           <td class="text-left">
             <select
               id="ddlRegionTypeId"
-              name="ddlRegionTypeId"
               v-model="formData.RegionTypeId"
+              name="ddlRegionTypeId"
               class="form-control form-control-sm"
               style="width: 150px"
             ></select>
@@ -77,8 +77,8 @@
           <td class="text-left">
             <select
               id="ddlFuncCodeTypeId"
-              name="ddlFuncCodeTypeId"
               v-model="formData.FuncCodeTypeId"
+              name="ddlFuncCodeTypeId"
               class="form-control form-control-sm"
               style="width: 150px"
             ></select>
@@ -97,8 +97,8 @@
           <td class="text-left">
             <select
               id="ddlFuncId4GC"
-              name="ddlFuncId4GC"
               v-model="formData.FuncId4GC"
+              name="ddlFuncId4GC"
               class="form-control form-control-sm"
               style="width: 150px"
             ></select>
@@ -107,9 +107,9 @@
             <span class="form-control form-control-sm" style="width: 150px">
               <input
                 id="chkIsGeneCode"
+                v-model="formData.IsGeneCode"
                 name="chkIsGeneCode"
                 type="checkbox"
-                v-model="formData.IsGeneCode"
                 Text="是否生成代码"
               /><label for="chkIsGeneCode">是否生成代码</label></span
             >
@@ -128,8 +128,8 @@
           <td class="text-left">
             <input
               id="txtOrderNum"
-              name="txtOrderNum"
               v-model="formData.OrderNum"
+              name="txtOrderNum"
               class="form-control form-control-sm"
               style="width: 150px"
             />
@@ -142,16 +142,16 @@
           <td class="text-left">
             <input
               id="txtMemo"
-              name="txtMemo"
               v-model="formData.Memo"
+              name="txtMemo"
               class="form-control form-control-sm"
               style="width: 150px"
             />
           </td>
         </tr>
       </table>
-      <input id="hidOpType" type="hidden" v-model="formData.hidOpType" />
-      <input id="hidKeyId" type="hidden" v-model="formData.hidKeyId" />
+      <input id="hidOpType" v-model="formData.hidOpType" type="hidden" />
+      <input id="hidKeyId" v-model="formData.hidKeyId" type="hidden" />
     </div>
     <template #footer>
       <a-button id="btnCancelFunctionTemplateRela" @click="dialogVisible = false">{{

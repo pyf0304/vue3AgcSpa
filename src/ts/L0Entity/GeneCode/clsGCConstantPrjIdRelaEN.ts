@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsGCConstantPrjIdRelaEN
  * 表名:GCConstantPrjIdRela(00050641)
- * 版本:2025.07.05.1(服务器:WIN-SRV103-116)
- * 日期:2025/07/05 09:37:33
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/27 06:17:24
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:生成代码(GeneCode)
  * 框架-层名:实体层(TS)(EntityLayer,0121)
@@ -18,6 +18,14 @@
  **/
 import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
+/**
+ * GC常量工程关系主键类型定义
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_KeyType)
+ **/
+export type GCConstantPrjIdRelaKey = {
+  constId: string;
+  prjId: string;
+};
 export class clsGCConstantPrjIdRelaEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
   public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
@@ -25,8 +33,8 @@ export class clsGCConstantPrjIdRelaEN extends clsGeneralTab {
   public static readonly _PrimaryTypeId: string = '07'; //复合主键
   public static readonly _IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
   public static readonly _WhereFormat = ''; //条件格式串
-  public static readonly _CurrTabName = 'GCConstantPrjIdRela'; //当前表名,与该类相关的表名
-  public static readonly _KeyFldName = 'ConstId,PrjId'; //当前表中的关键字名称,与该类相关的表中关键字名
+  public static readonly _CurrTabName: string = 'GCConstantPrjIdRela'; //当前表名,与该类相关的表名
+  public static readonly _KeyFldName: string = 'ConstId,PrjId'; //当前表中的关键字名称,与该类相关的表中关键字名
   public static readonly _AttributeCount = 5;
   public static readonly _AttributeName = ['constId', 'prjId', 'updUser', 'updDate', 'memo'];
   //以下是属性变量

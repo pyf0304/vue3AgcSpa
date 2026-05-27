@@ -7,5 +7,7 @@ export default {
     import('@/views/PrjFunction/Function4GeneCodeCRUD.vue'),
   'views/PrjFunction/FunctionTemplateRelaCRUDAi': () =>
     import('@/views/PrjFunction/FunctionTemplateRelaCRUDAi.vue'),
+  'views/PrjFunction/FunctionTemplateRelaTree': () =>
+    import('@/views/PrjFunction/FunctionTemplateRelaTree.vue'),
 } as const;
 // views/RegionManage/ViewRegionCRUD

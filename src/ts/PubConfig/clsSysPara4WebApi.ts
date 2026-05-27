@@ -7,18 +7,18 @@
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 
 export class clsSysPara4WebApi {
-  public static bolIsLocalHost = false; //true,,,false
+  public static bolIsLocalHost = true; //true,,,false
 
   //const CurrIPAddressAndPort = "http://Localhost:2408";
   //    public static CurrIPAddressAndPort:string = getHostAddressweb();// "http://Localhost:2408";
   // public static CurrPrx = 'AgcWAVue';
   //  public static CurrPrx = 'AgcWA';
-  public static CurrPrx = 'AgcWAV3';
-  // public static CurrPrx = '';
+  // public static CurrPrx = 'AgcWAV3';
+  public static CurrPrx = '';
 
-  public static CurrPrx_GP = 'GpWATz';
+  // public static CurrPrx_GP = 'GpWATz';
   //public static CurrPrx: string = VirtualRootPath + "/WebApi";
-  // public static CurrPrx_GP = '';
+  public static CurrPrx_GP = '';
 
   //192.168.1.15
   //public static CurrIPAddressAndPort = "http://192.168.1.15";// getHostAddressweb();// "http://Localhost:2408";

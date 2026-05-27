@@ -108,7 +108,7 @@ import {
   vDataNode_Sim_ReFreshThisCache,
 } from '@/ts/L3ForWApi/AIModule/clsvDataNode_SimWApi';
 import { DnFuncMap_GetObjByDnFuncMapIdAsync } from '@/ts/L3ForWApi/AIModule/clsDnFuncMapWApi';
-import { DataNode_GetObjByDataNodeIdAsync } from '@/ts/L3ForWApi/AIModule/clsDataNodeWApi';
+import { DataNode_GetObjByKeyAsync } from '@/ts/L3ForWApi/AIModule/clsDataNodeWApi';
 import {
   vFieldTab_Sim_GetObjByFldIdAsync,
   vFieldTab_Sim_GetObjByFldIdCache,
@@ -193,7 +193,7 @@ export default class DnFuncMapCRUD_EditEx extends DnFuncMapCRUD implements IShow
           DnFuncMapCRUD_EditEx.TabIdStatic,
           DnFuncMapCRUD_EditEx.divNodeGraph, //.divName4DataNodeLst,
         );
-        objDataNode = await DataNode_GetObjByDataNodeIdAsync(objDnFuncMap.inDataNodeId);
+        objDataNode = await DataNode_GetObjByKeyAsync({ dataNodeId: objDnFuncMap.inDataNodeId });
         if (objDataNode != null) {
           await RemoveLi_FieldTab(objDataNode.fldId, DnFuncMapCRUD_EditEx.divFldGraph);
         }
@@ -202,7 +202,7 @@ export default class DnFuncMapCRUD_EditEx extends DnFuncMapCRUD implements IShow
           DnFuncMapCRUD_EditEx.TabIdStatic,
           DnFuncMapCRUD_EditEx.divNodeGraph, //.divName4DataNodeLst,
         );
-        objDataNode = await DataNode_GetObjByDataNodeIdAsync(objDnFuncMap.outDataNodeId);
+        objDataNode = await DataNode_GetObjByKeyAsync({ dataNodeId: objDnFuncMap.outDataNodeId });
         if (objDataNode == null) return;
         await RemoveLi_FieldTab(objDataNode.fldId, DnFuncMapCRUD_EditEx.divFldGraph);
         break;
@@ -242,7 +242,7 @@ export default class DnFuncMapCRUD_EditEx extends DnFuncMapCRUD implements IShow
           DnFuncMapCRUD_EditEx.TabIdStatic,
           DnFuncMapCRUD_EditEx.divNodeGraph, //.divName4DataNodeLst,
         );
-        objDataNode = await DataNode_GetObjByDataNodeIdAsync(objDnFuncMap.outDataNodeId);
+        objDataNode = await DataNode_GetObjByKeyAsync({ dataNodeId: objDnFuncMap.outDataNodeId });
         if (objDataNode == null) return;
         await RemoveLi_FieldTab(objDataNode.fldId, DnFuncMapCRUD_EditEx.divFldGraph);
         break;
@@ -255,7 +255,7 @@ export default class DnFuncMapCRUD_EditEx extends DnFuncMapCRUD implements IShow
           DnFuncMapCRUD_EditEx.TabIdStatic,
           DnFuncMapCRUD_EditEx.divNodeGraph, //.divName4DataNodeLst,
         );
-        objDataNode = await DataNode_GetObjByDataNodeIdAsync(objDnFuncMap.inDataNodeId);
+        objDataNode = await DataNode_GetObjByKeyAsync({ dataNodeId: objDnFuncMap.inDataNodeId });
         if (objDataNode == null) return;
         await RemoveLi_FieldTab(objDataNode.fldId, DnFuncMapCRUD_EditEx.divFldGraph);
         break;

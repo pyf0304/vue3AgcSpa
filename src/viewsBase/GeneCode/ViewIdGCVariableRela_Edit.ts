@@ -17,7 +17,7 @@ import {
   ViewIdGCVariableRela_CheckPropertyNew,
   ViewIdGCVariableRela_IsExistAsync,
   ViewIdGCVariableRela_AddNewRecordAsync,
-  ViewIdGCVariableRela_GetObjByKeyLstAsync,
+  ViewIdGCVariableRela_GetObjByKeyAsync,
   ViewIdGCVariableRela_CheckProperty4Update,
   ViewIdGCVariableRela_UpdateRecordAsync,
 } from '@/ts/L3ForWApi/GeneCode/clsViewIdGCVariableRelaWApi';
@@ -445,10 +445,10 @@ export abstract class ViewIdGCVariableRela_Edit {
       alert(strMsg);
     }
     try {
-      const objViewIdGCVariableRelaENConst = await ViewIdGCVariableRela_GetObjByKeyLstAsync(
-        strVarId,
-        strViewId,
-      );
+      const objViewIdGCVariableRelaENConst = await ViewIdGCVariableRela_GetObjByKeyAsync({
+        varId: strVarId,
+        viewId: strViewId,
+      });
       if (objViewIdGCVariableRelaENConst == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -484,10 +484,10 @@ export abstract class ViewIdGCVariableRela_Edit {
     const strThisFuncName = this.UpdateRecord.name;
     this.keyId = strVarId;
     try {
-      const objViewIdGCVariableRelaEN = await ViewIdGCVariableRela_GetObjByKeyLstAsync(
-        strVarId,
-        strViewId,
-      );
+      const objViewIdGCVariableRelaEN = await ViewIdGCVariableRela_GetObjByKeyAsync({
+        varId: strVarId,
+        viewId: strViewId,
+      });
       if (objViewIdGCVariableRelaEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

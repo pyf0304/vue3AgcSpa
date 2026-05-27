@@ -192,7 +192,7 @@
   import { clsvCodeType_SimEN } from '@/ts/L0Entity/GeneCode/clsvCodeType_SimEN';
   import { clsFunction4GeneCodeEN } from '@/ts/L0Entity/PrjFunction/clsFunction4GeneCodeEN';
   import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
-  import FunctionTemplateRelaCRUDExAi from '@/views/PrjFunction/FunctionTemplateRelaCRUDExAi';
+  import FunctionTemplateRelaCRUDExAi from '@/views/PrjFunction/FunctionTemplateRelaCRUDAiEx';
   import {
     getQueryRowsAi,
     initQueryDefaultsAi,

@@ -25,7 +25,10 @@
 import axios from 'axios';
 import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
 import { Storage } from '@/utils/Storage';
-import { clsvFunctionTemplateRelaEN } from '@/ts/L0Entity/PrjFunction/clsvFunctionTemplateRelaEN';
+import {
+  clsvFunctionTemplateRelaEN,
+  vFunctionTemplateRelaKey,
+} from '@/ts/L0Entity/PrjFunction/clsvFunctionTemplateRelaEN';
 import { GetExceptionStr, myShowErrorMsg, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
@@ -42,12 +45,12 @@ export const vFunctionTemplateRela_ConstructorName = 'vFunctionTemplateRela';
  * @param lngmId:关键字
  * @returns 对象
  **/
-export async function vFunctionTemplateRela_GetObjBymIdAsync(
-  lngmId: number,
+export async function vFunctionTemplateRela_GetObjByKeyAsync(
+  key: vFunctionTemplateRelaKey,
 ): Promise<clsvFunctionTemplateRelaEN | null> {
-  const strThisFuncName = 'GetObjBymIdAsync';
+  const strThisFuncName = 'GetObjByKeyAsync';
 
-  if (lngmId == 0) {
+  if (key.mId == 0) {
     const strMsg = Format(
       '参数:[lngmId]不能为空!(In clsvFunctionTemplateRelaWApi.GetObjBymIdAsync)',
     );
@@ -64,7 +67,7 @@ export async function vFunctionTemplateRela_GetObjBymIdAsync(
       Authorization: `${token}`,
     },
     params: {
-      lngmId,
+      mId: key.mId,
     },
   };
   try {

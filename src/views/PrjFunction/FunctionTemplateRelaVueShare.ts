@@ -76,12 +76,14 @@ export const isFuncMapCache: { [key: string]: boolean } = {};
 //查询区变量定义
 export const functionTemplateId_q = ref('');
 export const regionTypeId_q = ref('');
+export const progLangTypeId_q = ref('');
 export const codeTypeId_q = ref('');
 export const funcId4GC_q = ref('');
 export const isGeneCode_q = ref('0');
 const qryVarSet = reactive({
   functionTemplateId_q,
   regionTypeId_q,
+  progLangTypeId_q,
   codeTypeId_q,
   funcId4GC_q,
   isGeneCode_q,

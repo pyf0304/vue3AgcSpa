@@ -21,7 +21,7 @@ import {
   DataNode_GetUniCondStr4Update,
   DataNode_AddNewRecordWithReturnKeyAsync,
   DataNode_IsExistAsync,
-  DataNode_GetObjByDataNodeIdAsync,
+  DataNode_GetObjByKeyAsync,
   DataNode_CheckProperty4Update,
   DataNode_UpdateRecordAsync,
   DataNode_EditRecordExAsync,
@@ -553,7 +553,7 @@ export abstract class DataNode_Edit {
       alert(strMsg);
     }
     try {
-      const objDataNodeENConst = await DataNode_GetObjByDataNodeIdAsync(lngDataNodeId);
+      const objDataNodeENConst = await DataNode_GetObjByKeyAsync({ dataNodeId: lngDataNodeId });
       if (objDataNodeENConst == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -587,7 +587,7 @@ export abstract class DataNode_Edit {
     const strThisFuncName = this.UpdateRecord.name;
     this.keyId = lngDataNodeId;
     try {
-      const objDataNodeEN = await DataNode_GetObjByDataNodeIdAsync(lngDataNodeId);
+      const objDataNodeEN = await DataNode_GetObjByKeyAsync({ dataNodeId: lngDataNodeId });
       if (objDataNodeEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

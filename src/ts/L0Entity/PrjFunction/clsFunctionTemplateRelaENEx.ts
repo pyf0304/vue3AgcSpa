@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsFunctionTemplateRelaENEx
  * 表名:FunctionTemplateRela(00050313)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:51:24
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/26 15:54:11
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:函数管理(PrjFunction)
  * 框架-层名:实体扩展层(TS)(EntityLayerEx,0191)
@@ -56,6 +56,8 @@ export class clsFunctionTemplateRelaENEx extends clsFunctionTemplateRelaEN {
         return this.codeTypeName;
       case clsFunctionTemplateRelaENEx.con_FuncCodeTypeName:
         return this.funcCodeTypeName;
+      case clsFunctionTemplateRelaENEx.con_DateTimeSim:
+        return this.dateTimeSim;
       default:
         strValue = super.GetFldValue(strFldName);
         return strValue;
@@ -66,65 +68,55 @@ export class clsFunctionTemplateRelaENEx extends clsFunctionTemplateRelaEN {
    * 常量:"FunctionTemplateName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_FunctionTemplateName(): string {
-    return 'functionTemplateName';
-  } //函数模板名
+  public static readonly con_FunctionTemplateName = 'functionTemplateName'; //函数模板名
 
   /**
    * 常量:"RegionTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_RegionTypeName(): string {
-    return 'regionTypeName';
-  } //区域类型名称
+  public static readonly con_RegionTypeName = 'regionTypeName'; //区域类型名称
 
   /**
    * 常量:"FuncName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_FuncName(): string {
-    return 'funcName';
-  } //函数名
+  public static readonly con_FuncName = 'funcName'; //函数名
 
   /**
    * 常量:"FuncName4Code"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_FuncName4Code(): string {
-    return 'funcName4Code';
-  } //函数名4Code
+  public static readonly con_FuncName4Code = 'funcName4Code'; //函数名4Code
 
   /**
    * 常量:"ProgLangTypeSimName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_ProgLangTypeSimName(): string {
-    return 'progLangTypeSimName';
-  } //编程语言类型简称
+  public static readonly con_ProgLangTypeSimName = 'progLangTypeSimName'; //编程语言类型简称
 
   /**
    * 常量:"CodeTypeSimName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_CodeTypeSimName(): string {
-    return 'codeTypeSimName';
-  } //简称
+  public static readonly con_CodeTypeSimName = 'codeTypeSimName'; //简称
 
   /**
    * 常量:"CodeTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_CodeTypeName(): string {
-    return 'codeTypeName';
-  } //代码类型名
+  public static readonly con_CodeTypeName = 'codeTypeName'; //代码类型名
 
   /**
    * 常量:"FuncCodeTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_FuncCodeTypeName(): string {
-    return 'funcCodeTypeName';
-  } //FuncCodeTypeName
+  public static readonly con_FuncCodeTypeName = 'funcCodeTypeName'; //FuncCodeTypeName
+
+  /**
+   * 常量:"DateTimeSim"
+   * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
+   */
+  public static readonly con_DateTimeSim = 'dateTimeSim'; //简化日期时间
 
   public functionTemplateName = ''; //函数模板名
   public regionTypeName = ''; //区域类型名称
@@ -134,6 +126,8 @@ export class clsFunctionTemplateRelaENEx extends clsFunctionTemplateRelaEN {
   public codeTypeSimName = ''; //简称
   public codeTypeName = ''; //代码类型名
   public funcCodeTypeName = ''; //FuncCodeTypeName
+  public dateTimeSim = ''; //简化日期时间
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名

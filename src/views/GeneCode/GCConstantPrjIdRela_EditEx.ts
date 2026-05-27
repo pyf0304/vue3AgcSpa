@@ -14,9 +14,10 @@
  **/
 //import $ from "jquery";
 import { myMessage } from '@/utils/myMessage';
-import { GCConstantPrjIdRela_SplitKeyLst } from '@/ts/L3ForWApi/GeneCode/clsGCConstantPrjIdRelaWApi';
+
 import { Format } from '@/ts/PubFun/clsString';
 import { GCConstantPrjIdRela_Edit } from '@/viewsBase/GeneCode/GCConstantPrjIdRela_Edit';
+import { GCConstantPrjIdRelaKey } from '@/ts/L0Entity/GeneCode/clsGCConstantPrjIdRelaEN';
 /* GCConstantPrjIdRela_EditEx 的摘要说明。其中Q代表查询,U代表修改
   (AutoGCLib.Vue_ViewScript_EditCSEx_TS4TypeScript:GeneCode)
 */
@@ -25,7 +26,7 @@ export default class GCConstantPrjIdRela_EditEx extends GCConstantPrjIdRela_Edit
   按钮单击,用于调用Js函数中btnClick
  (AutoGCLib.Vue_ViewScript_EditCSEx_TS4TypeScript:Gen_Vue_TS_btnEdit_Click)
  **/
-  public static btnEdit_Click(strCommandName: string, strKeyId: string) {
+  public static btnEdit_Click(strCommandName: string, key: GCConstantPrjIdRelaKey) {
     const strThisFuncName = this.btnEdit_Click.name;
     const objPage: GCConstantPrjIdRela_EditEx = <GCConstantPrjIdRela_EditEx>(
       GCConstantPrjIdRela_Edit.GetPageEditObj('GCConstantPrjIdRela_EditEx')
@@ -37,8 +38,7 @@ export default class GCConstantPrjIdRela_EditEx extends GCConstantPrjIdRela_Edit
       return;
     }
     let strMsg = '';
-    let objKeyLst;
-    const strKeyLst = strKeyId;
+
     switch (strCommandName) {
       case 'Submit': //提交
         objPage.btnSubmit_Click();
@@ -51,18 +51,18 @@ export default class GCConstantPrjIdRela_EditEx extends GCConstantPrjIdRela_Edit
       case 'UpdateRecord': //修改记录
       case 'Update': //修改记录
       case 'UpdateRecordInTab': //修改记录InTab
-        objKeyLst = GCConstantPrjIdRela_SplitKeyLst(strKeyLst);
+        // objKeyLst = GCConstantPrjIdRela_SplitKeyLst(strKeyLst);
         if (strCommandName == 'UpdateRecordInTab') {
-          objPage.btnUpdateRecordInTab_Click(objKeyLst.constId, objKeyLst.prjId);
+          objPage.btnUpdateRecordInTab_Click(key);
         } else {
-          objPage.btnUpdateRecord_Click(objKeyLst.constId, objKeyLst.prjId);
+          objPage.btnUpdateRecord_Click(key);
         }
         break;
       default:
         strMsg = Format(
           '命令:{0}, 关键字: {1}, 在函数({2}.{3})中没有被处理!',
           strCommandName,
-          strKeyId,
+          `constId: ${key.constId}, prjId: ${key.prjId}`, //因为是复合主键，所以这里暂时只显示第一个关键字值
           this.constructor.name,
           strThisFuncName,
         );

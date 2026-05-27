@@ -539,7 +539,7 @@ export abstract class FunctionTemplateRelaCRUDAi
    * - memo (string)
    *
    * 作者: AutoGCLib
-   * 日期: 2026-05-14
+   * 日期: 2026-05-21
    */
   public SortFunExportExcel(a: clsFunctionTemplateRelaEN, b: clsFunctionTemplateRelaEN): number {
     // 第一级排序：memo

@@ -12,11 +12,14 @@
  * 框架-层名:Vue_详细信息后台_TS(TS)(Vue_ViewScript_DetailCS_TS,0260)
  * 编程语言:TypeScript
  **/
-import { GCConstantPrjIdRela_GetObjByKeyLstAsync } from '@/ts/L3ForWApi/GeneCode/clsGCConstantPrjIdRelaWApi';
+import { GCConstantPrjIdRela_GetObjByKeyAsync } from '@/ts/L3ForWApi/GeneCode/clsGCConstantPrjIdRelaWApi';
 import { ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { GCConstantPrjIdRelaEx_FuncMapByFldName } from '@/ts/L3ForWApiEx/GeneCode/clsGCConstantPrjIdRelaExWApi';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
-import { clsGCConstantPrjIdRelaEN } from '@/ts/L0Entity/GeneCode/clsGCConstantPrjIdRelaEN';
+import {
+  clsGCConstantPrjIdRelaEN,
+  GCConstantPrjIdRelaKey,
+} from '@/ts/L0Entity/GeneCode/clsGCConstantPrjIdRelaEN';
 import {
   divVarSet,
   refGCConstantPrjIdRela_Detail,
@@ -112,21 +115,21 @@ export abstract class GCConstantPrjIdRela_Detail {
  在数据表里详细信息记录
  (AutoGCLib.WA_ViewScript_DetailCS_TS4TypeScript:Gen_WApi_Ts_btnDetailRecordInTab_Click)
 */
-  public async btnDetailRecordInTab_Click(strConstId: string, strPrjId: string) {
+  public async btnDetailRecordInTab_Click(key: GCConstantPrjIdRelaKey) {
     const strThisFuncName = this.btnDetailRecordInTab_Click.name;
     this.opType = 'Detail';
     const bolIsSuccess = await this.ShowDialog_GCConstantPrjIdRela('Detail');
     if (bolIsSuccess == false) return;
     try {
-      if (IsNullOrEmpty(strConstId) == true) {
+      if (IsNullOrEmpty(key.constId) == true) {
         alert('请选择需要详细信息的记录!');
         return '';
       }
-      if (IsNullOrEmpty(strPrjId) == true) {
+      if (IsNullOrEmpty(key.prjId) == true) {
         alert('请选择需要详细信息的记录!');
         return '';
       }
-      this.DetailRecord4Func(strConstId, strPrjId);
+      this.DetailRecord4Func(key);
     } catch (e) {
       const strMsg = Format(
         '详细信息记录不成功. {0}.(in {1}.{2})',
@@ -144,14 +147,11 @@ export abstract class GCConstantPrjIdRela_Detail {
   (AutoGCLib.WA_ViewScript_DetailCS_TS4TypeScript:Gen_WApi_Ts_DetailRecord4Func)
   <param name = "sender">参数列表</param>
 */
-  public async DetailRecord4Func(strConstId: string, strPrjId: string) {
+  public async DetailRecord4Func(key: GCConstantPrjIdRelaKey) {
     const strThisFuncName = this.DetailRecord4Func.name;
     this.btnCancelGCConstantPrjIdRela = '关闭';
     try {
-      const objGCConstantPrjIdRelaEN = await GCConstantPrjIdRela_GetObjByKeyLstAsync(
-        strConstId,
-        strPrjId,
-      );
+      const objGCConstantPrjIdRelaEN = await GCConstantPrjIdRela_GetObjByKeyAsync(key);
       const objGCConstantPrjIdRelaENEx = new clsGCConstantPrjIdRelaENEx();
       ObjectAssign(objGCConstantPrjIdRelaENEx, objGCConstantPrjIdRelaEN);
       await GCConstantPrjIdRelaEx_FuncMapByFldName(
@@ -207,16 +207,16 @@ export abstract class GCConstantPrjIdRela_Detail {
   /* 修改记录
  (AutoGCLib.Vue_ViewScript_DetailCS_TS4TypeScript:Gen_Vue_Ts_btnDetailRecord_Click)
 */
-  public async btnDetailRecord_Click(strConstId: string, strPrjId: string) {
+  public async btnDetailRecord_Click(key: GCConstantPrjIdRelaKey) {
     this.opType = 'Detail';
     const bolIsSuccess = await this.ShowDialog_GCConstantPrjIdRela('Detail');
     if (bolIsSuccess == false) return;
-    if (IsNullOrEmpty(strConstId) == true) {
+    if (IsNullOrEmpty(key.constId) == true) {
       const strMsg = '需要显示详细信息记录的关键字为空,请检查!';
       console.error(strMsg);
       alert(strMsg);
     }
-    if (IsNullOrEmpty(strPrjId) == true) {
+    if (IsNullOrEmpty(key.prjId) == true) {
       const strMsg = '需要显示详细信息记录的关键字为空,请检查!';
       console.error(strMsg);
       alert(strMsg);
@@ -224,7 +224,7 @@ export abstract class GCConstantPrjIdRela_Detail {
     // 为编辑区绑定下拉框
     //const conBindDdl = await this.BindDdl4DetailRegion();
     this.bolIsLoadDetailRegion = true; //
-    this.DetailRecord4Func(strConstId, strPrjId);
+    this.DetailRecord4Func(key);
   }
 
   /// <summary>

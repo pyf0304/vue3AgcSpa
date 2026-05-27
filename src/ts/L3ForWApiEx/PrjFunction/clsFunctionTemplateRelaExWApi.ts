@@ -21,6 +21,7 @@ import { RegionType_func } from '@/ts/L3ForWApi/RegionManage/clsRegionTypeWApi';
 import { ProgLangType_func } from '@/ts/L3ForWApi/SysPara/clsProgLangTypeWApi';
 import { vFunction4GeneCode_SimEx_func } from '@/ts/L3ForWApiEx/PrjFunction/clsvFunction4GeneCode_SimExWApi';
 import { GetSortExpressInfo, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
+import { clsDateTime } from '@/ts/PubFun/clsDateTime';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 
@@ -211,6 +212,8 @@ export function FunctionTemplateRelaEx_FuncMapByFldName(
       return FunctionTemplateRelaEx_FuncMap_CodeTypeName(objFunctionTemplateRelaEx);
     case clsFunctionTemplateRelaENEx.con_FuncCodeTypeName:
       return FunctionTemplateRelaEx_FuncMap_FuncCodeTypeName(objFunctionTemplateRelaEx);
+    case clsFunctionTemplateRelaENEx.con_DateTimeSim:
+      return FunctionTemplateRelaEx_FuncMapDateTimeSim(objFunctionTemplateRelaEx);
     default:
       strMsg = Format(
         '扩展字段:[{0}]在字段值函数映射中不存在！(in {1})',
@@ -335,6 +338,10 @@ export async function FunctionTemplateRelaEx_FuncMap_FuncName4Code(
         clsvFunction4GeneCode_SimEN.con_FuncId4Code,
         vFunction4GeneCode_Sim_FuncId4GC,
       );
+      if (IsNullOrEmpty(vFunction4GeneCode_Sim_FuncId4Code) == true) {
+        objFunctionTemplateRela.funcName4Code = '函数为空';
+        return;
+      }
       const vFunction4Code_Sim_FuncName4Code = await vFunction4Code_SimStore.getName(
         vFunction4GeneCode_Sim_FuncId4Code,
       );
@@ -589,4 +596,32 @@ export async function FunctionTemplateRelaEx_GetObjLstByTemplateIdAndCodeTypeId(
     FunctionTemplateRelaEx_CopyToEx,
   );
   return arrFunctionTemplateRelaObjExLst;
+}
+
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objFunctionTemplateRelaS:源对象
+ **/
+export async function FunctionTemplateRelaEx_FuncMapDateTimeSim(
+  objFunctionTemplateRela: clsFunctionTemplateRelaENEx,
+) {
+  const strThisFuncName = FunctionTemplateRelaEx_FuncMapDateTimeSim.name;
+  try {
+    if (IsNullOrEmpty(objFunctionTemplateRela.dateTimeSim) == true) {
+      const CommonDataNodeDateTimeSim = clsDateTime.GetDateTime_Sim(
+        objFunctionTemplateRela.updDate,
+      );
+      objFunctionTemplateRela.dateTimeSim = CommonDataNodeDateTimeSim;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001033)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      functionTemplateRelaEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
 }

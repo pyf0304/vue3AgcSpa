@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsFunctionTemplateRelaWApi
  * 表名:FunctionTemplateRela(00050313)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:51:23
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/27 06:09:23
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:函数管理(PrjFunction)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * 函数与模板关系(FunctionTemplateRela)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年06月14日.
+ * Created by pyf on 2026年05月27日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -29,7 +29,10 @@ import { Storage } from '@/utils/Storage';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 import { ObjectAssign, GetExceptionStr, myShowErrorMsg } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsFunctionTemplateRelaENEx } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateRelaENEx';
-import { clsFunctionTemplateRelaEN } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateRelaEN';
+import {
+  clsFunctionTemplateRelaEN,
+  FunctionTemplateRelaKey,
+} from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateRelaEN';
 import { Format, GetStrLen, tzDataType, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { FunctionTemplate_func } from '@/ts/L3ForWApi/PrjFunction/clsFunctionTemplateWApi';
 import { clsFunctionTemplateEN } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateEN';
@@ -48,6 +51,7 @@ import { AddRecordResult } from '@/ts/PubFun/AddRecordResult';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
 import { stuRangePara } from '@/ts/PubFun/stuRangePara';
+import { clsDateTime } from '@/ts/PubFun/clsDateTime';
 
 export const functionTemplateRela_Controller = 'FunctionTemplateRelaApi';
 export const functionTemplateRela_ConstructorName = 'functionTemplateRela';
@@ -55,20 +59,21 @@ export const functionTemplateRela_ConstructorName = 'functionTemplateRela';
 /**
  * 根据关键字获取相应记录的对象
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdAsync)
- * @param lngmId:关键字
+ * @param key:包含关键字的对象
  * @returns 对象
  **/
-export async function FunctionTemplateRela_GetObjBymIdAsync(
-  lngmId: number,
+export async function FunctionTemplateRela_GetObjByKeyAsync(
+  key: FunctionTemplateRelaKey,
 ): Promise<clsFunctionTemplateRelaEN | null> {
-  const strThisFuncName = 'GetObjBymIdAsync';
-
-  if (lngmId == 0) {
+  const strThisFuncName = 'GetObjByKeyAsync';
+  if (key.mId === undefined || key.mId === null || key.mId === 0) {
     const strMsg = Format(
-      '参数:[lngmId]不能为空!(In clsFunctionTemplateRelaWApi.GetObjBymIdAsync)',
+      '关键字段[mId]不能为空!(in {0}.{1})',
+      functionTemplateRela_ConstructorName,
+      strThisFuncName,
     );
     console.error(strMsg);
-    throw strMsg;
+    throw new Error(strMsg);
   }
   const strAction = 'GetObjBymId';
   const strUrl = GetWebApiUrl(functionTemplateRela_Controller, strAction);
@@ -80,7 +85,7 @@ export async function FunctionTemplateRela_GetObjBymIdAsync(
       Authorization: `${token}`,
     },
     params: {
-      lngmId,
+      lngmId: key.mId,
     },
   };
   try {
@@ -133,7 +138,7 @@ export async function FunctionTemplateRela_GetObjBymIdAsync(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -148,7 +153,7 @@ export function FunctionTemplateRela_SortFunDefa(
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -165,7 +170,7 @@ export function FunctionTemplateRela_SortFunDefa2Fld(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -309,7 +314,7 @@ export function FunctionTemplateRela_SortFunByKey(strKey: string, AscOrDesc: str
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -1131,7 +1136,7 @@ export function FunctionTemplateRela_CopyToEx(
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -1165,6 +1170,8 @@ export function FunctionTemplateRela_FuncMapByFldName(
       return FunctionTemplateRela_FuncMapCodeTypeName(objFunctionTemplateRelaEx);
     case clsFunctionTemplateRelaENEx.con_FuncCodeTypeName:
       return FunctionTemplateRela_FuncMapFuncCodeTypeName(objFunctionTemplateRelaEx);
+    case clsFunctionTemplateRelaENEx.con_DateTimeSim:
+      return FunctionTemplateRela_FuncMapDateTimeSim(objFunctionTemplateRelaEx);
     default:
       strMsg = Format(
         '扩展字段:[{0}]在字段值函数映射中不存在!(in {1})',
@@ -1178,7 +1185,7 @@ export function FunctionTemplateRela_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -1226,6 +1233,13 @@ export function FunctionTemplateRela_SortFunByExKey(strKey: string, AscOrDesc: s
           if (b.funcCodeTypeName === null) return 1;
           return a.funcCodeTypeName.localeCompare(b.funcCodeTypeName);
         };
+      case clsFunctionTemplateRelaENEx.con_DateTimeSim:
+        return (a: clsFunctionTemplateRelaENEx, b: clsFunctionTemplateRelaENEx) => {
+          if (a.dateTimeSim === null && b.dateTimeSim === null) return 0;
+          if (a.dateTimeSim === null) return -1;
+          if (b.dateTimeSim === null) return 1;
+          return a.dateTimeSim.localeCompare(b.dateTimeSim);
+        };
       default:
         return FunctionTemplateRela_SortFunByKey(strKey, AscOrDesc);
     }
@@ -1268,6 +1282,13 @@ export function FunctionTemplateRela_SortFunByExKey(strKey: string, AscOrDesc: s
           if (a.funcCodeTypeName === null) return 1;
           if (b.funcCodeTypeName === null) return -1;
           return b.funcCodeTypeName.localeCompare(a.funcCodeTypeName);
+        };
+      case clsFunctionTemplateRelaENEx.con_DateTimeSim:
+        return (a: clsFunctionTemplateRelaENEx, b: clsFunctionTemplateRelaENEx) => {
+          if (a.dateTimeSim === null && b.dateTimeSim === null) return 0;
+          if (a.dateTimeSim === null) return 1;
+          if (b.dateTimeSim === null) return -1;
+          return b.dateTimeSim.localeCompare(a.dateTimeSim);
         };
       default:
         return FunctionTemplateRela_SortFunByKey(strKey, AscOrDesc);
@@ -1519,6 +1540,33 @@ export async function FunctionTemplateRela_FuncMapCodeTypeName(
   } catch (e) {
     const strMsg = Format(
       '(errid:Watl001309)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      functionTemplateRela_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
+ * @param objFunctionTemplateRelaS:源对象
+ **/
+export async function FunctionTemplateRela_FuncMapDateTimeSim(
+  objFunctionTemplateRela: clsFunctionTemplateRelaENEx,
+) {
+  const strThisFuncName = FunctionTemplateRela_FuncMapDateTimeSim.name;
+  try {
+    if (IsNullOrEmpty(objFunctionTemplateRela.dateTimeSim) == true) {
+      const CommonDataNodeDateTimeSim = clsDateTime.GetDateTime_Sim(
+        objFunctionTemplateRela.updDate,
+      );
+      objFunctionTemplateRela.dateTimeSim = CommonDataNodeDateTimeSim;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001326)函数映射表对象数据出错,{0}.(in {1}.{2})',
       e,
       functionTemplateRela_ConstructorName,
       strThisFuncName,
@@ -2414,10 +2462,12 @@ export async function FunctionTemplateRela_IsExistRecordAsync(
 /**
  * 根据关键字判断是否存在记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistAsync)
- * @param lngmId:关键字
+ * @param key:包含关键字的对象
  * @returns 是否存在?存在返回True
  **/
-export async function FunctionTemplateRela_IsExistAsync(lngmId: number): Promise<boolean> {
+export async function FunctionTemplateRela_IsExistAsync(
+  key: FunctionTemplateRelaKey,
+): Promise<boolean> {
   const strThisFuncName = 'IsExistAsync';
   //检测记录是否存在
   const strAction = 'IsExist';
@@ -2430,7 +2480,7 @@ export async function FunctionTemplateRela_IsExistAsync(lngmId: number): Promise
       Authorization: `${token}`,
     },
     params: {
-      lngmId,
+      lngmId: key.mId,
     },
   };
   try {
@@ -3017,7 +3067,7 @@ export function FunctionTemplateRela_CheckProperty4Update(
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3040,7 +3090,7 @@ export function FunctionTemplateRela_GetJSONStrByObj(
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -3063,7 +3113,7 @@ export function FunctionTemplateRela_GetObjLstByJSONStr(
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrFunctionTemplateRelaObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -3083,7 +3133,7 @@ export function FunctionTemplateRela_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

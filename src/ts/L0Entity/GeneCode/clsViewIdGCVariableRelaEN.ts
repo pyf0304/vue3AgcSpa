@@ -16,9 +16,14 @@
  * 界面变量关系(ViewIdGCVariableRela)
  * (AutoGCLib.EntityLayer4TypeScript:GeneCode)
  **/
+import { IEntityKey } from '@/ts/FunClass/IEntityKey';
 import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
-export class clsViewIdGCVariableRelaEN extends clsGeneralTab {
+export type ViewIdGCVariableRelaKey = {
+  varId: string;
+  viewId: string;
+};
+export class clsViewIdGCVariableRelaEN extends clsGeneralTab implements IEntityKey {
   public static _RefreshTimeLst = new Array<string>();
   public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
   public static readonly _CacheModeId: string = ''; //
@@ -50,6 +55,13 @@ export class clsViewIdGCVariableRelaEN extends clsGeneralTab {
    */
   constructor() {
     super();
+  }
+
+  toKeyObject() {
+    return {
+      varId: this.varId,
+      viewId: this.viewId,
+    };
   }
 
   /**

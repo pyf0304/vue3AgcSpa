@@ -1,18 +1,18 @@
 ﻿/**
  * 类名:FunctionTemplateRela_Detail(界面:FunctionTemplateRelaCRUD,00050327)
  * 表名:FunctionTemplateRela(00050313)
- * 版本:2025.05.19.1(服务器:WIN-SRV103-116)
- * 日期:2025/05/19 11:40:31
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/21 23:23:39
  * 生成者:
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  * 模块中文名:函数管理(PrjFunction)
- * 框架-层名:Vue_详细信息后台_TS(TS)(Vue_ViewScript_DetailCS_TS,0260)
+ * 框架-层名:Vue_详细信息_TS(Vue_ViewScript_Detail_TS,0260)
  * 编程语言:TypeScript
  **/
-import { FunctionTemplateRela_GetObjBymIdAsync } from '@/ts/L3ForWApi/PrjFunction/clsFunctionTemplateRelaWApi';
+import { FunctionTemplateRela_GetObjByKeyAsync } from '@/ts/L3ForWApi/PrjFunction/clsFunctionTemplateRelaWApi';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
 import {
   divVarSet,
@@ -21,7 +21,7 @@ import {
 import { IShowList } from '@/ts/PubFun/IShowList';
 import { enumPageDispMode } from '@/ts/PubFun/enumPageDispMode';
 /* FunctionTemplateRela_Detail 的摘要说明。其中Q代表查询,U代表修改
-  (AutoGCLib.Vue_ViewScript_DetailCS_TS4TypeScript:GeneCode)
+  (AutoGCLib.Vue_ViewScript_Detail_TS4TypeScript:GeneCode)
 */
 export abstract class FunctionTemplateRela_Detail {
   public static times4TestShowDialog = 0;
@@ -50,7 +50,7 @@ export abstract class FunctionTemplateRela_Detail {
 
   /**
    * 隐藏对话框
-   * (AutoGCLib.Vue_ViewScript_DetailCS_TS4TypeScript:Gen_Vue_TS_HideDialog)
+   * (AutoGCLib.Vue_ViewScript_Detail_TS4TypeScript:Gen_Vue_TS_HideDialog)
    **/
   public HideDialog_FunctionTemplateRela() {
     if (FunctionTemplateRela_Detail.strPageDispModeId == enumPageDispMode.PopupBox_01) {
@@ -60,7 +60,7 @@ export abstract class FunctionTemplateRela_Detail {
 
   /**
    * 显示对话框
-   * (AutoGCLib.Vue_ViewScript_DetailCS_TS4TypeScript:Gen_Vue_TS_ShowDialog)
+   * (AutoGCLib.Vue_ViewScript_Detail_TS4TypeScript:Gen_Vue_TS_ShowDialog)
    **/
   public async ShowDialog_FunctionTemplateRela(strOp: string): Promise<boolean> {
     const strThisFuncName = this.ShowDialog_FunctionTemplateRela.name;
@@ -141,7 +141,9 @@ export abstract class FunctionTemplateRela_Detail {
     const strThisFuncName = this.DetailRecord.name;
     this.btnCancelFunctionTemplateRela = '关闭';
     try {
-      const objFunctionTemplateRelaEN = await FunctionTemplateRela_GetObjBymIdAsync(lngmId);
+      const objFunctionTemplateRelaEN = await FunctionTemplateRela_GetObjByKeyAsync({
+        mId: lngmId,
+      });
       if (objFunctionTemplateRelaEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -181,7 +183,7 @@ export abstract class FunctionTemplateRela_Detail {
   }
 
   /* 修改记录
- (AutoGCLib.Vue_ViewScript_DetailCS_TS4TypeScript:Gen_Vue_Ts_btnDetailRecord_Click)
+ (AutoGCLib.Vue_ViewScript_Detail_TS4TypeScript:Gen_Vue_Ts_btnDetailRecord_Click)
 */
   public async btnDetailRecord_Click(strKeyId: string) {
     this.opType = 'Detail';
