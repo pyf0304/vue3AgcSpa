@@ -535,7 +535,7 @@ export async function EditRegionFldsEx_GetConditionShowStr(
     //strFldNameCond2 = await vFieldTab_Sim_GetNameByFldIdCache(strFldIdCond2, strPrjId);
     strVarIdCond1 = objEditRegionFlds.varIdCond1;
     //strVarIdCond2 = objEditRegionFlds.varIdCond2;
-    if (IsNullOrEmpty(strVarIdCond1) == false) {
+    if (IsNullOrEmpty(strVarIdCond1) == false && strVarIdCond1 != '0') {
       objVarIdCond1 = await GCVariable_GetObjByVarIdCache(strVarIdCond1);
       if (objVarIdCond1 != null) {
         let strVarTypeName = '';

@@ -20,7 +20,7 @@ import {
   ProgLangType_AddNewRecordAsync,
   ProgLangType_ReFreshCache,
   ProgLangType_AddNewRecordWithMaxIdAsync,
-  ProgLangType_GetObjByProgLangTypeIdAsync,
+  ProgLangType_GetObjByKeyAsync,
   ProgLangType_CheckProperty4Update,
   ProgLangType_UpdateRecordAsync,
 } from '@/ts/L3ForWApi/SysPara/clsProgLangTypeWApi';
@@ -180,7 +180,7 @@ export abstract class ProgLangType_Edit {
       this.opType = 'Add';
       const bolIsSuccess = await this.ShowDialog_ProgLangType(this.opType);
       if (bolIsSuccess == false) return;
-      if (['02', '03', '06'].indexOf(clsProgLangTypeEN.PrimaryTypeId) > -1) {
+      if (['02', '03', '06'].indexOf(clsProgLangTypeEN._PrimaryTypeId) > -1) {
         await this.AddNewRecordWithMaxId();
       } else {
         await this.AddNewRecord();
@@ -279,7 +279,7 @@ export abstract class ProgLangType_Edit {
         case '确认添加':
           //这是一个单表的插入的代码,由于逻辑层太简单,
           //就把逻辑层合并到控制层,
-          if (['02', '03', '06'].indexOf(clsProgLangTypeEN.PrimaryTypeId) > -1) {
+          if (['02', '03', '06'].indexOf(clsProgLangTypeEN._PrimaryTypeId) > -1) {
             returnKeyId = await this.AddNewRecordWithMaxIdSave();
             if (IsNullOrEmpty(returnKeyId) == false) {
               if (ProgLangType_Edit.strPageDispModeId == enumPageDispMode.PopupBox_01)
@@ -509,7 +509,7 @@ export abstract class ProgLangType_Edit {
     //2、检查该关键字的记录是否存在,如果不存在就返回不显示；
     let objProgLangTypeEN = new clsProgLangTypeEN();
     try {
-      const returnBool = await ProgLangType_IsExistAsync(strProgLangTypeId);
+      const returnBool = await ProgLangType_IsExistAsync({ progLangTypeId: strProgLangTypeId });
       if (returnBool == false) {
         const strInfo = Format('关键字:[{0}] 的记录不存在!', strProgLangTypeId);
         //显示信息框
@@ -526,9 +526,9 @@ export abstract class ProgLangType_Edit {
       alert(strMsg);
     }
     try {
-      const objProgLangTypeENConst = await ProgLangType_GetObjByProgLangTypeIdAsync(
-        strProgLangTypeId,
-      );
+      const objProgLangTypeENConst = await ProgLangType_GetObjByKeyAsync({
+        progLangTypeId: strProgLangTypeId,
+      });
       if (objProgLangTypeENConst == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -562,7 +562,9 @@ export abstract class ProgLangType_Edit {
     const strThisFuncName = this.UpdateRecord.name;
     this.keyId = strProgLangTypeId;
     try {
-      const objProgLangTypeEN = await ProgLangType_GetObjByProgLangTypeIdAsync(strProgLangTypeId);
+      const objProgLangTypeEN = await ProgLangType_GetObjByKeyAsync({
+        progLangTypeId: strProgLangTypeId,
+      });
       if (objProgLangTypeEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

@@ -22,7 +22,7 @@ import {
 import {
   ApplicationType_DelRecordAsync,
   ApplicationType_ReFreshCache,
-  ApplicationType_GetObjByApplicationTypeIdAsync,
+  ApplicationType_GetObjByKeyAsync,
   ApplicationType_FuncMapByFldName,
   ApplicationType_GetRecCountByCondCache,
   ApplicationType_GetObjExLstByPagerCache,
@@ -249,7 +249,9 @@ export abstract class ApplicationTypeCRUD implements clsOperateList {
   public async DelRecord(intApplicationTypeId: number) {
     const strThisFuncName = this.DelRecord.name;
     try {
-      const returnInt = await ApplicationType_DelRecordAsync(intApplicationTypeId);
+      const returnInt = await ApplicationType_DelRecordAsync({
+        applicationTypeId: intApplicationTypeId,
+      });
       if (returnInt > 0) {
         ApplicationType_ReFreshCache();
         const strInfo = `删除${this.thisTabName}记录成功,共删除${returnInt}条记录!`;
@@ -276,9 +278,9 @@ export abstract class ApplicationTypeCRUD implements clsOperateList {
   public async SelectRecord(intApplicationTypeId: number) {
     const strThisFuncName = this.SelectRecord.name;
     try {
-      const objApplicationTypeEN = await ApplicationType_GetObjByApplicationTypeIdAsync(
-        intApplicationTypeId,
-      );
+      const objApplicationTypeEN = await ApplicationType_GetObjByKeyAsync({
+        applicationTypeId: intApplicationTypeId,
+      });
       console.log('完成SelectRecord!', objApplicationTypeEN);
       Redirect('/Index/Main_ApplicationType');
     } catch (e) {

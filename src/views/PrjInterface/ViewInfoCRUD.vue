@@ -342,7 +342,7 @@
   import { clsCMProjectEN } from '@/ts/L0Entity/CodeMan/clsCMProjectEN';
   import {
     ApplicationType_GetArrApplicationTypeByIsVisible,
-    ApplicationType_GetObjByApplicationTypeIdCache,
+    ApplicationType_GetObjByKeyCache,
   } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
   import {
     FuncModule_Agc_GetArrFuncModule_AgcByPrjId,
@@ -741,9 +741,9 @@
           clsPrivateSessionStorage.funcModuleEnName = objFuncModule_Agc.funcModuleEnName;
         }
 
-        const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-          objViewInfo.applicationTypeId,
-        );
+        const objApplicationType = await ApplicationType_GetObjByKeyCache({
+          applicationTypeId: objViewInfo.applicationTypeId,
+        });
         if (objApplicationType != null) {
           clsPrivateSessionStorage.applicationTypeName = objApplicationType.applicationTypeName;
         }

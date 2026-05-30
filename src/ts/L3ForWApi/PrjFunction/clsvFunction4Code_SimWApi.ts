@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsvFunction4Code_SimWApi
  * 表名:vFunction4Code_Sim(00050602)
- * 版本:2024.10.15.1(服务器:WIN-SRV103-116)
- * 日期:2024/10/15 11:49:10
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/27 15:52:40
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,9433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:函数管理(PrjFunction)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * v函数4Code_Sim(vFunction4Code_Sim)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2024年10月15日.
+ * Created by pyf on 2026年05月27日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -29,17 +29,20 @@ import { Storage } from '@/utils/Storage';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
 import { enumComparisonOp } from '@/ts/PubFun/enumComparisonOp';
 import { CacheHelper } from '@/ts/PubFun/CacheHelper';
+import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
 import {
-  GetObjKeys,
+  BindDdl_ObjLstInDivObj_V,
   GetExceptionStr,
   myShowErrorMsg,
   ObjectAssign,
 } from '@/ts/PubFun/clsCommFunc4Web';
-import { clsvFunction4Code_SimEN } from '@/ts/L0Entity/PrjFunction/clsvFunction4Code_SimEN';
+import {
+  clsvFunction4Code_SimEN,
+  vFunction4Code_SimKey,
+} from '@/ts/L0Entity/PrjFunction/clsvFunction4Code_SimEN';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
 import { stuRangePara } from '@/ts/PubFun/stuRangePara';
-import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 import { clsDateTime } from '@/ts/PubFun/clsDateTime';
 
 export const vFunction4Code_Sim_Controller = 'vFunction4Code_SimApi';
@@ -48,28 +51,21 @@ export const vFunction4Code_Sim_ConstructorName = 'vFunction4Code_Sim';
 /**
  * 根据关键字获取相应记录的对象
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdAsync)
- * @param strFuncId4Code:关键字
+ * @param key:包含关键字的对象
  * @returns 对象
  **/
-export async function vFunction4Code_Sim_GetObjByFuncId4CodeAsync(
-  strFuncId4Code: string,
+export async function vFunction4Code_Sim_GetObjByKeyAsync(
+  key: vFunction4Code_SimKey,
 ): Promise<clsvFunction4Code_SimEN | null> {
-  const strThisFuncName = 'GetObjByFuncId4CodeAsync';
-
-  if (IsNullOrEmpty(strFuncId4Code) == true) {
+  const strThisFuncName = 'GetObjByKeyAsync';
+  if (key.funcId4Code === undefined || key.funcId4Code === null || key.funcId4Code === '') {
     const strMsg = Format(
-      '参数:[strFuncId4Code]不能为空!(In clsvFunction4Code_SimWApi.GetObjByFuncId4CodeAsync)',
+      '关键字段[FuncId4Code]不能为空!(in {0}.{1})',
+      vFunction4Code_Sim_ConstructorName,
+      strThisFuncName,
     );
     console.error(strMsg);
-    throw strMsg;
-  }
-  if (strFuncId4Code.length != 8) {
-    const strMsg = Format(
-      '缓存分类变量:[strFuncId4Code]的长度:[{0}]不正确!(clsvFunction4Code_SimWApi.GetObjByFuncId4CodeAsync)',
-      strFuncId4Code.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
+    throw new Error(strMsg);
   }
   const strAction = 'GetObjByFuncId4Code';
   const strUrl = GetWebApiUrl(vFunction4Code_Sim_Controller, strAction);
@@ -81,7 +77,7 @@ export async function vFunction4Code_Sim_GetObjByFuncId4CodeAsync(
       Authorization: `${token}`,
     },
     params: {
-      strFuncId4Code,
+      strFuncId4Code: key.funcId4Code,
     },
   };
   try {
@@ -129,6 +125,66 @@ export async function vFunction4Code_Sim_GetObjByFuncId4CodeAsync(
 }
 
 /**
+ * 根据关键字获取相关对象, 从localStorage缓存中获取.
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
+ * @param strFuncId4Code:所给的关键字
+ * @returns 对象
+ */
+export async function vFunction4Code_Sim_GetObjByFuncId4CodelocalStorage(strFuncId4Code: string) {
+  const strThisFuncName = 'GetObjByFuncId4CodelocalStorage';
+
+  if (IsNullOrEmpty(strFuncId4Code) == true) {
+    const strMsg = Format(
+      '参数:[strFuncId4Code]不能为空!(In clsvFunction4Code_SimWApi.GetObjByFuncId4CodelocalStorage)',
+    );
+    console.error(strMsg);
+    throw strMsg;
+  }
+  if (strFuncId4Code.length != 8) {
+    const strMsg = Format(
+      '缓存分类变量:[strFuncId4Code]的长度:[{0}]不正确!(clsvFunction4Code_SimWApi.GetObjByFuncId4CodelocalStorage)',
+      strFuncId4Code.length,
+    );
+    console.error(strMsg);
+    throw strMsg;
+  }
+  const strKey = Format('{0}_{1}', clsvFunction4Code_SimEN._CurrTabName, strFuncId4Code);
+  if (strKey == '') {
+    console.error('关键字为空!不正确');
+    throw new Error('关键字为空!不正确');
+  }
+  if (Object.prototype.hasOwnProperty.call(localStorage, strKey)) {
+    //缓存存在,直接返回
+    const strTempObj = localStorage.getItem(strKey) as string;
+    const objvFunction4Code_SimCache: clsvFunction4Code_SimEN = JSON.parse(strTempObj);
+    return objvFunction4Code_SimCache;
+  }
+  try {
+    const objvFunction4Code_Sim = await vFunction4Code_Sim_GetObjByKeyAsync({
+      funcId4Code: strFuncId4Code,
+    });
+    if (objvFunction4Code_Sim != null) {
+      localStorage.setItem(strKey, JSON.stringify(objvFunction4Code_Sim));
+      const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
+      console.log(strInfo);
+      return objvFunction4Code_Sim;
+    }
+    return objvFunction4Code_Sim;
+  } catch (e) {
+    const strMsg = Format(
+      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
+      e,
+      strFuncId4Code,
+      vFunction4Code_Sim_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+    return;
+  }
+}
+
+/**
  * 根据关键字获取相关对象, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
  * @param strFuncId4Code:所给的关键字
@@ -166,9 +222,9 @@ export async function vFunction4Code_Sim_GetObjByFuncId4CodeCache(
       return objvFunction4Code_Sim;
     } else {
       if (bolTryAsyncOnce == true) {
-        const objvFunction4Code_SimConst = await vFunction4Code_Sim_GetObjByFuncId4CodeAsync(
-          strFuncId4Code,
-        );
+        const objvFunction4Code_SimConst = await vFunction4Code_Sim_GetObjByKeyAsync({
+          funcId4Code: strFuncId4Code,
+        });
         if (objvFunction4Code_SimConst != null) {
           vFunction4Code_Sim_ReFreshThisCache();
           return objvFunction4Code_SimConst;
@@ -190,109 +246,9 @@ export async function vFunction4Code_Sim_GetObjByFuncId4CodeCache(
 }
 
 /**
- * 根据关键字获取相关对象, 从localStorage缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
- * @param strFuncId4Code:所给的关键字
- * @returns 对象
- */
-export async function vFunction4Code_Sim_GetObjByFuncId4CodelocalStorage(strFuncId4Code: string) {
-  const strThisFuncName = 'GetObjByFuncId4CodelocalStorage';
-
-  if (IsNullOrEmpty(strFuncId4Code) == true) {
-    const strMsg = Format(
-      '参数:[strFuncId4Code]不能为空!(In clsvFunction4Code_SimWApi.GetObjByFuncId4CodelocalStorage)',
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  if (strFuncId4Code.length != 8) {
-    const strMsg = Format(
-      '缓存分类变量:[strFuncId4Code]的长度:[{0}]不正确!(clsvFunction4Code_SimWApi.GetObjByFuncId4CodelocalStorage)',
-      strFuncId4Code.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  const strKey = Format('{0}_{1}', clsvFunction4Code_SimEN._CurrTabName, strFuncId4Code);
-  if (strKey == '') {
-    console.error('关键字为空!不正确');
-    throw new Error('关键字为空!不正确');
-  }
-  if (Object.prototype.hasOwnProperty.call(localStorage, strKey)) {
-    //缓存存在,直接返回
-    const strTempObj = localStorage.getItem(strKey) as string;
-    const objvFunction4Code_SimCache: clsvFunction4Code_SimEN = JSON.parse(strTempObj);
-    return objvFunction4Code_SimCache;
-  }
-  try {
-    const objvFunction4Code_Sim = await vFunction4Code_Sim_GetObjByFuncId4CodeAsync(strFuncId4Code);
-    if (objvFunction4Code_Sim != null) {
-      localStorage.setItem(strKey, JSON.stringify(objvFunction4Code_Sim));
-      const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
-      console.log(strInfo);
-      return objvFunction4Code_Sim;
-    }
-    return objvFunction4Code_Sim;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
-      e,
-      strFuncId4Code,
-      vFunction4Code_Sim_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-    return;
-  }
-}
-/*该表没有名称字段,不能生成此函数!*/
-
-/**
- * 映射函数。根据表映射把输入字段值,映射成输出字段值
- * 作者:pyf
- * 日期:2024-10-15
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
- * @param strInFldName:输入字段名
- * @param strOutFldName:输出字段名
- * @param strInValue:输入字段值
- * @returns 返回一个输出字段值
- */
-export async function vFunction4Code_Sim_func(
-  strInFldName: string,
-  strOutFldName: string,
-  strInValue: string,
-) {
-  //const strThisFuncName = "func";
-
-  if (strInFldName != clsvFunction4Code_SimEN.con_FuncId4Code) {
-    const strMsg = Format('输入字段名:[{0}]不正确!', strInFldName);
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  if (clsvFunction4Code_SimEN.AttributeName.indexOf(strOutFldName) == -1) {
-    const strMsg = Format(
-      '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
-      strOutFldName,
-      clsvFunction4Code_SimEN.AttributeName.join(','),
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  const strFuncId4Code = strInValue;
-  if (IsNullOrEmpty(strFuncId4Code) == true) {
-    return '';
-  }
-  const objvFunction4Code_Sim = await vFunction4Code_Sim_GetObjByFuncId4CodeCache(strFuncId4Code);
-  if (objvFunction4Code_Sim == null) return '';
-  if (objvFunction4Code_Sim.GetFldValue(strOutFldName) == null) return '';
-  return objvFunction4Code_Sim.GetFldValue(strOutFldName).toString();
-}
-
-/**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2024-10-15
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -307,7 +263,7 @@ export function vFunction4Code_Sim_SortFunDefa(
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2024-10-15
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -324,7 +280,7 @@ export function vFunction4Code_Sim_SortFunDefa2Fld(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2024-10-15
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -427,9 +383,56 @@ export function vFunction4Code_Sim_SortFunByKey(strKey: string, AscOrDesc: strin
 }
 
 /**
+ * 根据关键字获取相关对象的名称属性, 从缓存中获取.
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
+ * @param strFuncId4Code:所给的关键字
+ * @returns 对象
+ */
+export async function vFunction4Code_Sim_GetNameByFuncId4CodeCache(strFuncId4Code: string) {
+  if (IsNullOrEmpty(strFuncId4Code) == true) {
+    const strMsg = Format(
+      '参数:[strFuncId4Code]不能为空!(In clsvFunction4Code_SimWApi.GetNameByFuncId4CodeCache)',
+    );
+    console.error(strMsg);
+    throw strMsg;
+  }
+  if (strFuncId4Code.length != 8) {
+    const strMsg = Format(
+      '缓存分类变量:[strFuncId4Code]的长度:[{0}]不正确!(clsvFunction4Code_SimWApi.GetNameByFuncId4CodeCache)',
+      strFuncId4Code.length,
+    );
+    console.error(strMsg);
+    throw strMsg;
+  }
+  const arrvFunction4Code_SimObjLstCache = await vFunction4Code_Sim_GetObjLstCache();
+  if (arrvFunction4Code_SimObjLstCache == null) return '';
+  try {
+    const arrvFunction4Code_SimSel = arrvFunction4Code_SimObjLstCache.filter(
+      (x) => x.funcId4Code == strFuncId4Code,
+    );
+    let objvFunction4Code_Sim: clsvFunction4Code_SimEN;
+    if (arrvFunction4Code_SimSel.length > 0) {
+      objvFunction4Code_Sim = arrvFunction4Code_SimSel[0];
+      return objvFunction4Code_Sim.funcName4Code;
+    } else {
+      return '';
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象名称属性不成功!',
+      e,
+      strFuncId4Code,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+  return '';
+}
+
+/**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2024-10-15
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -481,7 +484,48 @@ export async function vFunction4Code_Sim_FilterFunByKey(strKey: string, value: a
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2024-10-15
+ * 日期:2026-05-27
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
+ * @param strInFldName:输入字段名
+ * @param strOutFldName:输出字段名
+ * @param strInValue:输入字段值
+ * @returns 返回一个输出字段值
+ */
+export async function vFunction4Code_Sim_func(
+  strInFldName: string,
+  strOutFldName: string,
+  strInValue: string,
+) {
+  //const strThisFuncName = "func";
+
+  if (strInFldName != clsvFunction4Code_SimEN.con_FuncId4Code) {
+    const strMsg = Format('输入字段名:[{0}]不正确!', strInFldName);
+    console.error(strMsg);
+    throw new Error(strMsg);
+  }
+  if (clsvFunction4Code_SimEN._AttributeName.indexOf(strOutFldName) == -1) {
+    const strMsg = Format(
+      '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
+      strOutFldName,
+      clsvFunction4Code_SimEN._AttributeName.join(','),
+    );
+    console.error(strMsg);
+    throw new Error(strMsg);
+  }
+  const strFuncId4Code = strInValue;
+  if (IsNullOrEmpty(strFuncId4Code) == true) {
+    return '';
+  }
+  const objvFunction4Code_Sim = await vFunction4Code_Sim_GetObjByFuncId4CodeCache(strFuncId4Code);
+  if (objvFunction4Code_Sim == null) return '';
+  if (objvFunction4Code_Sim.GetFldValue(strOutFldName) == null) return '';
+  return objvFunction4Code_Sim.GetFldValue(strOutFldName).toString();
+}
+
+/**
+ * 映射函数。根据表映射把输入字段值,映射成输出字段值
+ * 作者:pyf
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -579,13 +623,16 @@ export async function vFunction4Code_Sim_funcKey(
 
 /**
  * 根据条件获取满足条件的第一条记录
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetFirstIdAsync)
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetFldValueAsync)
  * @param strWhereCond:条件
  * @returns 返回的第一条记录的关键字值
  **/
-export async function vFunction4Code_Sim_GetFirstIDAsync(strWhereCond: string): Promise<string> {
-  const strThisFuncName = 'GetFirstIDAsync';
-  const strAction = 'GetFirstID';
+export async function vFunction4Code_Sim_GetFldValueAsync(
+  strFldName: string,
+  strWhereCond: string,
+): Promise<Array<string>> {
+  const strThisFuncName = 'GetFldValueAsync';
+  const strAction = 'GetFldValue';
   const strUrl = GetWebApiUrl(vFunction4Code_Sim_Controller, strAction);
 
   const token = Storage.get(ACCESS_TOKEN_KEY);
@@ -595,6 +642,7 @@ export async function vFunction4Code_Sim_GetFirstIDAsync(strWhereCond: string): 
       Authorization: `${token}`,
     },
     params: {
+      strFldName,
       strWhereCond,
     },
   };
@@ -602,7 +650,8 @@ export async function vFunction4Code_Sim_GetFirstIDAsync(strWhereCond: string): 
     const response = await axios.get(strUrl, config);
     const data = response.data;
     if (data.errorId == 0) {
-      return data.returnStr;
+      const arrId = data.returnStrLst.split(',');
+      return arrId;
     } else {
       console.error(data.errorMsg);
       throw data.errorMsg;
@@ -638,16 +687,13 @@ export async function vFunction4Code_Sim_GetFirstIDAsync(strWhereCond: string): 
 
 /**
  * 根据条件获取满足条件的第一条记录
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetFldValueAsync)
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetFirstIdAsync)
  * @param strWhereCond:条件
  * @returns 返回的第一条记录的关键字值
  **/
-export async function vFunction4Code_Sim_GetFldValueAsync(
-  strFldName: string,
-  strWhereCond: string,
-): Promise<Array<string>> {
-  const strThisFuncName = 'GetFldValueAsync';
-  const strAction = 'GetFldValue';
+export async function vFunction4Code_Sim_GetFirstIDAsync(strWhereCond: string): Promise<string> {
+  const strThisFuncName = 'GetFirstIDAsync';
+  const strAction = 'GetFirstID';
   const strUrl = GetWebApiUrl(vFunction4Code_Sim_Controller, strAction);
 
   const token = Storage.get(ACCESS_TOKEN_KEY);
@@ -657,7 +703,6 @@ export async function vFunction4Code_Sim_GetFldValueAsync(
       Authorization: `${token}`,
     },
     params: {
-      strFldName,
       strWhereCond,
     },
   };
@@ -665,8 +710,7 @@ export async function vFunction4Code_Sim_GetFldValueAsync(
     const response = await axios.get(strUrl, config);
     const data = response.data;
     if (data.errorId == 0) {
-      const arrId = data.returnStrLst.split(',');
-      return arrId;
+      return data.returnStr;
     } else {
       console.error(data.errorMsg);
       throw data.errorMsg;
@@ -836,11 +880,11 @@ export async function vFunction4Code_Sim_GetObjLstClientCache() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsvFunction4Code_SimEN._CurrTabName;
-  if (IsNullOrEmpty(clsvFunction4Code_SimEN.WhereFormat) == false) {
-    strWhereCond = clsvFunction4Code_SimEN.WhereFormat;
+  if (IsNullOrEmpty(clsvFunction4Code_SimEN._WhereFormat) == false) {
+    strWhereCond = clsvFunction4Code_SimEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsvFunction4Code_SimEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsvFunction4Code_SimEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsvFunction4Code_SimEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsvFunction4Code_SimEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -887,11 +931,11 @@ export async function vFunction4Code_Sim_GetObjLstlocalStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsvFunction4Code_SimEN._CurrTabName;
-  if (IsNullOrEmpty(clsvFunction4Code_SimEN.WhereFormat) == false) {
-    strWhereCond = clsvFunction4Code_SimEN.WhereFormat;
+  if (IsNullOrEmpty(clsvFunction4Code_SimEN._WhereFormat) == false) {
+    strWhereCond = clsvFunction4Code_SimEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsvFunction4Code_SimEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsvFunction4Code_SimEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsvFunction4Code_SimEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsvFunction4Code_SimEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1033,11 +1077,11 @@ export async function vFunction4Code_Sim_GetObjLstsessionStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsvFunction4Code_SimEN._CurrTabName;
-  if (IsNullOrEmpty(clsvFunction4Code_SimEN.WhereFormat) == false) {
-    strWhereCond = clsvFunction4Code_SimEN.WhereFormat;
+  if (IsNullOrEmpty(clsvFunction4Code_SimEN._WhereFormat) == false) {
+    strWhereCond = clsvFunction4Code_SimEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsvFunction4Code_SimEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsvFunction4Code_SimEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsvFunction4Code_SimEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsvFunction4Code_SimEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1105,7 +1149,7 @@ export async function vFunction4Code_Sim_GetObjLstCache(): Promise<Array<clsvFun
   //const strThisFuncName = "GetObjLst_Cache";
 
   let arrvFunction4Code_SimObjLstCache;
-  switch (clsvFunction4Code_SimEN.CacheModeId) {
+  switch (clsvFunction4Code_SimEN._CacheModeId) {
     case '04': //sessionStorage
       arrvFunction4Code_SimObjLstCache = await vFunction4Code_Sim_GetObjLstsessionStorage();
       break;
@@ -1130,7 +1174,7 @@ export async function vFunction4Code_Sim_GetObjLstCache(): Promise<Array<clsvFun
 export async function vFunction4Code_Sim_GetObjLstPureCache() {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrvFunction4Code_SimObjLstCache;
-  switch (clsvFunction4Code_SimEN.CacheModeId) {
+  switch (clsvFunction4Code_SimEN._CacheModeId) {
     case '04': //sessionStorage
       arrvFunction4Code_SimObjLstCache =
         await vFunction4Code_Sim_GetObjLstsessionStoragePureCache();
@@ -1155,31 +1199,22 @@ export async function vFunction4Code_Sim_GetObjLstPureCache() {
  * @returns 对象列表子集
  */
 export async function vFunction4Code_Sim_GetSubObjLstCache(
-  objvFunction4Code_SimCond: clsvFunction4Code_SimEN,
+  objvFunction4Code_SimCond: ConditionCollection,
 ) {
   const strThisFuncName = 'GetSubObjLstCache';
   const arrvFunction4Code_SimObjLstCache = await vFunction4Code_Sim_GetObjLstCache();
   let arrvFunction4Code_SimSel = arrvFunction4Code_SimObjLstCache;
-  if (
-    objvFunction4Code_SimCond.sfFldComparisonOp == null ||
-    objvFunction4Code_SimCond.sfFldComparisonOp == ''
-  )
-    return arrvFunction4Code_SimSel;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objvFunction4Code_SimCond.sfFldComparisonOp,
-  );
-  //console.log("clsvFunction4Code_SimWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
+  if (objvFunction4Code_SimCond.GetConditions().length == 0) return arrvFunction4Code_SimSel;
   try {
-    const sstrKeys = GetObjKeys(objvFunction4Code_SimCond);
     //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
+    for (const objCondition of objvFunction4Code_SimCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
       arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
         (x) => x.GetFldValue(strKey) != null,
       );
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objvFunction4Code_SimCond.GetFldValue(strKey);
       const strType = typeof strValue;
       switch (strType) {
         case 'string':
@@ -1502,214 +1537,13 @@ export async function vFunction4Code_Sim_GetObjLstByRangeAsync(
     }
   }
 }
-
-/**
- * 根据分页条件从缓存中获取分页对象列表,只获取一页.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerCache)
- * @param objPagerPara:分页参数结构
- * @returns 对象列表
- */
-export async function vFunction4Code_Sim_GetObjLstByPagerCache(objPagerPara: stuPagerPara) {
-  const strThisFuncName = 'GetObjLstByPagerCache';
-  if (objPagerPara.pageIndex == 0) return new Array<clsvFunction4Code_SimEN>();
-  const arrvFunction4Code_SimObjLstCache = await vFunction4Code_Sim_GetObjLstCache();
-  if (arrvFunction4Code_SimObjLstCache.length == 0) return arrvFunction4Code_SimObjLstCache;
-  let arrvFunction4Code_SimSel = arrvFunction4Code_SimObjLstCache;
-  const objCond = JSON.parse(objPagerPara.whereCond);
-  const objvFunction4Code_SimCond = new clsvFunction4Code_SimEN();
-  ObjectAssign(objvFunction4Code_SimCond, objCond);
-  let dicFldComparisonOp: { [index: string]: string } = {};
-  if (objCond.sfFldComparisonOp != '') {
-    dicFldComparisonOp = JSON.parse(objCond.sfFldComparisonOp);
-  }
-  //console.log("clsvFunction4Code_SimWApi->GetObjLstByPagerCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
-  try {
-    const sstrKeys = GetObjKeys(objCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
-      arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-        (x) => x.GetFldValue(strKey) != null,
-      );
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objvFunction4Code_SimCond.GetFldValue(strKey);
-      const strType = typeof strValue;
-      switch (strType) {
-        case 'string':
-          if (strValue == null) continue;
-          if (strValue == '') continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
-            );
-          } else if (strComparisonOp == 'like') {
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
-            );
-          } else if (strComparisonOp == 'length greater') {
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not greater') {
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not less') {
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length less') {
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length equal') {
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'in') {
-            const arrValues = strValue.toString().split(',');
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => arrValues.indexOf(x.GetFldValue(strKey).toString()) != -1,
-            );
-          }
-          break;
-        case 'boolean':
-          if (strValue == null) continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => x.GetFldValue(strKey) == strValue,
-            );
-          }
-          break;
-        case 'number':
-          if (Number(strValue) == 0) continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => x.GetFldValue(strKey) == strValue,
-            );
-          } else if (strComparisonOp == '>=') {
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => x.GetFldValue(strKey) >= strValue,
-            );
-          } else if (strComparisonOp == '<=') {
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => x.GetFldValue(strKey) <= strValue,
-            );
-          } else if (strComparisonOp == '>') {
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => x.GetFldValue(strKey) > strValue,
-            );
-          } else if (strComparisonOp == '<') {
-            arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
-              (x) => x.GetFldValue(strKey) <= strValue,
-            );
-          }
-          break;
-      }
-    }
-    if (arrvFunction4Code_SimSel.length == 0) return arrvFunction4Code_SimSel;
-    let intStart: number = objPagerPara.pageSize * (objPagerPara.pageIndex - 1);
-    if (intStart <= 0) intStart = 0;
-    const intEnd = intStart + objPagerPara.pageSize;
-    if (objPagerPara.orderBy != null && objPagerPara.orderBy.length > 0) {
-      const sstrSplit: string[] = objPagerPara.orderBy.split(' ');
-      let strSortType = 'asc';
-      const strSortFld = sstrSplit[0];
-      if (sstrSplit.length > 1) strSortType = sstrSplit[1];
-      arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.sort(
-        vFunction4Code_Sim_SortFunByKey(strSortFld, strSortType),
-      );
-    } else {
-      //如果排序字段名[OrderBy]为空,就调用排序函数
-      arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.sort(objPagerPara.sortFun);
-    }
-    arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.slice(intStart, intEnd);
-    return arrvFunction4Code_SimSel;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据条件:[{1}]获取分页对象列表不成功!(In {2}.{3})',
-      e,
-      objPagerPara.whereCond,
-      vFunction4Code_Sim_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return new Array<clsvFunction4Code_SimEN>();
-}
-
-/**
- * 根据分页条件获取相应的记录对象列表,只获取一页
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerAsync)
- * @param objPagerPara:分页获取对象列表的参数对象
- * @returns 获取的相应记录对象列表
- **/
-export async function vFunction4Code_Sim_GetObjLstByPagerAsync(
-  objPagerPara: stuPagerPara,
-): Promise<Array<clsvFunction4Code_SimEN>> {
-  const strThisFuncName = 'GetObjLstByPagerAsync';
-  if (objPagerPara.pageIndex == 0) return new Array<clsvFunction4Code_SimEN>();
-  const strAction = 'GetObjLstByPager';
-  const strUrl = GetWebApiUrl(vFunction4Code_Sim_Controller, strAction);
-
-  const token = Storage.get(ACCESS_TOKEN_KEY);
-  //console.error('token:', token);
-  const config = {
-    headers: {
-      Authorization: `${token}`,
-    },
-  };
-  try {
-    const response = await axios.post(strUrl, objPagerPara, config);
-    const data = response.data;
-    if (data.errorId == 0) {
-      const returnObjLst = data.returnObjLst;
-      if (returnObjLst == null) {
-        const strNullInfo = Format(
-          '获取数据为null, 请注意!(in {0}.{1})',
-          vFunction4Code_Sim_ConstructorName,
-          strThisFuncName,
-        );
-        console.error(strNullInfo);
-        throw strNullInfo;
-      }
-      //console.log(returnObjLst);
-      const arrObjLst = vFunction4Code_Sim_GetObjLstByJSONObjLst(returnObjLst);
-      return arrObjLst;
-    } else {
-      console.error(data.errorMsg);
-      throw data.errorMsg;
-    }
-  } catch (error: any) {
-    console.error(error);
-    if (error.statusText == undefined) {
-      throw error;
-    }
-    if (error.statusText == 'error') {
-      const strInfo = Format(
-        '网络错误!访问地址:{0}不成功!(in {1}.{2})',
-        strUrl,
-        vFunction4Code_Sim_ConstructorName,
-        strThisFuncName,
-      );
-      console.error(strInfo);
-      throw strInfo;
-    } else if (error.statusText == 'Not Found') {
-      const strInfo = Format(
-        '网络错误!访问地址:{0}可能不存在!(in {1}.{2})',
-        strUrl,
-        vFunction4Code_Sim_ConstructorName,
-        strThisFuncName,
-      );
-      console.error(strInfo);
-      throw strInfo;
-    } else {
-      throw error.statusText;
-    }
-  }
-}
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerCache)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerAsync)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjExLstByPagerCache)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_CopyToEx)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
+//该表没有应用在界面视图的列表区,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
 
 /**
  * 根据条件对象, 从缓存的对象列表中获取子集.
@@ -1718,29 +1552,20 @@ export async function vFunction4Code_Sim_GetObjLstByPagerAsync(
  * @returns 对象列表子集
  */
 export async function vFunction4Code_Sim_IsExistRecordCache(
-  objvFunction4Code_SimCond: clsvFunction4Code_SimEN,
+  objvFunction4Code_SimCond: ConditionCollection,
 ) {
   const strThisFuncName = 'IsExistRecordCache';
   const arrvFunction4Code_SimObjLstCache = await vFunction4Code_Sim_GetObjLstCache();
   if (arrvFunction4Code_SimObjLstCache == null) return false;
   let arrvFunction4Code_SimSel = arrvFunction4Code_SimObjLstCache;
-  if (
-    objvFunction4Code_SimCond.sfFldComparisonOp == null ||
-    objvFunction4Code_SimCond.sfFldComparisonOp == ''
-  )
+  if (objvFunction4Code_SimCond.GetConditions().length == 0)
     return arrvFunction4Code_SimSel.length > 0 ? true : false;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objvFunction4Code_SimCond.sfFldComparisonOp,
-  );
-  //console.log("clsvFunction4Code_SimWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
   try {
-    const sstrKeys = GetObjKeys(objvFunction4Code_SimCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objvFunction4Code_SimCond.GetFldValue(strKey);
+    for (const objCondition of objvFunction4Code_SimCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
       const strType = typeof strValue;
       switch (strType) {
         case 'string':
@@ -1924,10 +1749,12 @@ export async function vFunction4Code_Sim_IsExistCache(strFuncId4Code: string) {
 /**
  * 根据关键字判断是否存在记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistAsync)
- * @param strFuncId4Code:关键字
+ * @param key:包含关键字的对象
  * @returns 是否存在?存在返回True
  **/
-export async function vFunction4Code_Sim_IsExistAsync(strFuncId4Code: string): Promise<boolean> {
+export async function vFunction4Code_Sim_IsExistAsync(
+  key: vFunction4Code_SimKey,
+): Promise<boolean> {
   const strThisFuncName = 'IsExistAsync';
   //检测记录是否存在
   const strAction = 'IsExist';
@@ -1940,7 +1767,7 @@ export async function vFunction4Code_Sim_IsExistAsync(strFuncId4Code: string): P
       Authorization: `${token}`,
     },
     params: {
-      strFuncId4Code,
+      strFuncId4Code: key.funcId4Code,
     },
   };
   try {
@@ -2049,32 +1876,22 @@ export async function vFunction4Code_Sim_GetRecCountByCondAsync(
  * @returns 对象列表记录数
  */
 export async function vFunction4Code_Sim_GetRecCountByCondCache(
-  objvFunction4Code_SimCond: clsvFunction4Code_SimEN,
+  objvFunction4Code_SimCond: ConditionCollection,
 ) {
   const strThisFuncName = 'GetRecCountByCondCache';
   const arrvFunction4Code_SimObjLstCache = await vFunction4Code_Sim_GetObjLstCache();
   if (arrvFunction4Code_SimObjLstCache == null) return 0;
   let arrvFunction4Code_SimSel = arrvFunction4Code_SimObjLstCache;
-  if (
-    objvFunction4Code_SimCond.sfFldComparisonOp == null ||
-    objvFunction4Code_SimCond.sfFldComparisonOp == ''
-  )
-    return arrvFunction4Code_SimSel.length;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objvFunction4Code_SimCond.sfFldComparisonOp,
-  );
-  //console.log("clsvFunction4Code_SimWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
+  if (objvFunction4Code_SimCond.GetConditions().length == 0) return arrvFunction4Code_SimSel.length;
   try {
-    const sstrKeys = GetObjKeys(objvFunction4Code_SimCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
+    for (const objCondition of objvFunction4Code_SimCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
       arrvFunction4Code_SimSel = arrvFunction4Code_SimSel.filter(
         (x) => x.GetFldValue(strKey) != null,
       );
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objvFunction4Code_SimCond.GetFldValue(strKey);
       const strType = typeof strValue;
       switch (strType) {
         case 'string':
@@ -2198,7 +2015,7 @@ export function vFunction4Code_Sim_GetWebApiUrl(strController: string, strAction
 export function vFunction4Code_Sim_ReFreshThisCache(): void {
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = clsvFunction4Code_SimEN._CurrTabName;
-    switch (clsvFunction4Code_SimEN.CacheModeId) {
+    switch (clsvFunction4Code_SimEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -2230,12 +2047,104 @@ export function vFunction4Code_Sim_GetLastRefreshTime(): string {
     clsvFunction4Code_SimEN._RefreshTimeLst.length - 1
   ];
 }
-/* 该表的下拉框功能没有设置,不需要生成下拉框绑定函数。*/
+
+/**
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050484)
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)-pyf
+ * @param objDDL:需要绑定当前表的下拉框
+
+ * @param strFuncPurposeId:
+*/
+export async function vFunction4Code_Sim_BindDdl_FuncId4CodeByFuncPurposeIdInDivCache(
+  objDiv: HTMLDivElement,
+  strDdlName: string,
+  strFuncPurposeId: string,
+) {
+  if (IsNullOrEmpty(strFuncPurposeId) == true) {
+    const strMsg = Format(
+      '参数:[strFuncPurposeId]不能为空！(In clsvFunction4Code_SimWApi.BindDdl_FuncId4CodeByFuncPurposeIdInDiv)',
+    );
+    console.error(strMsg);
+    throw strMsg;
+  }
+  if (strFuncPurposeId.length != 2) {
+    const strMsg = Format(
+      '缓存分类变量:[strFuncPurposeId]的长度:[{0}]不正确！(clsvFunction4Code_SimWApi.BindDdl_FuncId4CodeByFuncPurposeIdInDiv)',
+      strFuncPurposeId.length,
+    );
+    console.error(strMsg);
+    throw strMsg;
+  }
+
+  const objDdl = document.getElementById(strDdlName);
+  if (objDdl == null) {
+    const strMsg = Format(
+      '下拉框：{0} 不存在!(In BindDdl_FuncId4CodeByFuncPurposeIdInDiv)',
+      strDdlName,
+    );
+    alert(strMsg);
+    console.error(strMsg);
+    throw strMsg;
+  }
+  //为数据源于表的下拉框设置内容
+  //console.log("开始：BindDdl_FuncId4CodeByFuncPurposeIdInDivCache");
+  let arrObjLstSel = await vFunction4Code_Sim_GetObjLstCache();
+  if (arrObjLstSel == null) return;
+  arrObjLstSel = arrObjLstSel.filter((x) => x.funcPurposeId == strFuncPurposeId);
+  BindDdl_ObjLstInDivObj_V(
+    objDiv,
+    strDdlName,
+    arrObjLstSel,
+    clsvFunction4Code_SimEN.con_FuncId4Code,
+    clsvFunction4Code_SimEN.con_FuncName4Code,
+    '选v函数4Code_Sim...',
+  );
+}
+
+/**
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050484)
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_GetDdlData)-pyf
+ * @param objDDL:需要绑定当前表的下拉框
+
+ * @param strFuncPurposeId:
+*/
+export async function vFunction4Code_Sim_GetArrvFunction4Code_SimByFuncPurposeIdCache(
+  strFuncPurposeId: string,
+) {
+  if (IsNullOrEmpty(strFuncPurposeId) == true) {
+    const strMsg = Format(
+      '参数:[strFuncPurposeId]不能为空！(In clsvFunction4Code_SimWApi.BindDdl_FuncId4CodeByFuncPurposeIdInDiv)',
+    );
+    console.error(strMsg);
+    throw strMsg;
+  }
+  if (strFuncPurposeId.length != 2) {
+    const strMsg = Format(
+      '缓存分类变量:[strFuncPurposeId]的长度:[{0}]不正确！(clsvFunction4Code_SimWApi.BindDdl_FuncId4CodeByFuncPurposeIdInDiv)',
+      strFuncPurposeId.length,
+    );
+    console.error(strMsg);
+    throw strMsg;
+  }
+
+  //为数据源于表的下拉框设置内容
+  //console.log("开始：BindDdl_FuncId4CodeByFuncPurposeIdInDivCache");
+  const arrvFunction4Code_Sim = new Array<clsvFunction4Code_SimEN>();
+  let arrObjLstSel = await vFunction4Code_Sim_GetObjLstCache();
+  if (arrObjLstSel == null) return null;
+  arrObjLstSel = arrObjLstSel.filter((x) => x.funcPurposeId == strFuncPurposeId);
+  const obj0 = new clsvFunction4Code_SimEN();
+  obj0.funcId4Code = '0';
+  obj0.funcName4Code = '选v函数4Code_Sim...';
+  arrvFunction4Code_Sim.push(obj0);
+  arrObjLstSel.forEach((x) => arrvFunction4Code_Sim.push(x));
+  return arrvFunction4Code_Sim;
+}
 
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2024-10-15
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -2257,7 +2166,7 @@ export function vFunction4Code_Sim_GetJSONStrByObj(
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2024-10-15
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -2280,7 +2189,7 @@ export function vFunction4Code_Sim_GetObjLstByJSONStr(
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2024-10-15
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrvFunction4Code_SimObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -2300,7 +2209,7 @@ export function vFunction4Code_Sim_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2024-10-15
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

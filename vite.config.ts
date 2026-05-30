@@ -129,9 +129,11 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       checker({
         typescript: true,
         // vueTsc: true,
-        eslint: {
-          lintCommand: 'eslint "./src/**/*.{.vue,ts,tsx}"', // for example, lint .ts & .tsx
-        },
+        // eslint 由 VS Code 扩展 / CLI 处理，vite-plugin-checker 的 worker 线程
+        // 解析相对 glob 路径存在兼容问题，故此处禁用以避免启动崩溃。
+        // eslint: {
+        //   lintCommand: 'eslint "./src/**/*.{vue,ts,tsx}"',
+        // },
       }),
     ],
     css: {
@@ -155,6 +157,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     server: {
       host: '0.0.0.0',
       port: 8099,
+      strictPort: true,
       proxy: {
         '/api': {
           // target: 'https://nest-api.b1uqiyuan.site/api/',

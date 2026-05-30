@@ -40,10 +40,10 @@ export const FUNCTIONTEMPLATERELA_COLUMN_SPECS_AI: Array<FunctionTemplateRelaCol
     includeInExport: true,
   },
   {
-    fldName: clsFunctionTemplateRelaENEx.con_CodeTypeName,
+    fldName: clsFunctionTemplateRelaENEx.con_CodeTypeSimName,
     fieldSource: 'related',
     colHeader: '代码类型',
-    sortBy: 'codeTypeName|Ex',
+    sortBy: 'codeTypeSimName|Ex',
     tdClass: 'text-left',
     orderNum: 5,
     includeInList: true,

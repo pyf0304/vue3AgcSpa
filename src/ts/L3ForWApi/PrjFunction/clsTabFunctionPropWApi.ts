@@ -44,7 +44,7 @@ import { vPrjTab_Sim_func } from '@/ts/L3ForWApi/Table_Field/clsvPrjTab_SimWApi'
 import { clsvPrjTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvPrjTab_SimEN';
 import { FunctionTemplate_func } from '@/ts/L3ForWApi/PrjFunction/clsFunctionTemplateWApi';
 import { clsFunctionTemplateEN } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateEN';
-import { vFunction4GeneCode_Sim_func } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4GeneCode_SimWApi';
+
 import { clsvFunction4GeneCode_SimEN } from '@/ts/L0Entity/PrjFunction/clsvFunction4GeneCode_SimEN';
 import { vFunction4Code_Sim_func } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4Code_SimWApi';
 import { clsvFunction4Code_SimEN } from '@/ts/L0Entity/PrjFunction/clsvFunction4Code_SimEN';
@@ -55,6 +55,7 @@ import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebAp
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
 import { stuRangePara } from '@/ts/PubFun/stuRangePara';
 import { clsDateTime } from '@/ts/PubFun/clsDateTime';
+import { vFunction4GeneCode_SimEx_func } from '@/ts/L3ForWApiEx/PrjFunction/clsvFunction4GeneCode_SimExWApi';
 
 export const tabFunctionProp_Controller = 'TabFunctionPropApi';
 export const tabFunctionProp_ConstructorName = 'tabFunctionProp';
@@ -2386,7 +2387,7 @@ export async function TabFunctionProp_FuncMapFuncName4Code(
   try {
     if (IsNullOrEmpty(objTabFunctionProp.funcName4Code) == true) {
       const vFunction4GeneCodeSimFuncId4GC = objTabFunctionProp.funcId4GC;
-      const vFunction4GeneCodeSimFuncId4Code = await vFunction4GeneCode_Sim_func(
+      const vFunction4GeneCodeSimFuncId4Code = await vFunction4GeneCode_SimEx_func(
         clsvFunction4GeneCode_SimEN.con_FuncId4GC,
         clsvFunction4GeneCode_SimEN.con_FuncId4Code,
         vFunction4GeneCodeSimFuncId4GC,
@@ -2452,7 +2453,7 @@ export async function TabFunctionProp_FuncMapFuncId4Code(
   try {
     if (IsNullOrEmpty(objTabFunctionProp.funcId4Code) == true) {
       const vFunction4GeneCodeSimFuncId4GC = objTabFunctionProp.funcId4GC;
-      const vFunction4GeneCodeSimFuncId4Code = await vFunction4GeneCode_Sim_func(
+      const vFunction4GeneCodeSimFuncId4Code = await vFunction4GeneCode_SimEx_func(
         clsvFunction4GeneCode_SimEN.con_FuncId4GC,
         clsvFunction4GeneCode_SimEN.con_FuncId4Code,
         vFunction4GeneCodeSimFuncId4GC,
@@ -2480,7 +2481,7 @@ export async function TabFunctionProp_FuncMapFuncName(objTabFunctionProp: clsTab
   try {
     if (IsNullOrEmpty(objTabFunctionProp.funcName) == true) {
       const vFunction4GeneCodeSimFuncId4GC = objTabFunctionProp.funcId4GC;
-      const vFunction4GeneCodeSimFuncName = await vFunction4GeneCode_Sim_func(
+      const vFunction4GeneCodeSimFuncName = await vFunction4GeneCode_SimEx_func(
         clsvFunction4GeneCode_SimEN.con_FuncId4GC,
         clsvFunction4GeneCode_SimEN.con_FuncName,
         vFunction4GeneCodeSimFuncId4GC,

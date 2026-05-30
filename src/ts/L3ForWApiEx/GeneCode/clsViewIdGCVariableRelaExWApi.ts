@@ -5,6 +5,7 @@
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
+
 import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
 import { Storage } from '@/utils/Storage';
 import { ObjectAssign, GetSortExpressInfo } from '@/ts/PubFun/clsCommFunc4Web';
@@ -445,6 +446,8 @@ export function ViewIdGCVariableRelaEx_FuncMapByFldName(
       return ViewIdGCVariableRelaEx_FuncMapRetrievalMethodName(objViewIdGCVariableRelaEx);
     case clsViewIdGCVariableRelaENEx.con_ViewName:
       return ViewIdGCVariableRelaEx_FuncMapViewName(objViewIdGCVariableRelaEx);
+    case clsViewIdGCVariableRelaENEx.con_FilePath:
+      return ViewIdGCVariableRelaEx_FuncMapFilePath(objViewIdGCVariableRelaEx);
     default:
       strMsg = Format(
         '扩展字段:[{0}]在字段值函数映射中不存在!(in {1})',
@@ -648,5 +651,36 @@ export async function ViewIdGCVariableRelaEx_GetViewVar(
     } else {
       throw error.statusText;
     }
+  }
+}
+
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objViewIdGCVariableRelaS:源对象
+ **/
+export async function ViewIdGCVariableRelaEx_FuncMapFilePath(
+  objViewIdGCVariableRela: clsViewIdGCVariableRelaENEx,
+) {
+  const strThisFuncName = ViewIdGCVariableRelaEx_FuncMapFilePath.name;
+  try {
+    if (IsNullOrEmpty(objViewIdGCVariableRela.filePath) == true) {
+      const GCVariableVarId = objViewIdGCVariableRela.varId;
+      const GCVariableFilePath = await GCVariable_func(
+        clsGCVariableEN.con_VarId,
+        clsGCVariableEN.con_FilePath,
+        GCVariableVarId,
+      );
+      objViewIdGCVariableRela.filePath = GCVariableFilePath;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001526)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      viewIdGCVariableRelaEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
   }
 }

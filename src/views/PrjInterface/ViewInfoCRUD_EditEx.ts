@@ -11,7 +11,7 @@ import { clsViewInfoENEx } from '@/ts/L0Entity/PrjInterface/clsViewInfoENEx';
 import { enumRegionType } from '@/ts/L0Entity/RegionManage/clsRegionTypeEN';
 import { clsViewRegionEN } from '@/ts/L0Entity/RegionManage/clsViewRegionEN';
 import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
-import { ApplicationType_GetObjByApplicationTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
+import { ApplicationType_GetObjByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 
 import { FuncModule_Agc_GetObjByFuncModuleAgcIdCache } from '@/ts/L3ForWApi/PrjManage/clsFuncModule_AgcWApi';
 import { Projects_GetObjByPrjIdCache } from '@/ts/L3ForWApi/PrjManage/clsProjectsWApi';
@@ -660,9 +660,9 @@ export default class ViewInfoCRUD_EditEx extends ViewInfoCRUD implements IShowLi
         alert(strMsg);
         return;
       }
-      const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-        objViewInfo.applicationTypeId,
-      );
+      const objApplicationType = await ApplicationType_GetObjByKeyCache({
+        applicationTypeId: objViewInfo.applicationTypeId,
+      });
       if (objApplicationType == null) {
         const strMsg = Format(
           '应用Id:[{0}]，没有相应的类型，请检查！',
@@ -1532,9 +1532,9 @@ export default class ViewInfoCRUD_EditEx extends ViewInfoCRUD implements IShowLi
       const strMsg = Format('Label:{0}不存在！', 'lblCurrCmPrjName');
       console.error(strMsg);
     } else {
-      const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-        objCMProject.applicationTypeId,
-      );
+      const objApplicationType = await ApplicationType_GetObjByKeyCache({
+        applicationTypeId: objCMProject.applicationTypeId,
+      });
       if (objApplicationType == null) {
         const strMsg = Format(
           '应用Id:[{0}]，没有相应的类型，请检查！',

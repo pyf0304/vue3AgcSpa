@@ -268,7 +268,7 @@
   } from '@/ts/L3ForWApi/PrjManage/clsProjectDatabaseRelWApi';
   import {
     PrjDataBase_GetObjLstCache,
-    PrjDataBase_GetNameByPrjDataBaseIdCache,
+    PrjDataBase_GetNameByKeyCache,
   } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
   import { UseState_BindDdl_UseStateIdInDivCache } from '@/ts/L3ForWApi/SysPara/clsUseStateWApi';
   import { clsProjectDatabaseRelEN } from '@/ts/L0Entity/PrjManage/clsProjectDatabaseRelEN';
@@ -343,7 +343,9 @@
             memo: string;
           }> = [];
           for (const item of lst) {
-            const dbName = await PrjDataBase_GetNameByPrjDataBaseIdCache(item.prjDataBaseId);
+            const dbName = await PrjDataBase_GetNameByKeyCache({
+              prjDataBaseId: item.prjDataBaseId,
+            });
             result.push({
               mId: item.mId,
               prjDataBaseId: item.prjDataBaseId,

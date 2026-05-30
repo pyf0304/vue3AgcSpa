@@ -407,7 +407,7 @@
         ); //编辑区域
         featureId.value = '0';
 
-        arrProgLangType.value = await ProgLangType_GetArrProgLangTypeByIsVisible(); //编辑区域
+        arrProgLangType.value = await ProgLangType_GetArrProgLangTypeByIsVisible(true); //编辑区域
         progLangTypeId.value = '0';
 
         arrCodeType.value = await CodeType_GetArrCodeTypeByProgLangTypeId(strProgLangTypeId_Static); //编辑区域
@@ -521,7 +521,7 @@
             case '确认添加':
               //这是一个单表的插入的代码,由于逻辑层太简单,
               //就把逻辑层合并到控制层,
-              if (['02', '03', '06'].indexOf(clsFunction4GeneCodeEN.PrimaryTypeId) > -1) {
+              if (['02', '03', '06'].indexOf(clsFunction4GeneCodeEN._PrimaryTypeId) > -1) {
                 returnKeyId = await objPage_Edit.value.AddNewRecordWithMaxIdSave();
                 if (IsNullOrEmpty(returnKeyId) == false) {
                   if (Function4GeneCode_Edit.strPageDispModeId == enumPageDispMode.PopupBox_01)

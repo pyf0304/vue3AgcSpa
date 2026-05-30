@@ -21,7 +21,7 @@ import { clsExcelExportRegionFldsEN } from '@/ts/L0Entity/RegionManage/clsExcelE
 import { clsExcelExportRegionFldsENEx } from '@/ts/L0Entity/RegionManage/clsExcelExportRegionFldsENEx';
 import { enumRegionType } from '@/ts/L0Entity/RegionManage/clsRegionTypeEN';
 import { clsViewRegionEN } from '@/ts/L0Entity/RegionManage/clsViewRegionEN';
-import { ApplicationType_GetObjByApplicationTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
+import { ApplicationType_GetObjByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 import { vCodeType_Sim_GetObjByCodeTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
 
 import {
@@ -1352,9 +1352,9 @@ export default class ExcelExportRegionFldsCRUDEx
       strViewId,
       clsPrivateSessionStorage.cmPrjId,
     );
-    const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-      objViewInfo.applicationTypeId,
-    );
+    const objApplicationType = await ApplicationType_GetObjByKeyCache({
+      applicationTypeId: objViewInfo.applicationTypeId,
+    });
     if (objApplicationType == null) {
       const strMsg = Format(
         '应用Id:[{0}]，没有相应的类型，请检查！',

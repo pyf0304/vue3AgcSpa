@@ -260,7 +260,7 @@
     useStateId_f,
   } from '@/views/PrjManage/PrjDataBaseVueShare';
   import { clsPrjDataBaseEN } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
-  import PrjDataBase_EditEx from '@/views/PrjManage/PrjDataBase_EditExAi';
+  import PrjDataBase_EditEx from '@/views/PrjManage/PrjDataBase_EditAiEx';
   // import PrjDataBase_DetailEx from '@/views/PrjManage/PrjDataBase_DetailEx';
   import { confirmDel } from '@/ts/PubFun/clsCommFunc4Web';
   import PrjDataBaseCRUDEx from '@/views/PrjManage/PrjDataBaseCRUDEx';

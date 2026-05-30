@@ -12,7 +12,7 @@
  * 框架-层名:Vue_详细信息后台_TS(TS)(Vue_ViewScript_DetailCS_TS,0260)
  * 编程语言:TypeScript
  **/
-import { Function4GeneCode_GetObjByFuncId4GCAsync } from '@/ts/L3ForWApi/PrjFunction/clsFunction4GeneCodeWApi';
+import { Function4GeneCode_GetObjByKeyAsync } from '@/ts/L3ForWApi/PrjFunction/clsFunction4GeneCodeWApi';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
 import {
   divVarSet,
@@ -140,7 +140,9 @@ export abstract class Function4GeneCode_Detail {
     const strThisFuncName = this.DetailRecord.name;
     this.btnCancelFunction4GeneCode = '关闭';
     try {
-      const objFunction4GeneCodeEN = await Function4GeneCode_GetObjByFuncId4GCAsync(strFuncId4GC);
+      const objFunction4GeneCodeEN = await Function4GeneCode_GetObjByKeyAsync({
+        funcId4GC: strFuncId4GC,
+      });
       if (objFunction4GeneCodeEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

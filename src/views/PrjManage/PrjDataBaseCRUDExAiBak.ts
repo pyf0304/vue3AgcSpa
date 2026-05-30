@@ -11,7 +11,7 @@ import {
   GetFirstCheckedKeyIdInDivObj,
 } from '@/ts/PubFun/clsCommFunc4Ctrl.js';
 import { AccessBindGvDefault } from '@/ts/PubFun/clsErrMsgBLEx';
-import PrjDataBase_EditEx from '@/views/PrjManage/PrjDataBase_EditExAi';
+import PrjDataBase_EditEx from '@/views/PrjManage/PrjDataBase_EditAiEx';
 import { PrjDataBaseCRUDAi } from '@/viewsBase/PrjManage/PrjDataBaseCRUDAi';
 import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
 import { PrjDataBaseCommandIdAi } from '@/viewsBase/PrjManage/PrjDataBaseCRUDAiCommands';
@@ -77,17 +77,17 @@ export default class PrjDataBaseCRUDExAi4 extends PrjDataBaseCRUDAi implements I
     await this.btnDelRecord_Click();
   }
 
-  public async onExportAi4(): Promise<ExportExcelData> {
-    return await this.ExportExcel_PrjDataBaseCacheAi2();
-  }
+  // public async onExportAi4(): Promise<ExportExcelData> {
+  //   return await this.ExportExcel_PrjDataBaseCacheAi2();
+  // }
 
   public async executeCommand(commandId: PrjDataBaseCommandIdAi): Promise<ExportExcelData | void> {
     switch (commandId) {
       case 'query':
         await this.onQuery();
         return;
-      case 'export':
-        return await this.onExportAi4();
+      // case 'export':
+      //   return await this.onExportAi4();
       case 'create':
         await this.onCreate('Create', '');
         return;

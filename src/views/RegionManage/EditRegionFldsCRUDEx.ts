@@ -68,7 +68,7 @@ import { clsPubVar4Web } from '@/ts/FunClass/clsPubVar4Web';
 import { clsAppCodeTypeRelaENEx } from '@/ts/L0Entity/GeneCode/clsAppCodeTypeRelaENEx';
 import { enumCodeType } from '@/ts/L0Entity/GeneCode/clsCodeTypeEN';
 import { enumRegionType } from '@/ts/L0Entity/RegionManage/clsRegionTypeEN';
-import { ApplicationType_GetObjByApplicationTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
+import { ApplicationType_GetObjByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 import { vCodeType_Sim_GetObjByCodeTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
 
 import {
@@ -1586,9 +1586,9 @@ export default class EditRegionFldsCRUDEx extends EditRegionFldsCRUD implements 
       strViewId,
       clsPrivateSessionStorage.cmPrjId,
     );
-    const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-      objViewInfo.applicationTypeId,
-    );
+    const objApplicationType = await ApplicationType_GetObjByKeyCache({
+      applicationTypeId: objViewInfo.applicationTypeId,
+    });
     if (objApplicationType == null) {
       const strMsg = Format(
         '应用Id:[{0}]，没有相应的类型，请检查！',

@@ -15,6 +15,8 @@ export default {
 
   'views/GeneCode/GCConstantPrjIdRelaCRUD': () =>
     import('@/views/GeneCode/GCConstantPrjIdRelaCRUD.vue'),
+  'views/GeneCode/GCConstantPrjIdRelaCRUDAi': () =>
+    import('@/views/GeneCode/GCConstantPrjIdRelaCRUDAi.vue'),
 
   'views/PrjFunction/Function4Code_FuncGC': () =>
     import('@/views/PrjFunction/Function4Code_FuncGC.vue'),

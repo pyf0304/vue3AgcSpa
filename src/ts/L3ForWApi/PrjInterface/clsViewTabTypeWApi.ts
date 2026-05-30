@@ -1,8 +1,8 @@
 ﻿/**
  * 类名:clsViewTabTypeWApi
  * 表名:ViewTabType(00050103)
- * 版本:2026.04.19(服务器:WIN-SRV103-116)
- * 日期:2026/04/29 01:25:30
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/27 16:43:52
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
@@ -20,7 +20,7 @@
 /**
  * 界面表类型(ViewTabType)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2026年04月29日.
+ * Created by pyf on 2026年05月27日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -37,7 +37,7 @@ import {
   myShowErrorMsg,
   ObjectAssign,
 } from '@/ts/PubFun/clsCommFunc4Web';
-import { clsViewTabTypeEN } from '@/ts/L0Entity/PrjInterface/clsViewTabTypeEN';
+import { clsViewTabTypeEN, ViewTabTypeKey } from '@/ts/L0Entity/PrjInterface/clsViewTabTypeEN';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
 import { stuRangePara } from '@/ts/PubFun/stuRangePara';
@@ -49,20 +49,21 @@ export const viewTabType_ConstructorName = 'viewTabType';
 /**
  * 根据关键字获取相应记录的对象
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdAsync)
- * @param strViewTabTypeId:关键字
+ * @param key:包含关键字的对象
  * @returns 对象
  **/
-export async function ViewTabType_GetObjByViewTabTypeIdAsync(
-  strViewTabTypeId: string,
+export async function ViewTabType_GetObjByKeyAsync(
+  key: ViewTabTypeKey,
 ): Promise<clsViewTabTypeEN | null> {
-  const strThisFuncName = 'GetObjByViewTabTypeIdAsync';
-
-  if (IsNullOrEmpty(strViewTabTypeId) == true) {
+  const strThisFuncName = 'GetObjByKeyAsync';
+  if (key.viewTabTypeId === undefined || key.viewTabTypeId === null || key.viewTabTypeId === '') {
     const strMsg = Format(
-      '参数:[strViewTabTypeId]不能为空!(In clsViewTabTypeWApi.GetObjByViewTabTypeIdAsync)',
+      '关键字段[ViewTabTypeId]不能为空!(in {0}.{1})',
+      viewTabType_ConstructorName,
+      strThisFuncName,
     );
     console.error(strMsg);
-    throw strMsg;
+    throw new Error(strMsg);
   }
   const strAction = 'GetObjByViewTabTypeId';
   const strUrl = GetWebApiUrl(viewTabType_Controller, strAction);
@@ -74,7 +75,7 @@ export async function ViewTabType_GetObjByViewTabTypeIdAsync(
       Authorization: `${token}`,
     },
     params: {
-      strViewTabTypeId,
+      strViewTabTypeId: key.viewTabTypeId,
     },
   };
   try {
@@ -122,22 +123,22 @@ export async function ViewTabType_GetObjByViewTabTypeIdAsync(
 }
 
 /**
- * 根据关键字获取相关对象, 从localStorage缓存中获取.
+ * 根据关键字获取特定对象, 从 localStorage 中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
- * @param strViewTabTypeId:所给的关键字
+ * @param key:关键字对象
  * @returns 对象
  */
-export async function ViewTabType_GetObjByViewTabTypeIdlocalStorage(strViewTabTypeId: string) {
+export async function ViewTabType_GetObjByKeylocalStorage(key: ViewTabTypeKey) {
   const strThisFuncName = 'GetObjByViewTabTypeIdlocalStorage';
 
-  if (IsNullOrEmpty(strViewTabTypeId) == true) {
+  if (IsNullOrEmpty(key.viewTabTypeId) == true) {
     const strMsg = Format(
-      '参数:[strViewTabTypeId]不能为空!(In clsViewTabTypeWApi.GetObjByViewTabTypeIdlocalStorage)',
+      '参数:[key.viewTabTypeId]不能为空!(In clsViewTabTypeWApi.GetObjByViewTabTypeIdlocalStorage)',
     );
     console.error(strMsg);
     throw strMsg;
   }
-  const strKey = Format('{0}_{1}', clsViewTabTypeEN._CurrTabName, strViewTabTypeId);
+  const strKey = Format('{0}_{1}', clsViewTabTypeEN._CurrTabName, key.viewTabTypeId);
   if (strKey == '') {
     console.error('关键字为空!不正确');
     throw new Error('关键字为空!不正确');
@@ -149,7 +150,7 @@ export async function ViewTabType_GetObjByViewTabTypeIdlocalStorage(strViewTabTy
     return objViewTabTypeCache;
   }
   try {
-    const objViewTabType = await ViewTabType_GetObjByViewTabTypeIdAsync(strViewTabTypeId);
+    const objViewTabType = await ViewTabType_GetObjByKeyAsync(key);
     if (objViewTabType != null) {
       localStorage.setItem(strKey, JSON.stringify(objViewTabType));
       const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
@@ -161,7 +162,7 @@ export async function ViewTabType_GetObjByViewTabTypeIdlocalStorage(strViewTabTy
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      strViewTabTypeId,
+      key.viewTabTypeId,
       viewTabType_ConstructorName,
       strThisFuncName,
     );
@@ -172,20 +173,17 @@ export async function ViewTabType_GetObjByViewTabTypeIdlocalStorage(strViewTabTy
 }
 
 /**
- * 根据关键字获取相关对象, 从缓存中获取.
+ * 根据关键字获取特定对象, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
- * @param strViewTabTypeId:所给的关键字
+ * @param key:关键字对象
  * @returns 对象
  */
-export async function ViewTabType_GetObjByViewTabTypeIdCache(
-  strViewTabTypeId: string,
-  bolTryAsyncOnce = true,
-) {
+export async function ViewTabType_GetObjByKeyCache(key: ViewTabTypeKey, bolTryAsyncOnce = true) {
   const strThisFuncName = 'GetObjByViewTabTypeIdCache';
 
-  if (IsNullOrEmpty(strViewTabTypeId) == true) {
+  if (IsNullOrEmpty(key.viewTabTypeId) == true) {
     const strMsg = Format(
-      '参数:[strViewTabTypeId]不能为空!(In clsViewTabTypeWApi.GetObjByViewTabTypeIdCache)',
+      '参数:[key.viewTabTypeId]不能为空!(In clsViewTabTypeWApi.GetObjByViewTabTypeIdCache)',
     );
     console.error(strMsg);
     throw strMsg;
@@ -193,7 +191,7 @@ export async function ViewTabType_GetObjByViewTabTypeIdCache(
   const arrViewTabTypeObjLstCache = await ViewTabType_GetObjLstCache();
   try {
     const arrViewTabTypeSel = arrViewTabTypeObjLstCache.filter(
-      (x) => x.viewTabTypeId == strViewTabTypeId,
+      (x) => x.viewTabTypeId == key.viewTabTypeId,
     );
     let objViewTabType: clsViewTabTypeEN;
     if (arrViewTabTypeSel.length > 0) {
@@ -201,7 +199,7 @@ export async function ViewTabType_GetObjByViewTabTypeIdCache(
       return objViewTabType;
     } else {
       if (bolTryAsyncOnce == true) {
-        const objViewTabTypeConst = await ViewTabType_GetObjByViewTabTypeIdAsync(strViewTabTypeId);
+        const objViewTabTypeConst = await ViewTabType_GetObjByKeyAsync(key);
         if (objViewTabTypeConst != null) {
           ViewTabType_ReFreshThisCache();
           return objViewTabTypeConst;
@@ -213,7 +211,7 @@ export async function ViewTabType_GetObjByViewTabTypeIdCache(
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      strViewTabTypeId,
+      key.viewTabTypeId,
       viewTabType_ConstructorName,
       strThisFuncName,
     );
@@ -256,7 +254,7 @@ export async function ViewTabType_UpdateObjInLstCache(objViewTabType: clsViewTab
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-29
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -268,7 +266,7 @@ export function ViewTabType_SortFunDefa(a: clsViewTabTypeEN, b: clsViewTabTypeEN
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-29
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -283,7 +281,7 @@ export function ViewTabType_SortFunDefa2Fld(a: clsViewTabTypeEN, b: clsViewTabTy
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-29
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -348,13 +346,13 @@ export function ViewTabType_SortFunByKey(strKey: string, AscOrDesc: string) {
 /**
  * 根据关键字获取相关对象的名称属性, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
- * @param strViewTabTypeId:所给的关键字
- * @returns 对象
+ * @param key:关键字对象
+ * @returns 名称属性值
  */
-export async function ViewTabType_GetNameByViewTabTypeIdCache(strViewTabTypeId: string) {
-  if (IsNullOrEmpty(strViewTabTypeId) == true) {
+export async function ViewTabType_GetNameByKeyCache(key: ViewTabTypeKey) {
+  if (IsNullOrEmpty(key.viewTabTypeId) == true) {
     const strMsg = Format(
-      '参数:[strViewTabTypeId]不能为空!(In clsViewTabTypeWApi.GetNameByViewTabTypeIdCache)',
+      '参数:[key.viewTabTypeId]不能为空!(In clsViewTabTypeWApi.GetNameByKeyCache)',
     );
     console.error(strMsg);
     throw strMsg;
@@ -363,7 +361,7 @@ export async function ViewTabType_GetNameByViewTabTypeIdCache(strViewTabTypeId: 
   if (arrViewTabTypeObjLstCache == null) return '';
   try {
     const arrViewTabTypeSel = arrViewTabTypeObjLstCache.filter(
-      (x) => x.viewTabTypeId == strViewTabTypeId,
+      (x) => x.viewTabTypeId == key.viewTabTypeId,
     );
     let objViewTabType: clsViewTabTypeEN;
     if (arrViewTabTypeSel.length > 0) {
@@ -376,7 +374,7 @@ export async function ViewTabType_GetNameByViewTabTypeIdCache(strViewTabTypeId: 
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象名称属性不成功!',
       e,
-      strViewTabTypeId,
+      key.viewTabTypeId,
     );
     console.error(strMsg);
     alert(strMsg);
@@ -387,7 +385,7 @@ export async function ViewTabType_GetNameByViewTabTypeIdCache(strViewTabTypeId: 
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2026-04-29
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -423,7 +421,7 @@ export async function ViewTabType_FilterFunByKey(strKey: string, value: any) {
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2026-04-29
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -455,7 +453,7 @@ export async function ViewTabType_func(
   if (IsNullOrEmpty(strViewTabTypeId) == true) {
     return '';
   }
-  const objViewTabType = await ViewTabType_GetObjByViewTabTypeIdCache(strViewTabTypeId);
+  const objViewTabType = await ViewTabType_GetObjByKeyCache({ viewTabTypeId: strViewTabTypeId });
   if (objViewTabType == null) return '';
   if (objViewTabType.GetFldValue(strOutFldName) == null) return '';
   return objViewTabType.GetFldValue(strOutFldName).toString();
@@ -464,7 +462,7 @@ export async function ViewTabType_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2026-04-29
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -1454,14 +1452,14 @@ export async function ViewTabType_GetObjLstByRangeAsync(
 /**
  * 调用WebApi来删除记录,根据关键字来删除记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_DelRecordAsync)
- * @param strViewTabTypeId:关键字
+ * @param key:关键字对象
  * @returns 获取删除的结果
  **/
-export async function ViewTabType_DelRecordAsync(strViewTabTypeId: string): Promise<number> {
+export async function ViewTabType_DelRecordAsync(key: ViewTabTypeKey): Promise<number> {
   const strThisFuncName = 'DelRecordAsync';
   const strAction = 'DelRecord';
   let strUrl = GetWebApiUrl(viewTabType_Controller, strAction);
-  strUrl = Format('{0}?Id={1}', strUrl, strViewTabTypeId);
+  strUrl = Format('{0}?Id={1}', strUrl, key.viewTabTypeId);
 
   const token = Storage.get(ACCESS_TOKEN_KEY);
   //console.error('token:', token);
@@ -2290,16 +2288,16 @@ export async function ViewTabType_IsExistRecordAsync(strWhereCond: string): Prom
 /**
  * 根据关键字判断是否存在记录, 从本地缓存中判断.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistCache)
- * @param strViewTabTypeId:所给的关键字
- * @returns 对象
+ * @param key:关键字对象
+ * @returns 是否存在
  */
-export async function ViewTabType_IsExistCache(strViewTabTypeId: string) {
+export async function ViewTabType_IsExistCache(key: ViewTabTypeKey): Promise<boolean> {
   const strThisFuncName = 'IsExistCache';
   const arrViewTabTypeObjLstCache = await ViewTabType_GetObjLstCache();
   if (arrViewTabTypeObjLstCache == null) return false;
   try {
     const arrViewTabTypeSel = arrViewTabTypeObjLstCache.filter(
-      (x) => x.viewTabTypeId == strViewTabTypeId,
+      (x) => x.viewTabTypeId == key.viewTabTypeId,
     );
     if (arrViewTabTypeSel.length > 0) {
       return true;
@@ -2309,7 +2307,7 @@ export async function ViewTabType_IsExistCache(strViewTabTypeId: string) {
   } catch (e) {
     const strMsg = Format(
       '根据关键字:[{0}]判断是否存在不成功!(in {1}.{2})',
-      strViewTabTypeId,
+      key.viewTabTypeId,
       viewTabType_ConstructorName,
       strThisFuncName,
     );
@@ -2322,10 +2320,10 @@ export async function ViewTabType_IsExistCache(strViewTabTypeId: string) {
 /**
  * 根据关键字判断是否存在记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistAsync)
- * @param strViewTabTypeId:关键字
+ * @param key:包含关键字的对象
  * @returns 是否存在?存在返回True
  **/
-export async function ViewTabType_IsExistAsync(strViewTabTypeId: string): Promise<boolean> {
+export async function ViewTabType_IsExistAsync(key: ViewTabTypeKey): Promise<boolean> {
   const strThisFuncName = 'IsExistAsync';
   //检测记录是否存在
   const strAction = 'IsExist';
@@ -2338,7 +2336,7 @@ export async function ViewTabType_IsExistAsync(strViewTabTypeId: string): Promis
       Authorization: `${token}`,
     },
     params: {
-      strViewTabTypeId,
+      strViewTabTypeId: key.viewTabTypeId,
     },
   };
   try {
@@ -2741,7 +2739,7 @@ export function ViewTabType_GetLastRefreshTime(): string {
 }
 
 /**
- * 绑定基于Web的下拉框,在某一层下的下拉框
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050051)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
@@ -2772,7 +2770,7 @@ export async function ViewTabType_BindDdl_ViewTabTypeIdInDivCache(
 }
 
 /**
- * 绑定基于Web的下拉框,在某一层下的下拉框
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050051)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_GetDdlData)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
@@ -2963,7 +2961,7 @@ export function ViewTabType_CheckProperty4Update(pobjViewTabTypeEN: clsViewTabTy
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2026-04-29
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -2984,7 +2982,7 @@ export function ViewTabType_GetJSONStrByObj(pobjViewTabTypeEN: clsViewTabTypeEN)
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2026-04-29
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -3005,7 +3003,7 @@ export function ViewTabType_GetObjLstByJSONStr(strJSON: string): Array<clsViewTa
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2026-04-29
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrViewTabTypeObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -3025,7 +3023,7 @@ export function ViewTabType_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2026-04-29
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

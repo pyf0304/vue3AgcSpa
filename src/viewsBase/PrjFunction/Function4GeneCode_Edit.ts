@@ -22,7 +22,7 @@ import {
   Function4GeneCode_IsExistRecordAsync,
   Function4GeneCode_GetUniCondStr4Update,
   Function4GeneCode_IsExistAsync,
-  Function4GeneCode_GetObjByFuncId4GCAsync,
+  Function4GeneCode_GetObjByKeyAsync,
   Function4GeneCode_CheckProperty4Update,
   Function4GeneCode_UpdateRecordAsync,
   Function4GeneCode_EditRecordExAsync,
@@ -182,7 +182,7 @@ export abstract class Function4GeneCode_Edit {
       this.opType = 'Add';
       const bolIsSuccess = await this.ShowDialog_Function4GeneCode(this.opType);
       if (bolIsSuccess == false) return;
-      if (['02', '03', '06'].indexOf(clsFunction4GeneCodeEN.PrimaryTypeId) > -1) {
+      if (['02', '03', '06'].indexOf(clsFunction4GeneCodeEN._PrimaryTypeId) > -1) {
         await this.AddNewRecordWithMaxId();
       } else {
         await this.AddNewRecord();
@@ -281,7 +281,7 @@ export abstract class Function4GeneCode_Edit {
         case '确认添加':
           //这是一个单表的插入的代码,由于逻辑层太简单,
           //就把逻辑层合并到控制层,
-          if (['02', '03', '06'].indexOf(clsFunction4GeneCodeEN.PrimaryTypeId) > -1) {
+          if (['02', '03', '06'].indexOf(clsFunction4GeneCodeEN._PrimaryTypeId) > -1) {
             returnKeyId = await this.AddNewRecordWithMaxIdSave();
             if (IsNullOrEmpty(returnKeyId) == false) {
               if (Function4GeneCode_Edit.strPageDispModeId == enumPageDispMode.PopupBox_01)
@@ -598,7 +598,7 @@ export abstract class Function4GeneCode_Edit {
     //2、检查该关键字的记录是否存在,如果不存在就返回不显示；
     let objFunction4GeneCodeEN = new clsFunction4GeneCodeEN();
     try {
-      const returnBool = await Function4GeneCode_IsExistAsync(strFuncId4GC);
+      const returnBool = await Function4GeneCode_IsExistAsync({ funcId4GC: strFuncId4GC });
       if (returnBool == false) {
         const strInfo = Format('关键字:[{0}] 的记录不存在!', strFuncId4GC);
         //显示信息框
@@ -615,9 +615,9 @@ export abstract class Function4GeneCode_Edit {
       alert(strMsg);
     }
     try {
-      const objFunction4GeneCodeENConst = await Function4GeneCode_GetObjByFuncId4GCAsync(
-        strFuncId4GC,
-      );
+      const objFunction4GeneCodeENConst = await Function4GeneCode_GetObjByKeyAsync({
+        funcId4GC: strFuncId4GC,
+      });
       if (objFunction4GeneCodeENConst == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -651,7 +651,9 @@ export abstract class Function4GeneCode_Edit {
     const strThisFuncName = this.UpdateRecord.name;
     this.keyId = strFuncId4GC;
     try {
-      const objFunction4GeneCodeEN = await Function4GeneCode_GetObjByFuncId4GCAsync(strFuncId4GC);
+      const objFunction4GeneCodeEN = await Function4GeneCode_GetObjByKeyAsync({
+        funcId4GC: strFuncId4GC,
+      });
       if (objFunction4GeneCodeEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

@@ -27,15 +27,8 @@ import axios from 'axios';
 import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
 import { Storage } from '@/utils/Storage';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
-import { enumComparisonOp } from '@/ts/PubFun/enumComparisonOp';
 import { CacheHelper } from '@/ts/PubFun/CacheHelper';
-import {
-  GetObjKeys,
-  BindDdl_ObjLstInDivObj_V,
-  GetExceptionStr,
-  myShowErrorMsg,
-  ObjectAssign,
-} from '@/ts/PubFun/clsCommFunc4Web';
+import { GetExceptionStr, myShowErrorMsg, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsvFunction4GeneCode_SimEN } from '@/ts/L0Entity/PrjFunction/clsvFunction4GeneCode_SimEN';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
@@ -129,66 +122,66 @@ export async function vFunction4GeneCode_Sim_GetObjByFuncId4GCAsync(
   }
 }
 
-/**
- * 根据关键字获取相关对象, 从缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
- * @param strFuncId4GC:所给的关键字
- * @returns 对象
- */
-export async function vFunction4GeneCode_Sim_GetObjByFuncId4GCCache(
-  strFuncId4GC: string,
-  bolTryAsyncOnce = true,
-) {
-  const strThisFuncName = 'GetObjByFuncId4GCCache';
+// /**
+//  * 根据关键字获取相关对象, 从缓存中获取.
+//  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
+//  * @param strFuncId4GC:所给的关键字
+//  * @returns 对象
+//  */
+// export async function vFunction4GeneCode_Sim_GetObjByFuncId4GCCache(
+//   strFuncId4GC: string,
+//   bolTryAsyncOnce = true,
+// ) {
+//   const strThisFuncName = 'GetObjByFuncId4GCCache';
 
-  if (IsNullOrEmpty(strFuncId4GC) == true) {
-    const strMsg = Format(
-      '参数:[strFuncId4GC]不能为空!(In clsvFunction4GeneCode_SimWApi.GetObjByFuncId4GCCache)',
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  if (strFuncId4GC.length != 10) {
-    const strMsg = Format(
-      '缓存分类变量:[strFuncId4GC]的长度:[{0}]不正确!(clsvFunction4GeneCode_SimWApi.GetObjByFuncId4GCCache)',
-      strFuncId4GC.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  const arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
-  try {
-    const arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimObjLstCache.filter(
-      (x) => x.funcId4GC == strFuncId4GC,
-    );
-    let objvFunction4GeneCode_Sim: clsvFunction4GeneCode_SimEN;
-    if (arrvFunction4GeneCode_SimSel.length > 0) {
-      objvFunction4GeneCode_Sim = arrvFunction4GeneCode_SimSel[0];
-      return objvFunction4GeneCode_Sim;
-    } else {
-      if (bolTryAsyncOnce == true) {
-        const objvFunction4GeneCode_SimConst = await vFunction4GeneCode_Sim_GetObjByFuncId4GCAsync(
-          strFuncId4GC,
-        );
-        if (objvFunction4GeneCode_SimConst != null) {
-          vFunction4GeneCode_Sim_ReFreshThisCache();
-          return objvFunction4GeneCode_SimConst;
-        }
-      }
-      return null;
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
-      e,
-      strFuncId4GC,
-      vFunction4GeneCode_Sim_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-  }
-  return null;
-}
+//   if (IsNullOrEmpty(strFuncId4GC) == true) {
+//     const strMsg = Format(
+//       '参数:[strFuncId4GC]不能为空!(In clsvFunction4GeneCode_SimWApi.GetObjByFuncId4GCCache)',
+//     );
+//     console.error(strMsg);
+//     throw strMsg;
+//   }
+//   if (strFuncId4GC.length != 10) {
+//     const strMsg = Format(
+//       '缓存分类变量:[strFuncId4GC]的长度:[{0}]不正确!(clsvFunction4GeneCode_SimWApi.GetObjByFuncId4GCCache)',
+//       strFuncId4GC.length,
+//     );
+//     console.error(strMsg);
+//     throw strMsg;
+//   }
+//   const arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
+//   try {
+//     const arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimObjLstCache.filter(
+//       (x) => x.funcId4GC == strFuncId4GC,
+//     );
+//     let objvFunction4GeneCode_Sim: clsvFunction4GeneCode_SimEN;
+//     if (arrvFunction4GeneCode_SimSel.length > 0) {
+//       objvFunction4GeneCode_Sim = arrvFunction4GeneCode_SimSel[0];
+//       return objvFunction4GeneCode_Sim;
+//     } else {
+//       if (bolTryAsyncOnce == true) {
+//         const objvFunction4GeneCode_SimConst = await vFunction4GeneCode_Sim_GetObjByFuncId4GCAsync(
+//           strFuncId4GC,
+//         );
+//         if (objvFunction4GeneCode_SimConst != null) {
+//           vFunction4GeneCode_Sim_ReFreshThisCache();
+//           return objvFunction4GeneCode_SimConst;
+//         }
+//       }
+//       return null;
+//     }
+//   } catch (e) {
+//     const strMsg = Format(
+//       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
+//       e,
+//       strFuncId4GC,
+//       vFunction4GeneCode_Sim_ConstructorName,
+//       strThisFuncName,
+//     );
+//     console.error(strMsg);
+//   }
+//   return null;
+// }
 
 /**
  * 根据关键字获取相关对象, 从localStorage缓存中获取.
@@ -250,95 +243,48 @@ export async function vFunction4GeneCode_Sim_GetObjByFuncId4GClocalStorage(strFu
   }
 }
 
-/**
- * 根据关键字获取相关对象的名称属性, 从缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
- * @param strFuncId4GC:所给的关键字
- * @returns 对象
- */
-export async function vFunction4GeneCode_Sim_GetNameByFuncId4GCCache(strFuncId4GC: string) {
-  if (IsNullOrEmpty(strFuncId4GC) == true) {
-    const strMsg = Format(
-      '参数:[strFuncId4GC]不能为空!(In clsvFunction4GeneCode_SimWApi.GetNameByFuncId4GCCache)',
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  if (strFuncId4GC.length != 10) {
-    const strMsg = Format(
-      '缓存分类变量:[strFuncId4GC]的长度:[{0}]不正确!(clsvFunction4GeneCode_SimWApi.GetNameByFuncId4GCCache)',
-      strFuncId4GC.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  const arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
-  if (arrvFunction4GeneCode_SimObjLstCache == null) return '';
-  try {
-    const arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimObjLstCache.filter(
-      (x) => x.funcId4GC == strFuncId4GC,
-    );
-    let objvFunction4GeneCode_Sim: clsvFunction4GeneCode_SimEN;
-    if (arrvFunction4GeneCode_SimSel.length > 0) {
-      objvFunction4GeneCode_Sim = arrvFunction4GeneCode_SimSel[0];
-      return objvFunction4GeneCode_Sim.funcName;
-    } else {
-      return '';
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象名称属性不成功!',
-      e,
-      strFuncId4GC,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-  }
-  return '';
-}
+// /**
+//  * 映射函数。根据表映射把输入字段值,映射成输出字段值
+//  * 作者:pyf
+//  * 日期:2024-10-15
+//  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
+//  * @param strInFldName:输入字段名
+//  * @param strOutFldName:输出字段名
+//  * @param strInValue:输入字段值
+//  * @returns 返回一个输出字段值
+//  */
+// export async function vFunction4GeneCode_Sim_func(
+//   strInFldName: string,
+//   strOutFldName: string,
+//   strInValue: string,
+// ) {
+//   //const strThisFuncName = "func";
 
-/**
- * 映射函数。根据表映射把输入字段值,映射成输出字段值
- * 作者:pyf
- * 日期:2024-10-15
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
- * @param strInFldName:输入字段名
- * @param strOutFldName:输出字段名
- * @param strInValue:输入字段值
- * @returns 返回一个输出字段值
- */
-export async function vFunction4GeneCode_Sim_func(
-  strInFldName: string,
-  strOutFldName: string,
-  strInValue: string,
-) {
-  //const strThisFuncName = "func";
-
-  if (strInFldName != clsvFunction4GeneCode_SimEN.con_FuncId4GC) {
-    const strMsg = Format('输入字段名:[{0}]不正确!', strInFldName);
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  if (clsvFunction4GeneCode_SimEN.AttributeName.indexOf(strOutFldName) == -1) {
-    const strMsg = Format(
-      '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
-      strOutFldName,
-      clsvFunction4GeneCode_SimEN.AttributeName.join(','),
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  const strFuncId4GC = strInValue;
-  if (IsNullOrEmpty(strFuncId4GC) == true) {
-    return '';
-  }
-  const objvFunction4GeneCode_Sim = await vFunction4GeneCode_Sim_GetObjByFuncId4GCCache(
-    strFuncId4GC,
-  );
-  if (objvFunction4GeneCode_Sim == null) return '';
-  if (objvFunction4GeneCode_Sim.GetFldValue(strOutFldName) == null) return '';
-  return objvFunction4GeneCode_Sim.GetFldValue(strOutFldName).toString();
-}
+//   if (strInFldName != clsvFunction4GeneCode_SimEN.con_FuncId4GC) {
+//     const strMsg = Format('输入字段名:[{0}]不正确!', strInFldName);
+//     console.error(strMsg);
+//     throw new Error(strMsg);
+//   }
+//   if (clsvFunction4GeneCode_SimEN.AttributeName.indexOf(strOutFldName) == -1) {
+//     const strMsg = Format(
+//       '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
+//       strOutFldName,
+//       clsvFunction4GeneCode_SimEN.AttributeName.join(','),
+//     );
+//     console.error(strMsg);
+//     throw new Error(strMsg);
+//   }
+//   const strFuncId4GC = strInValue;
+//   if (IsNullOrEmpty(strFuncId4GC) == true) {
+//     return '';
+//   }
+//   const objvFunction4GeneCode_Sim = await vFunction4GeneCode_Sim_GetObjByFuncId4GCCache(
+//     strFuncId4GC,
+//   );
+//   if (objvFunction4GeneCode_Sim == null) return '';
+//   if (objvFunction4GeneCode_Sim.GetFldValue(strOutFldName) == null) return '';
+//   return objvFunction4GeneCode_Sim.GetFldValue(strOutFldName).toString();
+// }
 
 /**
  * 排序函数。根据关键字字段的值进行比较
@@ -565,105 +511,6 @@ export async function vFunction4GeneCode_Sim_FilterFunByKey(strKey: string, valu
       console.error(strMsg);
       break;
   }
-}
-
-/**
- * 映射函数。根据表映射把输入字段值,映射成输出字段值
- * 作者:pyf
- * 日期:2024-10-15
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
- * @param strInFldName:输入字段名
- * @param strInValue:输入字段值
- * @param strComparisonOp:比较操作符
- * @returns 返回一个关键字值列表
- */
-export async function vFunction4GeneCode_Sim_funcKey(
-  strInFldName: string,
-  strInValue: any,
-  strComparisonOp: string,
-): Promise<Array<string>> {
-  //const strThisFuncName = "funcKey";
-
-  if (strInFldName == clsvFunction4GeneCode_SimEN.con_FuncId4GC) {
-    const strMsg = Format('输入字段名:[{0}]不正确, 不能为关键字段!', strInFldName);
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  if (IsNullOrEmpty(strInValue) == true) {
-    return [];
-  }
-  const arrvFunction4GeneCode_Sim = await vFunction4GeneCode_Sim_GetObjLstCache();
-  if (arrvFunction4GeneCode_Sim == null) return [];
-  let arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_Sim;
-  const strType = typeof strInValue;
-  let arrValues: string[];
-  switch (strType) {
-    case 'string':
-      switch (strComparisonOp) {
-        case enumComparisonOp.Equal_01: // " = "
-          arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-            (x) => x.GetFldValue(strInFldName).toString() == strInValue.toString(),
-          );
-          break;
-        case enumComparisonOp.Like_03:
-          arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-            (x) => x.GetFldValue(strInFldName).toString().indexOf(strInValue.toString()) != -1,
-          );
-          break;
-        case enumComparisonOp.In_04:
-          arrValues = strInValue.split(',');
-          arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-            (x) => arrValues.indexOf(x.GetFldValue(strInFldName).toString()) != -1,
-          );
-          break;
-      }
-      break;
-    case 'boolean':
-      if (strInValue == null) return [];
-      if (strComparisonOp == enumComparisonOp.Equal_01) {
-        arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-          (x) => x.GetFldValue(strInFldName) == strInValue,
-        );
-      }
-      break;
-    case 'number':
-      if (Number(strInValue) == 0) return [];
-      switch (strComparisonOp) {
-        case enumComparisonOp.Equal_01:
-          arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-            (x) => x.GetFldValue(strInFldName) == strInValue,
-          );
-          break;
-        case enumComparisonOp.NotEqual_02:
-          arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-            (x) => x.GetFldValue(strInFldName) != strInValue,
-          );
-          break;
-        case enumComparisonOp.NotLessThan_05: //" >= ":
-          arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-            (x) => x.GetFldValue(strInFldName) >= strInValue,
-          );
-          break;
-        case enumComparisonOp.NotGreaterThan_06: //" <= ":
-          arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-            (x) => x.GetFldValue(strInFldName) <= strInValue,
-          );
-          break;
-        case enumComparisonOp.GreaterThan_07: //" > ":
-          arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-            (x) => x.GetFldValue(strInFldName) > strInValue,
-          );
-          break;
-        case enumComparisonOp.LessThan_08: //" < ":
-          arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-            (x) => x.GetFldValue(strInFldName) <= strInValue,
-          );
-          break;
-      }
-      break;
-  }
-  if (arrvFunction4GeneCode_SimSel.length == 0) return [];
-  return arrvFunction4GeneCode_SimSel.map((x) => x.funcId4GC);
 }
 
 /**
@@ -927,11 +774,11 @@ export async function vFunction4GeneCode_Sim_GetObjLstClientCache() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsvFunction4GeneCode_SimEN._CurrTabName;
-  if (IsNullOrEmpty(clsvFunction4GeneCode_SimEN.WhereFormat) == false) {
-    strWhereCond = clsvFunction4GeneCode_SimEN.WhereFormat;
+  if (IsNullOrEmpty(clsvFunction4GeneCode_SimEN._WhereFormat) == false) {
+    strWhereCond = clsvFunction4GeneCode_SimEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsvFunction4GeneCode_SimEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsvFunction4GeneCode_SimEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsvFunction4GeneCode_SimEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsvFunction4GeneCode_SimEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -980,11 +827,11 @@ export async function vFunction4GeneCode_Sim_GetObjLstlocalStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsvFunction4GeneCode_SimEN._CurrTabName;
-  if (IsNullOrEmpty(clsvFunction4GeneCode_SimEN.WhereFormat) == false) {
-    strWhereCond = clsvFunction4GeneCode_SimEN.WhereFormat;
+  if (IsNullOrEmpty(clsvFunction4GeneCode_SimEN._WhereFormat) == false) {
+    strWhereCond = clsvFunction4GeneCode_SimEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsvFunction4GeneCode_SimEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsvFunction4GeneCode_SimEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsvFunction4GeneCode_SimEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsvFunction4GeneCode_SimEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1128,11 +975,11 @@ export async function vFunction4GeneCode_Sim_GetObjLstsessionStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsvFunction4GeneCode_SimEN._CurrTabName;
-  if (IsNullOrEmpty(clsvFunction4GeneCode_SimEN.WhereFormat) == false) {
-    strWhereCond = clsvFunction4GeneCode_SimEN.WhereFormat;
+  if (IsNullOrEmpty(clsvFunction4GeneCode_SimEN._WhereFormat) == false) {
+    strWhereCond = clsvFunction4GeneCode_SimEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsvFunction4GeneCode_SimEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsvFunction4GeneCode_SimEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsvFunction4GeneCode_SimEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsvFunction4GeneCode_SimEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1195,41 +1042,13 @@ export async function vFunction4GeneCode_Sim_GetObjLstsessionStoragePureCache() 
 
 /**
  * 获取本地缓存中的对象列表,是整个表中的全部记录,也可是表中某缓存分类的全部记录.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstCacheAsync)
- * @returns 从本地缓存中获取的对象列表
- **/
-export async function vFunction4GeneCode_Sim_GetObjLstCache(): Promise<
-  Array<clsvFunction4GeneCode_SimEN>
-> {
-  //const strThisFuncName = "GetObjLst_Cache";
-
-  let arrvFunction4GeneCode_SimObjLstCache;
-  switch (clsvFunction4GeneCode_SimEN.CacheModeId) {
-    case '04': //sessionStorage
-      arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstsessionStorage();
-      break;
-    case '03': //localStorage
-      arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstlocalStorage();
-      break;
-    case '02': //ClientCache
-      arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstClientCache();
-      break;
-    default:
-      arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstClientCache();
-      break;
-  }
-  return arrvFunction4GeneCode_SimObjLstCache;
-}
-
-/**
- * 获取本地缓存中的对象列表,是整个表中的全部记录,也可是表中某缓存分类的全部记录.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLst_PureCacheAsync)
  * @returns 从本地缓存中获取的对象列表
  **/
 export async function vFunction4GeneCode_Sim_GetObjLstPureCache() {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrvFunction4GeneCode_SimObjLstCache;
-  switch (clsvFunction4GeneCode_SimEN.CacheModeId) {
+  switch (clsvFunction4GeneCode_SimEN._CacheModeId) {
     case '04': //sessionStorage
       arrvFunction4GeneCode_SimObjLstCache =
         await vFunction4GeneCode_Sim_GetObjLstsessionStoragePureCache();
@@ -1246,122 +1065,6 @@ export async function vFunction4GeneCode_Sim_GetObjLstPureCache() {
       break;
   }
   return arrvFunction4GeneCode_SimObjLstCache;
-}
-
-/**
- * 根据条件对象, 从缓存的对象列表中获取子集.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetSubObjLstCache)
- * @param objstrFuncId4GCCond:条件对象
- * @returns 对象列表子集
- */
-export async function vFunction4GeneCode_Sim_GetSubObjLstCache(
-  objvFunction4GeneCode_SimCond: clsvFunction4GeneCode_SimEN,
-) {
-  const strThisFuncName = 'GetSubObjLstCache';
-  const arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
-  let arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimObjLstCache;
-  if (
-    objvFunction4GeneCode_SimCond.sfFldComparisonOp == null ||
-    objvFunction4GeneCode_SimCond.sfFldComparisonOp == ''
-  )
-    return arrvFunction4GeneCode_SimSel;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objvFunction4GeneCode_SimCond.sfFldComparisonOp,
-  );
-  //console.log("clsvFunction4GeneCode_SimWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
-  try {
-    const sstrKeys = GetObjKeys(objvFunction4GeneCode_SimCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
-      arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-        (x) => x.GetFldValue(strKey) != null,
-      );
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objvFunction4GeneCode_SimCond.GetFldValue(strKey);
-      const strType = typeof strValue;
-      switch (strType) {
-        case 'string':
-          if (strValue == null) continue;
-          if (strValue == '') continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
-            );
-          } else if (strComparisonOp == 'like') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
-            );
-          } else if (strComparisonOp == 'length greater') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not greater') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not less') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length less') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length equal') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
-            );
-          }
-          break;
-        case 'boolean':
-          if (strValue == null) continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) == strValue,
-            );
-          }
-          break;
-        case 'number':
-          if (Number(strValue) == 0) continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) == strValue,
-            );
-          } else if (strComparisonOp == '>=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) >= strValue,
-            );
-          } else if (strComparisonOp == '<=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) <= strValue,
-            );
-          } else if (strComparisonOp == '>') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) > strValue,
-            );
-          } else if (strComparisonOp == '<') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) <= strValue,
-            );
-          }
-          break;
-      }
-    }
-    return arrvFunction4GeneCode_SimSel;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据条件:[{1}]缓存对象列表中获取子集对象不成功!(in {2}.{3})',
-      e,
-      JSON.stringify(objvFunction4GeneCode_SimCond),
-      vFunction4GeneCode_Sim_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return new Array<clsvFunction4GeneCode_SimEN>();
 }
 
 /**
@@ -1431,35 +1134,6 @@ export async function vFunction4GeneCode_Sim_GetObjLstByFuncId4GCLstAsync(
     } else {
       throw error.statusText;
     }
-  }
-}
-
-/**
- * 根据关键字列表获取相关对象列表, 从缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByKeyLstCache)
- * @param arrstrFuncId4GCLst:关键字列表
- * @returns 对象列表
- */
-export async function vFunction4GeneCode_Sim_GetObjLstByFuncId4GCLstCache(
-  arrFuncId4GCLst: Array<string>,
-) {
-  const strThisFuncName = 'GetObjLstByFuncId4GCLstCache';
-  try {
-    const arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
-    const arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimObjLstCache.filter(
-      (x) => arrFuncId4GCLst.indexOf(x.funcId4GC) > -1,
-    );
-    return arrvFunction4GeneCode_SimSel;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取对象列表不成功!(in {2}.{3})',
-      e,
-      arrFuncId4GCLst.join(','),
-      vFunction4GeneCode_Sim_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
   }
 }
 
@@ -1604,143 +1278,6 @@ export async function vFunction4GeneCode_Sim_GetObjLstByRangeAsync(
 }
 
 /**
- * 根据分页条件从缓存中获取分页对象列表,只获取一页.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerCache)
- * @param objPagerPara:分页参数结构
- * @returns 对象列表
- */
-export async function vFunction4GeneCode_Sim_GetObjLstByPagerCache(objPagerPara: stuPagerPara) {
-  const strThisFuncName = 'GetObjLstByPagerCache';
-  if (objPagerPara.pageIndex == 0) return new Array<clsvFunction4GeneCode_SimEN>();
-  const arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
-  if (arrvFunction4GeneCode_SimObjLstCache.length == 0) return arrvFunction4GeneCode_SimObjLstCache;
-  let arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimObjLstCache;
-  const objCond = JSON.parse(objPagerPara.whereCond);
-  const objvFunction4GeneCode_SimCond = new clsvFunction4GeneCode_SimEN();
-  ObjectAssign(objvFunction4GeneCode_SimCond, objCond);
-  let dicFldComparisonOp: { [index: string]: string } = {};
-  if (objCond.sfFldComparisonOp != '') {
-    dicFldComparisonOp = JSON.parse(objCond.sfFldComparisonOp);
-  }
-  //console.log("clsvFunction4GeneCode_SimWApi->GetObjLstByPagerCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
-  try {
-    const sstrKeys = GetObjKeys(objCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
-      arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-        (x) => x.GetFldValue(strKey) != null,
-      );
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objvFunction4GeneCode_SimCond.GetFldValue(strKey);
-      const strType = typeof strValue;
-      switch (strType) {
-        case 'string':
-          if (strValue == null) continue;
-          if (strValue == '') continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
-            );
-          } else if (strComparisonOp == 'like') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
-            );
-          } else if (strComparisonOp == 'length greater') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not greater') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not less') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length less') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length equal') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'in') {
-            const arrValues = strValue.toString().split(',');
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => arrValues.indexOf(x.GetFldValue(strKey).toString()) != -1,
-            );
-          }
-          break;
-        case 'boolean':
-          if (strValue == null) continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) == strValue,
-            );
-          }
-          break;
-        case 'number':
-          if (Number(strValue) == 0) continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) == strValue,
-            );
-          } else if (strComparisonOp == '>=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) >= strValue,
-            );
-          } else if (strComparisonOp == '<=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) <= strValue,
-            );
-          } else if (strComparisonOp == '>') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) > strValue,
-            );
-          } else if (strComparisonOp == '<') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) <= strValue,
-            );
-          }
-          break;
-      }
-    }
-    if (arrvFunction4GeneCode_SimSel.length == 0) return arrvFunction4GeneCode_SimSel;
-    let intStart: number = objPagerPara.pageSize * (objPagerPara.pageIndex - 1);
-    if (intStart <= 0) intStart = 0;
-    const intEnd = intStart + objPagerPara.pageSize;
-    if (objPagerPara.orderBy != null && objPagerPara.orderBy.length > 0) {
-      const sstrSplit: string[] = objPagerPara.orderBy.split(' ');
-      let strSortType = 'asc';
-      const strSortFld = sstrSplit[0];
-      if (sstrSplit.length > 1) strSortType = sstrSplit[1];
-      arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.sort(
-        vFunction4GeneCode_Sim_SortFunByKey(strSortFld, strSortType),
-      );
-    } else {
-      //如果排序字段名[OrderBy]为空,就调用排序函数
-      arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.sort(objPagerPara.sortFun);
-    }
-    arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.slice(intStart, intEnd);
-    return arrvFunction4GeneCode_SimSel;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据条件:[{1}]获取分页对象列表不成功!(In {2}.{3})',
-      e,
-      objPagerPara.whereCond,
-      vFunction4GeneCode_Sim_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return new Array<clsvFunction4GeneCode_SimEN>();
-}
-
-/**
  * 根据分页条件获取相应的记录对象列表,只获取一页
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerAsync)
  * @param objPagerPara:分页获取对象列表的参数对象
@@ -1812,123 +1349,6 @@ export async function vFunction4GeneCode_Sim_GetObjLstByPagerAsync(
 }
 
 /**
- * 根据条件对象, 从缓存的对象列表中获取子集.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistRecordCache)
- * @param objstrFuncId4GCCond:条件对象
- * @returns 对象列表子集
- */
-export async function vFunction4GeneCode_Sim_IsExistRecordCache(
-  objvFunction4GeneCode_SimCond: clsvFunction4GeneCode_SimEN,
-) {
-  const strThisFuncName = 'IsExistRecordCache';
-  const arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
-  if (arrvFunction4GeneCode_SimObjLstCache == null) return false;
-  let arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimObjLstCache;
-  if (
-    objvFunction4GeneCode_SimCond.sfFldComparisonOp == null ||
-    objvFunction4GeneCode_SimCond.sfFldComparisonOp == ''
-  )
-    return arrvFunction4GeneCode_SimSel.length > 0 ? true : false;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objvFunction4GeneCode_SimCond.sfFldComparisonOp,
-  );
-  //console.log("clsvFunction4GeneCode_SimWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
-  try {
-    const sstrKeys = GetObjKeys(objvFunction4GeneCode_SimCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objvFunction4GeneCode_SimCond.GetFldValue(strKey);
-      const strType = typeof strValue;
-      switch (strType) {
-        case 'string':
-          if (strValue == null) continue;
-          if (strValue == '') continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
-            );
-          } else if (strComparisonOp == 'like') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
-            );
-          } else if (strComparisonOp == 'length greater') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not greater') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not less') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length less') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length equal') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
-            );
-          }
-          break;
-        case 'boolean':
-          if (strValue == null) continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) == strValue,
-            );
-          }
-          break;
-        case 'number':
-          if (Number(strValue) == 0) continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) == strValue,
-            );
-          } else if (strComparisonOp == '>=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) >= strValue,
-            );
-          } else if (strComparisonOp == '<=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) <= strValue,
-            );
-          } else if (strComparisonOp == '>') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) > strValue,
-            );
-          } else if (strComparisonOp == '<') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) <= strValue,
-            );
-          }
-          break;
-      }
-    }
-    if (arrvFunction4GeneCode_SimSel.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '根据条件:[{0}]判断是否存在不成功!(in {1}.{2})',
-      JSON.stringify(objvFunction4GeneCode_SimCond),
-      vFunction4GeneCode_Sim_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return false;
-}
-
-/**
  * 根据条件获取是否存在相应的记录？
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistRecordAsync)
  * @param strWhereCond:条件
@@ -1987,38 +1407,6 @@ export async function vFunction4GeneCode_Sim_IsExistRecordAsync(
       throw error.statusText;
     }
   }
-}
-
-/**
- * 根据关键字判断是否存在记录, 从本地缓存中判断.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistCache)
- * @param strFuncId4GC:所给的关键字
- * @returns 对象
- */
-export async function vFunction4GeneCode_Sim_IsExistCache(strFuncId4GC: string) {
-  const strThisFuncName = 'IsExistCache';
-  const arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
-  if (arrvFunction4GeneCode_SimObjLstCache == null) return false;
-  try {
-    const arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimObjLstCache.filter(
-      (x) => x.funcId4GC == strFuncId4GC,
-    );
-    if (arrvFunction4GeneCode_SimSel.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '根据关键字:[{0}]判断是否存在不成功!(in {1}.{2})',
-      strFuncId4GC,
-      vFunction4GeneCode_Sim_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-  }
-  return false;
 }
 
 /**
@@ -2143,128 +1531,6 @@ export async function vFunction4GeneCode_Sim_GetRecCountByCondAsync(
 }
 
 /**
- * 根据条件对象, 从缓存的对象列表中获取记录数.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetRecCountByCondCache)
- * @param objvFunction4GeneCode_SimCond:条件对象
- * @returns 对象列表记录数
- */
-export async function vFunction4GeneCode_Sim_GetRecCountByCondCache(
-  objvFunction4GeneCode_SimCond: clsvFunction4GeneCode_SimEN,
-) {
-  const strThisFuncName = 'GetRecCountByCondCache';
-  const arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
-  if (arrvFunction4GeneCode_SimObjLstCache == null) return 0;
-  let arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimObjLstCache;
-  if (
-    objvFunction4GeneCode_SimCond.sfFldComparisonOp == null ||
-    objvFunction4GeneCode_SimCond.sfFldComparisonOp == ''
-  )
-    return arrvFunction4GeneCode_SimSel.length;
-  const dicFldComparisonOp: { [index: string]: string } = JSON.parse(
-    objvFunction4GeneCode_SimCond.sfFldComparisonOp,
-  );
-  //console.log("clsvFunction4GeneCode_SimWApi->GetSubObjLstCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
-  try {
-    const sstrKeys = GetObjKeys(objvFunction4GeneCode_SimCond);
-    //console.log(sstrKeys);
-    for (const strKey of sstrKeys) {
-      if (Object.prototype.hasOwnProperty.call(dicFldComparisonOp, strKey) == false) continue;
-      arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-        (x) => x.GetFldValue(strKey) != null,
-      );
-      const strComparisonOp = dicFldComparisonOp[strKey];
-      const strValue = objvFunction4GeneCode_SimCond.GetFldValue(strKey);
-      const strType = typeof strValue;
-      switch (strType) {
-        case 'string':
-          if (strValue == null) continue;
-          if (strValue == '') continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
-            );
-          } else if (strComparisonOp == 'like') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
-            );
-          } else if (strComparisonOp == 'length greater') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not greater') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not less') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length less') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length equal') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'in') {
-            const arrValues = strValue.toString().split(',');
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => arrValues.indexOf(x.GetFldValue(strKey).toString()) != -1,
-            );
-          }
-          break;
-        case 'boolean':
-          if (strValue == null) continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) == strValue,
-            );
-          }
-          break;
-        case 'number':
-          if (Number(strValue) == 0) continue;
-          if (strComparisonOp == '=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) == strValue,
-            );
-          } else if (strComparisonOp == '>=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) >= strValue,
-            );
-          } else if (strComparisonOp == '<=') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) <= strValue,
-            );
-          } else if (strComparisonOp == '>') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) > strValue,
-            );
-          } else if (strComparisonOp == '<') {
-            arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimSel.filter(
-              (x) => x.GetFldValue(strKey) <= strValue,
-            );
-          }
-          break;
-      }
-    }
-    return arrvFunction4GeneCode_SimSel.length;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据条件:[{1}]从缓存对象列表中获取记录数不成功!(in {2}.{3})',
-      e,
-      JSON.stringify(objvFunction4GeneCode_SimCond),
-      vFunction4GeneCode_Sim_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return 0;
-}
-
-/**
  * 获取WebApi的地址
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetWebApiUrl)
  * @returns 返回当前文件中Web服务的地址
@@ -2301,7 +1567,7 @@ export function vFunction4GeneCode_Sim_GetWebApiUrl(
 export function vFunction4GeneCode_Sim_ReFreshThisCache(): void {
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = clsvFunction4GeneCode_SimEN._CurrTabName;
-    switch (clsvFunction4GeneCode_SimEN.CacheModeId) {
+    switch (clsvFunction4GeneCode_SimEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -2332,59 +1598,6 @@ export function vFunction4GeneCode_Sim_GetLastRefreshTime(): string {
   return clsvFunction4GeneCode_SimEN._RefreshTimeLst[
     clsvFunction4GeneCode_SimEN._RefreshTimeLst.length - 1
   ];
-}
-
-/**
- * 绑定基于Web的下拉框,在某一层下的下拉框
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)-pyf
- * @param objDDL:需要绑定当前表的下拉框
-
- * @param strFuncCodeTypeId:
-*/
-export async function vFunction4GeneCode_Sim_BindDdl_FuncId4GCByFuncCodeTypeIdInDivCache(
-  objDiv: HTMLDivElement,
-  strDdlName: string,
-  strFuncCodeTypeId: string,
-) {
-  if (IsNullOrEmpty(strFuncCodeTypeId) == true) {
-    const strMsg = Format(
-      '参数:[strFuncCodeTypeId]不能为空！(In clsvFunction4GeneCode_SimWApi.BindDdl_FuncId4GCByFuncCodeTypeIdInDiv)',
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  if (strFuncCodeTypeId.length != 4) {
-    const strMsg = Format(
-      '缓存分类变量:[strFuncCodeTypeId]的长度:[{0}]不正确！(clsvFunction4GeneCode_SimWApi.BindDdl_FuncId4GCByFuncCodeTypeIdInDiv)',
-      strFuncCodeTypeId.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-
-  const objDdl = document.getElementById(strDdlName);
-  if (objDdl == null) {
-    const strMsg = Format(
-      '下拉框：{0} 不存在!(In BindDdl_FuncId4GCByFuncCodeTypeIdInDiv)',
-      strDdlName,
-    );
-    alert(strMsg);
-    console.error(strMsg);
-    throw strMsg;
-  }
-  //为数据源于表的下拉框设置内容
-  //console.log("开始：BindDdl_FuncId4GCByFuncCodeTypeIdInDivCache");
-  let arrObjLstSel = await vFunction4GeneCode_Sim_GetObjLstCache();
-  if (arrObjLstSel == null) return;
-  arrObjLstSel = arrObjLstSel.filter((x) => x.funcCodeTypeId == strFuncCodeTypeId);
-  BindDdl_ObjLstInDivObj_V(
-    objDiv,
-    strDdlName,
-    arrObjLstSel,
-    clsvFunction4GeneCode_SimEN.con_FuncId4GC,
-    clsvFunction4GeneCode_SimEN.con_FuncName,
-    'v函数4GC_Sim',
-  );
 }
 
 /**

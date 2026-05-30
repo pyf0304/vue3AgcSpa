@@ -222,8 +222,8 @@ export default class FunctionTemplateRelaCRUDAiEx
       case 'progLangTypeSimName|Ex':
         viewVarSet.sortFunctionTemplateRelaBy = `progLangTypeSimName ${sortDirection}|(vCodeType_Sim)FunctionTemplateRela.CodeTypeId = vCodeType_Sim.CodeTypeId|(ProgLangType)vCodeType_Sim.ProgLangTypeId = ProgLangType.ProgLangTypeId|`;
         break;
-      case 'codeTypeName|Ex':
-        viewVarSet.sortFunctionTemplateRelaBy = `codeTypeName ${sortDirection}|(vCodeType_Sim)FunctionTemplateRela.CodeTypeId = vCodeType_Sim.CodeTypeId|`;
+      case 'codeTypeSimName|Ex':
+        viewVarSet.sortFunctionTemplateRelaBy = `codeTypeSimName ${sortDirection}|(vCodeType_Sim)FunctionTemplateRela.CodeTypeId = vCodeType_Sim.CodeTypeId|`;
         break;
       case 'funcCodeTypeName|Ex':
         viewVarSet.sortFunctionTemplateRelaBy = `funcCodeTypeName ${sortDirection}|(vCodeType_Sim)FunctionTemplateRela.FuncCodeTypeId = vCodeType_Sim.CodeTypeId|`;

@@ -87,7 +87,7 @@ export function initQueryDefaultsAi(queryRefs: {
 }
 
 export async function loadQueryOptionsAi() {
-  const [arrProgLangType] = await Promise.all([ProgLangType_GetArrProgLangTypeByIsVisible()]);
+  const [arrProgLangType] = await Promise.all([ProgLangType_GetArrProgLangTypeByIsVisible(true)]);
   return { arrProgLangType };
 }
 

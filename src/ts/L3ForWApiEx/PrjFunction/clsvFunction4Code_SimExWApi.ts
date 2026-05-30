@@ -212,11 +212,11 @@ export async function vFunction4Code_SimEx_func(
     console.error(strMsg);
     throw new Error(strMsg);
   }
-  if (clsvFunction4Code_SimEN.AttributeName.indexOf(strOutFldName) == -1) {
+  if (clsvFunction4Code_SimEN._AttributeName.indexOf(strOutFldName) == -1) {
     const strMsg = Format(
       '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
       strOutFldName,
-      clsvFunction4Code_SimEN.AttributeName.join(','),
+      clsvFunction4Code_SimEN._AttributeName.join(','),
     );
     console.error(strMsg);
     throw new Error(strMsg);

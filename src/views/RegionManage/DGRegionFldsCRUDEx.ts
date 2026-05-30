@@ -79,7 +79,7 @@ import {
   AppCodeTypeRelaEx_SortFunByGroupNameAndOrderNum,
 } from '@/ts/L3ForWApiEx/GeneCode/clsAppCodeTypeRelaExWApi';
 import { vCodeType_Sim_GetObjByCodeTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
-import { ApplicationType_GetObjByApplicationTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
+import { ApplicationType_GetObjByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 
 import { vPrjTab_SimEx_GetNameByTabIdCache } from '@/ts/L3ForWApiEx/Table_Field/clsvPrjTab_SimExWApi';
 import { SqlWApi_GetDataTableAsync } from '@/ts/FunClass/SqlWApi';
@@ -1169,9 +1169,9 @@ export default class DGRegionFldsCRUDEx extends DGRegionFldsCRUD implements ISho
       strViewId,
       clsPrivateSessionStorage.cmPrjId,
     );
-    const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-      objViewInfo.applicationTypeId,
-    );
+    const objApplicationType = await ApplicationType_GetObjByKeyCache({
+      applicationTypeId: objViewInfo.applicationTypeId,
+    });
     if (objApplicationType == null) {
       const strMsg = Format(
         '应用Id:[{0}]，没有相应的类型，请检查！',

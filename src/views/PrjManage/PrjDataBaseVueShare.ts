@@ -2,7 +2,7 @@
  * 类名:PrjDataBaseVueShare(界面:PrjDataBaseCRUD,00050346)
  * 表名:PrjDataBase(00050176)
  * 版本:2026.04.19(服务器:PYF-AI)
- * 日期:2026/04/19 19:44:17
+ * 日期:2026/05/28 02:04:54
  * 生成者:
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
@@ -17,8 +17,8 @@ import { reactive, ref } from 'vue';
 import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
 import { clsPrjDataBaseENEx } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseENEx';
 import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
+import { PrjDataBaseKey, clsPrjDataBaseEN } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
-import { clsPrjDataBaseEN } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
 
 const ascOrDesc4SortFun = ref('Asc');
 const sortPrjDataBaseBy = ref('');
@@ -38,6 +38,7 @@ const refDivList = ref();
 const refDivEdit = ref();
 const refDivDetail = ref();
 const refPrjDataBase_Detail = ref();
+const refPrjDataBase_DetailAi = ref();
 const refPrjDataBase_Edit = ref();
 const refPrjDataBase_List = ref();
 const divVarSet = reactive({
@@ -48,6 +49,7 @@ const divVarSet = reactive({
   refDivEdit,
   refDivDetail,
   refPrjDataBase_Detail,
+  refPrjDataBase_DetailAi,
   refPrjDataBase_Edit,
   refPrjDataBase_List,
 });
@@ -60,6 +62,7 @@ export {
   refDivEdit,
   refDivDetail,
   refPrjDataBase_Detail,
+  refPrjDataBase_DetailAi,
   refPrjDataBase_Edit,
   refPrjDataBase_List,
 };
@@ -318,10 +321,10 @@ export const BindTabByList = async (
   if (refPrjDataBase_List.value != null) refPrjDataBase_List.value.selectAllChecked = false;
 };
 
-export function PrjDataBase_DeleteKeyIdCache(strPrjDataBaseId: string): void {
-  if (IsNullOrEmpty(strPrjDataBaseId) == false) {
+export function PrjDataBase_DeleteKeyIdCache(key: PrjDataBaseKey): void {
+  if (IsNullOrEmpty(key.prjDataBaseId) == false) {
     // 使用 delete 删除特定的键
-    const cacheKey = `${strPrjDataBaseId}`;
+    const cacheKey = `${key.prjDataBaseId}`;
     delete prjDataBaseCache[cacheKey];
     return;
   }

@@ -13,13 +13,14 @@ import {
   PrjDataBase_GetRecCountByCondCache,
   PrjDataBase_GetSubObjLstCache,
   PrjDataBase_ReFreshCache,
-  PrjDataBase_FuncMapByFldName,
   PrjDataBase_GetObjExLstByPagerCache,
   PrjDataBase_GetObjLstByPrjDataBaseIdLstAsync,
   PrjDataBase_UpdateRecordAsync,
   PrjDataBase_DelPrjDataBasesAsync,
 } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
+import { PrjDataBaseEx_FuncMapByFldName } from '@/ts/L3ForWApiEx/PrjManage/clsPrjDataBaseExWApi';
 import { UseState_BindDdl_UseStateIdInDivCache } from '@/ts/L3ForWApi/SysPara/clsUseStateWApi';
+
 import {
   GetCheckedKeyIdsInDivObj,
   GetSelectValueInDivObj,
@@ -34,12 +35,12 @@ import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
 import { clsOperateList, GetCurrPageIndex } from '@/ts/PubFun/clsOperateList';
 import { AIOperateListBase } from '@/viewsBase/common/AIOperateListBase';
 import {
-  getExportColumnSpecsAi2,
-  getListColumnsAi2,
-} from '@/viewsBase/PrjManage/PrjDataBaseCRUDAi2Columns';
+  getExportColumnSpecsAi,
+  getListColumnsAi,
+} from '@/viewsBase/PrjManage/PrjDataBaseCRUDAiColumns';
 
 /**
- * Ai4版基类：
+ * Ai版基类：
  * 在Ai3基础上增加命令schema驱动，不改变原有基类行为。
  */
 export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements clsOperateList {
@@ -69,11 +70,11 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
   }
 
   protected getListColumnsAi(): Array<clsDataColumn> {
-    return getListColumnsAi2();
+    return getListColumnsAi();
   }
 
   protected getExportColumnSpecsAi(): Array<{ colHeader: string }> {
-    return getExportColumnSpecsAi2();
+    return getExportColumnSpecsAi();
   }
 
   public abstract SortColumn(sortColumnKey: string, sortDirection: string): void;
@@ -238,7 +239,7 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
         }
 
         if (returnBool == true) {
-          PrjDataBase_DeleteKeyIdCache(objInFor.prjDataBaseId);
+          PrjDataBase_DeleteKeyIdCache({ prjDataBaseId: objInFor.prjDataBaseId });
           intCount++;
         } else {
           alert('设置记录不成功!');
@@ -306,7 +307,7 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
   }
 
   /** 按导出列规格整理导出结果。 */
-  public async ExportExcel_PrjDataBaseCacheAi2(): Promise<ExportExcelData> {
+  public async ExportExcel_PrjDataBaseCacheAi(): Promise<ExportExcelData> {
     const raw = await this.ExportExcel_PrjDataBaseCache();
     if (raw.arrObjLst.length === 0) return raw;
     const normalizedRows = this.NormalizeExportRowsBySpecs(
@@ -471,7 +472,7 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;
       for (const objInFor of arrPrjDataBaseExObjLst) {
-        await PrjDataBase_FuncMapByFldName(objDataColumn.fldName, objInFor);
+        await PrjDataBaseEx_FuncMapByFldName(objDataColumn.fldName, objInFor);
       }
     }
   }
@@ -491,13 +492,29 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
       if (arrFldName.indexOf(normalizedFldName) > -1) continue;
 
       for (const objInFor of arrPrjDataBaseExObjLst) {
-        await PrjDataBase_FuncMapByFldName(normalizedFldName, objInFor);
+        await PrjDataBaseEx_FuncMapByFldName(normalizedFldName, objInFor);
       }
     }
   }
 
-  /** 导出时使用的默认排序规则。 */
+  /**
+   * 导出时使用的默认排序规则。
+   * ⚠️ 这是一个示例方法，使用从导出区域字段中选择的前 2 个字段。
+   * ⚠️ 请根据实际业务需求修改排序逻辑和字段选择。
+   *
+   * 当前示例使用的字段：
+   * - dataBaseName (string)
+   * - userId (string)
+   *
+   * 表中可用的所有字段：
+   * - dataBaseName (string)
+   * - userId (string)
+   *
+   * 作者: AutoGCLib
+   * 日期: 2026-05-27
+   */
   public SortFunExportExcel(a: clsPrjDataBaseEN, b: clsPrjDataBaseEN): number {
+    // 第一级排序：userId
     if (a.userId == b.userId) {
       if (a.userId == null) return -1;
       if (b.userId == null) return 1;

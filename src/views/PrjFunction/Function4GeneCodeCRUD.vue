@@ -440,9 +440,11 @@
 
       PrjId_Session.value = clsPrivateSessionStorage.currSelPrjId;
       UserId_Local.value = userStore.getUserId;
-      FeatureTypeId_Static.value = '';
+
       ProgLangTypeId_Static.value = enumProgLangType.TypeScript_09;
-      FuncPurposeId_Static.value = '';
+      FeatureTypeId_Static.value = '02';
+      FuncPurposeId_Static.value = '02';
+
       const objPage = ref<Function4GeneCodeCRUDEx>();
       const objPage_Edit = ref<Function4GeneCode_EditEx>();
       const objPage_Detail = ref<Function4GeneCode_DetailEx>();
@@ -492,7 +494,7 @@
           opType.value = 'Add';
           const bolIsSuccess = await objPage_Edit.value.ShowDialog_Function4GeneCode(opType.value);
           if (bolIsSuccess == false) return;
-          if (['02', '03', '06'].indexOf(clsFunction4GeneCodeEN.PrimaryTypeId) > -1) {
+          if (['02', '03', '06'].indexOf(clsFunction4GeneCodeEN._PrimaryTypeId) > -1) {
             await objPage_Edit.value.AddNewRecordWithMaxId();
           } else {
             await objPage_Edit.value.AddNewRecord();
@@ -757,7 +759,7 @@
         arrCodeType.value = await CodeType_GetArrCodeTypeByProgLangTypeId(strProgLangTypeId_Static); //查询区域
         funcCodeTypeId_q.value = '0';
 
-        arrProgLangType.value = await ProgLangType_GetArrProgLangTypeByIsVisible(); //查询区域
+        arrProgLangType.value = await ProgLangType_GetArrProgLangTypeByIsVisible(true); //查询区域
         progLangTypeId_q.value = strProgLangTypeId_Static;
 
         arrFunctionType.value = await FunctionType_GetArrFunctionType(); //查询区域

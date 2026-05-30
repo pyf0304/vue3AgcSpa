@@ -1,8 +1,8 @@
 ﻿/**
  * 类名:clsViewTabTypeEN
  * 表名:ViewTabType(00050103)
- * 版本:2026.04.19(服务器:WIN-SRV103-116)
- * 日期:2026/04/29 01:25:29
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/27 15:56:50
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
@@ -18,6 +18,13 @@
  **/
 import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
+/**
+ * 界面表类型主键类型定义
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_KeyType)
+ **/
+export type ViewTabTypeKey = {
+  viewTabTypeId: string;
+};
 export class clsViewTabTypeEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
   public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件

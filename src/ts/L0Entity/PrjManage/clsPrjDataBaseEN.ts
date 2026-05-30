@@ -1,8 +1,8 @@
 ﻿/**
  * 类名:clsPrjDataBaseEN
  * 表名:PrjDataBase(00050176)
- * 版本:2026.04.19(服务器:WIN-SRV103-116)
- * 日期:2026/04/28 23:40:02
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/27 16:46:28
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
@@ -18,6 +18,13 @@
  **/
 import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
+/**
+ * 数据库对象主键类型定义
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_KeyType)
+ **/
+export type PrjDataBaseKey = {
+  prjDataBaseId: string;
+};
 export class clsPrjDataBaseEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
   public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件

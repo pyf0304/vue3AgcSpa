@@ -35,7 +35,10 @@ import {
   myShowErrorMsg,
 } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsFunction4GeneCodeENEx } from '@/ts/L0Entity/PrjFunction/clsFunction4GeneCodeENEx';
-import { clsFunction4GeneCodeEN } from '@/ts/L0Entity/PrjFunction/clsFunction4GeneCodeEN';
+import {
+  clsFunction4GeneCodeEN,
+  Function4GeneCodeKey,
+} from '@/ts/L0Entity/PrjFunction/clsFunction4GeneCodeEN';
 import { vCodeType_Sim_func } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
 import { clsvCodeType_SimEN } from '@/ts/L0Entity/GeneCode/clsvCodeType_SimEN';
 import { vFunction4Code_Sim_func } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4Code_SimWApi';
@@ -64,22 +67,22 @@ export const function4GeneCode_ConstructorName = 'function4GeneCode';
  * @param strFuncId4GC:关键字
  * @returns 对象
  **/
-export async function Function4GeneCode_GetObjByFuncId4GCAsync(
-  strFuncId4GC: string,
+export async function Function4GeneCode_GetObjByKeyAsync(
+  key: Function4GeneCodeKey,
 ): Promise<clsFunction4GeneCodeEN | null> {
   const strThisFuncName = 'GetObjByFuncId4GCAsync';
 
-  if (IsNullOrEmpty(strFuncId4GC) == true) {
+  if (IsNullOrEmpty(key.funcId4GC) == true) {
     const strMsg = Format(
       '参数:[strFuncId4GC]不能为空!(In clsFunction4GeneCodeWApi.GetObjByFuncId4GCAsync)',
     );
     console.error(strMsg);
     throw strMsg;
   }
-  if (strFuncId4GC.length != 10) {
+  if (key.funcId4GC.length != 10) {
     const strMsg = Format(
       '缓存分类变量:[strFuncId4GC]的长度:[{0}]不正确!(clsFunction4GeneCodeWApi.GetObjByFuncId4GCAsync)',
-      strFuncId4GC.length,
+      key.funcId4GC.length,
     );
     console.error(strMsg);
     throw strMsg;
@@ -94,7 +97,7 @@ export async function Function4GeneCode_GetObjByFuncId4GCAsync(
       Authorization: `${token}`,
     },
     params: {
-      strFuncId4GC,
+      strFuncId4GC: key.funcId4GC,
     },
   };
   try {
@@ -1431,7 +1434,7 @@ export function Function4GeneCode_FuncMapByFldName(
   strFldName = strFldName.replace('|Ex', '');
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsFunction4GeneCodeEN.AttributeName;
+  const arrFldName = clsFunction4GeneCodeEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -2432,7 +2435,7 @@ export async function Function4GeneCode_IsExistRecordAsync(strWhereCond: string)
  * @param strFuncId4GC:关键字
  * @returns 是否存在?存在返回True
  **/
-export async function Function4GeneCode_IsExistAsync(strFuncId4GC: string): Promise<boolean> {
+export async function Function4GeneCode_IsExistAsync(key: Function4GeneCodeKey): Promise<boolean> {
   const strThisFuncName = 'IsExistAsync';
   //检测记录是否存在
   const strAction = 'IsExist';
@@ -2445,7 +2448,7 @@ export async function Function4GeneCode_IsExistAsync(strFuncId4GC: string): Prom
       Authorization: `${token}`,
     },
     params: {
-      strFuncId4GC,
+      strFuncId4GC: key.funcId4GC,
     },
   };
   try {

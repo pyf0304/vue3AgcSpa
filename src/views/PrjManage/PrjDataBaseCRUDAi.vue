@@ -11,7 +11,79 @@
         style="width: 900px"
         class="table table-bordered table-hover table td table-sm"
       >
-        <tbody> </tbody>
+        <tbody>
+          <tr>
+            <template v-for="field in queryRow1" :key="field.key">
+              <td class="text-right">
+                <label class="col-form-label text-right" style="width: 90px">
+                  {{ field.label }}
+                </label>
+              </td>
+              <td class="text-left">
+                <input
+                  v-if="field.controlType === 'text'"
+                  :id="field.id"
+                  class="form-control form-control-sm"
+                  :style="{ width: field.width + 'px' }"
+                  :value="getQueryValue(field.key)"
+                  @input="setQueryValue(field.key, ($event.target as HTMLInputElement).value)"
+                />
+                <select
+                  v-else
+                  :id="field.id"
+                  class="form-control form-control-sm"
+                  :style="{ width: field.width + 'px' }"
+                  :value="getQueryValue(field.key)"
+                  @change="setQueryValue(field.key, ($event.target as HTMLSelectElement).value)"
+                >
+                  <option
+                    v-for="(item, index) in getSelectOptions(field.optionsKey)"
+                    :key="index"
+                    :value="getSelectValue(item, field.optionsKey)"
+                  >
+                    {{ getSelectText(item, field.optionsKey) }}
+                  </option>
+                </select>
+              </td>
+            </template>
+          </tr>
+          <tr>
+            <template v-for="field in queryRow2" :key="field.key">
+              <td class="text-right">
+                <label class="col-form-label text-right" style="width: 90px">
+                  {{ field.label }}
+                </label>
+              </td>
+              <td class="text-left">
+                <select
+                  :id="field.id"
+                  class="form-control form-control-sm"
+                  :style="{ width: field.width + 'px' }"
+                  :value="getQueryValue(field.key)"
+                  @change="setQueryValue(field.key, ($event.target as HTMLSelectElement).value)"
+                >
+                  <option
+                    v-for="(item, index) in getSelectOptions(field.optionsKey)"
+                    :key="index"
+                    :value="getSelectValue(item, field.optionsKey)"
+                  >
+                    {{ getSelectText(item, field.optionsKey) }}
+                  </option>
+                </select>
+              </td>
+            </template>
+            <td v-for="cmd in queryCommands" :key="cmd.id" class="text-left">
+              <button
+                :id="cmd.elementId"
+                type="button"
+                :class="cmd.btnClass"
+                @click="runCommand(cmd.id)"
+              >
+                {{ cmd.text }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
 
@@ -23,21 +95,41 @@
           >
         </li>
         <li v-for="cmd in featureCommands" :key="cmd.id" class="nav-item ml-3">
-          <div v-if="cmd.needAuxControl" class="btn-group" role="group" aria-label="Basic example">
-            <select
-              id="ddlUseStateId_SetFldValue"
-              v-model="useStateId_f"
-              class="form-control form-control-sm"
-              style="width: 60px"
-            >
-              <option v-for="(item, index) in arrUseState" :key="index" :value="item.useStateId">{{
-                item.useStateName
-              }}</option>
-            </select>
-            <button :id="cmd.elementId" :class="cmd.btnClass" @click="runCommand(cmd.id)">{{
-              cmd.text
-            }}</button>
-          </div>
+          <template v-if="cmd.needAuxControl">
+            <div class="btn-group" role="group" :aria-label="cmd.text">
+              <select
+                v-if="cmd.auxControlType === 'select4Bool'"
+                :id="cmd.auxControlId"
+                class="form-control form-control-sm"
+                style="width: 100px"
+                :value="auxControlValues[cmd.id]"
+                @change="updateAuxControlValue(cmd.id, ($event.target as HTMLSelectElement).value)"
+              >
+                <option value="0">选择是/否</option>
+                <option value="true">是</option>
+                <option value="false">否</option>
+              </select>
+              <select
+                v-else
+                :id="cmd.auxControlId"
+                class="form-control form-control-sm"
+                style="width: 150px"
+                :value="auxControlValues[cmd.id]"
+                @change="updateAuxControlValue(cmd.id, ($event.target as HTMLSelectElement).value)"
+              >
+                <option
+                  v-for="(item, index) in getSelectOptions(cmd.auxControlOptionsKey)"
+                  :key="index"
+                  :value="getSelectValue(item, cmd.auxControlOptionsKey)"
+                >
+                  {{ getSelectText(item, cmd.auxControlOptionsKey) }}
+                </option>
+              </select>
+              <button :id="cmd.elementId" :class="cmd.btnClass" @click="runCommand(cmd.id)">
+                {{ cmd.text }}
+              </button>
+            </div>
+          </template>
           <button v-else :id="cmd.elementId" :class="cmd.btnClass" @click="runCommand(cmd.id)">
             {{ cmd.text }}
           </button>
@@ -60,7 +152,7 @@
     </div>
 
     <PrjDataBase_EditCom ref="refPrjDataBase_Edit" />
-    <PrjDataBase_DetailCom ref="refPrjDataBase_Detail" />
+    <PrjDataBase_DetailCom ref="refPrjDataBase_DetailAi" />
   </div>
 </template>
 
@@ -68,17 +160,16 @@
   import 'jquery/dist/jquery.min.js';
   import 'bootstrap/dist/js/bootstrap.min.js';
   import 'bootstrap/dist/css/bootstrap.css';
-  import { defineComponent, onMounted, ref } from 'vue';
+  import { defineComponent, onMounted, ref, reactive } from 'vue';
   import * as XLSX from 'xlsx';
   import router from '@/router';
   import {
-    divVarSet,
     refDivLayout,
     refDivQuery,
     refDivFunction,
     refDivList,
     refPrjDataBase_Edit,
-    refPrjDataBase_Detail,
+    refPrjDataBase_DetailAi,
     refPrjDataBase_List,
     showErrorMessage,
     dataListPrjDataBase,
@@ -91,20 +182,23 @@
     useStateId_q,
     useStateId_f,
   } from '@/views/PrjManage/PrjDataBaseVueShare';
-  import PrjDataBase_EditCom from '@/views/PrjManage/PrjDataBase_Edit.vue';
-  import PrjDataBase_DetailCom from '@/views/PrjManage/PrjDataBase_Detail.vue';
+
+  import PrjDataBase_EditCom from '@/views/PrjManage/PrjDataBase_EditAi.vue';
+
+  import PrjDataBase_DetailCom from '@/views/PrjManage/PrjDataBase_DetailAi.vue';
   import PrjDataBase_ListCom from '@/views/PrjManage/PrjDataBase_ListAi.vue';
   import { clsDataBaseTypeEN } from '@/ts/L0Entity/SysPara/clsDataBaseTypeEN';
   import { clsUseStateEN } from '@/ts/L0Entity/SysPara/clsUseStateEN';
   import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
-  import PrjDataBaseCRUDExAi from '@/views/PrjManage/PrjDataBaseCRUDExAi';
+  import PrjDataBaseCRUDAiEx from '@/views/PrjManage/PrjDataBaseCRUDAiEx';
+  import { PrjDataBaseKey } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
   import {
-    getQueryRowsAi3,
-    initQueryDefaultsAi3,
-    loadFeatureOptionsAi3,
-    loadQueryOptionsAi3,
-    PrjDataBaseQueryFieldSpecAi3,
-  } from '@/viewsBase/PrjManage/PrjDataBaseCRUDAi3Query';
+    getQueryRowsAi,
+    initQueryDefaultsAi,
+    loadFeatureOptionsAi,
+    loadQueryOptionsAi,
+    PrjDataBaseQueryFieldSpecAi,
+  } from '@/viewsBase/PrjManage/PrjDataBaseCRUDAiQuery';
   import {
     getFeatureCommandsAi,
     getQueryCommandsAi,
@@ -116,23 +210,29 @@
     name: 'PrjDataBaseCRUDAi',
     components: {
       PrjDataBase_EditCom,
+
       PrjDataBase_DetailCom,
       PrjDataBase_ListCom,
     },
+
     setup() {
-      const strTitle = ref('数据库对象维护(Ai4版-命令Schema)');
-      const objPage = ref<PrjDataBaseCRUDExAi>();
+      /*__VIEW_VARIABLES_INIT_CODE__*/
+
+      const strTitle = ref('数据库对象维护(Ai版-命令Schema)');
+      const objPage = ref<PrjDataBaseCRUDAiEx>();
       const arrDataBaseType = ref<clsDataBaseTypeEN[] | null>([]);
       const arrUseState = ref<clsUseStateEN[] | null>([]);
 
-      const { row1, row2 } = getQueryRowsAi3();
-      const queryRow1 = ref<Array<PrjDataBaseQueryFieldSpecAi3>>(row1);
-      const queryRow2 = ref<Array<PrjDataBaseQueryFieldSpecAi3>>(row2);
+      const { row1, row2 } = getQueryRowsAi();
+      const queryRow1 = ref<Array<PrjDataBaseQueryFieldSpecAi>>(row1);
+      const queryRow2 = ref<Array<PrjDataBaseQueryFieldSpecAi>>(row2);
 
       const queryCommands = ref<Array<PrjDataBaseCommandSpecAi>>(getQueryCommandsAi());
       const featureCommands = ref<Array<PrjDataBaseCommandSpecAi>>(getFeatureCommandsAi());
 
-      const ensurePage = (): PrjDataBaseCRUDExAi | null => {
+      const auxControlValues = reactive<Record<string, string>>({});
+
+      const ensurePage = (): PrjDataBaseCRUDAiEx | null => {
         if (objPage.value == null) {
           alert('页面初始化不成功,请联系管理员!');
           return null;
@@ -140,7 +240,7 @@
         return objPage.value;
       };
 
-      const getQueryValue = (key: PrjDataBaseQueryFieldSpecAi3['key']): string => {
+      const getQueryValue = (key: PrjDataBaseQueryFieldSpecAi['key']): string => {
         switch (key) {
           case 'databaseOwner_q':
             return databaseOwner_q.value;
@@ -157,7 +257,7 @@
         }
       };
 
-      const setQueryValue = (key: PrjDataBaseQueryFieldSpecAi3['key'], value: string) => {
+      const setQueryValue = (key: PrjDataBaseQueryFieldSpecAi['key'], value: string) => {
         switch (key) {
           case 'databaseOwner_q':
             databaseOwner_q.value = value;
@@ -179,22 +279,50 @@
         }
       };
 
-      const getSelectOptions = (optionsKey?: 'dataBaseType' | 'useState') => {
-        if (optionsKey === 'dataBaseType') return arrDataBaseType.value ?? [];
-        if (optionsKey === 'useState') return arrUseState.value ?? [];
-        return [];
+      const getSelectOptions = (optionsKey?: 'dataBaseType' | 'useState' | string) => {
+        switch (optionsKey) {
+          case 'dataBaseType':
+            return arrDataBaseType.value ?? [];
+          case 'useState':
+            return arrUseState.value ?? [];
+          default:
+            return [];
+        }
       };
 
-      const getSelectValue = (item: any, optionsKey?: 'dataBaseType' | 'useState') => {
-        if (optionsKey === 'dataBaseType') return item.dataBaseTypeId;
-        if (optionsKey === 'useState') return item.useStateId;
-        return '';
+      const getSelectValue = (item: any, optionsKey?: 'dataBaseType' | 'useState' | string) => {
+        switch (optionsKey) {
+          case 'dataBaseType':
+            return item.dataBaseTypeId;
+          case 'useState':
+            return item.useStateId;
+          default:
+            return '';
+        }
       };
 
-      const getSelectText = (item: any, optionsKey?: 'dataBaseType' | 'useState') => {
-        if (optionsKey === 'dataBaseType') return item.dataBaseTypeName;
-        if (optionsKey === 'useState') return item.useStateName;
-        return '';
+      const getSelectText = (item: any, optionsKey?: 'dataBaseType' | 'useState' | string) => {
+        switch (optionsKey) {
+          case 'dataBaseType':
+            return item.dataBaseTypeName;
+          case 'useState':
+            return item.useStateName;
+          default:
+            return '';
+        }
+      };
+
+      const updateAuxControlValue = (commandId: PrjDataBaseCommandIdAi, value: string) => {
+        auxControlValues[commandId] = value;
+
+        const command = featureCommands.value.find((x) => x.id === commandId);
+        if (command && command.fieldNameCamel) {
+          switch (command.fieldNameCamel) {
+            case 'useStateId_f':
+              useStateId_f.value = value;
+              break;
+          }
+        }
       };
 
       const exportToExcel = (
@@ -238,12 +366,12 @@
         }
       }
 
-      function btn_Click(strCommandName: string, strKeyId: string) {
-        PrjDataBaseCRUDExAi.btn_Click(strCommandName, strKeyId);
+      function btn_Click(strCommandName: string, key: PrjDataBaseKey | null) {
+        PrjDataBaseCRUDAiEx.btn_Click(strCommandName, key);
       }
 
       onMounted(async () => {
-        initQueryDefaultsAi3({
+        initQueryDefaultsAi({
           databaseOwner_q,
           dataBaseTypeId_q,
           dataBaseUserId_q,
@@ -251,17 +379,23 @@
           useStateId_q,
         });
 
-        const queryOptions = await loadQueryOptionsAi3();
+        const queryOptions = await loadQueryOptionsAi();
         arrDataBaseType.value = queryOptions.arrDataBaseType;
         arrUseState.value = queryOptions.arrUseState;
 
-        const featureOptions = await loadFeatureOptionsAi3();
-        arrUseState.value = featureOptions.arrUseState;
+        const featureOptions = await loadFeatureOptionsAi();
+        console.log('featureOptions:', featureOptions);
         useStateId_f.value = '0';
 
-        PrjDataBaseCRUDExAi.vuebtn_Click = btn_Click;
-        PrjDataBaseCRUDExAi.GetPropValue = GetPropValue;
-        objPage.value = new PrjDataBaseCRUDExAi();
+        featureCommands.value.forEach((cmd) => {
+          if (cmd.needAuxControl) {
+            auxControlValues[cmd.id] = '0';
+          }
+        });
+
+        PrjDataBaseCRUDAiEx.vuebtn_Click = btn_Click;
+        PrjDataBaseCRUDAiEx.GetPropValue = GetPropValue;
+        objPage.value = new PrjDataBaseCRUDAiEx();
         await objPage.value.PageLoadCache();
       });
 
@@ -277,34 +411,33 @@
       };
 
       return {
-        showErrorMessage,
-        dataListPrjDataBase,
-        emptyRecNumInfo,
-        dataColumn,
         strTitle,
-        ...divVarSet,
         refDivLayout,
         refDivQuery,
         refDivFunction,
         refDivList,
         refPrjDataBase_Edit,
-        refPrjDataBase_Detail,
+
+        refPrjDataBase_DetailAi,
         refPrjDataBase_List,
-        useStateId_f,
-        arrDataBaseType,
-        arrUseState,
+        showErrorMessage,
+        dataListPrjDataBase,
+        emptyRecNumInfo,
+        dataColumn,
         queryRow1,
         queryRow2,
         queryCommands,
         featureCommands,
+        auxControlValues,
         getQueryValue,
         setQueryValue,
         getSelectOptions,
         getSelectValue,
         getSelectText,
+        updateAuxControlValue,
         runCommand,
-        SortColumn,
         EditTabRelaInfo,
+        SortColumn,
       };
     },
   });

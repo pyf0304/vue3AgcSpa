@@ -12,8 +12,8 @@ import { enumCodeType } from '@/ts/L0Entity/GeneCode/clsCodeTypeEN';
 import { enumRegionType } from '@/ts/L0Entity/RegionManage/clsRegionTypeEN';
 import { AutoGeneCode_GeneCodeAsync } from '@/ts/L3ForWApiEx/GeneCode/AutoGeneCodeWApi';
 import {
-  ApplicationType_GetNameByApplicationTypeIdCache,
-  ApplicationType_GetObjByApplicationTypeIdCache,
+  ApplicationType_GetNameByKeyCache,
+  ApplicationType_GetObjByKeyCache,
 } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 
 import {
@@ -227,18 +227,18 @@ export class GeneViewCodeEx implements IShowList {
       alert(strMsg);
       return;
     }
-    const applicationTypeName = await ApplicationType_GetNameByApplicationTypeIdCache(
-      objViewInfo.applicationTypeId,
-    );
+    const applicationTypeName = await ApplicationType_GetNameByKeyCache({
+      applicationTypeId: objViewInfo.applicationTypeId,
+    });
     viewInfo4GC.value = `界面名称:${objViewInfo.viewName}(${objViewInfo.viewId}),类型:${applicationTypeName}`;
     // const intViewTypeCode = objViewInfo.viewTypeCode;
     const arrViewRegion = await ViewRegionEx_GetObjLstByViewIdCache(
       strViewId,
       clsPrivateSessionStorage.cmPrjId,
     );
-    const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-      objViewInfo.applicationTypeId,
-    );
+    const objApplicationType = await ApplicationType_GetObjByKeyCache({
+      applicationTypeId: objViewInfo.applicationTypeId,
+    });
     if (objApplicationType == null) {
       const strMsg = Format(
         '应用Id:[{0}]，没有相应的类型，请检查！',

@@ -1,27 +1,26 @@
 ﻿/**
  * 类名:PrjDataBase_EditAi(界面:PrjDataBaseCRUD,00050346)
  * 表名:PrjDataBase
- * 版本:2026.04.24
+ * 版本:2026.05.27
  * 生成者:
  * 模块中文名:PrjManage
  * 编程语言:TypeScript
  **/
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
+
 import {
   PrjDataBase_GetMaxStrIdAsync,
-  PrjDataBase_CheckPropertyNew,
   PrjDataBase_AddNewRecordWithMaxIdAsync,
+  PrjDataBase_CheckPropertyNew,
   PrjDataBase_ReFreshCache,
-  PrjDataBase_GetUniCondStr,
-  PrjDataBase_IsExistRecordAsync,
-  PrjDataBase_GetUniCondStr4Update,
   PrjDataBase_IsExistAsync,
-  PrjDataBase_GetObjByPrjDataBaseIdAsync,
+  PrjDataBase_GetObjByKeyAsync,
   PrjDataBase_CheckProperty4Update,
   PrjDataBase_UpdateRecordAsync,
   PrjDataBase_EditRecordExAsync,
 } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
-import { clsPrjDataBaseEN } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
+
+import { clsPrjDataBaseEN, PrjDataBaseKey } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
 import {
   PrjDataBase_DeleteKeyIdCache,
   divVarSet,
@@ -31,7 +30,7 @@ import { IShowList } from '@/ts/PubFun/IShowList';
 import { enumPageDispMode } from '@/ts/PubFun/enumPageDispMode';
 
 /** PrjDataBase_EditAi 的摘要说明。其中Q代表查询,U代表修改
- * (AutoGCLib.Vue_ViewScript_EditCS_TS4TypeScript:GeneCode)
+ * (AutoGCLib.Vue_ViewScript_EditAi_TS4TypeScript:GeneCode)
  **/
 export abstract class PrjDataBase_EditAi {
   protected _className = 'Unknown';
@@ -42,7 +41,8 @@ export abstract class PrjDataBase_EditAi {
 
   public static times4TestShowDialog = 0;
   public opType = '';
-  public keyId = '';
+  // 🔥 单关键字段
+  public keyId = { prjDataBaseId: '' }; // 🔥 字符串型关键字
   public isShowMsg = true;
   public tag = '';
   public static strPageDispModeId = '01';
@@ -121,9 +121,9 @@ export abstract class PrjDataBase_EditAi {
   }
 
   /** 在数据表里修改记录 */
-  public async btnUpdateRecordInTab_Click(strPrjDataBaseId: string) {
+  public async btnUpdateRecordInTab_Click(key: PrjDataBaseKey) {
     const strThisFuncName = this.btnUpdateRecordInTab_Click.name;
-    if (IsNullOrEmpty(strPrjDataBaseId) == true) {
+    if (IsNullOrEmpty(key.prjDataBaseId) == true) {
       alert('请选择需要修改的记录!');
       return;
     }
@@ -131,7 +131,14 @@ export abstract class PrjDataBase_EditAi {
       this.opType = 'Update';
       const bolIsSuccess = await this.ShowDialog_PrjDataBase(this.opType);
       if (bolIsSuccess == false) return;
-      await this.UpdateRecord(strPrjDataBaseId);
+      this.bolIsLoadEditRegion = true;
+      const update = await this.UpdateRecord(key);
+      if (update == false) {
+        const strMsg = Format('在修改记录时,显示记录数据不成功!');
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
     } catch (e) {
       const strMsg = Format(
         '(errid: WiTsCs0034)在修改记录时出错!请联系管理员!{0}.(in {1}.{2})',
@@ -145,9 +152,9 @@ export abstract class PrjDataBase_EditAi {
   }
 
   /** 修改记录 */
-  public async btnUpdateRecord_Click(strPrjDataBaseId: string) {
+  public async btnUpdateRecord_Click(key: PrjDataBaseKey) {
     const strThisFuncName = this.btnUpdateRecord_Click.name;
-    if (IsNullOrEmpty(strPrjDataBaseId) == true) {
+    if (IsNullOrEmpty(key.prjDataBaseId) == true) {
       const strMsg = '修改记录的关键字为空,请检查!';
       console.error(strMsg);
       alert(strMsg);
@@ -158,7 +165,7 @@ export abstract class PrjDataBase_EditAi {
       const bolIsSuccess = await this.ShowDialog_PrjDataBase(this.opType);
       if (bolIsSuccess == false) return;
       this.bolIsLoadEditRegion = true;
-      const update = await this.UpdateRecord(strPrjDataBaseId);
+      const update = await this.UpdateRecord(key);
       if (update == false) {
         const strMsg = Format('在修改记录时,显示记录数据不成功!');
         console.error(strMsg);
@@ -193,23 +200,13 @@ export abstract class PrjDataBase_EditAi {
           await this.AddNewRecord();
           break;
         case '确认添加':
-          if (['02', '03', '06'].indexOf(clsPrjDataBaseEN._PrimaryTypeId) > -1) {
-            returnKeyId = await this.AddNewRecordWithMaxIdSave();
-            if (IsNullOrEmpty(returnKeyId) == false) {
-              if (PrjDataBase_EditAi.strPageDispModeId == enumPageDispMode.PopupBox_01)
-                this.HideDialog_PrjDataBase();
-              if (this.iShowList != null)
-                this.iShowList.BindGvCache(clsPrjDataBaseEN._CurrTabName, returnKeyId);
-            }
-          } else {
-            returnBool = await this.AddNewRecordSave();
-            if (returnBool == true) {
-              if (PrjDataBase_EditAi.strPageDispModeId == enumPageDispMode.PopupBox_01) {
-                refPrjDataBase_Edit.value.hideDialog();
-              }
-              if (this.iShowList != null)
-                this.iShowList.BindGvCache(clsPrjDataBaseEN._CurrTabName, this.keyId);
-            }
+          // 🔥 单关键字段 + 需要返回值（Identity 或自增类型）
+          returnKeyId = await this.AddNewRecordWithReturnKeySave();
+          if (IsNullOrEmpty(returnKeyId) == false) {
+            if (PrjDataBase_EditAi.strPageDispModeId == enumPageDispMode.PopupBox_01)
+              refPrjDataBase_Edit.value.hideDialog();
+            if (this.iShowList != null)
+              this.iShowList.BindGvCache(clsPrjDataBaseEN._CurrTabName, returnKeyId);
           }
           break;
         case '确认修改':
@@ -222,7 +219,7 @@ export abstract class PrjDataBase_EditAi {
               refPrjDataBase_Edit.value.hideDialog();
             }
             if (this.iShowList != null)
-              this.iShowList.BindGvCache(clsPrjDataBaseEN._CurrTabName, this.keyId);
+              this.iShowList.BindGvCache(clsPrjDataBaseEN._CurrTabName, this.keyId.prjDataBaseId);
           }
           break;
         default:
@@ -265,7 +262,8 @@ export abstract class PrjDataBase_EditAi {
         const strInfo = Format('获取表PrjDataBase的最大关键字为空,不成功,请检查!');
         alert(strInfo);
       } else {
-        this.keyId = returnString;
+        // 🔥 单关键字段：构造对象
+        this.keyId = { prjDataBaseId: returnString };
       }
     } catch (e) {
       const strMsg = Format(
@@ -289,7 +287,8 @@ export abstract class PrjDataBase_EditAi {
         const strInfo = Format('获取表PrjDataBase的最大关键字为空,不成功,请检查!');
         alert(strInfo);
       } else {
-        this.keyId = returnString;
+        // 🔥 单关键字段：构造对象
+        this.keyId = { prjDataBaseId: returnString };
       }
     } catch (e) {
       const strMsg = Format(
@@ -303,7 +302,9 @@ export abstract class PrjDataBase_EditAi {
     }
   }
 
-  /** 添加新记录,保存函数 */
+  /** 添加新记录,保存函数
+   * (AutoGCLib.Vue_ViewScript_EditAi_TS4TypeScript:Gen_Vue_Ts_AddNewRecordSave)
+   **/
   public async AddNewRecordSave(): Promise<boolean> {
     const strThisFuncName = this.AddNewRecordSave.name;
     let objPrjDataBaseEN;
@@ -334,14 +335,12 @@ export abstract class PrjDataBase_EditAi {
       return false;
     }
     try {
-      const bolIsExistCond = await this.CheckUniCond4Add(objPrjDataBaseEN);
-      if (bolIsExistCond == false) {
-        return false;
-      }
       let returnBool = false;
+      // StringAutoAddPrimaryKey_03: 字符串自增，需要获取返回的 KeyId
       const returnKeyId = await PrjDataBase_AddNewRecordWithMaxIdAsync(objPrjDataBaseEN);
       if (IsNullOrEmpty(returnKeyId) == false) {
-        this.keyId = returnKeyId;
+        // 🔥 赋值为对象格式
+        this.keyId = { prjDataBaseId: returnKeyId };
         returnBool = true;
       }
       if (returnBool == true) {
@@ -366,39 +365,68 @@ export abstract class PrjDataBase_EditAi {
     }
   }
 
-  /** 为添加记录检查唯一性条件 */
-  public async CheckUniCond4Add(objPrjDataBaseEN: clsPrjDataBaseEN): Promise<boolean> {
-    const strUniquenessCondition = PrjDataBase_GetUniCondStr(objPrjDataBaseEN);
-    const bolIsExistCondition = await PrjDataBase_IsExistRecordAsync(strUniquenessCondition);
-    if (bolIsExistCondition == true) {
+  /** 添加新记录,由后台自动获取最大值的关键字。保存函数
+   * (AutoGCLib.Vue_ViewScript_EditAi_TS4TypeScript:Gen_Vue_Ts_AddNewRecordWithReturnKeySave)
+   **/
+  public async AddNewRecordWithReturnKeySave(): Promise<string> {
+    const strThisFuncName = this.AddNewRecordWithReturnKeySave.name;
+    let objPrjDataBaseEN;
+    try {
+      objPrjDataBaseEN = await refPrjDataBase_Edit.value.GetEditDataPrjDataBaseObj();
+    } catch (e) {
       const strMsg = Format(
-        '不能满足唯一性条件。满足条件：{0}的记录已经存在!',
-        strUniquenessCondition,
+        '从界面获取数据不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
       );
       console.error(strMsg);
       alert(strMsg);
-      return false;
+      return '';
     }
-    return true;
-  }
-
-  /** 为修改记录检查唯一性条件 */
-  public async CheckUniCond4Update(objPrjDataBaseEN: clsPrjDataBaseEN): Promise<boolean> {
-    const strUniquenessCondition = PrjDataBase_GetUniCondStr4Update(objPrjDataBaseEN);
-    const bolIsExistCondition = await PrjDataBase_IsExistRecordAsync(strUniquenessCondition);
-    if (bolIsExistCondition == true) {
+    try {
+      PrjDataBase_CheckPropertyNew(objPrjDataBaseEN);
+    } catch (e) {
       const strMsg = Format(
-        '不能满足唯一性条件。满足条件：{0}的记录已经存在!',
-        strUniquenessCondition,
+        '检查数据不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
       );
       console.error(strMsg);
       alert(strMsg);
-      return false;
+      return '';
     }
-    return true;
+    try {
+      const responseKeyId = await PrjDataBase_AddNewRecordWithMaxIdAsync(objPrjDataBaseEN);
+      const returnKeyId: string = responseKeyId;
+      if (IsNullOrEmpty(returnKeyId) == false) {
+        PrjDataBase_ReFreshCache();
+        const strInfo = `添加[数据库对象(PrjDataBase)]记录成功!`;
+        //显示信息框
+        if (this.isShowMsg == true) alert(strInfo);
+      } else {
+        const strInfo = `添加[数据库对象(PrjDataBase)]记录不成功!`;
+        //显示信息框
+        alert(strInfo);
+      }
+      return responseKeyId;
+    } catch (e) {
+      const strMsg = Format(
+        '添加记录不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+      return '';
+    }
   }
 
-  /** 添加新记录,由后台自动获取最大值的关键字。保存函数 */
+  /** 添加新记录,由后台自动获取最大值的关键字。保存函数
+   * (AutoGCLib.Vue_ViewScript_EditAi_TS4TypeScript:Gen_Vue_Ts_AddNewRecordWithMaxIdSave)
+   **/
   public async AddNewRecordWithMaxIdSave(): Promise<string> {
     const strThisFuncName = this.AddNewRecordWithMaxIdSave.name;
     let objPrjDataBaseEN;
@@ -429,10 +457,6 @@ export abstract class PrjDataBase_EditAi {
       throw strMsg;
     }
     try {
-      const bolIsExistCond = await this.CheckUniCond4Add(objPrjDataBaseEN);
-      if (bolIsExistCond == false) {
-        return '';
-      }
       const responseKeyId = await PrjDataBase_AddNewRecordWithMaxIdAsync(objPrjDataBaseEN);
       const returnKeyId: string = responseKeyId;
       if (IsNullOrEmpty(returnKeyId) == false) {
@@ -458,13 +482,13 @@ export abstract class PrjDataBase_EditAi {
   }
 
   /** 显示指定记录的数据 */
-  public async ShowData(strPrjDataBaseId: string) {
+  public async ShowData(key: PrjDataBaseKey) {
     const strThisFuncName = this.ShowData.name;
     let objPrjDataBaseEN = new clsPrjDataBaseEN();
     try {
-      const returnBool = await PrjDataBase_IsExistAsync(strPrjDataBaseId);
+      const returnBool = await PrjDataBase_IsExistAsync(key);
       if (returnBool == false) {
-        const strInfo = Format('关键字:[{0}] 的记录不存在!', strPrjDataBaseId);
+        const strInfo = Format('关键字:[{0}] 的记录不存在!', key.prjDataBaseId);
         alert(strInfo);
         return;
       }
@@ -479,7 +503,7 @@ export abstract class PrjDataBase_EditAi {
       alert(strMsg);
     }
     try {
-      const objPrjDataBaseENConst = await PrjDataBase_GetObjByPrjDataBaseIdAsync(strPrjDataBaseId);
+      const objPrjDataBaseENConst = await PrjDataBase_GetObjByKeyAsync(key);
       if (objPrjDataBaseENConst == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -505,11 +529,11 @@ export abstract class PrjDataBase_EditAi {
   }
 
   /** 修改记录（显示数据） */
-  public async UpdateRecord(strPrjDataBaseId: string): Promise<boolean> {
+  public async UpdateRecord(key: PrjDataBaseKey): Promise<boolean> {
     const strThisFuncName = this.UpdateRecord.name;
-    this.keyId = strPrjDataBaseId;
+    this.keyId = key;
     try {
-      const objPrjDataBaseEN = await PrjDataBase_GetObjByPrjDataBaseIdAsync(strPrjDataBaseId);
+      const objPrjDataBaseEN = await PrjDataBase_GetObjByKeyAsync(key);
       if (objPrjDataBaseEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -539,7 +563,8 @@ export abstract class PrjDataBase_EditAi {
   public async UpdateRecordSave(): Promise<boolean> {
     const strThisFuncName = this.UpdateRecordSave.name;
     const objPrjDataBaseEN = await refPrjDataBase_Edit.value.GetEditDataPrjDataBaseObj();
-    objPrjDataBaseEN.SetPrjDataBaseId(this.keyId);
+    // 🔥 单关键字段：直接使用
+    objPrjDataBaseEN.SetPrjDataBaseId(this.keyId.prjDataBaseId);
     objPrjDataBaseEN.sfUpdFldSetStr = objPrjDataBaseEN.updFldString;
     if (objPrjDataBaseEN.prjDataBaseId == '' || objPrjDataBaseEN.prjDataBaseId == undefined) {
       console.error('关键字不能为空!');
@@ -559,10 +584,6 @@ export abstract class PrjDataBase_EditAi {
       return false;
     }
     try {
-      const bolIsExistCond = await this.CheckUniCond4Update(objPrjDataBaseEN);
-      if (bolIsExistCond == false) {
-        return false;
-      }
       const returnBool = await PrjDataBase_UpdateRecordAsync(objPrjDataBaseEN);
       if (returnBool == true) {
         PrjDataBase_ReFreshCache();
@@ -586,7 +607,9 @@ export abstract class PrjDataBase_EditAi {
   public async EditRecordExSave(): Promise<boolean> {
     const strThisFuncName = this.EditRecordExSave.name;
     const objPrjDataBaseEN = await refPrjDataBase_Edit.value.GetEditDataPrjDataBaseObj();
-    objPrjDataBaseEN.SetPrjDataBaseId(this.keyId);
+
+    // 🔥 单关键字段：直接使用
+    objPrjDataBaseEN.SetPrjDataBaseId(this.keyId.prjDataBaseId);
     objPrjDataBaseEN.sfUpdFldSetStr = objPrjDataBaseEN.updFldString;
     if (objPrjDataBaseEN.prjDataBaseId == '' || objPrjDataBaseEN.prjDataBaseId == undefined) {
       console.error('关键字不能为空!');
@@ -606,10 +629,6 @@ export abstract class PrjDataBase_EditAi {
       return false;
     }
     try {
-      const bolIsExistCond = await this.CheckUniCond4Update(objPrjDataBaseEN);
-      if (bolIsExistCond == false) {
-        return false;
-      }
       const returnBool = await PrjDataBase_EditRecordExAsync(objPrjDataBaseEN);
       if (returnBool == true) {
         PrjDataBase_ReFreshCache();

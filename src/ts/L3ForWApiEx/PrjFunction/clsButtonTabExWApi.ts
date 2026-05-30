@@ -10,7 +10,7 @@ import { clsFeatureRegionFldsEN } from '@/ts/L0Entity/RegionManage/clsFeatureReg
 import { clsFeatureRegionFldsENEx4GC } from '@/ts/L0Entity/RegionManage/clsFeatureRegionFldsENEx4GC';
 import { ButtonTab_GetObjByButtonIdCache } from '@/ts/L3ForWApi/PrjFunction/clsButtonTabWApi';
 
-import { ApplicationType_GetObjByApplicationTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
+import { ApplicationType_GetObjByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 import { ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { vPrjFeatureSim_GetObjByFeatureIdCache } from '@/ts/L3ForWApi/PrjFunction/clsvPrjFeatureSimWApi';
 import { vPrjFeatureSimEx_CopyToEx } from '@/ts/L3ForWApiEx/PrjFunction/clsvPrjFeatureSimExWApi';
@@ -81,7 +81,9 @@ export async function ButtonTabEx_GetObjExLstByFeatureRegionFlds(
   if (objPrjFeatureENEx.buttonSet == null) {
     let strApplicationTypeName = '';
 
-    const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(intAppTypeId);
+    const objApplicationType = await ApplicationType_GetObjByKeyCache({
+      applicationTypeId: intAppTypeId,
+    });
     if (objApplicationType == null) strApplicationTypeName = '未知';
     else strApplicationTypeName = objApplicationType.applicationTypeName;
 

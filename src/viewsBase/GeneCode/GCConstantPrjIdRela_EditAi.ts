@@ -1,22 +1,23 @@
 /**
  * 类名:GCConstantPrjIdRela_EditAi(界面:GCConstantPrjIdRelaCRUD,00050344)
  * 表名:GCConstantPrjIdRela
- * 版本:2026.05.27
+ * 版本:2026.05.29
  * 生成者:
  * 模块中文名:GeneCode
  * 编程语言:TypeScript
  **/
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
+
 import {
   GCConstantPrjIdRela_AddNewRecordAsync,
   GCConstantPrjIdRela_CheckPropertyNew,
-  GCConstantPrjIdRela_IsExistRecordAsync,
   GCConstantPrjIdRela_IsExistAsync,
   GCConstantPrjIdRela_GetObjByKeyAsync,
   GCConstantPrjIdRela_CheckProperty4Update,
   GCConstantPrjIdRela_UpdateRecordAsync,
   GCConstantPrjIdRela_EditRecordExAsync,
 } from '@/ts/L3ForWApi/GeneCode/clsGCConstantPrjIdRelaWApi';
+
 import {
   clsGCConstantPrjIdRelaEN,
   GCConstantPrjIdRelaKey,
@@ -192,7 +193,6 @@ export abstract class GCConstantPrjIdRela_EditAi {
     const strCommandText: string = this.btnSubmitGCConstantPrjIdRela;
     try {
       let returnBool = false;
-      let returnKeyId = '';
       let strInfo = '';
       let strMsg = '';
       switch (strCommandText) {
@@ -202,28 +202,15 @@ export abstract class GCConstantPrjIdRela_EditAi {
           await this.AddNewRecord();
           break;
         case '确认添加':
-          //这是一个单表的插入的代码,由于逻辑层太简单,
-          //就把逻辑层合并到控制层,
-          if (['02', '03', '06'].indexOf(clsGCConstantPrjIdRelaEN._PrimaryTypeId) > -1) {
-            returnKeyId = await this.AddNewRecordWithReturnKeySave();
-            if (IsNullOrEmpty(returnKeyId) == false) {
-              if (GCConstantPrjIdRela_EditAi.strPageDispModeId == enumPageDispMode.PopupBox_01)
-                refGCConstantPrjIdRela_Edit.value.hideDialog();
-              if (this.iShowList != null)
-                this.iShowList.BindGvCache(clsGCConstantPrjIdRelaEN._CurrTabName, returnKeyId);
+          // 🔥 多关键字段：没有返回值概念，直接保存
+          returnBool = await this.AddNewRecordSave();
+          if (returnBool == true) {
+            if (GCConstantPrjIdRela_EditAi.strPageDispModeId == enumPageDispMode.PopupBox_01) {
+              refGCConstantPrjIdRela_Edit.value.hideDialog();
             }
-          } else {
-            returnBool = await this.AddNewRecordSave();
-            if (returnBool == true) {
-              if (GCConstantPrjIdRela_EditAi.strPageDispModeId == enumPageDispMode.PopupBox_01) {
-                refGCConstantPrjIdRela_Edit.value.hideDialog();
-              }
-              if (this.iShowList != null)
-                this.iShowList.BindGvCache(
-                  clsGCConstantPrjIdRelaEN._CurrTabName,
-                  this.keyId.constId,
-                );
-            }
+            if (this.iShowList != null)
+              // 🔥 多关键字段：使用第一个关键字段的值
+              this.iShowList.BindGvCache(clsGCConstantPrjIdRelaEN._CurrTabName, this.keyId.constId);
           }
           break;
         case '确认修改':
@@ -236,6 +223,7 @@ export abstract class GCConstantPrjIdRela_EditAi {
               refGCConstantPrjIdRela_Edit.value.hideDialog();
             }
             if (this.iShowList != null)
+              // 🔥 多关键字段：使用第一个关键字段的值
               this.iShowList.BindGvCache(clsGCConstantPrjIdRelaEN._CurrTabName, this.keyId.constId);
           }
           break;
@@ -268,6 +256,7 @@ export abstract class GCConstantPrjIdRela_EditAi {
       txtConstId.readOnly = bolReadonly;
     }
   }
+
   /** 为插入记录做准备工作 */
   public async AddNewRecord() {
     refGCConstantPrjIdRela_Edit.value.Clear();
@@ -296,7 +285,7 @@ export abstract class GCConstantPrjIdRela_EditAi {
       );
       console.error(strMsg);
       alert(strMsg);
-      return false; //一定要有一个返回值,否则会出错!
+      return false;
     }
     try {
       GCConstantPrjIdRela_CheckPropertyNew(objGCConstantPrjIdRelaEN);
@@ -309,35 +298,21 @@ export abstract class GCConstantPrjIdRela_EditAi {
       );
       console.error(strMsg);
       alert(strMsg);
-      return false; //一定要有一个返回值,否则会出错!
+      return false;
     }
     try {
-      //检查唯一性条件
-      const bolIsExistCond = await this.CheckUniCond4Add(objGCConstantPrjIdRelaEN);
-      if (bolIsExistCond == false) {
-        return false;
-      }
       let returnBool = false;
       // 其他类型：先检查关键字是否存在
-      const bolIsExist = await GCConstantPrjIdRela_IsExistAsync(objGCConstantPrjIdRelaEN.constId);
-      if (bolIsExist == true) {
-        const strMsg = Format('添加记录时,关键字：{0}已经存在!', objGCConstantPrjIdRelaEN.constId);
-        console.error(strMsg);
-        alert(strMsg);
-        return false; //一定要有一个返回值,否则会出错!
-      }
       returnBool = await GCConstantPrjIdRela_AddNewRecordAsync(objGCConstantPrjIdRelaEN);
       if (returnBool == true) {
         // GCConstantPrjIdRela_ReFreshCache(); // 🔥 当前表未使用 localStorage/sessionStorage 缓存，无需刷新
         const strInfo = `添加[GC常量工程关系(GCConstantPrjIdRela)]记录成功!`;
-        //显示信息框
         if (this.isShowMsg == true) alert(strInfo);
       } else {
         const strInfo = `添加[GC常量工程关系(GCConstantPrjIdRela)]记录不成功!`;
-        //显示信息框
         alert(strInfo);
       }
-      return returnBool; //一定要有一个返回值,否则会出错!
+      return returnBool;
     } catch (e) {
       const strMsg = Format(
         '添加记录不成功,{0}.(in {1}.{2})',
@@ -347,49 +322,8 @@ export abstract class GCConstantPrjIdRela_EditAi {
       );
       console.error(strMsg);
       alert(strMsg);
-      return false; //一定要有一个返回值,否则会出错!
-    }
-  }
-
-  /** 为添加记录检查唯一性条件 */
-  public async CheckUniCond4Add(
-    objGCConstantPrjIdRelaEN: clsGCConstantPrjIdRelaEN,
-  ): Promise<boolean> {
-    const strUniquenessCondition = GCConstantPrjIdRela_GetUniCondStr(objGCConstantPrjIdRelaEN);
-    const bolIsExistCondition = await GCConstantPrjIdRela_IsExistRecordAsync(
-      strUniquenessCondition,
-    );
-    if (bolIsExistCondition == true) {
-      const strMsg = Format(
-        '不能满足唯一性条件。满足条件：{0}的记录已经存在!',
-        strUniquenessCondition,
-      );
-      console.error(strMsg);
-      alert(strMsg);
       return false;
     }
-    return true;
-  }
-
-  /** 为修改记录检查唯一性条件 */
-  public async CheckUniCond4Update(
-    objGCConstantPrjIdRelaEN: clsGCConstantPrjIdRelaEN,
-  ): Promise<boolean> {
-    const strUniquenessCondition =
-      GCConstantPrjIdRela_GetUniCondStr4Update(objGCConstantPrjIdRelaEN);
-    const bolIsExistCondition = await GCConstantPrjIdRela_IsExistRecordAsync(
-      strUniquenessCondition,
-    );
-    if (bolIsExistCondition == true) {
-      const strMsg = Format(
-        '不能满足唯一性条件。满足条件：{0}的记录已经存在!',
-        strUniquenessCondition,
-      );
-      console.error(strMsg);
-      alert(strMsg);
-      return false;
-    }
-    return true;
   }
 
   /** 显示指定记录的数据 */
@@ -499,10 +433,6 @@ export abstract class GCConstantPrjIdRela_EditAi {
       return false;
     }
     try {
-      const bolIsExistCond = await this.CheckUniCond4Update(objGCConstantPrjIdRelaEN);
-      if (bolIsExistCond == false) {
-        return false;
-      }
       const returnBool = await GCConstantPrjIdRela_UpdateRecordAsync(objGCConstantPrjIdRelaEN);
       if (returnBool == true) {
         // GCConstantPrjIdRela_ReFreshCache(); // 🔥 当前表未使用 localStorage/sessionStorage 缓存，无需刷新
@@ -550,10 +480,6 @@ export abstract class GCConstantPrjIdRela_EditAi {
       return false;
     }
     try {
-      const bolIsExistCond = await this.CheckUniCond4Update(objGCConstantPrjIdRelaEN);
-      if (bolIsExistCond == false) {
-        return false;
-      }
       const returnBool = await GCConstantPrjIdRela_EditRecordExAsync(objGCConstantPrjIdRelaEN);
       if (returnBool == true) {
         // GCConstantPrjIdRela_ReFreshCache(); // 🔥 当前表未使用 localStorage/sessionStorage 缓存，无需刷新

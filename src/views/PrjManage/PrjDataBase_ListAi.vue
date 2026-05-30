@@ -57,7 +57,9 @@
             ></td>
 
             <!-- 最后一列：选择按钮 -->
-            <td v-if="showSelectColumn"><button @click="btnSubmitSel(item)"> 选择 </button></td>
+            <td v-if="showSelectColumn">
+              <button @click="btnSubmitSel(item)"> 选择 </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -200,7 +202,7 @@
   });
 </script>
 
-<style scoped>
+<style scoped="">
   .read-the-docs {
     color: #888;
   }

@@ -1,8 +1,8 @@
 ﻿/**
  * 类名:clsApplicationTypeEN
  * 表名:ApplicationType(00050127)
- * 版本:2026.04.19(服务器:WIN-SRV103-116)
- * 日期:2026/04/21 16:05:30
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/29 16:09:42
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
@@ -18,6 +18,13 @@
  **/
 import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
+/**
+ * 应用程序类型主键类型定义
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_KeyType)
+ **/
+export type ApplicationTypeKey = {
+  applicationTypeId: number;
+};
 export class clsApplicationTypeEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
   public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
@@ -510,4 +517,5 @@ export enum enumApplicationType {
   WebApp_JS_RJ_28 = 28, //Web应用-JS-RJ
   PubClass_TS_29 = 29, //公共类-TS
   VueAppInCore_TS_30 = 30, //Vue应用InCore-TS
+  VueAppInCore_TSBak_31 = 31, //Vue应用InCore-TSBak
 }

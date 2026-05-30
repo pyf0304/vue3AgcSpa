@@ -1,5 +1,4 @@
-﻿import { FunctionTemplateRelaEx_GetFuncId4GCLstByFunctionTemplateIdAndCodeTypeIdCache } from './clsFunctionTemplateRelaExWApi';
-import {
+﻿import {
   vFunction4GeneCode_SimEx_GetObjByFuncId4GCCacheEx,
   vFunction4GeneCode_SimEx_SortFunByKey,
 } from './clsvFunction4GeneCode_SimExWApi';
@@ -8,13 +7,30 @@ import { clsFunction4GeneCodeENEx } from '@/ts/L0Entity/PrjFunction/clsFunction4
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 
 import { BindDdl_ObjLstInDivObj_V, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
-import { vFunction4GeneCode_Sim_GetObjLstCache } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4GeneCode_SimWApi';
+
 import { clsvFunction4GeneCode_SimEN } from '@/ts/L0Entity/PrjFunction/clsvFunction4GeneCode_SimEN';
 import {
   Function4GeneCode_GetObjLstByPagerAsync,
   Function4GeneCode_SortFunByKey,
 } from '@/ts/L3ForWApi/PrjFunction/clsFunction4GeneCodeWApi';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
+import { vFunction4GeneCode_Sim_GetObjLstAsync } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4GeneCode_SimWApi';
+import { clsFunctionTemplateRelaEN } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateRelaEN';
+import { FunctionTemplateRelaEx_GetFuncId4GCLstByFunctionTemplateIdAndCodeTypeIdCache } from '@/ts/L3ForWApiEx/PrjFunction/clsFunctionTemplateRelaExWApi';
+import { vPrjFeatureSim_func } from '@/ts/L3ForWApi/PrjFunction/clsvPrjFeatureSimWApi.js';
+import { clsvPrjFeatureSimEN } from '@/ts/L0Entity/PrjFunction/clsvPrjFeatureSimEN.js';
+import { clsSQLDSTypeEN } from '@/ts/L0Entity/PrjInterface/clsSQLDSTypeEN.js';
+import { SQLDSType_func } from '@/ts/L3ForWApi/PrjInterface/clsSQLDSTypeWApi.js';
+import { vCodeType_Sim_func } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
+import { clsvCodeType_SimEN } from '@/ts/L0Entity/GeneCode/clsvCodeType_SimEN';
+import { vFunction4Code_Sim_func } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4Code_SimWApi';
+import { clsvFunction4Code_SimEN } from '@/ts/L0Entity/PrjFunction/clsvFunction4Code_SimEN';
+import { clsFunctionTypeEN } from '@/ts/L0Entity/PrjFunction/clsFunctionTypeEN';
+import { FunctionType_func } from '@/ts/L3ForWApi/PrjFunction/clsFunctionTypeWApi';
+import { FuncGCType_func } from '@/ts/L3ForWApi/PrjFunction/clsFuncGCTypeWApi';
+import { clsFuncGCTypeEN } from '@/ts/L0Entity/PrjFunction/clsFuncGCTypeEN';
+import { ProgLangType_func } from '@/ts/L3ForWApi/SysPara/clsProgLangTypeWApi';
+import { clsProgLangTypeEN } from '@/ts/L0Entity/SysPara/clsProgLangTypeEN';
 export const function4GeneCodeEx_Controller = 'Function4GeneCodeExApi';
 export const function4GeneCodeEx_ConstructorName = 'function4GeneCodeEx';
 
@@ -44,7 +60,10 @@ export async function Function4GeneCodeEx_GetObjLstByFunctionTemplateIdCache(
   strFunctionTemplateId: string,
   strSqlDsTypeId: string,
 ) {
-  const arrFunction4GeneCodeObjList = await vFunction4GeneCode_Sim_GetObjLstCache();
+  const strWhere0 = `${clsFunctionTemplateRelaEN.con_FuncCodeTypeId}='${strCodeTypeId}' and ${clsFunctionTemplateRelaEN.con_FunctionTemplateId}='${strFunctionTemplateId}' `;
+  const strWhere1 = `${clsvFunction4GeneCode_SimEN.con_FuncCodeTypeId} in (select ${clsFunctionTemplateRelaEN.con_CodeTypeId} from ${clsFunctionTemplateRelaEN._CurrTabName} where ${strWhere0})`;
+
+  const arrFunction4GeneCodeObjList = await vFunction4GeneCode_Sim_GetObjLstAsync(strWhere1);
 
   const arrFuncId4Gc =
     await FunctionTemplateRelaEx_GetFuncId4GCLstByFunctionTemplateIdAndCodeTypeIdCache(
@@ -118,11 +137,12 @@ export async function Function4GeneCodeEx_BindDdl_FuncId4GCByCodeTypeIdInDivCach
   }
   //为数据源于表的下拉框设置内容
   //console.log("开始：BindDdl_FuncId4GCByCodeTypeIdInDivCache");
-  let arrObjLst_Sel = await vFunction4GeneCode_Sim_GetObjLstCache();
+  const strWhereCond = `${clsvFunction4GeneCode_SimEN.con_FuncCodeTypeId}='${strCodeTypeId}'`;
+  let arrObjLst_Sel = await vFunction4GeneCode_Sim_GetObjLstAsync(strWhereCond);
   if (arrObjLst_Sel == null) return;
-  arrObjLst_Sel = arrObjLst_Sel
-    .filter((x) => x.funcCodeTypeId == strCodeTypeId)
-    .sort(vFunction4GeneCode_SimEx_SortFunByKey(clsvFunction4GeneCode_SimEN.con_FuncName, 'Asc'));
+  arrObjLst_Sel = arrObjLst_Sel.sort(
+    vFunction4GeneCode_SimEx_SortFunByKey(clsvFunction4GeneCode_SimEN.con_FuncName, 'Asc'),
+  );
   BindDdl_ObjLstInDivObj_V(
     strDivName,
     strDdlName,
@@ -272,5 +292,293 @@ export function Function4GeneCodeEx_SortFunByKey(strKey: string, AscOrDesc: stri
       default:
         return Function4GeneCode_SortFunByKey(strKey, AscOrDesc);
     }
+  }
+}
+
+/**
+ * 根据扩展字段名去调用相应的映射函数
+ * 作者:潘以锋
+ * 日期:00-00-00
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMapByFldName)
+ * @param strFldName:扩展字段名
+ * @param  obj{0}Ex:需要转换的对象
+ * @returns 针对扩展字段名对转换对象进行函数映射
+ */
+export function Function4GeneCodeEx_FuncMapByFldName(
+  strFldName: string,
+  objFunction4GeneCodeEx: clsFunction4GeneCodeENEx,
+) {
+  const strThisFuncName = Function4GeneCodeEx_FuncMapByFldName.name;
+  strFldName = strFldName.replace('|Ex', '');
+  let strMsg = '';
+  //如果是本表中字段,不需要映射
+  const arrFldName = clsFunction4GeneCodeEN._AttributeName;
+  if (arrFldName.indexOf(strFldName) > -1) return;
+  //针对扩展字段进行映射
+  switch (strFldName) {
+    case clsFunction4GeneCodeENEx.con_CodeTypeName:
+      return Function4GeneCodeEx_FuncMapCodeTypeName(objFunction4GeneCodeEx);
+    case clsFunction4GeneCodeENEx.con_FuncName4Code:
+      return Function4GeneCodeEx_FuncMapFuncName4Code(objFunction4GeneCodeEx);
+    case clsFunction4GeneCodeENEx.con_FuncTypeName:
+      return Function4GeneCodeEx_FuncMapFuncTypeName(objFunction4GeneCodeEx);
+    case clsFunction4GeneCodeENEx.con_FuncGCTypeName:
+      return Function4GeneCodeEx_FuncMapFuncGCTypeName(objFunction4GeneCodeEx);
+    case clsFunction4GeneCodeENEx.con_ProgLangTypeName:
+      return Function4GeneCodeEx_FuncMapProgLangTypeName(objFunction4GeneCodeEx);
+    case clsFunction4GeneCodeENEx.con_SqlDsTypeName:
+      return Function4GeneCodeEx_FuncMapSqlDsTypeName(objFunction4GeneCodeEx);
+    case clsFunction4GeneCodeENEx.con_ParentFeatureName:
+      return Function4GeneCodeEx_FuncMapParentFeatureName(objFunction4GeneCodeEx);
+    case clsFunction4GeneCodeENEx.con_FeatureName:
+      return Function4GeneCodeEx_FuncMapFeatureName(objFunction4GeneCodeEx);
+    default:
+      strMsg = Format(
+        '扩展字段:[{0}]在字段值函数映射中不存在!(in {1})',
+        strFldName,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+  }
+}
+
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objFunction4GeneCodeS:源对象
+ **/
+export async function Function4GeneCodeEx_FuncMapCodeTypeName(
+  objFunction4GeneCode: clsFunction4GeneCodeENEx,
+) {
+  const strThisFuncName = Function4GeneCodeEx_FuncMapCodeTypeName.name;
+  try {
+    if (IsNullOrEmpty(objFunction4GeneCode.codeTypeName) == true) {
+      const vCodeTypeSimCodeTypeId = objFunction4GeneCode.funcCodeTypeId;
+      const vCodeTypeSimCodeTypeName = await vCodeType_Sim_func(
+        clsvCodeType_SimEN.con_CodeTypeId,
+        clsvCodeType_SimEN.con_CodeTypeName,
+        vCodeTypeSimCodeTypeId,
+      );
+      objFunction4GeneCode.codeTypeName = vCodeTypeSimCodeTypeName;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001228)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      function4GeneCodeEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objFunction4GeneCodeS:源对象
+ **/
+export async function Function4GeneCodeEx_FuncMapFuncName4Code(
+  objFunction4GeneCode: clsFunction4GeneCodeENEx,
+) {
+  const strThisFuncName = Function4GeneCodeEx_FuncMapFuncName4Code.name;
+  try {
+    if (IsNullOrEmpty(objFunction4GeneCode.funcName4Code) == true) {
+      const vFunction4CodeSimFuncId4Code = objFunction4GeneCode.funcId4Code;
+      const vFunction4CodeSimFuncName4Code = await vFunction4Code_Sim_func(
+        clsvFunction4Code_SimEN.con_FuncId4Code,
+        clsvFunction4Code_SimEN.con_FuncName4Code,
+        vFunction4CodeSimFuncId4Code,
+      );
+      objFunction4GeneCode.funcName4Code = vFunction4CodeSimFuncName4Code;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001252)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      function4GeneCodeEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objFunction4GeneCodeS:源对象
+ **/
+export async function Function4GeneCodeEx_FuncMapFuncTypeName(
+  objFunction4GeneCode: clsFunction4GeneCodeENEx,
+) {
+  const strThisFuncName = Function4GeneCodeEx_FuncMapFuncTypeName.name;
+  try {
+    if (IsNullOrEmpty(objFunction4GeneCode.funcTypeName) == true) {
+      const FunctionTypeFuncTypeId = objFunction4GeneCode.funcTypeId;
+      const FunctionTypeFuncTypeName = await FunctionType_func(
+        clsFunctionTypeEN.con_FuncTypeId,
+        clsFunctionTypeEN.con_FuncTypeName,
+        FunctionTypeFuncTypeId,
+      );
+      objFunction4GeneCode.funcTypeName = FunctionTypeFuncTypeName;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001240)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      function4GeneCodeEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objFunction4GeneCodeS:源对象
+ **/
+export async function Function4GeneCodeEx_FuncMapFuncGCTypeName(
+  objFunction4GeneCode: clsFunction4GeneCodeENEx,
+) {
+  const strThisFuncName = Function4GeneCodeEx_FuncMapFuncGCTypeName.name;
+  try {
+    if (IsNullOrEmpty(objFunction4GeneCode.funcGCTypeName) == true) {
+      const FuncGCTypeFuncGCTypeId = objFunction4GeneCode.funcGCTypeId;
+      const FuncGCTypeFuncGCTypeName = await FuncGCType_func(
+        clsFuncGCTypeEN.con_FuncGCTypeId,
+        clsFuncGCTypeEN.con_FuncGCTypeName,
+        FuncGCTypeFuncGCTypeId,
+      );
+      objFunction4GeneCode.funcGCTypeName = FuncGCTypeFuncGCTypeName;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001518)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      function4GeneCodeEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objFunction4GeneCodeS:源对象
+ **/
+export async function Function4GeneCodeEx_FuncMapProgLangTypeName(
+  objFunction4GeneCode: clsFunction4GeneCodeENEx,
+) {
+  const strThisFuncName = Function4GeneCodeEx_FuncMapProgLangTypeName.name;
+  try {
+    if (IsNullOrEmpty(objFunction4GeneCode.progLangTypeName) == true) {
+      const ProgLangTypeProgLangTypeId = objFunction4GeneCode.progLangTypeId;
+      const ProgLangTypeProgLangTypeName = await ProgLangType_func(
+        clsProgLangTypeEN.con_ProgLangTypeId,
+        clsProgLangTypeEN.con_ProgLangTypeName,
+        ProgLangTypeProgLangTypeId,
+      );
+      objFunction4GeneCode.progLangTypeName = ProgLangTypeProgLangTypeName;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001231)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      function4GeneCodeEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objFunction4GeneCodeS:源对象
+ **/
+export async function Function4GeneCodeEx_FuncMapSqlDsTypeName(
+  objFunction4GeneCode: clsFunction4GeneCodeENEx,
+) {
+  const strThisFuncName = Function4GeneCodeEx_FuncMapSqlDsTypeName.name;
+  try {
+    if (IsNullOrEmpty(objFunction4GeneCode.sqlDsTypeName) == true) {
+      const SQLDSTypeSqlDsTypeId = objFunction4GeneCode.sqlDsTypeId;
+      const SQLDSTypeSqlDsTypeName = await SQLDSType_func(
+        clsSQLDSTypeEN.con_SqlDsTypeId,
+        clsSQLDSTypeEN.con_SqlDsTypeName,
+        SQLDSTypeSqlDsTypeId,
+      );
+      objFunction4GeneCode.sqlDsTypeName = SQLDSTypeSqlDsTypeName;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001149)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      function4GeneCodeEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objFunction4GeneCodeS:源对象
+ **/
+export async function Function4GeneCodeEx_FuncMapParentFeatureName(
+  objFunction4GeneCode: clsFunction4GeneCodeENEx,
+) {
+  const strThisFuncName = Function4GeneCodeEx_FuncMapParentFeatureName.name;
+  try {
+    if (IsNullOrEmpty(objFunction4GeneCode.parentFeatureName) == true) {
+      const vPrjFeatureSimFeatureId = objFunction4GeneCode.featureId;
+      const vPrjFeatureSimParentFeatureName = await vPrjFeatureSim_func(
+        clsvPrjFeatureSimEN.con_FeatureId,
+        clsvPrjFeatureSimEN.con_ParentFeatureName,
+        vPrjFeatureSimFeatureId,
+      );
+      objFunction4GeneCode.parentFeatureName = vPrjFeatureSimParentFeatureName;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001178)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      function4GeneCodeEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objFunction4GeneCodeS:源对象
+ **/
+export async function Function4GeneCodeEx_FuncMapFeatureName(
+  objFunction4GeneCode: clsFunction4GeneCodeENEx,
+) {
+  const strThisFuncName = Function4GeneCodeEx_FuncMapFeatureName.name;
+  try {
+    if (IsNullOrEmpty(objFunction4GeneCode.featureName) == true) {
+      const vPrjFeatureSimFeatureId = objFunction4GeneCode.featureId;
+      const vPrjFeatureSimFeatureName = await vPrjFeatureSim_func(
+        clsvPrjFeatureSimEN.con_FeatureId,
+        clsvPrjFeatureSimEN.con_FeatureName,
+        vPrjFeatureSimFeatureId,
+      );
+      objFunction4GeneCode.featureName = vPrjFeatureSimFeatureName;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001177)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      function4GeneCodeEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
   }
 }

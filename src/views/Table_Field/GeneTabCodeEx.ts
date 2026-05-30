@@ -24,7 +24,6 @@ import { AppCodeTypeRelaEx_SortFunByOrderNum } from '@/ts/L3ForWApiEx/GeneCode/c
 import { ApplicationTypeEx_SortFunByOrderNum } from '@/ts/L3ForWApiEx/GeneCode/clsApplicationTypeExWApi';
 import { vCodeType_SimEx_Function4GeneCodeEx_ } from '@/ts/L3ForWApiEx/GeneCode/clsvCodeType_SimExWApi';
 import { Function4CodeEx_AccessFuncName } from '@/ts/L3ForWApiEx/PrjFunction/clsFunction4CodeExWApi';
-import { Function4GeneCodeEx_GetObjLstByFunctionTemplateIdCache } from '@/ts/L3ForWApiEx/PrjFunction/clsFunction4GeneCodeExWApi';
 import {
   vFunction4GeneCode_SimEx_CopyToEx,
   vFunction4GeneCode_SimEx_SortFunByKey,
@@ -49,6 +48,7 @@ import { TreeNode } from '@/ts/components/TreeNode';
 import { codeTypeId } from '@/views/Table_Field/GeneTabCodeVueShare';
 import { useCMProjectAppRelaStore } from '@/store/modules/CMProjectAppRela';
 import { vFunction4Code_SimEx_GetObjByFuncId4CodeCacheEx } from '@/ts/L3ForWApiEx/PrjFunction/clsvFunction4Code_SimExWApi';
+import { Function4GeneCodeEx_GetObjLstByFunctionTemplateIdCache } from '@/ts/L3ForWApiEx/PrjFunction/clsFunction4GeneCodeExWApi';
 
 class TreeNodeImpl implements TreeNode {
   id: string;
@@ -462,9 +462,9 @@ export class GeneTabCodeEx implements IShowList {
       strTabId,
       strPrjId,
     );
-    const objProgLangType = await ProgLangType_GetObjByProgLangTypeIdCache(
-      objCodeType.progLangTypeId,
-    );
+    const objProgLangType = await ProgLangType_GetObjByProgLangTypeIdCache({
+      progLangTypeId: objCodeType.progLangTypeId,
+    });
     const strGCFileName = Format(
       '{1}({2})',
       objCodeType.codeTypeName,

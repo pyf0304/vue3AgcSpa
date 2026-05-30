@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsvFunction4GeneCode_SimEN
  * 表名:vFunction4GeneCode_Sim(00050605)
- * 版本:2024.10.15.1(服务器:WIN-SRV103-116)
- * 日期:2024/10/15 11:49:05
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/27 13:07:49
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,9433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:函数管理(PrjFunction)
  * 框架-层名:实体层(TS)(EntityLayer,0121)
@@ -18,17 +18,24 @@
  **/
 import { clsGeneralTabV } from '@/ts/PubFun/clsGeneralTabV';
 
+/**
+ * v函数4GC_Sim主键类型定义
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_KeyType)
+ **/
+export type vFunction4GeneCode_SimKey = {
+  funcId4GC: string;
+};
 export class clsvFunction4GeneCode_SimEN extends clsGeneralTabV {
   public static _RefreshTimeLst = new Array<string>();
-  public static CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
-  public static CacheModeId = '04'; //sessionStorage
-  public static PrimaryTypeId = '03'; //自增
-  public static IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
-  public static WhereFormat = 'UsedTimes>0'; //条件格式串
-  public static _CurrTabName = 'vFunction4GeneCode_Sim'; //当前表名,与该类相关的表名
-  public static _KeyFldName = 'FuncId4GC'; //当前表中的关键字名称,与该类相关的表中关键字名
-  public static mintAttributeCount = 11;
-  public static AttributeName = [
+  public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
+  public static readonly _CacheModeId: string = '07'; //PiniaStore
+  public static readonly _PrimaryTypeId: string = '03'; //自增
+  public static readonly _IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
+  public static readonly _WhereFormat = 'UsedTimes>0'; //条件格式串
+  public static readonly _CurrTabName: string = 'vFunction4GeneCode_Sim'; //当前表名,与该类相关的表名
+  public static readonly _KeyFldName: string = 'FuncId4GC'; //当前表中的关键字名称,与该类相关的表中关键字名
+  public static readonly _AttributeCount = 11;
+  public static readonly _AttributeName = [
     'funcId4GC',
     'funcName',
     'funcId4Code',
@@ -165,89 +172,67 @@ export class clsvFunction4GeneCode_SimEN extends clsGeneralTabV {
    * 常量:"FuncId4GC"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_FuncId4GC(): string {
-    return 'funcId4GC';
-  } //函数ID
+  public static readonly con_FuncId4GC = 'funcId4GC'; //函数ID
 
   /**
    * 常量:"FuncName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_FuncName(): string {
-    return 'funcName';
-  } //函数名
+  public static readonly con_FuncName = 'funcName'; //函数名
 
   /**
    * 常量:"FuncId4Code"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_FuncId4Code(): string {
-    return 'funcId4Code';
-  } //函数Id4Code
+  public static readonly con_FuncId4Code = 'funcId4Code'; //函数Id4Code
 
   /**
    * 常量:"SqlDsTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_SqlDsTypeId(): string {
-    return 'sqlDsTypeId';
-  } //数据源类型Id
+  public static readonly con_SqlDsTypeId = 'sqlDsTypeId'; //数据源类型Id
 
   /**
    * 常量:"FeatureId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_FeatureId(): string {
-    return 'featureId';
-  } //功能Id
+  public static readonly con_FeatureId = 'featureId'; //功能Id
 
   /**
    * 常量:"InUse"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_InUse(): string {
-    return 'inUse';
-  } //是否在用
+  public static readonly con_InUse = 'inUse'; //是否在用
 
   /**
    * 常量:"FuncGCTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_FuncGCTypeId(): string {
-    return 'funcGCTypeId';
-  } //函数生成代码类型Id
+  public static readonly con_FuncGCTypeId = 'funcGCTypeId'; //函数生成代码类型Id
 
   /**
    * 常量:"TemplateNum"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_TemplateNum(): string {
-    return 'templateNum';
-  } //TemplateNum
+  public static readonly con_TemplateNum = 'templateNum'; //TemplateNum
 
   /**
    * 常量:"ProgLangTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ProgLangTypeId(): string {
-    return 'progLangTypeId';
-  } //编程语言类型Id
+  public static readonly con_ProgLangTypeId = 'progLangTypeId'; //编程语言类型Id
 
   /**
    * 常量:"FuncCodeTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_FuncCodeTypeId(): string {
-    return 'funcCodeTypeId';
-  } //函数代码类型Id
+  public static readonly con_FuncCodeTypeId = 'funcCodeTypeId'; //函数代码类型Id
 
   /**
    * 常量:"UsedTimes"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UsedTimes(): string {
-    return 'usedTimes';
-  } //使用次数
+  public static readonly con_UsedTimes = 'usedTimes'; //使用次数
 
   /**
    * 设置条件字段值.
@@ -265,5 +250,16 @@ export class clsvFunction4GeneCode_SimEN extends clsGeneralTabV {
       this.dicFldComparisonOp[strFldName] = strComparisonOp;
     }
     this.sfFldComparisonOp = JSON.stringify(this.dicFldComparisonOp);
+  }
+
+  /**
+   * 判断一个字符串是否是类的属性
+   * @param propName: 属性名
+   * @returns 是否是属性
+   */
+  public static hasProperty(propName: string): boolean {
+    //return propName in new clsvFunction4GeneCode_SimEN();
+    const instance = new clsvFunction4GeneCode_SimEN();
+    return Object.prototype.hasOwnProperty.call(instance, propName);
   }
 }

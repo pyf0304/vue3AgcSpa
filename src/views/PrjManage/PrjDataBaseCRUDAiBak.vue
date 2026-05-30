@@ -15,9 +15,9 @@
           <tr>
             <template v-for="field in queryRow1" :key="field.key">
               <td class="text-right">
-                <label class="col-form-label text-right" style="width: 90px">{{
-                  field.label
-                }}</label>
+                <label class="col-form-label text-right" style="width: 90px">
+                  {{ field.label }}
+                </label>
               </td>
               <td class="text-left">
                 <input
@@ -28,6 +28,18 @@
                   :value="getQueryValue(field.key)"
                   @input="setQueryValue(field.key, ($event.target as HTMLInputElement).value)"
                 />
+                <select
+                  v-else-if="field.controlType === 'select4Bool'"
+                  :id="field.id"
+                  class="form-control form-control-sm"
+                  :style="{ width: field.width + 'px' }"
+                  :value="getQueryValue(field.key)"
+                  @change="setQueryValue(field.key, ($event.target as HTMLSelectElement).value)"
+                >
+                  <option value="0">选择是/否</option>
+                  <option value="true">是</option>
+                  <option value="false">否</option>
+                </select>
                 <select
                   v-else
                   :id="field.id"
@@ -50,12 +62,33 @@
           <tr>
             <template v-for="field in queryRow2" :key="field.key">
               <td class="text-right">
-                <label class="col-form-label text-right" style="width: 90px">{{
-                  field.label
-                }}</label>
+                <label class="col-form-label text-right" style="width: 90px">
+                  {{ field.label }}
+                </label>
               </td>
               <td class="text-left">
+                <input
+                  v-if="field.controlType === 'text'"
+                  :id="field.id"
+                  class="form-control form-control-sm"
+                  :style="{ width: field.width + 'px' }"
+                  :value="getQueryValue(field.key)"
+                  @input="setQueryValue(field.key, ($event.target as HTMLInputElement).value)"
+                />
                 <select
+                  v-else-if="field.controlType === 'select4Bool'"
+                  :id="field.id"
+                  class="form-control form-control-sm"
+                  :style="{ width: field.width + 'px' }"
+                  :value="getQueryValue(field.key)"
+                  @change="setQueryValue(field.key, ($event.target as HTMLSelectElement).value)"
+                >
+                  <option value="0">选择是/否</option>
+                  <option value="true">是</option>
+                  <option value="false">否</option>
+                </select>
+                <select
+                  v-else
                   :id="field.id"
                   class="form-control form-control-sm"
                   :style="{ width: field.width + 'px' }"
@@ -86,7 +119,6 @@
         </tbody>
       </table>
     </div>
-
     <div id="divFunction" ref="refDivFunction" class="table table-bordered table-hover">
       <ul class="nav">
         <li class="nav-item">
@@ -95,22 +127,7 @@
           >
         </li>
         <li v-for="cmd in featureCommands" :key="cmd.id" class="nav-item ml-3">
-          <div v-if="cmd.needAuxControl" class="btn-group" role="group" aria-label="Basic example">
-            <select
-              id="ddlUseStateId_SetFldValue"
-              v-model="useStateId_f"
-              class="form-control form-control-sm"
-              style="width: 60px"
-            >
-              <option v-for="(item, index) in arrUseState" :key="index" :value="item.useStateId">{{
-                item.useStateName
-              }}</option>
-            </select>
-            <button :id="cmd.elementId" :class="cmd.btnClass" @click="runCommand(cmd.id)">{{
-              cmd.text
-            }}</button>
-          </div>
-          <button v-else :id="cmd.elementId" :class="cmd.btnClass" @click="runCommand(cmd.id)">
+          <button :id="cmd.elementId" :class="cmd.btnClass" @click="runCommand(cmd.id)">
             {{ cmd.text }}
           </button>
         </li>
@@ -132,7 +149,7 @@
     </div>
 
     <PrjDataBase_EditCom ref="refPrjDataBase_Edit" />
-    <PrjDataBase_DetailCom ref="refPrjDataBase_Detail" />
+    <PrjDataBase_DetailCom ref="refPrjDataBase_DetailAi" />
   </div>
 </template>
 
@@ -150,7 +167,7 @@
     refDivFunction,
     refDivList,
     refPrjDataBase_Edit,
-    refPrjDataBase_Detail,
+    refPrjDataBase_DetailAi,
     refPrjDataBase_List,
     showErrorMessage,
     dataListPrjDataBase,
@@ -163,20 +180,22 @@
     useStateId_q,
     useStateId_f,
   } from '@/views/PrjManage/PrjDataBaseVueShare';
-  import PrjDataBase_EditCom from '@/views/PrjManage/PrjDataBase_Edit.vue';
-  import PrjDataBase_DetailCom from '@/views/PrjManage/PrjDataBase_Detail.vue';
+  import PrjDataBase_EditCom from '@/views/PrjManage/PrjDataBase_EditAi.vue';
+  import PrjDataBase_DetailCom from '@/views/PrjManage/PrjDataBase_DetailAi.vue';
   import PrjDataBase_ListCom from '@/views/PrjManage/PrjDataBase_ListAi.vue';
+  import { PrjDataBaseKey } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
+
   import { clsDataBaseTypeEN } from '@/ts/L0Entity/SysPara/clsDataBaseTypeEN';
   import { clsUseStateEN } from '@/ts/L0Entity/SysPara/clsUseStateEN';
   import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
-  import PrjDataBaseCRUDExAi4 from '@/views/PrjManage/PrjDataBaseCRUDExAi';
+  import PrjDataBaseCRUDAiEx from '@/views/PrjManage/PrjDataBaseCRUDAiEx';
   import {
-    getQueryRowsAi3,
-    initQueryDefaultsAi3,
-    loadFeatureOptionsAi3,
-    loadQueryOptionsAi3,
-    PrjDataBaseQueryFieldSpecAi3,
-  } from '@/viewsBase/PrjManage/PrjDataBaseCRUDAi3Query';
+    getQueryRowsAi,
+    initQueryDefaultsAi,
+    loadFeatureOptionsAi,
+    loadQueryOptionsAi,
+    PrjDataBaseQueryFieldSpecAi,
+  } from '@/viewsBase/PrjManage/PrjDataBaseCRUDAiQuery';
   import {
     getFeatureCommandsAi,
     getQueryCommandsAi,
@@ -185,7 +204,7 @@
   } from '@/viewsBase/PrjManage/PrjDataBaseCRUDAiCommands';
 
   export default defineComponent({
-    name: 'PrjDataBaseCRUDAi4',
+    name: 'PrjDataBaseCRUDAi',
     components: {
       PrjDataBase_EditCom,
       PrjDataBase_DetailCom,
@@ -193,26 +212,42 @@
     },
     setup() {
       const strTitle = ref('数据库对象维护(Ai4版-命令Schema)');
-      const objPage = ref<PrjDataBaseCRUDExAi4>();
+      const objPage = ref<PrjDataBaseCRUDAiEx>();
       const arrDataBaseType = ref<clsDataBaseTypeEN[] | null>([]);
       const arrUseState = ref<clsUseStateEN[] | null>([]);
 
-      const { row1, row2 } = getQueryRowsAi3();
-      const queryRow1 = ref<Array<PrjDataBaseQueryFieldSpecAi3>>(row1);
-      const queryRow2 = ref<Array<PrjDataBaseQueryFieldSpecAi3>>(row2);
+      const { row1, row2 } = getQueryRowsAi();
+      const queryRow1 = ref<Array<PrjDataBaseQueryFieldSpecAi>>(row1);
+      const queryRow2 = ref<Array<PrjDataBaseQueryFieldSpecAi>>(row2);
 
       const queryCommands = ref<Array<PrjDataBaseCommandSpecAi>>(getQueryCommandsAi());
       const featureCommands = ref<Array<PrjDataBaseCommandSpecAi>>(getFeatureCommandsAi());
 
-      const ensurePage = (): PrjDataBaseCRUDExAi4 | null => {
+      const getEnsurePageCaller = (): string => {
+        const stack = new Error().stack;
+        if (stack == null || stack === '') return 'unknown';
+
+        const lines = stack
+          .split('\n')
+          .map((line) => line.trim())
+          .filter((line) => line !== '');
+
+        // stack格式通常为: Error -> getEnsurePageCaller -> ensurePage -> 调用者
+        return lines[3] ?? lines[2] ?? 'unknown';
+      };
+
+      const ensurePage = (strCaller: string): PrjDataBaseCRUDAiEx | null => {
         if (objPage.value == null) {
-          alert('页面初始化不成功,请联系管理员!');
+          const caller = getEnsurePageCaller();
+          const errorMessage = `页面初始化不成功,请联系管理员! 调用者: ${strCaller}, 调用栈: ${caller}`;
+          console.error(errorMessage);
+          alert(errorMessage);
           return null;
         }
         return objPage.value;
       };
 
-      const getQueryValue = (key: PrjDataBaseQueryFieldSpecAi3['key']): string => {
+      const getQueryValue = (key: PrjDataBaseQueryFieldSpecAi['key']): string => {
         switch (key) {
           case 'databaseOwner_q':
             return databaseOwner_q.value;
@@ -229,7 +264,7 @@
         }
       };
 
-      const setQueryValue = (key: PrjDataBaseQueryFieldSpecAi3['key'], value: string) => {
+      const setQueryValue = (key: PrjDataBaseQueryFieldSpecAi['key'], value: string) => {
         switch (key) {
           case 'databaseOwner_q':
             databaseOwner_q.value = value;
@@ -252,21 +287,36 @@
       };
 
       const getSelectOptions = (optionsKey?: 'dataBaseType' | 'useState') => {
-        if (optionsKey === 'dataBaseType') return arrDataBaseType.value ?? [];
-        if (optionsKey === 'useState') return arrUseState.value ?? [];
-        return [];
+        switch (optionsKey) {
+          case 'dataBaseType':
+            return arrDataBaseType.value ?? [];
+          case 'useState':
+            return arrUseState.value ?? [];
+          default:
+            return [];
+        }
       };
 
       const getSelectValue = (item: any, optionsKey?: 'dataBaseType' | 'useState') => {
-        if (optionsKey === 'dataBaseType') return item.dataBaseTypeId;
-        if (optionsKey === 'useState') return item.useStateId;
-        return '';
+        switch (optionsKey) {
+          case 'dataBaseType':
+            return item.dataBaseTypeId;
+          case 'useState':
+            return item.useStateId;
+          default:
+            return '';
+        }
       };
 
       const getSelectText = (item: any, optionsKey?: 'dataBaseType' | 'useState') => {
-        if (optionsKey === 'dataBaseType') return item.dataBaseTypeName;
-        if (optionsKey === 'useState') return item.useStateName;
-        return '';
+        switch (optionsKey) {
+          case 'dataBaseType':
+            return item.dataBaseTypeName;
+          case 'useState':
+            return item.useStateName;
+          default:
+            return '';
+        }
       };
 
       const exportToExcel = (
@@ -287,7 +337,7 @@
       };
 
       const runCommand = async (commandId: PrjDataBaseCommandIdAi) => {
-        const page = ensurePage();
+        const page = ensurePage(commandId);
         if (page == null) return;
 
         const result = await page.executeCommand(commandId);
@@ -310,12 +360,12 @@
         }
       }
 
-      function btn_Click(strCommandName: string, strKeyId: string) {
-        PrjDataBaseCRUDExAi4.btn_Click(strCommandName, strKeyId);
+      function btn_Click(strCommandName: string, key: PrjDataBaseKey) {
+        PrjDataBaseCRUDAiEx.btn_Click(strCommandName, key);
       }
 
       onMounted(async () => {
-        initQueryDefaultsAi3({
+        initQueryDefaultsAi({
           databaseOwner_q,
           dataBaseTypeId_q,
           dataBaseUserId_q,
@@ -323,29 +373,29 @@
           useStateId_q,
         });
 
-        const queryOptions = await loadQueryOptionsAi3();
+        const queryOptions = await loadQueryOptionsAi();
         arrDataBaseType.value = queryOptions.arrDataBaseType;
         arrUseState.value = queryOptions.arrUseState;
 
-        const featureOptions = await loadFeatureOptionsAi3();
-        arrUseState.value = featureOptions.arrUseState;
+        const featureOptions = await loadFeatureOptionsAi();
+        console.log('featureOptions:', featureOptions);
         useStateId_f.value = '0';
 
-        PrjDataBaseCRUDExAi4.vuebtn_Click = btn_Click;
-        PrjDataBaseCRUDExAi4.GetPropValue = GetPropValue;
-        objPage.value = new PrjDataBaseCRUDExAi4();
+        PrjDataBaseCRUDAiEx.vuebtn_Click = btn_Click;
+        PrjDataBaseCRUDAiEx.GetPropValue = GetPropValue;
+        objPage.value = new PrjDataBaseCRUDAiEx();
         await objPage.value.PageLoadCache();
       });
 
       const SortColumn = async (data: any) => {
-        const page = ensurePage();
+        const page = ensurePage('SortColumn');
         if (page == null) return;
         await page.SortColumn(data.sortColumnKey, data.sortDirection);
       };
 
       const EditTabRelaInfo = async (data: any) => {
         console.log('data:', data);
-        router.push({ name: 'editPrjDataBase', params: { courseId: data.courseId } });
+        router.push({ name: 'editPrjDataBase', params: { prjDataBaseId: data.prjDataBaseId } });
       };
 
       return {
@@ -360,9 +410,10 @@
         refDivFunction,
         refDivList,
         refPrjDataBase_Edit,
-        refPrjDataBase_Detail,
+        refPrjDataBase_DetailAi,
         refPrjDataBase_List,
         useStateId_f,
+
         arrDataBaseType,
         arrUseState,
         queryRow1,
@@ -382,4 +433,4 @@
   });
 </script>
 
-<style scoped></style>
+<style scoped=""></style>

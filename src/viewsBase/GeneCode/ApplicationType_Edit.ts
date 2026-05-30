@@ -22,7 +22,7 @@ import {
   ApplicationType_GetUniCondStr4Update,
   ApplicationType_AddNewRecordWithReturnKeyAsync,
   ApplicationType_IsExistAsync,
-  ApplicationType_GetObjByApplicationTypeIdAsync,
+  ApplicationType_GetObjByKeyAsync,
   ApplicationType_CheckProperty4Update,
   ApplicationType_UpdateRecordAsync,
   ApplicationType_EditRecordExAsync,
@@ -546,7 +546,9 @@ export abstract class ApplicationType_Edit {
     //2、检查该关键字的记录是否存在,如果不存在就返回不显示；
     let objApplicationTypeEN = new clsApplicationTypeEN();
     try {
-      const returnBool = await ApplicationType_IsExistAsync(intApplicationTypeId);
+      const returnBool = await ApplicationType_IsExistAsync({
+        applicationTypeId: intApplicationTypeId,
+      });
       if (returnBool == false) {
         const strInfo = Format('关键字:[{0}] 的记录不存在!', intApplicationTypeId);
         //显示信息框
@@ -563,9 +565,9 @@ export abstract class ApplicationType_Edit {
       alert(strMsg);
     }
     try {
-      const objApplicationTypeENConst = await ApplicationType_GetObjByApplicationTypeIdAsync(
-        intApplicationTypeId,
-      );
+      const objApplicationTypeENConst = await ApplicationType_GetObjByKeyAsync({
+        applicationTypeId: intApplicationTypeId,
+      });
       if (objApplicationTypeENConst == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -599,9 +601,9 @@ export abstract class ApplicationType_Edit {
     const strThisFuncName = this.UpdateRecord.name;
     this.keyId = intApplicationTypeId;
     try {
-      const objApplicationTypeEN = await ApplicationType_GetObjByApplicationTypeIdAsync(
-        intApplicationTypeId,
-      );
+      const objApplicationTypeEN = await ApplicationType_GetObjByKeyAsync({
+        applicationTypeId: intApplicationTypeId,
+      });
       if (objApplicationTypeEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

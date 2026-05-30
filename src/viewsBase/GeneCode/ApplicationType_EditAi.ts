@@ -16,10 +16,10 @@ import {
   ApplicationType_IsExistRecordAsync,
   ApplicationType_GetUniCondStr4Update,
   ApplicationType_IsExistAsync,
-  ApplicationType_GetObjByApplicationTypeIdAsync,
   ApplicationType_CheckProperty4Update,
   ApplicationType_UpdateRecordAsync,
   ApplicationType_EditRecordExAsync,
+  ApplicationType_GetObjByKeyAsync,
 } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 import { clsApplicationTypeEN } from '@/ts/L0Entity/GeneCode/clsApplicationTypeEN';
 import {
@@ -450,7 +450,9 @@ export abstract class ApplicationType_EditAi {
     const strThisFuncName = this.ShowData.name;
     let objApplicationTypeEN = new clsApplicationTypeEN();
     try {
-      const returnBool = await ApplicationType_IsExistAsync(intApplicationTypeId);
+      const returnBool = await ApplicationType_IsExistAsync({
+        applicationTypeId: intApplicationTypeId,
+      });
       if (returnBool == false) {
         const strInfo = Format('关键字:[{0}] 的记录不存在!', intApplicationTypeId);
         alert(strInfo);
@@ -467,9 +469,9 @@ export abstract class ApplicationType_EditAi {
       alert(strMsg);
     }
     try {
-      const objApplicationTypeENConst = await ApplicationType_GetObjByApplicationTypeIdAsync(
-        intApplicationTypeId,
-      );
+      const objApplicationTypeENConst = await ApplicationType_GetObjByKeyAsync({
+        applicationTypeId: intApplicationTypeId,
+      });
       if (objApplicationTypeENConst == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -499,9 +501,9 @@ export abstract class ApplicationType_EditAi {
     const strThisFuncName = this.UpdateRecord.name;
     this.keyId = intApplicationTypeId;
     try {
-      const objApplicationTypeEN = await ApplicationType_GetObjByApplicationTypeIdAsync(
-        intApplicationTypeId,
-      );
+      const objApplicationTypeEN = await ApplicationType_GetObjByKeyAsync({
+        applicationTypeId: intApplicationTypeId,
+      });
       if (objApplicationTypeEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

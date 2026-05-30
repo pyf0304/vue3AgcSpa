@@ -77,17 +77,17 @@ export default class PrjDataBaseCRUDExAi4 extends PrjDataBaseCRUDAi implements I
     await this.btnDelRecord_Click();
   }
 
-  public async onExportAi4(): Promise<ExportExcelData> {
-    return await this.ExportExcel_PrjDataBaseCacheAi2();
-  }
+  // public async onExportAi4(): Promise<ExportExcelData> {
+  //   return await this.ExportExcel_PrjDataBaseCacheAi2();
+  // }
 
   public async executeCommand(commandId: PrjDataBaseCommandIdAi4): Promise<ExportExcelData | void> {
     switch (commandId) {
       case 'query':
         await this.onQuery();
         return;
-      case 'export':
-        return await this.onExportAi4();
+      // case 'export':
+      //   return await this.onExportAi4();
       case 'create':
         await this.onCreate('Create', '');
         return;

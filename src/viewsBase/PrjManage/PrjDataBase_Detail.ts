@@ -12,11 +12,11 @@
  * 框架-层名:Vue_详细信息后台_TS(TS)(Vue_ViewScript_DetailCS_TS,0260)
  * 编程语言:TypeScript
  **/
-import { PrjDataBase_GetObjByPrjDataBaseIdAsync } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
+import { PrjDataBase_GetObjByKeyAsync } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
 import { ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { PrjDataBaseEx_FuncMapByFldName } from '@/ts/L3ForWApiEx/PrjManage/clsPrjDataBaseExWApi';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
-import { clsPrjDataBaseEN } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
+import { clsPrjDataBaseEN, PrjDataBaseKey } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
 import { divVarSet, refPrjDataBase_Detail } from '@/views/PrjManage/PrjDataBaseVueShare';
 import { clsPrjDataBaseENEx } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseENEx';
 import { IShowList } from '@/ts/PubFun/IShowList';
@@ -109,17 +109,17 @@ export abstract class PrjDataBase_Detail {
  在数据表里详细信息记录
  (AutoGCLib.WA_ViewScript_DetailCS_TS4TypeScript:Gen_WApi_Ts_btnDetailRecordInTab_Click)
 */
-  public async btnDetailRecordInTab_Click(strKeyId: string) {
+  public async btnDetailRecordInTab_Click(key: PrjDataBaseKey) {
     const strThisFuncName = this.btnDetailRecordInTab_Click.name;
     this.opType = 'Detail';
     const bolIsSuccess = await this.ShowDialog_PrjDataBase('Detail');
     if (bolIsSuccess == false) return;
     try {
-      if (strKeyId == '') {
+      if (key.prjDataBaseId == '') {
         alert('请选择需要详细信息的记录!');
         return '';
       }
-      this.DetailRecord4Func(strKeyId);
+      this.DetailRecord4Func(key.prjDataBaseId);
     } catch (e) {
       const strMsg = Format(
         '详细信息记录不成功. {0}.(in {1}.{2})',
@@ -141,7 +141,9 @@ export abstract class PrjDataBase_Detail {
     const strThisFuncName = this.DetailRecord4Func.name;
     this.btnCancelPrjDataBase = '关闭';
     try {
-      const objPrjDataBaseEN = await PrjDataBase_GetObjByPrjDataBaseIdAsync(strPrjDataBaseId);
+      const objPrjDataBaseEN = await PrjDataBase_GetObjByKeyAsync({
+        prjDataBaseId: strPrjDataBaseId,
+      });
       const objPrjDataBaseENEx = new clsPrjDataBaseENEx();
       ObjectAssign(objPrjDataBaseENEx, objPrjDataBaseEN);
       await PrjDataBaseEx_FuncMapByFldName(

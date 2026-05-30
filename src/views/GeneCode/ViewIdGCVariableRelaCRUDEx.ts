@@ -140,6 +140,9 @@ export default class ViewIdGCVariableRelaCRUDEx
       case 'varTypeName|Ex':
         viewVarSet.sortViewIdGCVariableRelaBy = `GCVariable|varTypeName ${sortDirection}|ViewIdGCVariableRela.VarId = GCVariable.VarId,GCVariable.VarTypeId = GCVariableType.VarTypeId`;
         break;
+      case 'filePath|Ex':
+        viewVarSet.sortViewIdGCVariableRelaBy = `filePath ${sortDirection}|(GCVariable)ViewIdGCVariableRela.VarId = GCVariable.VarId|`;
+        break;
       case 'dsTabId|Ex':
         viewVarSet.sortViewIdGCVariableRelaBy = `GCVariable|dsTabId ${sortDirection}|ViewIdGCVariableRela.VarId = GCVariable.VarId`;
         break;

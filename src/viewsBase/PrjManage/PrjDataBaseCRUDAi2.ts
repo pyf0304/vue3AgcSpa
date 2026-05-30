@@ -239,7 +239,7 @@ export abstract class PrjDataBaseCRUDAi2 extends AIOperateListBase implements cl
         }
 
         if (returnBool == true) {
-          PrjDataBase_DeleteKeyIdCache(objInFor.prjDataBaseId);
+          PrjDataBase_DeleteKeyIdCache({ prjDataBaseId: objInFor.prjDataBaseId });
           intCount++;
         } else {
           alert('设置记录不成功!');

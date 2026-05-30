@@ -1,7 +1,7 @@
 ﻿import { clsvFunctionTemplateRelaBLEx } from './clsvFunctionTemplateRelaBLEx';
 
 import { FeatureFuncRela_GetObjLstCache } from '@/ts/L3ForWApi/PrjFunction/clsFeatureFuncRelaWApi';
-import { vFunction4GeneCode_Sim_GetObjLstCache } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4GeneCode_SimWApi';
+
 import { clsFunction4GeneCodeEN } from '@/ts/L0Entity/PrjFunction/clsFunction4GeneCodeEN';
 import { clsFeatureFuncRelaEN } from '@/ts/L0Entity/PrjFunction/clsFeatureFuncRelaEN';
 import { enumRegionType } from '@/ts/L0Entity/RegionManage/clsRegionTypeEN';
@@ -11,10 +11,12 @@ import { clsPrjTabENEx4GC } from '@/ts/L0Entity/Table_Field/clsPrjTabENEx4GC';
 import { clsViewInfoENEx4GC } from '@/ts/L0Entity/PrjInterface/clsViewInfoENEx4GC';
 
 import { clsvFunction4GeneCode_SimEN } from '@/ts/L0Entity/PrjFunction/clsvFunction4GeneCode_SimEN';
+import { vFunction4GeneCode_Sim_GetObjLstAsync } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4GeneCode_SimWApi';
 import { vFunction4GeneCode_SimEx_SortFunByKey } from '@/ts/L3ForWApiEx/PrjFunction/clsvFunction4GeneCode_SimExWApi';
 import { clsvFunction4GeneCode_SimENEx } from '@/ts/L0Entity/PrjFunction/clsvFunction4GeneCode_SimENEx';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
-import { vFunction4Code_Sim_GetObjLstAsync } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4Code_SimWApi';
+import { usevFunction4Code_SimStore } from '@/store/modules/vFunction4Code_Sim';
+import { usevFunction4GeneCode_SimStore } from '@/store/modules/vFunction4GeneCode_Sim';
 
 export class clsFunction4GeneCodeBLEx {
   /// <summary>
@@ -25,10 +27,11 @@ export class clsFunction4GeneCodeBLEx {
   /// <returns>根据函数名称获取的对象</returns>
   public static async GetObjByFuncName4CodeCache(strFuncName4Code: string) {
     if (IsNullOrEmpty(strFuncName4Code) == true) return null;
-    //初始化列表缓存
-    const arrObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
+    const vFunction4Code_SimStore = usevFunction4Code_SimStore();
+    const vFunction4GeneCode_SimStore = usevFunction4GeneCode_SimStore();
 
-    const arrFunction4CodeObjLstCache = await vFunction4Code_Sim_GetObjLstAsync('1=1');
+    const arrObjLstCache = await vFunction4GeneCode_SimStore.ensureObjLstCache();
+    const arrFunction4CodeObjLstCache = await vFunction4Code_SimStore.ensureObjLstCache();
     const arrFunction4CodeObjLst_Sel = arrFunction4CodeObjLstCache.filter(
       (x) => x.funcName4Code == strFuncName4Code,
     );
@@ -59,24 +62,6 @@ export class clsFunction4GeneCodeBLEx {
     return false;
   }
 
-  public static async GetObjByFuncId4GCCacheEx(strFuncId4GC: string) {
-    // const strWhereCond = Format('1 = 1 Order By {0}', clsFunction4GeneCodeEN.con_OrderNum);
-    const arrObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
-
-    // const arrFunction4GeneCodeObjLst: Array<clsFunction4GeneCodeEN> =
-    //   new Array<clsFunction4GeneCodeEN>();
-
-    const arrFunction4GeneCodeObjLst_Sel1 = arrObjLstCache.filter(
-      (x) => x.funcId4GC == strFuncId4GC,
-    );
-    const arrFunction4GeneCodeObjLst_Sel: Array<clsvFunction4GeneCode_SimEN> =
-      new Array<clsvFunction4GeneCode_SimEN>();
-    for (const obj of arrFunction4GeneCodeObjLst_Sel1) {
-      arrFunction4GeneCodeObjLst_Sel.push(obj);
-    }
-    if (arrFunction4GeneCodeObjLst_Sel.length > 0) return arrFunction4GeneCodeObjLst_Sel[0];
-    return null;
-  }
   /// <summary>
   /// 获取表相关所有的生成代码函数对象列表
   /// </summary>
@@ -130,21 +115,6 @@ export class clsFunction4GeneCodeBLEx {
     return arrvFunction4GeneCodeObjLst_All;
   }
 
-  /// <summary>
-  ///
-  /// </summary>
-  /// <param name="strFuncName"></param>
-  /// <returns></returns>
-  public static async GetObjByFuncNameCacheEx(strFuncName: string) {
-    const arrObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
-    // const arrFunction4GeneCodeObjLst = new Array<clsvFunction4GeneCode_SimEN>();
-
-    const arrFunction4GeneCodeObjLst_Sel1 = arrObjLstCache.filter((x) => x.funcName == strFuncName);
-
-    if (arrFunction4GeneCodeObjLst_Sel1.length > 0) return arrFunction4GeneCodeObjLst_Sel1[0];
-
-    return null;
-  }
   public static async GetObjLstByFeatureIdCache(
     strFeatureId: string,
     intApplicationTypeId: number,
@@ -156,12 +126,14 @@ export class clsFunction4GeneCodeBLEx {
     );
 
     const arrFuncId4GC: Array<string> = arrFeatureFuncRela.map((x) => x.funcId4GC);
-    const arrvFunction4GeneCodeObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
-    //return arrFeatureFuncRelaObjLstCache;
-    const arrFunction4GeneCodeObjLst = arrvFunction4GeneCodeObjLstCache.filter(
-      (x) => arrFuncId4GC.indexOf(x.funcId4GC) > -1,
+    const strWhere = Format(
+      'funcId4GC in ({0})',
+      arrFuncId4GC.map((x) => Format("'{0}'", x)).join(','),
     );
-    return arrFunction4GeneCodeObjLst;
+    const arrvFunction4GeneCodeObjLst = await vFunction4GeneCode_Sim_GetObjLstAsync(strWhere);
+    //return arrFeatureFuncRelaObjLstCache;
+
+    return arrvFunction4GeneCodeObjLst;
   }
 
   public static async GetObjLst4FeatureIdLst2(
@@ -175,9 +147,12 @@ export class clsFunction4GeneCodeBLEx {
       (x) => arrFeatureId.indexOf(x.featureId) > -1,
     );
     const arrFuncId: Array<string> = arrFeatureFuncRela.map((x) => x.funcId4GC);
-    let arrvFunction4GeneCodeObjLst4TabFeature = await vFunction4GeneCode_Sim_GetObjLstCache();
-    arrvFunction4GeneCodeObjLst4TabFeature = arrvFunction4GeneCodeObjLst4TabFeature.filter(
-      (x) => arrFuncId.indexOf(x.funcId4GC) > -1,
+    const strWhere = Format(
+      'funcId4GC in ({0})',
+      arrFuncId.map((x) => Format("'{0}'", x)).join(','),
+    );
+    const arrvFunction4GeneCodeObjLst4TabFeature = await vFunction4GeneCode_Sim_GetObjLstAsync(
+      strWhere,
     );
     return arrvFunction4GeneCodeObjLst4TabFeature;
     //Array<clsFunction4GeneCodeEN> arrvFunction4GeneCodeObjLst4TabFeature = Function4GeneCode_GetObjLstCache(strCondition).filter(x => x.codeTypeId == objPrjTabENEx.codeTypeId);
@@ -194,11 +169,14 @@ export class clsFunction4GeneCodeBLEx {
       (x) => x.applicationTypeId == intApplicationTypeId && arrFeatureId.indexOf(x.featureId) > -1,
     );
     const arrFuncId: Array<string> = arrFeatureFuncRela.map((x) => x.funcId4GC);
-    let arrvFunction4GeneCodeObjLst4TabFeature = await vFunction4GeneCode_Sim_GetObjLstCache();
-
-    arrvFunction4GeneCodeObjLst4TabFeature = arrvFunction4GeneCodeObjLst4TabFeature.filter(
-      (x) => arrFuncId.indexOf(x.funcId4GC) > -1,
+    const strWhere = Format(
+      'funcId4GC in ({0})',
+      arrFuncId.map((x) => Format("'{0}'", x)).join(','),
     );
+    const arrvFunction4GeneCodeObjLst4TabFeature = await vFunction4GeneCode_Sim_GetObjLstAsync(
+      strWhere,
+    );
+
     return arrvFunction4GeneCodeObjLst4TabFeature;
   }
   /// <summary>

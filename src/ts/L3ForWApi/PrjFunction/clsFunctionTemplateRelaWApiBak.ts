@@ -38,10 +38,6 @@ import { FunctionTemplate_func } from '@/ts/L3ForWApi/PrjFunction/clsFunctionTem
 import { clsFunctionTemplateEN } from '@/ts/L0Entity/PrjFunction/clsFunctionTemplateEN';
 import { RegionType_func } from '@/ts/L3ForWApi/RegionManage/clsRegionTypeWApi';
 import { clsRegionTypeEN } from '@/ts/L0Entity/RegionManage/clsRegionTypeEN';
-import { vFunction4GeneCode_Sim_func } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4GeneCode_SimWApi';
-import { clsvFunction4GeneCode_SimEN } from '@/ts/L0Entity/PrjFunction/clsvFunction4GeneCode_SimEN';
-import { vFunction4Code_Sim_func } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4Code_SimWApi';
-import { clsvFunction4Code_SimEN } from '@/ts/L0Entity/PrjFunction/clsvFunction4Code_SimEN';
 import { vCodeType_Sim_func } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
 import { clsvCodeType_SimEN } from '@/ts/L0Entity/GeneCode/clsvCodeType_SimEN';
 import { ProgLangType_func } from '@/ts/L3ForWApi/SysPara/clsProgLangTypeWApi';
@@ -1156,10 +1152,10 @@ export function FunctionTemplateRela_FuncMapByFldName(
       return FunctionTemplateRela_FuncMapFunctionTemplateName(objFunctionTemplateRelaEx);
     case clsFunctionTemplateRelaENEx.con_RegionTypeName:
       return FunctionTemplateRela_FuncMapRegionTypeName(objFunctionTemplateRelaEx);
-    case clsFunctionTemplateRelaENEx.con_FuncName:
-      return FunctionTemplateRela_FuncMapFuncName(objFunctionTemplateRelaEx);
-    case clsFunctionTemplateRelaENEx.con_FuncName4Code:
-      return FunctionTemplateRela_FuncMapFuncName4Code(objFunctionTemplateRelaEx);
+    // case clsFunctionTemplateRelaENEx.con_FuncName:
+    //   return FunctionTemplateRela_FuncMapFuncName(objFunctionTemplateRelaEx);
+    // case clsFunctionTemplateRelaENEx.con_FuncName4Code:
+    //   return FunctionTemplateRela_FuncMapFuncName4Code(objFunctionTemplateRelaEx);
     case clsFunctionTemplateRelaENEx.con_ProgLangTypeSimName:
       return FunctionTemplateRela_FuncMapProgLangTypeSimName(objFunctionTemplateRelaEx);
     case clsFunctionTemplateRelaENEx.con_CodeTypeSimName:
@@ -1338,72 +1334,72 @@ export async function FunctionTemplateRela_FuncMapRegionTypeName(
     alert(strMsg);
   }
 }
-/**
- * 把一个扩展类的部分属性进行函数转换
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
- * @param objFunctionTemplateRelaS:源对象
- **/
-export async function FunctionTemplateRela_FuncMapFuncName(
-  objFunctionTemplateRela: clsFunctionTemplateRelaENEx,
-) {
-  const strThisFuncName = FunctionTemplateRela_FuncMapFuncName.name;
-  try {
-    if (IsNullOrEmpty(objFunctionTemplateRela.funcName) == true) {
-      const vFunction4GeneCodeSimFuncId4GC = objFunctionTemplateRela.funcId4GC;
-      const vFunction4GeneCodeSimFuncName = await vFunction4GeneCode_Sim_func(
-        clsvFunction4GeneCode_SimEN.con_FuncId4GC,
-        clsvFunction4GeneCode_SimEN.con_FuncName,
-        vFunction4GeneCodeSimFuncId4GC,
-      );
-      objFunctionTemplateRela.funcName = vFunction4GeneCodeSimFuncName;
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '(errid:Watl001359)函数映射表对象数据出错,{0}.(in {1}.{2})',
-      e,
-      functionTemplateRela_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-  }
-}
-/**
- * 把一个扩展类的部分属性进行函数转换
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
- * @param objFunctionTemplateRelaS:源对象
- **/
-export async function FunctionTemplateRela_FuncMapFuncName4Code(
-  objFunctionTemplateRela: clsFunctionTemplateRelaENEx,
-) {
-  const strThisFuncName = FunctionTemplateRela_FuncMapFuncName4Code.name;
-  try {
-    if (IsNullOrEmpty(objFunctionTemplateRela.funcName4Code) == true) {
-      const vFunction4GeneCodeSimFuncId4GC = objFunctionTemplateRela.funcId4GC;
-      const vFunction4GeneCodeSimFuncId4Code = await vFunction4GeneCode_Sim_func(
-        clsvFunction4GeneCode_SimEN.con_FuncId4GC,
-        clsvFunction4GeneCode_SimEN.con_FuncId4Code,
-        vFunction4GeneCodeSimFuncId4GC,
-      );
-      const vFunction4CodeSimFuncId4Code = vFunction4GeneCodeSimFuncId4Code;
-      const vFunction4CodeSimFuncName4Code = await vFunction4Code_Sim_func(
-        clsvFunction4Code_SimEN.con_FuncId4Code,
-        clsvFunction4Code_SimEN.con_FuncName4Code,
-        vFunction4CodeSimFuncId4Code,
-      );
-      objFunctionTemplateRela.funcName4Code = vFunction4CodeSimFuncName4Code;
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '(errid:Watl001360)函数映射表对象数据出错,{0}.(in {1}.{2})',
-      e,
-      functionTemplateRela_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-  }
-}
+// /**
+//  * 把一个扩展类的部分属性进行函数转换
+//  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
+//  * @param objFunctionTemplateRelaS:源对象
+//  **/
+// export async function FunctionTemplateRela_FuncMapFuncName(
+//   objFunctionTemplateRela: clsFunctionTemplateRelaENEx,
+// ) {
+//   const strThisFuncName = FunctionTemplateRela_FuncMapFuncName.name;
+//   try {
+//     if (IsNullOrEmpty(objFunctionTemplateRela.funcName) == true) {
+//       const vFunction4GeneCodeSimFuncId4GC = objFunctionTemplateRela.funcId4GC;
+//       const vFunction4GeneCodeSimFuncName = await vFunction4GeneCode_Sim_func(
+//         clsvFunction4GeneCode_SimEN.con_FuncId4GC,
+//         clsvFunction4GeneCode_SimEN.con_FuncName,
+//         vFunction4GeneCodeSimFuncId4GC,
+//       );
+//       objFunctionTemplateRela.funcName = vFunction4GeneCodeSimFuncName;
+//     }
+//   } catch (e) {
+//     const strMsg = Format(
+//       '(errid:Watl001359)函数映射表对象数据出错,{0}.(in {1}.{2})',
+//       e,
+//       functionTemplateRela_ConstructorName,
+//       strThisFuncName,
+//     );
+//     console.error(strMsg);
+//     alert(strMsg);
+//   }
+// }
+// /**
+//  * 把一个扩展类的部分属性进行函数转换
+//  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
+//  * @param objFunctionTemplateRelaS:源对象
+//  **/
+// export async function FunctionTemplateRela_FuncMapFuncName4Code(
+//   objFunctionTemplateRela: clsFunctionTemplateRelaENEx,
+// ) {
+//   const strThisFuncName = FunctionTemplateRela_FuncMapFuncName4Code.name;
+//   try {
+//     if (IsNullOrEmpty(objFunctionTemplateRela.funcName4Code) == true) {
+//       const vFunction4GeneCodeSimFuncId4GC = objFunctionTemplateRela.funcId4GC;
+//       const vFunction4GeneCodeSimFuncId4Code = await vFunction4GeneCode_Sim_func(
+//         clsvFunction4GeneCode_SimEN.con_FuncId4GC,
+//         clsvFunction4GeneCode_SimEN.con_FuncId4Code,
+//         vFunction4GeneCodeSimFuncId4GC,
+//       );
+//       const vFunction4CodeSimFuncId4Code = vFunction4GeneCodeSimFuncId4Code;
+//       const vFunction4CodeSimFuncName4Code = await vFunction4Code_Sim_func(
+//         clsvFunction4Code_SimEN.con_FuncId4Code,
+//         clsvFunction4Code_SimEN.con_FuncName4Code,
+//         vFunction4CodeSimFuncId4Code,
+//       );
+//       objFunctionTemplateRela.funcName4Code = vFunction4CodeSimFuncName4Code;
+//     }
+//   } catch (e) {
+//     const strMsg = Format(
+//       '(errid:Watl001360)函数映射表对象数据出错,{0}.(in {1}.{2})',
+//       e,
+//       functionTemplateRela_ConstructorName,
+//       strThisFuncName,
+//     );
+//     console.error(strMsg);
+//     alert(strMsg);
+//   }
+// }
 /**
  * 把一个扩展类的部分属性进行函数转换
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)

@@ -7,7 +7,7 @@ import { clsQxRoleMenusENEx } from '@/ts/L0Entity/MenuManage_GP/clsQxRoleMenusEN
 import { UserPrjGrant_GetObjLstAsync } from '@/ts/L3ForWApi/AuthorityManage/clsUserPrjGrantWApi';
 
 import { CMProject_GetNameByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
-import { PrjDataBase_GetNameByPrjDataBaseIdCache } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
+import { PrjDataBase_GetNameByKeyCache } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
 import {
   UserPrjGrantEx_CopyToEx,
   UserPrjGrantEx_FuncMapByFldName,
@@ -259,9 +259,9 @@ export class MainIndex {
         clsPubLocalStorage.userId,
       );
       if (objUserDefaPrjDataBaseEN != null) {
-        const strPrjDataBaseName = await PrjDataBase_GetNameByPrjDataBaseIdCache(
-          objUserDefaPrjDataBaseEN.prjDataBaseId,
-        );
+        const strPrjDataBaseName = await PrjDataBase_GetNameByKeyCache({
+          prjDataBaseId: objUserDefaPrjDataBaseEN.prjDataBaseId,
+        });
         $('#lblCurrProject').html(
           `${clsPrivateSessionStorage.currSelPrjId}${clsPrivateSessionStorage.currSelPrjName}(${objUserDefaPrjDataBaseEN.prjDataBaseId}${strPrjDataBaseName}`,
         );

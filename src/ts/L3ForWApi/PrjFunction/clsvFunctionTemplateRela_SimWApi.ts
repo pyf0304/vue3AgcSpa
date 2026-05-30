@@ -43,12 +43,7 @@ import {
 } from '@/views/PrjFunction/vFunctionTemplateRela_SimVueShare';
 import { clsvFunctionTemplateRela_SimENEx } from '@/ts/L0Entity/PrjFunction/clsvFunctionTemplateRela_SimENEx';
 import { clsvFunctionTemplateRela_SimEN } from '@/ts/L0Entity/PrjFunction/clsvFunctionTemplateRela_SimEN';
-import { vFunction4GeneCode_Sim_func } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4GeneCode_SimWApi';
-import { clsvFunction4GeneCode_SimEN } from '@/ts/L0Entity/PrjFunction/clsvFunction4GeneCode_SimEN';
-import { vCodeType_Sim_func } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
-import { clsvCodeType_SimEN } from '@/ts/L0Entity/GeneCode/clsvCodeType_SimEN';
-import { ProgLangType_func } from '@/ts/L3ForWApi/SysPara/clsProgLangTypeWApi';
-import { clsProgLangTypeEN } from '@/ts/L0Entity/SysPara/clsProgLangTypeEN';
+
 import { SQLDSType_func } from '@/ts/L3ForWApi/PrjInterface/clsSQLDSTypeWApi';
 import { clsSQLDSTypeEN } from '@/ts/L0Entity/PrjInterface/clsSQLDSTypeEN';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
@@ -2075,10 +2070,10 @@ export function vFunctionTemplateRela_Sim_FuncMapByFldName(
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
-    case clsvFunctionTemplateRela_SimENEx.con_ProgLangTypeId:
-      return vFunctionTemplateRela_Sim_FuncMapProgLangTypeId(objvFunctionTemplateRela_SimEx);
-    case clsvFunctionTemplateRela_SimENEx.con_ProgLangTypeName:
-      return vFunctionTemplateRela_Sim_FuncMapProgLangTypeName(objvFunctionTemplateRela_SimEx);
+    // case clsvFunctionTemplateRela_SimENEx.con_ProgLangTypeId:
+    //   return vFunctionTemplateRela_Sim_FuncMapProgLangTypeId(objvFunctionTemplateRela_SimEx);
+    // case clsvFunctionTemplateRela_SimENEx.con_ProgLangTypeName:
+    //   return vFunctionTemplateRela_Sim_FuncMapProgLangTypeName(objvFunctionTemplateRela_SimEx);
     case clsvFunctionTemplateRela_SimENEx.con_SqlDsTypeName:
       return vFunctionTemplateRela_Sim_FuncMapSqlDsTypeName(objvFunctionTemplateRela_SimEx);
     default:
@@ -2163,84 +2158,84 @@ export function vFunctionTemplateRela_Sim_SortFunByExKey(strKey: string, AscOrDe
   }
 }
 
-/**
- * 把一个扩展类的部分属性进行函数转换
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
- * @param objvFunctionTemplateRela_SimS:源对象
- **/
-export async function vFunctionTemplateRela_Sim_FuncMapProgLangTypeId(
-  objvFunctionTemplateRela_Sim: clsvFunctionTemplateRela_SimENEx,
-) {
-  const strThisFuncName = vFunctionTemplateRela_Sim_FuncMapProgLangTypeId.name;
-  try {
-    if (IsNullOrEmpty(objvFunctionTemplateRela_Sim.progLangTypeId) == true) {
-      const vFunction4GeneCodeSimFuncId4GC = objvFunctionTemplateRela_Sim.funcId4GC;
-      const vFunction4GeneCodeSimFuncCodeTypeId = await vFunction4GeneCode_Sim_func(
-        clsvFunction4GeneCode_SimEN.con_FuncId4GC,
-        clsvFunction4GeneCode_SimEN.con_FuncCodeTypeId,
-        vFunction4GeneCodeSimFuncId4GC,
-      );
-      const vCodeTypeSimCodeTypeId = vFunction4GeneCodeSimFuncCodeTypeId;
-      const vCodeTypeSimProgLangTypeId = await vCodeType_Sim_func(
-        clsvCodeType_SimEN.con_CodeTypeId,
-        clsvCodeType_SimEN.con_ProgLangTypeId,
-        vCodeTypeSimCodeTypeId,
-      );
-      objvFunctionTemplateRela_Sim.progLangTypeId = vCodeTypeSimProgLangTypeId;
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '(errid:Watl001389)函数映射表对象数据出错,{0}.(in {1}.{2})',
-      e,
-      vFunctionTemplateRela_Sim_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-  }
-}
-/**
- * 把一个扩展类的部分属性进行函数转换
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
- * @param objvFunctionTemplateRela_SimS:源对象
- **/
-export async function vFunctionTemplateRela_Sim_FuncMapProgLangTypeName(
-  objvFunctionTemplateRela_Sim: clsvFunctionTemplateRela_SimENEx,
-) {
-  const strThisFuncName = vFunctionTemplateRela_Sim_FuncMapProgLangTypeName.name;
-  try {
-    if (IsNullOrEmpty(objvFunctionTemplateRela_Sim.progLangTypeName) == true) {
-      const vFunction4GeneCodeSimFuncId4GC = objvFunctionTemplateRela_Sim.funcId4GC;
-      const vFunction4GeneCodeSimFuncCodeTypeId = await vFunction4GeneCode_Sim_func(
-        clsvFunction4GeneCode_SimEN.con_FuncId4GC,
-        clsvFunction4GeneCode_SimEN.con_FuncCodeTypeId,
-        vFunction4GeneCodeSimFuncId4GC,
-      );
-      const vCodeTypeSimCodeTypeId = vFunction4GeneCodeSimFuncCodeTypeId;
-      const vCodeTypeSimProgLangTypeId = await vCodeType_Sim_func(
-        clsvCodeType_SimEN.con_CodeTypeId,
-        clsvCodeType_SimEN.con_ProgLangTypeId,
-        vCodeTypeSimCodeTypeId,
-      );
-      const ProgLangTypeProgLangTypeId = vCodeTypeSimProgLangTypeId;
-      const ProgLangTypeProgLangTypeName = await ProgLangType_func(
-        clsProgLangTypeEN.con_ProgLangTypeId,
-        clsProgLangTypeEN.con_ProgLangTypeName,
-        ProgLangTypeProgLangTypeId,
-      );
-      objvFunctionTemplateRela_Sim.progLangTypeName = ProgLangTypeProgLangTypeName;
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '(errid:Watl001312)函数映射表对象数据出错,{0}.(in {1}.{2})',
-      e,
-      vFunctionTemplateRela_Sim_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-  }
-}
+// /**
+//  * 把一个扩展类的部分属性进行函数转换
+//  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
+//  * @param objvFunctionTemplateRela_SimS:源对象
+//  **/
+// export async function vFunctionTemplateRela_Sim_FuncMapProgLangTypeId(
+//   objvFunctionTemplateRela_Sim: clsvFunctionTemplateRela_SimENEx,
+// ) {
+//   const strThisFuncName = vFunctionTemplateRela_Sim_FuncMapProgLangTypeId.name;
+//   try {
+//     if (IsNullOrEmpty(objvFunctionTemplateRela_Sim.progLangTypeId) == true) {
+//       const vFunction4GeneCodeSimFuncId4GC = objvFunctionTemplateRela_Sim.funcId4GC;
+//       const vFunction4GeneCodeSimFuncCodeTypeId = await vFunction4GeneCode_Sim_func(
+//         clsvFunction4GeneCode_SimEN.con_FuncId4GC,
+//         clsvFunction4GeneCode_SimEN.con_FuncCodeTypeId,
+//         vFunction4GeneCodeSimFuncId4GC,
+//       );
+//       const vCodeTypeSimCodeTypeId = vFunction4GeneCodeSimFuncCodeTypeId;
+//       const vCodeTypeSimProgLangTypeId = await vCodeType_Sim_func(
+//         clsvCodeType_SimEN.con_CodeTypeId,
+//         clsvCodeType_SimEN.con_ProgLangTypeId,
+//         vCodeTypeSimCodeTypeId,
+//       );
+//       objvFunctionTemplateRela_Sim.progLangTypeId = vCodeTypeSimProgLangTypeId;
+//     }
+//   } catch (e) {
+//     const strMsg = Format(
+//       '(errid:Watl001389)函数映射表对象数据出错,{0}.(in {1}.{2})',
+//       e,
+//       vFunctionTemplateRela_Sim_ConstructorName,
+//       strThisFuncName,
+//     );
+//     console.error(strMsg);
+//     alert(strMsg);
+//   }
+// }
+// /**
+//  * 把一个扩展类的部分属性进行函数转换
+//  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)
+//  * @param objvFunctionTemplateRela_SimS:源对象
+//  **/
+// export async function vFunctionTemplateRela_Sim_FuncMapProgLangTypeName(
+//   objvFunctionTemplateRela_Sim: clsvFunctionTemplateRela_SimENEx,
+// ) {
+//   const strThisFuncName = vFunctionTemplateRela_Sim_FuncMapProgLangTypeName.name;
+//   try {
+//     if (IsNullOrEmpty(objvFunctionTemplateRela_Sim.progLangTypeName) == true) {
+//       const vFunction4GeneCodeSimFuncId4GC = objvFunctionTemplateRela_Sim.funcId4GC;
+//       const vFunction4GeneCodeSimFuncCodeTypeId = await vFunction4GeneCode_Sim_func(
+//         clsvFunction4GeneCode_SimEN.con_FuncId4GC,
+//         clsvFunction4GeneCode_SimEN.con_FuncCodeTypeId,
+//         vFunction4GeneCodeSimFuncId4GC,
+//       );
+//       const vCodeTypeSimCodeTypeId = vFunction4GeneCodeSimFuncCodeTypeId;
+//       const vCodeTypeSimProgLangTypeId = await vCodeType_Sim_func(
+//         clsvCodeType_SimEN.con_CodeTypeId,
+//         clsvCodeType_SimEN.con_ProgLangTypeId,
+//         vCodeTypeSimCodeTypeId,
+//       );
+//       const ProgLangTypeProgLangTypeId = vCodeTypeSimProgLangTypeId;
+//       const ProgLangTypeProgLangTypeName = await ProgLangType_func(
+//         clsProgLangTypeEN.con_ProgLangTypeId,
+//         clsProgLangTypeEN.con_ProgLangTypeName,
+//         ProgLangTypeProgLangTypeId,
+//       );
+//       objvFunctionTemplateRela_Sim.progLangTypeName = ProgLangTypeProgLangTypeName;
+//     }
+//   } catch (e) {
+//     const strMsg = Format(
+//       '(errid:Watl001312)函数映射表对象数据出错,{0}.(in {1}.{2})',
+//       e,
+//       vFunctionTemplateRela_Sim_ConstructorName,
+//       strThisFuncName,
+//     );
+//     console.error(strMsg);
+//     alert(strMsg);
+//   }
+// }
 /**
  * 把一个扩展类的部分属性进行函数转换
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMap)

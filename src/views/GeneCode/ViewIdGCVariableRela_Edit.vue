@@ -411,8 +411,13 @@
           strInitDsTabId != '' &&
           (arrvPrjTab_Sim.value ?? []).some((x) => x.tabId == strInitDsTabId);
 
-        skipNextDsTabWatch = true;
-        dsTabId.value = hasDsTab ? strInitDsTabId : '';
+        const strNextDsTabId = hasDsTab ? strInitDsTabId : '';
+        const bolWillChangeDsTab = dsTabId.value != strNextDsTabId;
+        skipNextDsTabWatch = bolWillChangeDsTab;
+        dsTabId.value = strNextDsTabId;
+        if (bolWillChangeDsTab == false) {
+          skipNextDsTabWatch = false;
+        }
         initValue.value = strInitValue;
         await LoadInitValueByDsTabId(dsTabId.value);
       }

@@ -23,7 +23,7 @@ import {
   PrjDataBase_IsExistRecordAsync,
   PrjDataBase_GetUniCondStr4Update,
   PrjDataBase_IsExistAsync,
-  PrjDataBase_GetObjByPrjDataBaseIdAsync,
+  PrjDataBase_GetObjByKeyAsync,
   PrjDataBase_CheckProperty4Update,
   PrjDataBase_UpdateRecordAsync,
   PrjDataBase_EditRecordExAsync,
@@ -47,7 +47,7 @@ export abstract class PrjDataBase_Edit {
   }
   public static times4TestShowDialog = 0;
   public opType = '';
-  public keyId = '';
+  public keyId = { prjDataBaseId: '' };
   public isShowMsg = true; //编辑记录时是否显示提示信息
   public tag = ''; //编辑对象的标志，用于存放或者标志一些信息
   public static strPageDispModeId = '01'; //PopupBox(弹出框)
@@ -298,7 +298,7 @@ export abstract class PrjDataBase_Edit {
                 refPrjDataBase_Edit.value.hideDialog();
               }
               if (this.iShowList != null)
-                this.iShowList.BindGvCache(clsPrjDataBaseEN._CurrTabName, this.keyId);
+                this.iShowList.BindGvCache(clsPrjDataBaseEN._CurrTabName, this.keyId.prjDataBaseId);
             }
           }
           break;
@@ -315,7 +315,7 @@ export abstract class PrjDataBase_Edit {
               refPrjDataBase_Edit.value.hideDialog();
             }
             if (this.iShowList != null)
-              this.iShowList.BindGvCache(clsPrjDataBaseEN._CurrTabName, this.keyId);
+              this.iShowList.BindGvCache(clsPrjDataBaseEN._CurrTabName, this.keyId.prjDataBaseId);
           }
           break;
         default:
@@ -364,7 +364,7 @@ export abstract class PrjDataBase_Edit {
         //显示信息框
         alert(strInfo);
       } else {
-        this.keyId = returnString;
+        this.keyId = { prjDataBaseId: returnString };
       }
     } catch (e) {
       const strMsg = Format(
@@ -393,7 +393,7 @@ export abstract class PrjDataBase_Edit {
         //显示信息框
         alert(strInfo);
       } else {
-        this.keyId = returnString;
+        this.keyId = { prjDataBaseId: returnString };
       }
     } catch (e) {
       const strMsg = Format(
@@ -448,7 +448,7 @@ export abstract class PrjDataBase_Edit {
       let returnBool = false;
       const returnKeyId = await PrjDataBase_AddNewRecordWithMaxIdAsync(objPrjDataBaseEN);
       if (IsNullOrEmpty(returnKeyId) == false) {
-        this.keyId = returnKeyId;
+        this.keyId = { prjDataBaseId: returnKeyId };
         returnBool = true;
       }
       if (returnBool == true) {
@@ -592,7 +592,9 @@ export abstract class PrjDataBase_Edit {
     //2、检查该关键字的记录是否存在,如果不存在就返回不显示；
     let objPrjDataBaseEN = new clsPrjDataBaseEN();
     try {
-      const returnBool = await PrjDataBase_IsExistAsync(strPrjDataBaseId);
+      const returnBool = await PrjDataBase_IsExistAsync({
+        prjDataBaseId: strPrjDataBaseId,
+      });
       if (returnBool == false) {
         const strInfo = Format('关键字:[{0}] 的记录不存在!', strPrjDataBaseId);
         //显示信息框
@@ -609,7 +611,9 @@ export abstract class PrjDataBase_Edit {
       alert(strMsg);
     }
     try {
-      const objPrjDataBaseENConst = await PrjDataBase_GetObjByPrjDataBaseIdAsync(strPrjDataBaseId);
+      const objPrjDataBaseENConst = await PrjDataBase_GetObjByKeyAsync({
+        prjDataBaseId: strPrjDataBaseId,
+      });
       if (objPrjDataBaseENConst == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -641,9 +645,9 @@ export abstract class PrjDataBase_Edit {
    **/
   public async UpdateRecord(strPrjDataBaseId: string): Promise<boolean> {
     const strThisFuncName = this.UpdateRecord.name;
-    this.keyId = strPrjDataBaseId;
+    this.keyId = { prjDataBaseId: strPrjDataBaseId };
     try {
-      const objPrjDataBaseEN = await PrjDataBase_GetObjByPrjDataBaseIdAsync(strPrjDataBaseId);
+      const objPrjDataBaseEN = await PrjDataBase_GetObjByKeyAsync(this.keyId);
       if (objPrjDataBaseEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

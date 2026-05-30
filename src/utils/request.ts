@@ -5,6 +5,7 @@ import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
 import { Storage } from '@/utils/Storage';
 import { useUserStore } from '@/store/modulesShare/user';
 import { uniqueSlash } from '@/utils/urlUtils';
+import { GetBaseApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 
 export interface RequestOptions {
   /** 当前接口权限, 不需要鉴权的接口请忽略， 格式：sys:user:add */
@@ -22,8 +23,7 @@ export interface RequestOptions {
 const UNKNOWN_ERROR = '未知错误，请重试';
 
 /** 真实请求的路径前缀 */
-const baseApiUrl = import.meta.env.VITE_BASE_API;
-// const baseApiUrl = 'http://192.168.1.20:7109/api/';
+const baseApiUrl = GetBaseApiUrl();
 /** mock请求路径前缀 */
 const baseMockUrl = import.meta.env.VITE_MOCK_API;
 

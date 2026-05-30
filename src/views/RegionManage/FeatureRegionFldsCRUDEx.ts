@@ -28,7 +28,7 @@ import { clsViewRegionENEx } from '@/ts/L0Entity/RegionManage/clsViewRegionENEx'
 import { clsPrjTabEN } from '@/ts/L0Entity/Table_Field/clsPrjTabEN';
 import { clsASPButtonBLEx } from '@/ts/L2BLL/GeneCSharp/clsASPButtonBLEx';
 import { clsASPHtmlTableBLEx } from '@/ts/L2BLL/GeneCSharp/clsASPHtmlTableBLEx';
-import { ApplicationType_GetObjByApplicationTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
+import { ApplicationType_GetObjByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 import { vCodeType_Sim_GetObjByCodeTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
 
 import { CtlType_GetObjByCtlTypeIdCache } from '@/ts/L3ForWApi/PrjInterface/clsCtlTypeWApi';
@@ -1594,9 +1594,9 @@ export default class FeatureRegionFldsCRUDEx extends FeatureRegionFldsCRUD imple
       strViewId,
       clsPrivateSessionStorage.cmPrjId,
     );
-    const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-      FeatureRegionFldsCRUDEx.applicationTypeId,
-    );
+    const objApplicationType = await ApplicationType_GetObjByKeyCache({
+      applicationTypeId: FeatureRegionFldsCRUDEx.applicationTypeId,
+    });
     if (objApplicationType == null) {
       const strMsg = Format(
         '应用Id:[{0}]，没有相应的类型，请检查！',

@@ -1,7 +1,7 @@
 ﻿import $ from 'jquery';
 import PrjTabFldCRUDEx from './PrjTabFldCRUDEx';
 import { enumSQLDSType } from '@/ts/L0Entity/PrjInterface/clsSQLDSTypeEN';
-import { ApplicationType_GetObjByApplicationTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
+import { ApplicationType_GetObjByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 
 import { FuncModule_Agc_GetObjByFuncModuleAgcIdCache } from '@/ts/L3ForWApi/PrjManage/clsFuncModule_AgcWApi';
 import { Projects_GetObjByPrjIdCache } from '@/ts/L3ForWApi/PrjManage/clsProjectsWApi';
@@ -471,9 +471,9 @@ export class PrjTab_AllPropEx {
       a0.innerText = Format('编辑:{0}', objViewInfo.viewName);
       a0.title = Format('编辑界面信息：{0}({1})。', objViewInfo.viewName, objViewInfo.viewId);
       a0.className = 'link-primary text-primary font-weight-bold';
-      const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-        objViewInfo.applicationTypeId,
-      );
+      const objApplicationType = await ApplicationType_GetObjByKeyCache({
+        applicationTypeId: objViewInfo.applicationTypeId,
+      });
       if (objApplicationType == null) {
         const strMsg = Format(
           '应用Id:[{0}]，没有相应的类型，请检查！',

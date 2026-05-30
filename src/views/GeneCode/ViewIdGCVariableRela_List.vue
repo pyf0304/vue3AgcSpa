@@ -35,7 +35,20 @@
               <i :class="sortDirection === 'Asc' ? 'arrow-up' : 'arrow-down'"></i>
             </span>
           </th>
-
+          <th @click="sortColumn('filePath|Ex')">
+            文件路径
+            <span>
+              <i
+                :class="
+                  sortColumnKey === 'filePath|Ex'
+                    ? sortDirection === 'Asc'
+                      ? 'arrow-up'
+                      : 'arrow-down'
+                    : 'arrow-neutral'
+                "
+              ></i>
+            </span>
+          </th>
           <th @click="sortColumn('dsTabId|Ex')">
             数据源表ID
             <span v-if="sortColumnKey === 'dsTabId|Ex'">
@@ -111,7 +124,7 @@
           <td v-html="item.varName"></td>
 
           <td v-html="item.varTypeName"></td>
-
+          <td v-html="item.filePath"></td>
           <td v-html="item.dsTabId"></td>
 
           <td v-html="item.initValue"></td>

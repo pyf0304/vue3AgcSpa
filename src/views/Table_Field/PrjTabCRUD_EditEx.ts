@@ -16,7 +16,7 @@ import {
   CMProject_GetNameByCmPrjIdCache,
   CMProject_GetObjByCmPrjIdCache,
 } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
-import { ApplicationType_GetObjByApplicationTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
+import { ApplicationType_GetObjByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 import {
   TabFunctionProp_GetObjLstCache,
   TabFunctionProp_ReFreshCache,
@@ -1691,9 +1691,9 @@ export default class PrjTabCRUD_EditEx extends PrjTabCRUD implements IShowList {
       console.error(strMsg);
       return;
     } else {
-      const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-        objCMProject.applicationTypeId,
-      );
+      const objApplicationType = await ApplicationType_GetObjByKeyCache({
+        applicationTypeId: objCMProject.applicationTypeId,
+      });
       if (objApplicationType == null) {
         const strMsg = Format(
           '应用Id:[{0}]，没有相应的类型，请检查！',

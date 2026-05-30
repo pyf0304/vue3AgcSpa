@@ -967,6 +967,22 @@ export abstract class ViewIdGCVariableRelaCRUD implements clsOperateList {
           return new HTMLElement();
         },
       },
+
+      {
+        fldName: clsViewIdGCVariableRelaENEx.con_FilePath,
+        sortBy: clsViewIdGCVariableRelaENEx.con_FilePath,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '文件路径',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 5,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
       {
         fldName: clsViewIdGCVariableRelaENEx.con_RetrievalMethodName,
         sortBy: clsViewIdGCVariableRelaENEx.con_RetrievalMethodName,

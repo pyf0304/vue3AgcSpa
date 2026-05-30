@@ -1,6 +1,9 @@
 ﻿import { defineStore } from 'pinia';
 import { clsvFunction4Code_Sim } from '@/ts/L0Entity/PrjFunction/clsvFunction4Code_Sim';
-import { vFunction4Code_Sim_GetObjByFuncId4CodeAsync } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4Code_SimWApi';
+import {
+  vFunction4Code_Sim_GetObjByKeyAsync,
+  vFunction4Code_Sim_GetObjLstCache,
+} from '@/ts/L3ForWApi/PrjFunction/clsvFunction4Code_SimWApi';
 import { vFunction4Code_SimEx_CopyTo } from '@/ts/L3ForWApiEx/PrjFunction/clsvFunction4Code_SimExWApi';
 
 // import { vFunction4Code_Sim_GetObjByFuncId4CodeAsync } from '@/ts/L3ForWApi/AIModule/clsvFunction4Code_SimWApi';
@@ -24,14 +27,22 @@ export const usevFunction4Code_SimStore = defineStore({
   },
 
   actions: {
+    async ensureObjLstCache(): Promise<clsvFunction4Code_Sim[]> {
+      if (this.vFunction4Code_SimLst.length > 0) return this.vFunction4Code_SimLst;
+      const arrvFunction4Code_SimEN = await vFunction4Code_Sim_GetObjLstCache();
+      this.vFunction4Code_SimLst = arrvFunction4Code_SimEN.map((x) =>
+        vFunction4Code_SimEx_CopyTo(x),
+      );
+      return this.vFunction4Code_SimLst;
+    },
     async getObj(strFuncId4Code: string): Promise<clsvFunction4Code_Sim | null> {
       const objvFunction4Code_Sim = this.vFunction4Code_SimLst.find(
         (x) => x.funcId4Code === strFuncId4Code,
       );
       if (objvFunction4Code_Sim != null) return objvFunction4Code_Sim;
-      const objvFunction4Code_SimEN = await vFunction4Code_Sim_GetObjByFuncId4CodeAsync(
-        strFuncId4Code,
-      );
+      const objvFunction4Code_SimEN = await vFunction4Code_Sim_GetObjByKeyAsync({
+        funcId4Code: strFuncId4Code,
+      });
       if (objvFunction4Code_SimEN == null) return null;
       const objvFunction4Code_Sim1 = vFunction4Code_SimEx_CopyTo(objvFunction4Code_SimEN);
       this.vFunction4Code_SimLst.push(objvFunction4Code_Sim1);
@@ -42,9 +53,9 @@ export const usevFunction4Code_SimStore = defineStore({
         (x) => x.funcId4Code === strFuncId4Code,
       );
       if (objvFunction4Code_Sim != null) return objvFunction4Code_Sim.funcName4Code;
-      const objvFunction4Code_SimEN = await vFunction4Code_Sim_GetObjByFuncId4CodeAsync(
-        strFuncId4Code,
-      );
+      const objvFunction4Code_SimEN = await vFunction4Code_Sim_GetObjByKeyAsync({
+        funcId4Code: strFuncId4Code,
+      });
       if (objvFunction4Code_SimEN == null) return '';
       const objvFunction4Code_Sim1 = vFunction4Code_SimEx_CopyTo(objvFunction4Code_SimEN);
       this.vFunction4Code_SimLst.push(objvFunction4Code_Sim1);

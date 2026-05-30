@@ -55,9 +55,9 @@ export default class PrjDataBase_EditEx extends PrjDataBase_EditAi {
           return;
         }
         if (strCommandName == 'UpdateRecordInTab') {
-          this.btnUpdateRecordInTab_Click(strKeyId);
+          this.btnUpdateRecordInTab_Click({ prjDataBaseId: strKeyId });
         } else {
-          this.btnUpdateRecord_Click(strKeyId);
+          this.btnUpdateRecord_Click({ prjDataBaseId: strKeyId });
         }
         break;
       default:

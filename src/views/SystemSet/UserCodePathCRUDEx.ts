@@ -363,6 +363,7 @@ export default class UserCodePathCRUDEx extends UserCodePathCRUD implements ISho
     await ProgLangType_BindDdl_ProgLangTypeIdByIsVisibleInDivCache(
       divVarSet.refDivQuery,
       'ddlProgLangTypeId_q',
+      true,
     ); //查询区域
   }
   /** 扩展字段值的函数映射

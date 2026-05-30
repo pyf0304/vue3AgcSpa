@@ -122,6 +122,14 @@ export const CombineFunctionTemplateRelaCondition = async (): Promise<string> =>
         regionTypeId_q.value,
       );
     }
+    if (progLangTypeId_q.value != '' && progLangTypeId_q.value != '0') {
+      strWhereCond += Format(
+        " And FunctionTemplateRela.{0} in (Select {0} From vCodeType_Sim Where {1} = '{2}')",
+        clsFunctionTemplateRelaEN.con_CodeTypeId,
+        'ProgLangTypeId',
+        progLangTypeId_q.value,
+      );
+    }
     if (codeTypeId_q.value != '' && codeTypeId_q.value != '0') {
       strWhereCond += Format(
         " And FunctionTemplateRela.{0} = '{1}'",
@@ -184,6 +192,14 @@ export const CombineFunctionTemplateRelaConditionObj = async (): Promise<Conditi
         clsFunctionTemplateRelaEN.con_RegionTypeId,
         regionTypeId_q.value,
         '=',
+      );
+    }
+    if (progLangTypeId_q.value != '' && progLangTypeId_q.value != '0') {
+      strWhereCond += Format(
+        " And FunctionTemplateRela.{0} in (Select {0} From vCodeType_Sim Where {1} = '{2}')",
+        clsFunctionTemplateRelaEN.con_CodeTypeId,
+        'ProgLangTypeId',
+        progLangTypeId_q.value,
       );
     }
     if (codeTypeId_q.value != '' && codeTypeId_q.value != '0') {
@@ -270,6 +286,14 @@ export const CombineFunctionTemplateRelaConditionObj4ExportExcel =
           clsFunctionTemplateRelaEN.con_RegionTypeId,
           regionTypeId_q.value,
           '=',
+        );
+      }
+      if (progLangTypeId_q.value != '' && progLangTypeId_q.value != '0') {
+        strWhereCond += Format(
+          " And FunctionTemplateRela.{0} in (Select {0} From vCodeType_Sim Where {1} = '{2}')",
+          clsFunctionTemplateRelaEN.con_CodeTypeId,
+          'ProgLangTypeId',
+          progLangTypeId_q.value,
         );
       }
       if (codeTypeId_q.value != '' && codeTypeId_q.value != '0') {

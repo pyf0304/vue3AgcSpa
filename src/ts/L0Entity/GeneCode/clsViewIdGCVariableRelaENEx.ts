@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsViewIdGCVariableRelaENEx
  * 表名:ViewIdGCVariableRela(00050631)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/13 23:53:48
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/29 00:17:07
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:生成代码(GeneCode)
  * 框架-层名:实体扩展层(TS)(EntityLayerEx,0191)
@@ -44,11 +44,12 @@ export class clsViewIdGCVariableRelaENEx extends clsViewIdGCVariableRelaEN {
         return this.varName;
       case clsViewIdGCVariableRelaENEx.con_VarTypeName:
         return this.varTypeName;
-
       case clsViewIdGCVariableRelaENEx.con_RetrievalMethodName:
         return this.retrievalMethodName;
       case clsViewIdGCVariableRelaENEx.con_ViewName:
         return this.viewName;
+      case clsViewIdGCVariableRelaENEx.con_FilePath:
+        return this.filePath;
       default:
         strValue = super.GetFldValue(strFldName);
         return strValue;
@@ -59,38 +60,38 @@ export class clsViewIdGCVariableRelaENEx extends clsViewIdGCVariableRelaEN {
    * 常量:"VarName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_VarName(): string {
-    return 'varName';
-  } //变量名
+  public static readonly con_VarName = 'varName'; //变量名
 
   /**
    * 常量:"VarTypeName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_VarTypeName(): string {
-    return 'varTypeName';
-  } //变量类型名
+  public static readonly con_VarTypeName = 'varTypeName'; //变量类型名
 
   /**
    * 常量:"RetrievalMethodName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_RetrievalMethodName(): string {
-    return 'retrievalMethodName';
-  } //获取方式名
+  public static readonly con_RetrievalMethodName = 'retrievalMethodName'; //获取方式名
 
   /**
    * 常量:"ViewName"
    * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
    */
-  public static get con_ViewName(): string {
-    return 'viewName';
-  } //界面名称
+  public static readonly con_ViewName = 'viewName'; //界面名称
+
+  /**
+   * 常量:"FilePath"
+   * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
+   */
+  public static readonly con_FilePath = 'filePath'; //文件路径
 
   public varName = ''; //变量名
   public varTypeName = ''; //变量类型名
   public retrievalMethodName = ''; //获取方式名
   public viewName = ''; //界面名称
+  public filePath = ''; //文件路径
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名

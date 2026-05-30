@@ -29,7 +29,7 @@ import {
   PrjDataBase_GetSubObjLstCache,
   PrjDataBase_DelRecordAsync,
   PrjDataBase_ReFreshCache,
-  PrjDataBase_GetObjByPrjDataBaseIdAsync,
+  PrjDataBase_GetObjByKeyAsync,
   PrjDataBase_FuncMapByFldName,
   PrjDataBase_GetObjExLstByPagerCache,
   PrjDataBase_GetObjLstByPrjDataBaseIdLstAsync,
@@ -491,7 +491,7 @@ export abstract class PrjDataBaseCRUD implements clsOperateList {
   public async DelRecord(strPrjDataBaseId: string) {
     const strThisFuncName = this.DelRecord.name;
     try {
-      const returnInt = await PrjDataBase_DelRecordAsync(strPrjDataBaseId);
+      const returnInt = await PrjDataBase_DelRecordAsync({ prjDataBaseId: strPrjDataBaseId });
       if (returnInt > 0) {
         PrjDataBase_ReFreshCache();
         const strInfo = `删除${this.thisTabName}记录成功,共删除${returnInt}条记录!`;
@@ -518,7 +518,9 @@ export abstract class PrjDataBaseCRUD implements clsOperateList {
   public async SelectRecord(strPrjDataBaseId: string) {
     const strThisFuncName = this.SelectRecord.name;
     try {
-      const objPrjDataBaseEN = await PrjDataBase_GetObjByPrjDataBaseIdAsync(strPrjDataBaseId);
+      const objPrjDataBaseEN = await PrjDataBase_GetObjByKeyAsync({
+        prjDataBaseId: strPrjDataBaseId,
+      });
       console.log('完成SelectRecord!', objPrjDataBaseEN);
       Redirect('/Index/Main_PrjDataBase');
     } catch (e) {
@@ -1305,7 +1307,7 @@ export abstract class PrjDataBaseCRUD implements clsOperateList {
           throw strMsg;
         }
         if (returnBool == true) {
-          PrjDataBase_DeleteKeyIdCache(objInFor.prjDataBaseId);
+          PrjDataBase_DeleteKeyIdCache({ prjDataBaseId: objInFor.prjDataBaseId });
           intCount++;
         } else {
           const strInfo = Format('设置记录不成功!');

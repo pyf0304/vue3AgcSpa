@@ -26,7 +26,7 @@ import {
   Function4GeneCode_GetRecCountByCondAsync,
   Function4GeneCode_GetObjLstAsync,
   Function4GeneCode_DelRecordAsync,
-  Function4GeneCode_GetObjByFuncId4GCAsync,
+  Function4GeneCode_GetObjByKeyAsync,
   Function4GeneCode_FuncMapByFldName,
   Function4GeneCode_GetObjLstByFuncId4GCLstAsync,
   Function4GeneCode_GetMaxStrIdAsync,
@@ -678,7 +678,9 @@ export abstract class Function4GeneCodeCRUD implements clsOperateList {
   public async SelectRecord(strFuncId4GC: string) {
     const strThisFuncName = this.SelectRecord.name;
     try {
-      const objFunction4GeneCodeEN = await Function4GeneCode_GetObjByFuncId4GCAsync(strFuncId4GC);
+      const objFunction4GeneCodeEN = await Function4GeneCode_GetObjByKeyAsync({
+        funcId4GC: strFuncId4GC,
+      });
       console.log('完成SelectRecord!', objFunction4GeneCodeEN);
       Redirect('/Index/Main_Function4GeneCode');
     } catch (e) {
@@ -1211,7 +1213,7 @@ export abstract class Function4GeneCodeCRUD implements clsOperateList {
     arrFunction4GeneCodeExObjLst: Array<clsFunction4GeneCodeENEx>,
     arrDataColumn: Array<clsDataColumn>,
   ) {
-    const arrFldName = clsFunction4GeneCodeEN.AttributeName;
+    const arrFldName = clsFunction4GeneCodeEN._AttributeName;
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;

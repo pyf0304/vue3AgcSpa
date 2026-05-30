@@ -2,7 +2,7 @@
  * 类名:clsGCConstantPrjIdRelaWApi
  * 表名:GCConstantPrjIdRela(00050641)
  * 版本:2026.04.19(服务器:PYF-AI)
- * 日期:2026/05/27 07:04:09
+ * 日期:2026/05/29 17:09:00
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
@@ -20,7 +20,7 @@
 /**
  * GC常量工程关系(GCConstantPrjIdRela)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2026年05月27日.
+ * Created by pyf on 2026年05月29日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -55,7 +55,7 @@ export const gCConstantPrjIdRela_ConstructorName = 'gCConstantPrjIdRela';
  * @param strKeyLst:多关键字值
  * @returns 分解后的单独关键字值对象
  **/
-export function GCConstantPrjIdRela_SplitKeyLst(strKeyLst: string) {
+export function GCConstantPrjIdRela_SplitKeyLst(strKeyLst: string): GCConstantPrjIdRelaKey {
   const arrKey = strKeyLst.split('|');
   if (arrKey.length != 2) {
     const strMsg = '请选择需要修改的记录!';
@@ -166,14 +166,14 @@ export async function GCConstantPrjIdRela_GetObjByKeyAsync(
     }
   }
 }
-//该表没有使用Cache,不需要生成[GetObjByKeyLstlocalStorage]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
-//该表没有使用Cache,不需要生成[GetObjByKeyLstCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache )
+//该表没有使用localStorage,不需要生成[GetObjByKeylocalStorage]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage )
+//该表没有使用Cache,不需要生成[GetObjByKeyCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache )
 //该表没有使用Cache,不需要生成[UpdateObjInLstCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_UpdateObjInLstCache
 
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -188,7 +188,7 @@ export function GCConstantPrjIdRela_SortFunDefa(
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -205,7 +205,7 @@ export function GCConstantPrjIdRela_SortFunDefa2Fld(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -282,12 +282,12 @@ export function GCConstantPrjIdRela_SortFunByKey(strKey: string, AscOrDesc: stri
     }
   }
 }
-//该表没有使用Cache,不需要生成[GetNameByConstIdCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
+//该表没有使用Cache,不需要生成[GetNameByKeyCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
 
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -872,14 +872,13 @@ export async function GCConstantPrjIdRela_GetObjLstByPagerAsync(
 /**
  * 调用WebApi来删除记录,根据关键字来删除记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_DelRecordAsync)
- * @param strConstId,strPrjId:关键字列表
+ * @param key:关键字对象
  * @returns 获取删除的结果
  **/
-export async function GCConstantPrjIdRela_DelRecKeyLstAsync(
-  strConstId: string,
-  strPrjId: string,
+export async function GCConstantPrjIdRela_DelRecordAsync(
+  key: GCConstantPrjIdRelaKey,
 ): Promise<number> {
-  const strThisFuncName = 'DelRecKeyLstAsync';
+  const strThisFuncName = 'DelRecordAsync';
   const strAction = 'DelRecKeyLst';
   const strUrl = GetWebApiUrl(gCConstantPrjIdRela_Controller, strAction);
 
@@ -890,8 +889,8 @@ export async function GCConstantPrjIdRela_DelRecKeyLstAsync(
       Authorization: `${token}`,
     },
     params: {
-      strConstId,
-      strPrjId,
+      ConstId: key.constId,
+      PrjId: key.prjId,
     },
   };
   try {
@@ -1021,7 +1020,7 @@ export function GCConstantPrjIdRela_CopyToEx(
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -1066,7 +1065,7 @@ export function GCConstantPrjIdRela_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -2421,7 +2420,7 @@ export function GCConstantPrjIdRela_CheckProperty4Update(
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -2444,7 +2443,7 @@ export function GCConstantPrjIdRela_GetJSONStrByObj(
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -2467,7 +2466,7 @@ export function GCConstantPrjIdRela_GetObjLstByJSONStr(
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrGCConstantPrjIdRelaObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -2487,7 +2486,7 @@ export function GCConstantPrjIdRela_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

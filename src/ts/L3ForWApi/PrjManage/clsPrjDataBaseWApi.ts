@@ -1,8 +1,8 @@
 ﻿/**
  * 类名:clsPrjDataBaseWApi
  * 表名:PrjDataBase(00050176)
- * 版本:2026.04.19(服务器:WIN-SRV103-116)
- * 日期:2026/04/28 23:40:03
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/27 16:46:59
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
@@ -20,7 +20,7 @@
 /**
  * 数据库对象(PrjDataBase)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2026年04月28日.
+ * Created by pyf on 2026年05月27日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -40,7 +40,7 @@ import {
 } from '@/ts/PubFun/clsCommFunc4Web';
 import { prjDataBaseCache, isFuncMapCache } from '@/views/PrjManage/PrjDataBaseVueShare';
 import { clsPrjDataBaseENEx } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseENEx';
-import { clsPrjDataBaseEN } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
+import { clsPrjDataBaseEN, PrjDataBaseKey } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
 import { DataBaseType_func } from '@/ts/L3ForWApi/SysPara/clsDataBaseTypeWApi';
 import { clsDataBaseTypeEN } from '@/ts/L0Entity/SysPara/clsDataBaseTypeEN';
 import { UseState_func } from '@/ts/L3ForWApi/SysPara/clsUseStateWApi';
@@ -57,28 +57,21 @@ export const prjDataBase_ConstructorName = 'prjDataBase';
 /**
  * 根据关键字获取相应记录的对象
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdAsync)
- * @param strPrjDataBaseId:关键字
+ * @param key:包含关键字的对象
  * @returns 对象
  **/
-export async function PrjDataBase_GetObjByPrjDataBaseIdAsync(
-  strPrjDataBaseId: string,
+export async function PrjDataBase_GetObjByKeyAsync(
+  key: PrjDataBaseKey,
 ): Promise<clsPrjDataBaseEN | null> {
-  const strThisFuncName = 'GetObjByPrjDataBaseIdAsync';
-
-  if (IsNullOrEmpty(strPrjDataBaseId) == true) {
+  const strThisFuncName = 'GetObjByKeyAsync';
+  if (key.prjDataBaseId === undefined || key.prjDataBaseId === null || key.prjDataBaseId === '') {
     const strMsg = Format(
-      '参数:[strPrjDataBaseId]不能为空!(In clsPrjDataBaseWApi.GetObjByPrjDataBaseIdAsync)',
+      '关键字段[PrjDataBaseId]不能为空!(in {0}.{1})',
+      prjDataBase_ConstructorName,
+      strThisFuncName,
     );
     console.error(strMsg);
-    throw strMsg;
-  }
-  if (strPrjDataBaseId.length != 4) {
-    const strMsg = Format(
-      '缓存分类变量:[strPrjDataBaseId]的长度:[{0}]不正确!(clsPrjDataBaseWApi.GetObjByPrjDataBaseIdAsync)',
-      strPrjDataBaseId.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
+    throw new Error(strMsg);
   }
   const strAction = 'GetObjByPrjDataBaseId';
   const strUrl = GetWebApiUrl(prjDataBase_Controller, strAction);
@@ -90,7 +83,7 @@ export async function PrjDataBase_GetObjByPrjDataBaseIdAsync(
       Authorization: `${token}`,
     },
     params: {
-      strPrjDataBaseId,
+      strPrjDataBaseId: key.prjDataBaseId,
     },
   };
   try {
@@ -138,30 +131,30 @@ export async function PrjDataBase_GetObjByPrjDataBaseIdAsync(
 }
 
 /**
- * 根据关键字获取相关对象, 从localStorage缓存中获取.
+ * 根据关键字获取特定对象, 从 localStorage 中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
- * @param strPrjDataBaseId:所给的关键字
+ * @param key:关键字对象
  * @returns 对象
  */
-export async function PrjDataBase_GetObjByPrjDataBaseIdlocalStorage(strPrjDataBaseId: string) {
+export async function PrjDataBase_GetObjByKeylocalStorage(key: PrjDataBaseKey) {
   const strThisFuncName = 'GetObjByPrjDataBaseIdlocalStorage';
 
-  if (IsNullOrEmpty(strPrjDataBaseId) == true) {
+  if (IsNullOrEmpty(key.prjDataBaseId) == true) {
     const strMsg = Format(
-      '参数:[strPrjDataBaseId]不能为空!(In clsPrjDataBaseWApi.GetObjByPrjDataBaseIdlocalStorage)',
+      '参数:[key.prjDataBaseId]不能为空!(In clsPrjDataBaseWApi.GetObjByPrjDataBaseIdlocalStorage)',
     );
     console.error(strMsg);
     throw strMsg;
   }
-  if (strPrjDataBaseId.length != 4) {
+  if (key.prjDataBaseId.length != 4) {
     const strMsg = Format(
-      '缓存分类变量:[strPrjDataBaseId]的长度:[{0}]不正确!(clsPrjDataBaseWApi.GetObjByPrjDataBaseIdlocalStorage)',
-      strPrjDataBaseId.length,
+      '缓存分类变量:[key.prjDataBaseId]的长度:[{0}]不正确!(clsPrjDataBaseWApi.GetObjByPrjDataBaseIdlocalStorage)',
+      key.prjDataBaseId.length,
     );
     console.error(strMsg);
     throw strMsg;
   }
-  const strKey = Format('{0}_{1}', clsPrjDataBaseEN._CurrTabName, strPrjDataBaseId);
+  const strKey = Format('{0}_{1}', clsPrjDataBaseEN._CurrTabName, key.prjDataBaseId);
   if (strKey == '') {
     console.error('关键字为空!不正确');
     throw new Error('关键字为空!不正确');
@@ -173,7 +166,7 @@ export async function PrjDataBase_GetObjByPrjDataBaseIdlocalStorage(strPrjDataBa
     return objPrjDataBaseCache;
   }
   try {
-    const objPrjDataBase = await PrjDataBase_GetObjByPrjDataBaseIdAsync(strPrjDataBaseId);
+    const objPrjDataBase = await PrjDataBase_GetObjByKeyAsync(key);
     if (objPrjDataBase != null) {
       localStorage.setItem(strKey, JSON.stringify(objPrjDataBase));
       const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
@@ -185,7 +178,7 @@ export async function PrjDataBase_GetObjByPrjDataBaseIdlocalStorage(strPrjDataBa
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      strPrjDataBaseId,
+      key.prjDataBaseId,
       prjDataBase_ConstructorName,
       strThisFuncName,
     );
@@ -196,28 +189,25 @@ export async function PrjDataBase_GetObjByPrjDataBaseIdlocalStorage(strPrjDataBa
 }
 
 /**
- * 根据关键字获取相关对象, 从缓存中获取.
+ * 根据关键字获取特定对象, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
- * @param strPrjDataBaseId:所给的关键字
+ * @param key:关键字对象
  * @returns 对象
  */
-export async function PrjDataBase_GetObjByPrjDataBaseIdCache(
-  strPrjDataBaseId: string,
-  bolTryAsyncOnce = true,
-) {
+export async function PrjDataBase_GetObjByKeyCache(key: PrjDataBaseKey, bolTryAsyncOnce = true) {
   const strThisFuncName = 'GetObjByPrjDataBaseIdCache';
 
-  if (IsNullOrEmpty(strPrjDataBaseId) == true) {
+  if (IsNullOrEmpty(key.prjDataBaseId) == true) {
     const strMsg = Format(
-      '参数:[strPrjDataBaseId]不能为空!(In clsPrjDataBaseWApi.GetObjByPrjDataBaseIdCache)',
+      '参数:[key.prjDataBaseId]不能为空!(In clsPrjDataBaseWApi.GetObjByPrjDataBaseIdCache)',
     );
     console.error(strMsg);
     throw strMsg;
   }
-  if (strPrjDataBaseId.length != 4) {
+  if (key.prjDataBaseId.length != 4) {
     const strMsg = Format(
-      '缓存分类变量:[strPrjDataBaseId]的长度:[{0}]不正确!(clsPrjDataBaseWApi.GetObjByPrjDataBaseIdCache)',
-      strPrjDataBaseId.length,
+      '缓存分类变量:[key.prjDataBaseId]的长度:[{0}]不正确!(clsPrjDataBaseWApi.GetObjByPrjDataBaseIdCache)',
+      key.prjDataBaseId.length,
     );
     console.error(strMsg);
     throw strMsg;
@@ -225,7 +215,7 @@ export async function PrjDataBase_GetObjByPrjDataBaseIdCache(
   const arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstCache();
   try {
     const arrPrjDataBaseSel = arrPrjDataBaseObjLstCache.filter(
-      (x) => x.prjDataBaseId == strPrjDataBaseId,
+      (x) => x.prjDataBaseId == key.prjDataBaseId,
     );
     let objPrjDataBase: clsPrjDataBaseEN;
     if (arrPrjDataBaseSel.length > 0) {
@@ -233,7 +223,7 @@ export async function PrjDataBase_GetObjByPrjDataBaseIdCache(
       return objPrjDataBase;
     } else {
       if (bolTryAsyncOnce == true) {
-        const objPrjDataBaseConst = await PrjDataBase_GetObjByPrjDataBaseIdAsync(strPrjDataBaseId);
+        const objPrjDataBaseConst = await PrjDataBase_GetObjByKeyAsync(key);
         if (objPrjDataBaseConst != null) {
           PrjDataBase_ReFreshThisCache();
           return objPrjDataBaseConst;
@@ -245,7 +235,7 @@ export async function PrjDataBase_GetObjByPrjDataBaseIdCache(
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      strPrjDataBaseId,
+      key.prjDataBaseId,
       prjDataBase_ConstructorName,
       strThisFuncName,
     );
@@ -288,7 +278,7 @@ export async function PrjDataBase_UpdateObjInLstCache(objPrjDataBase: clsPrjData
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-28
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -300,7 +290,7 @@ export function PrjDataBase_SortFunDefa(a: clsPrjDataBaseEN, b: clsPrjDataBaseEN
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-28
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -314,7 +304,7 @@ export function PrjDataBase_SortFunDefa2Fld(a: clsPrjDataBaseEN, b: clsPrjDataBa
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-28
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -495,21 +485,21 @@ export function PrjDataBase_SortFunByKey(strKey: string, AscOrDesc: string) {
 /**
  * 根据关键字获取相关对象的名称属性, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
- * @param strPrjDataBaseId:所给的关键字
- * @returns 对象
+ * @param key:关键字对象
+ * @returns 名称属性值
  */
-export async function PrjDataBase_GetNameByPrjDataBaseIdCache(strPrjDataBaseId: string) {
-  if (IsNullOrEmpty(strPrjDataBaseId) == true) {
+export async function PrjDataBase_GetNameByKeyCache(key: PrjDataBaseKey) {
+  if (IsNullOrEmpty(key.prjDataBaseId) == true) {
     const strMsg = Format(
-      '参数:[strPrjDataBaseId]不能为空!(In clsPrjDataBaseWApi.GetNameByPrjDataBaseIdCache)',
+      '参数:[key.prjDataBaseId]不能为空!(In clsPrjDataBaseWApi.GetNameByKeyCache)',
     );
     console.error(strMsg);
     throw strMsg;
   }
-  if (strPrjDataBaseId.length != 4) {
+  if (key.prjDataBaseId.length != 4) {
     const strMsg = Format(
-      '缓存分类变量:[strPrjDataBaseId]的长度:[{0}]不正确!(clsPrjDataBaseWApi.GetNameByPrjDataBaseIdCache)',
-      strPrjDataBaseId.length,
+      '缓存分类变量:[key.prjDataBaseId]的长度:[{0}]不正确!(clsPrjDataBaseWApi.GetNameByKeyCache)',
+      key.prjDataBaseId.length,
     );
     console.error(strMsg);
     throw strMsg;
@@ -518,7 +508,7 @@ export async function PrjDataBase_GetNameByPrjDataBaseIdCache(strPrjDataBaseId: 
   if (arrPrjDataBaseObjLstCache == null) return '';
   try {
     const arrPrjDataBaseSel = arrPrjDataBaseObjLstCache.filter(
-      (x) => x.prjDataBaseId == strPrjDataBaseId,
+      (x) => x.prjDataBaseId == key.prjDataBaseId,
     );
     let objPrjDataBase: clsPrjDataBaseEN;
     if (arrPrjDataBaseSel.length > 0) {
@@ -531,7 +521,7 @@ export async function PrjDataBase_GetNameByPrjDataBaseIdCache(strPrjDataBaseId: 
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象名称属性不成功!',
       e,
-      strPrjDataBaseId,
+      key.prjDataBaseId,
     );
     console.error(strMsg);
     alert(strMsg);
@@ -542,7 +532,7 @@ export async function PrjDataBase_GetNameByPrjDataBaseIdCache(strPrjDataBaseId: 
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2026-04-28
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -618,7 +608,7 @@ export async function PrjDataBase_FilterFunByKey(strKey: string, value: any) {
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2026-04-28
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -650,7 +640,7 @@ export async function PrjDataBase_func(
   if (IsNullOrEmpty(strPrjDataBaseId) == true) {
     return '';
   }
-  const objPrjDataBase = await PrjDataBase_GetObjByPrjDataBaseIdCache(strPrjDataBaseId);
+  const objPrjDataBase = await PrjDataBase_GetObjByKeyCache({ prjDataBaseId: strPrjDataBaseId });
   if (objPrjDataBase == null) return '';
   if (objPrjDataBase.GetFldValue(strOutFldName) == null) return '';
   return objPrjDataBase.GetFldValue(strOutFldName).toString();
@@ -659,7 +649,7 @@ export async function PrjDataBase_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2026-04-28
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -1838,14 +1828,14 @@ export async function PrjDataBase_GetObjLstByPagerAsync(
 /**
  * 调用WebApi来删除记录,根据关键字来删除记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_DelRecordAsync)
- * @param strPrjDataBaseId:关键字
+ * @param key:关键字对象
  * @returns 获取删除的结果
  **/
-export async function PrjDataBase_DelRecordAsync(strPrjDataBaseId: string): Promise<number> {
+export async function PrjDataBase_DelRecordAsync(key: PrjDataBaseKey): Promise<number> {
   const strThisFuncName = 'DelRecordAsync';
   const strAction = 'DelRecord';
   let strUrl = GetWebApiUrl(prjDataBase_Controller, strAction);
-  strUrl = Format('{0}?Id={1}', strUrl, strPrjDataBaseId);
+  strUrl = Format('{0}?Id={1}', strUrl, key.prjDataBaseId);
 
   const token = Storage.get(ACCESS_TOKEN_KEY);
   //console.error('token:', token);
@@ -2130,7 +2120,7 @@ export function PrjDataBase_CopyToEx(objPrjDataBaseENS: clsPrjDataBaseEN): clsPr
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2026-04-28
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -2165,7 +2155,7 @@ export function PrjDataBase_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-28
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -2978,16 +2968,16 @@ export async function PrjDataBase_IsExistRecordAsync(strWhereCond: string): Prom
 /**
  * 根据关键字判断是否存在记录, 从本地缓存中判断.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistCache)
- * @param strPrjDataBaseId:所给的关键字
- * @returns 对象
+ * @param key:关键字对象
+ * @returns 是否存在
  */
-export async function PrjDataBase_IsExistCache(strPrjDataBaseId: string) {
+export async function PrjDataBase_IsExistCache(key: PrjDataBaseKey): Promise<boolean> {
   const strThisFuncName = 'IsExistCache';
   const arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstCache();
   if (arrPrjDataBaseObjLstCache == null) return false;
   try {
     const arrPrjDataBaseSel = arrPrjDataBaseObjLstCache.filter(
-      (x) => x.prjDataBaseId == strPrjDataBaseId,
+      (x) => x.prjDataBaseId == key.prjDataBaseId,
     );
     if (arrPrjDataBaseSel.length > 0) {
       return true;
@@ -2997,7 +2987,7 @@ export async function PrjDataBase_IsExistCache(strPrjDataBaseId: string) {
   } catch (e) {
     const strMsg = Format(
       '根据关键字:[{0}]判断是否存在不成功!(in {1}.{2})',
-      strPrjDataBaseId,
+      key.prjDataBaseId,
       prjDataBase_ConstructorName,
       strThisFuncName,
     );
@@ -3010,10 +3000,10 @@ export async function PrjDataBase_IsExistCache(strPrjDataBaseId: string) {
 /**
  * 根据关键字判断是否存在记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistAsync)
- * @param strPrjDataBaseId:关键字
+ * @param key:包含关键字的对象
  * @returns 是否存在?存在返回True
  **/
-export async function PrjDataBase_IsExistAsync(strPrjDataBaseId: string): Promise<boolean> {
+export async function PrjDataBase_IsExistAsync(key: PrjDataBaseKey): Promise<boolean> {
   const strThisFuncName = 'IsExistAsync';
   //检测记录是否存在
   const strAction = 'IsExist';
@@ -3026,7 +3016,7 @@ export async function PrjDataBase_IsExistAsync(strPrjDataBaseId: string): Promis
       Authorization: `${token}`,
     },
     params: {
-      strPrjDataBaseId,
+      strPrjDataBaseId: key.prjDataBaseId,
     },
   };
   try {
@@ -3429,7 +3419,7 @@ export function PrjDataBase_GetLastRefreshTime(): string {
 }
 
 /**
- * 绑定基于Web的下拉框,在某一层下的下拉框
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050067)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
@@ -3460,7 +3450,7 @@ export async function PrjDataBase_BindDdl_PrjDataBaseIdInDivCache(
 }
 
 /**
- * 绑定基于Web的下拉框,在某一层下的下拉框
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050067)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_GetDdlData)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
@@ -4015,7 +4005,7 @@ export function PrjDataBase_CheckProperty4Update(pobjPrjDataBaseEN: clsPrjDataBa
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2026-04-28
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -4036,7 +4026,7 @@ export function PrjDataBase_GetJSONStrByObj(pobjPrjDataBaseEN: clsPrjDataBaseEN)
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2026-04-28
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -4057,7 +4047,7 @@ export function PrjDataBase_GetObjLstByJSONStr(strJSON: string): Array<clsPrjDat
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2026-04-28
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrPrjDataBaseObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -4077,7 +4067,7 @@ export function PrjDataBase_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2026-04-28
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

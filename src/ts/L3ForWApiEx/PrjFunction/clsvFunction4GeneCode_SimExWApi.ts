@@ -5,8 +5,7 @@ import { Storage } from '@/utils/Storage';
 
 import {
   vFunction4GeneCode_Sim_GetObjFromJsonObj,
-  vFunction4GeneCode_Sim_GetObjLstCache,
-  vFunction4GeneCode_Sim_ReFreshThisCache,
+  vFunction4GeneCode_Sim_GetObjLstAsync,
   vFunction4GeneCode_Sim_SortFunByKey,
 } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4GeneCode_SimWApi';
 import { clsvFunction4GeneCode_SimEN } from '@/ts/L0Entity/PrjFunction/clsvFunction4GeneCode_SimEN';
@@ -14,6 +13,8 @@ import { clsvFunction4GeneCode_SimENEx } from '@/ts/L0Entity/PrjFunction/clsvFun
 import { BindDdl_ObjLstInDiv_V, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
+import { clsvFunction4GeneCode_Sim } from '@/ts/L0Entity/PrjFunction/clsvFunction4GeneCode_Sim';
+import { usevFunction4GeneCode_SimStore } from '@/store/modules/vFunction4GeneCode_Sim';
 
 export const vFunction4GeneCode_SimEx_Controller = 'vFunction4GeneCode_SimExApi';
 export const vFunction4GeneCode_SimEx_ConstructorName = 'vFunction4GeneCode_SimEx';
@@ -44,6 +45,49 @@ export function vFunction4GeneCode_SimEx_CopyToEx(
   }
 }
 
+export function vFunction4GeneCode_SimEx_CopyTo(
+  objvFunction4GeneCode_SimENS: clsvFunction4GeneCode_SimEN,
+): clsvFunction4GeneCode_Sim {
+  const strThisFuncName = vFunction4GeneCode_SimEx_CopyToEx.name;
+  const objvFunction4GeneCode_SimENT = new clsvFunction4GeneCode_Sim();
+  try {
+    ObjectAssign(objvFunction4GeneCode_SimENT, objvFunction4GeneCode_SimENS);
+    return objvFunction4GeneCode_SimENT;
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl000067)Copy表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      vFunction4GeneCode_SimEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+    return objvFunction4GeneCode_SimENT;
+  }
+}
+
+export function vFunction4GeneCode_SimEx_CopyToEN(
+  objvFunction4GeneCode_SimS: clsvFunction4GeneCode_Sim | null,
+): clsvFunction4GeneCode_SimEN {
+  const strThisFuncName = vFunction4GeneCode_SimEx_CopyToEN.name;
+  if (objvFunction4GeneCode_SimS == null) return null as any;
+
+  const objvFunction4GeneCode_SimENT = new clsvFunction4GeneCode_SimEN();
+  try {
+    ObjectAssign(objvFunction4GeneCode_SimENT, objvFunction4GeneCode_SimS);
+    return objvFunction4GeneCode_SimENT;
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl000067)Copy表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      vFunction4GeneCode_SimEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+    return objvFunction4GeneCode_SimENT;
+  }
+}
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:潘以锋
@@ -104,7 +148,8 @@ export async function vFunction4GeneCode_SimEx_BindDdl_FuncId4GCByFuncCodeTypeId
   }
   //为数据源于表的下拉框设置内容
   //console.log("开始：BindDdl_FuncId4GCByCodeTypeIdInDivCache");
-  let arrObjLst_Sel = await vFunction4GeneCode_Sim_GetObjLstCache();
+  const strWhereCond = `${clsvFunction4GeneCode_SimEN.con_FuncCodeTypeId}='${strCodeTypeId}'`;
+  let arrObjLst_Sel = await vFunction4GeneCode_Sim_GetObjLstAsync(strWhereCond);
   if (arrObjLst_Sel == null) return;
   arrObjLst_Sel = arrObjLst_Sel
     .filter((x) => x.funcCodeTypeId == strCodeTypeId)
@@ -189,11 +234,7 @@ export async function vFunction4GeneCode_SimEx_GetObjByFuncId4GCEx(
  * @param strFuncId4GC:所给的关键字
  * @returns 对象
  */
-export async function vFunction4GeneCode_SimEx_GetObjByFuncId4GCCacheEx(
-  strFuncId4GC: string,
-
-  bolTryAsyncOnce = true,
-) {
+export async function vFunction4GeneCode_SimEx_GetObjByFuncId4GCCacheEx(strFuncId4GC: string) {
   const strThisFuncName = 'GetObjByFuncId4GCCacheEx';
 
   if (IsNullOrEmpty(strFuncId4GC) == true) {
@@ -211,28 +252,14 @@ export async function vFunction4GeneCode_SimEx_GetObjByFuncId4GCCacheEx(
     console.error(strMsg);
     throw strMsg;
   }
-  const arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
+  // const arrvFunction4GeneCode_SimObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
 
+  const vFunction4GeneCode_SimStore = usevFunction4GeneCode_SimStore();
   try {
-    const arrvFunction4GeneCode_SimSel = arrvFunction4GeneCode_SimObjLstCache.filter(
-      (x) => x.funcId4GC == strFuncId4GC,
-    );
-    let objvFunction4GeneCode_Sim: clsvFunction4GeneCode_SimEN;
-    if (arrvFunction4GeneCode_SimSel.length > 0) {
-      objvFunction4GeneCode_Sim = arrvFunction4GeneCode_SimSel[0];
-      return objvFunction4GeneCode_Sim;
-    } else {
-      if (bolTryAsyncOnce == true) {
-        const objvFunction4GeneCode_SimConst = await vFunction4GeneCode_SimEx_GetObjByFuncId4GCEx(
-          strFuncId4GC,
-        );
-        if (objvFunction4GeneCode_SimConst != null) {
-          vFunction4GeneCode_Sim_ReFreshThisCache();
-          return objvFunction4GeneCode_SimConst;
-        }
-      }
-      return null;
-    }
+    const objvFunction4GeneCode_Sim = await vFunction4GeneCode_SimStore.getObj(strFuncId4GC);
+    const objvFunction4GeneCode_SimEN =
+      vFunction4GeneCode_SimEx_CopyToEN(objvFunction4GeneCode_Sim);
+    return objvFunction4GeneCode_SimEN;
   } catch (e) {
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
@@ -268,11 +295,11 @@ export async function vFunction4GeneCode_SimEx_func(
     console.error(strMsg);
     throw new Error(strMsg);
   }
-  if (clsvFunction4GeneCode_SimEN.AttributeName.indexOf(strOutFldName) == -1) {
+  if (clsvFunction4GeneCode_SimEN._AttributeName.indexOf(strOutFldName) == -1) {
     const strMsg = Format(
       '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
       strOutFldName,
-      clsvFunction4GeneCode_SimEN.AttributeName.join(','),
+      clsvFunction4GeneCode_SimEN._AttributeName.join(','),
     );
     console.error(strMsg);
     throw new Error(strMsg);

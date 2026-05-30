@@ -5,12 +5,7 @@
 基于 vite3.x + vue3.x + antd-design-vue3.x + typescript4.x 的后台管理系统模板
 
 - 账号：rootadmin，密码：123456
-- 在线预览（ [gitee](http://buqiyuan.gitee.io/vueagc/) / [vercel](https://vueagc.vercel.app/) ）
-- [swagger 文档](https://nest-api.buqiyuan.site/swagger-api/)
-- [后台地址](https://github.com/buqiyuan/nest-admin)
-- [react 版 coding](https://github.com/buqiyuan/react-antd-admin)
-- [vue-cli](https://github.com/buqiyuan/vueagc)
-- [gitee 地址](https://gitee.com/buqiyuan/vueagc)
+- [前端仓库](https://github.com/pyf0304/vue3AgcSpa)
 - 根据 JSON 生成 typescript 的工具：[http://json2ts.com/](http://json2ts.com/)
 
 部分设计参考了 [vue-vben-admin](https://github.com/vbenjs/vue-vben-admin)
@@ -20,13 +15,13 @@
 - 获取项目代码
 
 ```bash
-git clone https://github.com/buqiyuan/vueagc
+git clone https://github.com/pyf0304/vue3AgcSpa
 ```
 
 - 安装依赖
 
 ```bash
-cd vueagc
+cd vue3AgcSpa
 
 pnpm install
 
@@ -43,6 +38,89 @@ pnpm serve
 ```bash
 pnpm build
 ```
+
+## WebApi 场景切换
+
+项目中的 WebApi 配置已经统一到 [src/ts/PubConfig/clsSysPara4WebApi.ts](src/ts/PubConfig/clsSysPara4WebApi.ts)，`.env*` 文件只负责声明场景，不再直接维护完整 API 地址。
+
+- 开发模式使用 [.env.development](.env.development)
+- 生产模式使用 [.env.production](.env.production)
+- 远程测试模式使用 [.env.remote-test](.env.remote-test)
+- 本项目开发服务器端口在 [vite.config.ts](vite.config.ts#L155) 中固定为 `8099`
+
+场景值说明：
+
+- `local`: 本地 WebApi
+- `test`: 远程测试 WebApi
+- `prod`: 远程正式 WebApi
+
+常用命令：
+
+```bash
+# 本地开发（调用本地 WebApi）
+pnpm dev
+
+# 以生产模式启动（调用远程正式 WebApi）
+npm run dev:production
+
+# 一键清理 8099 占用 + 生产模式启动 + 自动打开浏览器(Windows)
+npm run dev:prod:auto
+
+# 远程测试开发（调用远程测试 WebApi）
+npm run dev:remote-test
+
+# 正式环境打包
+pnpm build
+
+# 远程测试环境打包
+pnpm build:remote-test
+
+# 远程测试环境预览
+pnpm preview:remote-test
+```
+
+发布到子路径 `/vueagc/` 时，请使用生产构建后的 `dist` 目录，并确保静态服务器把 `/vueagc/` 转发到前端入口页。当前项目已经按这个路径配置好：
+
+- [\.env.production](.env.production) 中 `VITE_BASE_URL = /vueagc/`
+- [src/router/index.ts](src/router/index.ts) 中 `createWebHashHistory(import.meta.env.BASE_URL)`
+- [default.conf.template](default.conf.template) 中已补充 `/vueagc/` 的 nginx 规则
+
+所以最终访问地址应为：`https://www.sh-tz.com/vueagc/#/login?redirect=/dashboard/welcome`
+
+> **注意**：`npm run dev -- --mode production` 这种写法在 npm 下存在 `--mode` flag 被丢弃的问题， Vite 会将 `production` 当作根目录参数导致 HTTP 404。请统一使用 `npm run dev:production`。
+
+说明：
+
+- `--mode production` 会加载 [.env.production](.env.production)
+- `--mode remote-test` 会加载 [.env.remote-test](.env.remote-test)
+- 前端仍然在本地运行，只是 WebApi 场景切换到了对应环境
+- 默认开发模式访问地址：`http://localhost:8099/`
+- `--mode production` 访问地址：`http://localhost:8099/`
+- 不要按 Vite 默认值 `5173` 访问
+
+如果启动时报 `Port 8099 is already in use`，可以先释放 8099 端口再重启：
+
+```powershell
+Get-NetTCPConnection -LocalPort 8099 -State Listen -ErrorAction SilentlyContinue |
+Select-Object -ExpandProperty OwningProcess -Unique |
+ForEach-Object { Stop-Process -Id $_ -Force }
+```
+
+提示：
+
+- 这条命令会结束占用 8099 的进程，建议在确认是本地开发进程时再执行。
+- 也可以直接使用 `npm run dev:prod:auto` 一键完成清理端口和启动。
+
+默认约定：
+
+- [.env.development](.env.development) 使用 `local`
+- [.env.production](.env.production) 使用 `prod`
+- [.env.remote-test](.env.remote-test) 使用 `test`
+
+如果需要切换普通接口和登录/GP 接口，可以分别修改：
+
+- `VITE_WEBAPI_SCENE`
+- `VITE_WEBAPI_GP_SCENE`
 
 ## vscode 配置
 
@@ -83,22 +161,3 @@ pnpm build
 ## 更新日志
 
 [CHANGELOG](./CHANGELOG.md)
-
-### QQ 交流群（2022-3-8）
-
-[![加入QQ群](https://img.shields.io/badge/570108996-blue.svg)](https://qm.qq.com/cgi-bin/qm/qr?k=ID-KcAOdPUPWVgAnsPLF3gRdHLc8GURO&jump_from=webapi)
-
-<div><img src="https://cdn.jsdelivr.net/gh/buqiyuan/MyImageHosting/imgs/vue3-antdv-admin/qq_group.jpg" height="280" /></div>
-
-## 赞赏
-
-如果你觉得这个项目对你有帮助，你可以帮作者买一杯咖啡表示支持!
-
-| 微信 | 支付宝 |
-| :-: | :-: |
-| <img src="https://cdn.jsdelivr.net/gh/buqiyuan/MyImageHosting/imgs/vue3-antdv-admin/weixin.jpg" height="220" /> | <img src="https://cdn.jsdelivr.net/gh/buqiyuan/MyImageHosting/imgs/vue3-antdv-admin/zhifubao.jpg" height="220" /> |
-
-## 感谢 JetBrains 免费的开源授权
-
-<a href="https://www.jetbrains.com/?from=Mybatis-PageHelper" target="_blank">
-<img src="https://user-images.githubusercontent.com/1787798/69898077-4f4e3d00-138f-11ea-81f9-96fb7c49da89.png" height="200"/></a>

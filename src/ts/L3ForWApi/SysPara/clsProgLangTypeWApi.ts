@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsProgLangTypeWApi
  * 表名:ProgLangType(00050303)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:51:15
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/27 15:37:00
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:系统参数(SysPara)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * 编程语言类型(ProgLangType)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年06月14日.
+ * Created by pyf on 2026年05月27日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -40,7 +40,7 @@ import {
 } from '@/ts/PubFun/clsCommFunc4Web';
 import { progLangTypeCache, isFuncMapCache } from '@/views/SysPara/ProgLangTypeVueShare';
 import { clsProgLangTypeENEx } from '@/ts/L0Entity/SysPara/clsProgLangTypeENEx';
-import { clsProgLangTypeEN } from '@/ts/L0Entity/SysPara/clsProgLangTypeEN';
+import { clsProgLangTypeEN, ProgLangTypeKey } from '@/ts/L0Entity/SysPara/clsProgLangTypeEN';
 import { CharEncoding_func } from '@/ts/L3ForWApi/SysPara/clsCharEncodingWApi';
 import { clsCharEncodingEN } from '@/ts/L0Entity/SysPara/clsCharEncodingEN';
 import { AddRecordResult } from '@/ts/PubFun/AddRecordResult';
@@ -55,28 +55,25 @@ export const progLangType_ConstructorName = 'progLangType';
 /**
  * 根据关键字获取相应记录的对象
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdAsync)
- * @param strProgLangTypeId:关键字
+ * @param key:包含关键字的对象
  * @returns 对象
  **/
-export async function ProgLangType_GetObjByProgLangTypeIdAsync(
-  strProgLangTypeId: string,
+export async function ProgLangType_GetObjByKeyAsync(
+  key: ProgLangTypeKey,
 ): Promise<clsProgLangTypeEN | null> {
-  const strThisFuncName = 'GetObjByProgLangTypeIdAsync';
-
-  if (IsNullOrEmpty(strProgLangTypeId) == true) {
+  const strThisFuncName = 'GetObjByKeyAsync';
+  if (
+    key.progLangTypeId === undefined ||
+    key.progLangTypeId === null ||
+    key.progLangTypeId === ''
+  ) {
     const strMsg = Format(
-      '参数:[strProgLangTypeId]不能为空!(In clsProgLangTypeWApi.GetObjByProgLangTypeIdAsync)',
+      '关键字段[ProgLangTypeId]不能为空!(in {0}.{1})',
+      progLangType_ConstructorName,
+      strThisFuncName,
     );
     console.error(strMsg);
-    throw strMsg;
-  }
-  if (strProgLangTypeId.length != 2) {
-    const strMsg = Format(
-      '缓存分类变量:[strProgLangTypeId]的长度:[{0}]不正确!(clsProgLangTypeWApi.GetObjByProgLangTypeIdAsync)',
-      strProgLangTypeId.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
+    throw new Error(strMsg);
   }
   const strAction = 'GetObjByProgLangTypeId';
   const strUrl = GetWebApiUrl(progLangType_Controller, strAction);
@@ -88,7 +85,7 @@ export async function ProgLangType_GetObjByProgLangTypeIdAsync(
       Authorization: `${token}`,
     },
     params: {
-      strProgLangTypeId,
+      strProgLangTypeId: key.progLangTypeId,
     },
   };
   try {
@@ -141,25 +138,25 @@ export async function ProgLangType_GetObjByProgLangTypeIdAsync(
  * @param strProgLangTypeId:所给的关键字
  * @returns 对象
  */
-export async function ProgLangType_GetObjByProgLangTypeIdlocalStorage(strProgLangTypeId: string) {
+export async function ProgLangType_GetObjByProgLangTypeIdlocalStorage(key: ProgLangTypeKey) {
   const strThisFuncName = 'GetObjByProgLangTypeIdlocalStorage';
 
-  if (IsNullOrEmpty(strProgLangTypeId) == true) {
+  if (IsNullOrEmpty(key.progLangTypeId) == true) {
     const strMsg = Format(
       '参数:[strProgLangTypeId]不能为空!(In clsProgLangTypeWApi.GetObjByProgLangTypeIdlocalStorage)',
     );
     console.error(strMsg);
     throw strMsg;
   }
-  if (strProgLangTypeId.length != 2) {
+  if (key.progLangTypeId.length != 2) {
     const strMsg = Format(
       '缓存分类变量:[strProgLangTypeId]的长度:[{0}]不正确!(clsProgLangTypeWApi.GetObjByProgLangTypeIdlocalStorage)',
-      strProgLangTypeId.length,
+      key.progLangTypeId.length,
     );
     console.error(strMsg);
     throw strMsg;
   }
-  const strKey = Format('{0}_{1}', clsProgLangTypeEN._CurrTabName, strProgLangTypeId);
+  const strKey = Format('{0}_{1}', clsProgLangTypeEN._CurrTabName, key.progLangTypeId);
   if (strKey == '') {
     console.error('关键字为空!不正确');
     throw new Error('关键字为空!不正确');
@@ -171,7 +168,7 @@ export async function ProgLangType_GetObjByProgLangTypeIdlocalStorage(strProgLan
     return objProgLangTypeCache;
   }
   try {
-    const objProgLangType = await ProgLangType_GetObjByProgLangTypeIdAsync(strProgLangTypeId);
+    const objProgLangType = await ProgLangType_GetObjByKeyAsync(key);
     if (objProgLangType != null) {
       localStorage.setItem(strKey, JSON.stringify(objProgLangType));
       const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
@@ -183,7 +180,7 @@ export async function ProgLangType_GetObjByProgLangTypeIdlocalStorage(strProgLan
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      strProgLangTypeId,
+      key.progLangTypeId,
       progLangType_ConstructorName,
       strThisFuncName,
     );
@@ -200,22 +197,22 @@ export async function ProgLangType_GetObjByProgLangTypeIdlocalStorage(strProgLan
  * @returns 对象
  */
 export async function ProgLangType_GetObjByProgLangTypeIdCache(
-  strProgLangTypeId: string,
+  key: ProgLangTypeKey,
   bolTryAsyncOnce = true,
 ) {
   const strThisFuncName = 'GetObjByProgLangTypeIdCache';
 
-  if (IsNullOrEmpty(strProgLangTypeId) == true) {
+  if (IsNullOrEmpty(key.progLangTypeId) == true) {
     const strMsg = Format(
       '参数:[strProgLangTypeId]不能为空!(In clsProgLangTypeWApi.GetObjByProgLangTypeIdCache)',
     );
     console.error(strMsg);
     throw strMsg;
   }
-  if (strProgLangTypeId.length != 2) {
+  if (key.progLangTypeId.length != 2) {
     const strMsg = Format(
       '缓存分类变量:[strProgLangTypeId]的长度:[{0}]不正确!(clsProgLangTypeWApi.GetObjByProgLangTypeIdCache)',
-      strProgLangTypeId.length,
+      key.progLangTypeId.length,
     );
     console.error(strMsg);
     throw strMsg;
@@ -223,7 +220,7 @@ export async function ProgLangType_GetObjByProgLangTypeIdCache(
   const arrProgLangTypeObjLstCache = await ProgLangType_GetObjLstCache();
   try {
     const arrProgLangTypeSel = arrProgLangTypeObjLstCache.filter(
-      (x) => x.progLangTypeId == strProgLangTypeId,
+      (x) => x.progLangTypeId == key.progLangTypeId,
     );
     let objProgLangType: clsProgLangTypeEN;
     if (arrProgLangTypeSel.length > 0) {
@@ -231,9 +228,7 @@ export async function ProgLangType_GetObjByProgLangTypeIdCache(
       return objProgLangType;
     } else {
       if (bolTryAsyncOnce == true) {
-        const objProgLangTypeConst = await ProgLangType_GetObjByProgLangTypeIdAsync(
-          strProgLangTypeId,
-        );
+        const objProgLangTypeConst = await ProgLangType_GetObjByKeyAsync(key);
         if (objProgLangTypeConst != null) {
           ProgLangType_ReFreshThisCache();
           return objProgLangTypeConst;
@@ -245,7 +240,7 @@ export async function ProgLangType_GetObjByProgLangTypeIdCache(
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      strProgLangTypeId,
+      key.progLangTypeId,
       progLangType_ConstructorName,
       strThisFuncName,
     );
@@ -288,7 +283,7 @@ export async function ProgLangType_UpdateObjInLstCache(objProgLangType: clsProgL
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -300,7 +295,7 @@ export function ProgLangType_SortFunDefa(a: clsProgLangTypeEN, b: clsProgLangTyp
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -315,7 +310,7 @@ export function ProgLangType_SortFunDefa2Fld(a: clsProgLangTypeEN, b: clsProgLan
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -493,7 +488,7 @@ export async function ProgLangType_GetNameByProgLangTypeIdCache(strProgLangTypeI
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -553,7 +548,7 @@ export async function ProgLangType_FilterFunByKey(strKey: string, value: any) {
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -572,11 +567,11 @@ export async function ProgLangType_func(
     console.error(strMsg);
     throw new Error(strMsg);
   }
-  if (clsProgLangTypeEN.AttributeName.indexOf(strOutFldName) == -1) {
+  if (clsProgLangTypeEN._AttributeName.indexOf(strOutFldName) == -1) {
     const strMsg = Format(
       '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
       strOutFldName,
-      clsProgLangTypeEN.AttributeName.join(','),
+      clsProgLangTypeEN._AttributeName.join(','),
     );
     console.error(strMsg);
     throw new Error(strMsg);
@@ -585,7 +580,9 @@ export async function ProgLangType_func(
   if (IsNullOrEmpty(strProgLangTypeId) == true) {
     return '';
   }
-  const objProgLangType = await ProgLangType_GetObjByProgLangTypeIdCache(strProgLangTypeId);
+  const objProgLangType = await ProgLangType_GetObjByProgLangTypeIdCache({
+    progLangTypeId: strProgLangTypeId,
+  });
   if (objProgLangType == null) return '';
   if (objProgLangType.GetFldValue(strOutFldName) == null) return '';
   return objProgLangType.GetFldValue(strOutFldName).toString();
@@ -594,7 +591,7 @@ export async function ProgLangType_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -949,11 +946,11 @@ export async function ProgLangType_GetObjLstClientCache() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsProgLangTypeEN._CurrTabName;
-  if (IsNullOrEmpty(clsProgLangTypeEN.WhereFormat) == false) {
-    strWhereCond = clsProgLangTypeEN.WhereFormat;
+  if (IsNullOrEmpty(clsProgLangTypeEN._WhereFormat) == false) {
+    strWhereCond = clsProgLangTypeEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsProgLangTypeEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsProgLangTypeEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsProgLangTypeEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsProgLangTypeEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -997,11 +994,11 @@ export async function ProgLangType_GetObjLstlocalStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsProgLangTypeEN._CurrTabName;
-  if (IsNullOrEmpty(clsProgLangTypeEN.WhereFormat) == false) {
-    strWhereCond = clsProgLangTypeEN.WhereFormat;
+  if (IsNullOrEmpty(clsProgLangTypeEN._WhereFormat) == false) {
+    strWhereCond = clsProgLangTypeEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsProgLangTypeEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsProgLangTypeEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsProgLangTypeEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsProgLangTypeEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1139,11 +1136,11 @@ export async function ProgLangType_GetObjLstsessionStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsProgLangTypeEN._CurrTabName;
-  if (IsNullOrEmpty(clsProgLangTypeEN.WhereFormat) == false) {
-    strWhereCond = clsProgLangTypeEN.WhereFormat;
+  if (IsNullOrEmpty(clsProgLangTypeEN._WhereFormat) == false) {
+    strWhereCond = clsProgLangTypeEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsProgLangTypeEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsProgLangTypeEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsProgLangTypeEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsProgLangTypeEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1207,7 +1204,7 @@ export async function ProgLangType_GetObjLstCache(): Promise<Array<clsProgLangTy
   //const strThisFuncName = "GetObjLst_Cache";
 
   let arrProgLangTypeObjLstCache;
-  switch (clsProgLangTypeEN.CacheModeId) {
+  switch (clsProgLangTypeEN._CacheModeId) {
     case '04': //sessionStorage
       arrProgLangTypeObjLstCache = await ProgLangType_GetObjLstsessionStorage();
       break;
@@ -1232,7 +1229,7 @@ export async function ProgLangType_GetObjLstCache(): Promise<Array<clsProgLangTy
 export async function ProgLangType_GetObjLstPureCache() {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrProgLangTypeObjLstCache;
-  switch (clsProgLangTypeEN.CacheModeId) {
+  switch (clsProgLangTypeEN._CacheModeId) {
     case '04': //sessionStorage
       arrProgLangTypeObjLstCache = await ProgLangType_GetObjLstsessionStoragePureCache();
       break;
@@ -1943,7 +1940,7 @@ export async function ProgLangType_GetObjExLstByPagerCache(
   const bolIsFuncMap = isFuncMapCache[isFuncMapKey];
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsProgLangTypeEN.AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
+    clsProgLangTypeEN._AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
     (bolIsFuncMap == false || bolIsFuncMap == undefined)
   ) {
     for (const newObj of arrProgLangTypeExObjLst) {
@@ -2097,7 +2094,7 @@ export function ProgLangType_CopyToEx(objProgLangTypeENS: clsProgLangTypeEN): cl
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -2111,7 +2108,7 @@ export function ProgLangType_FuncMapByFldName(
   strFldName = strFldName.replace('|Ex', '');
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsProgLangTypeEN.AttributeName;
+  const arrFldName = clsProgLangTypeEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -2130,7 +2127,7 @@ export function ProgLangType_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -2387,7 +2384,9 @@ export async function ProgLangType_AddNewObjSave(
   try {
     //检查唯一性条件
     let returnBool = false;
-    const bolIsExist = await ProgLangType_IsExistAsync(objProgLangTypeEN.progLangTypeId);
+    const bolIsExist = await ProgLangType_IsExistAsync({
+      progLangTypeId: objProgLangTypeEN.progLangTypeId,
+    });
     if (bolIsExist == true) {
       const strMsg = Format('添加记录时,关键字：{0}已经存在!', objProgLangTypeEN.progLangTypeId);
       console.error(strMsg);
@@ -2908,10 +2907,10 @@ export async function ProgLangType_IsExistCache(strProgLangTypeId: string) {
 /**
  * 根据关键字判断是否存在记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistAsync)
- * @param strProgLangTypeId:关键字
+ * @param key:包含关键字的对象
  * @returns 是否存在?存在返回True
  **/
-export async function ProgLangType_IsExistAsync(strProgLangTypeId: string): Promise<boolean> {
+export async function ProgLangType_IsExistAsync(key: ProgLangTypeKey): Promise<boolean> {
   const strThisFuncName = 'IsExistAsync';
   //检测记录是否存在
   const strAction = 'IsExist';
@@ -2924,7 +2923,7 @@ export async function ProgLangType_IsExistAsync(strProgLangTypeId: string): Prom
       Authorization: `${token}`,
     },
     params: {
-      strProgLangTypeId,
+      strProgLangTypeId: key.progLangTypeId,
     },
   };
   try {
@@ -3229,7 +3228,7 @@ export function ProgLangType_ReFreshCache(): void {
   console.trace(strMsg);
   // 静态的对象列表,用于清空相关缓存,针对记录较少,作为参数表可以使用
   const strKey = clsProgLangTypeEN._CurrTabName;
-  switch (clsProgLangTypeEN.CacheModeId) {
+  switch (clsProgLangTypeEN._CacheModeId) {
     case '04': //sessionStorage
       sessionStorage.removeItem(strKey);
       break;
@@ -3253,7 +3252,7 @@ export function ProgLangType_ReFreshCache(): void {
 export function ProgLangType_ReFreshThisCache(): void {
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = clsProgLangTypeEN._CurrTabName;
-    switch (clsProgLangTypeEN.CacheModeId) {
+    switch (clsProgLangTypeEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -3285,14 +3284,16 @@ export function ProgLangType_GetLastRefreshTime(): string {
 }
 
 /**
- * 绑定基于Web的下拉框,在某一层下的下拉框
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050116)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
+ * @param bolIsVisible:
 */
 export async function ProgLangType_BindDdl_ProgLangTypeIdByIsVisibleInDivCache(
   objDiv: HTMLDivElement,
   strDdlName: string,
+  bolIsVisible: boolean,
 ) {
   const objDdl = document.getElementById(strDdlName);
   if (objDdl == null) {
@@ -3308,6 +3309,7 @@ export async function ProgLangType_BindDdl_ProgLangTypeIdByIsVisibleInDivCache(
   //console.log("开始：BindDdl_ProgLangTypeIdByIsVisibleInDivCache");
   let arrObjLstSel = await ProgLangType_GetObjLstCache();
   if (arrObjLstSel == null) return;
+  arrObjLstSel = arrObjLstSel.filter((x) => x.isVisible == bolIsVisible);
   arrObjLstSel = arrObjLstSel.sort((x, y) => x.orderNum - y.orderNum);
   BindDdl_ObjLstInDivObj(
     objDiv,
@@ -3315,19 +3317,72 @@ export async function ProgLangType_BindDdl_ProgLangTypeIdByIsVisibleInDivCache(
     arrObjLstSel,
     clsProgLangTypeEN.con_ProgLangTypeId,
     clsProgLangTypeEN.con_ProgLangTypeName,
-    '编程语言类型...',
+    '选编程语言类型...',
+  );
+}
+/**
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050483)
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)-pyf
+ * @param objDDL:需要绑定当前表的下拉框
+
+*/
+export async function ProgLangType_BindDdl_ProgLangTypeIdInDivCache(
+  objDiv: HTMLDivElement,
+  strDdlName: string,
+) {
+  const objDdl = document.getElementById(strDdlName);
+  if (objDdl == null) {
+    const strMsg = Format('下拉框：{0} 不存在!(In BindDdl_ProgLangTypeIdInDiv)', strDdlName);
+    alert(strMsg);
+    console.error(strMsg);
+    throw strMsg;
+  }
+  //为数据源于表的下拉框设置内容
+  //console.log("开始：BindDdl_ProgLangTypeIdInDivCache");
+  let arrObjLstSel = await ProgLangType_GetObjLstCache();
+  if (arrObjLstSel == null) return;
+  arrObjLstSel = arrObjLstSel.sort((x, y) => x.orderNum - y.orderNum);
+  BindDdl_ObjLstInDivObj(
+    objDiv,
+    strDdlName,
+    arrObjLstSel,
+    clsProgLangTypeEN.con_ProgLangTypeId,
+    clsProgLangTypeEN.con_ProgLangTypeName,
+    '选编程语言类型...',
   );
 }
 
 /**
- * 绑定基于Web的下拉框,在某一层下的下拉框
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050116)
+ * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_GetDdlData)-pyf
+ * @param objDDL:需要绑定当前表的下拉框
+
+ * @param bolIsVisible:
+*/
+export async function ProgLangType_GetArrProgLangTypeByIsVisible(bolIsVisible: boolean) {
+  //为数据源于表的下拉框设置内容
+  //console.log("开始：BindDdl_ProgLangTypeIdByIsVisibleInDivCache");
+  const arrProgLangType = new Array<clsProgLangTypeEN>();
+  let arrObjLstSel = await ProgLangType_GetObjLstCache();
+  if (arrObjLstSel == null) return null;
+  arrObjLstSel = arrObjLstSel.filter((x) => x.isVisible == bolIsVisible);
+  arrObjLstSel = arrObjLstSel.sort((x, y) => x.orderNum - y.orderNum);
+  const obj0 = new clsProgLangTypeEN();
+  obj0.progLangTypeId = '0';
+  obj0.progLangTypeName = '选编程语言类型...';
+  arrProgLangType.push(obj0);
+  arrObjLstSel.forEach((x) => arrProgLangType.push(x));
+  return arrProgLangType;
+}
+/**
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050483)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_GetDdlData)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
 */
-export async function ProgLangType_GetArrProgLangTypeByIsVisible() {
+export async function ProgLangType_GetArrProgLangType() {
   //为数据源于表的下拉框设置内容
-  //console.log("开始：BindDdl_ProgLangTypeIdByIsVisibleInDivCache");
+  //console.log("开始：BindDdl_ProgLangTypeIdInDivCache");
   const arrProgLangType = new Array<clsProgLangTypeEN>();
   let arrObjLstSel = await ProgLangType_GetObjLstCache();
   if (arrObjLstSel == null) return null;
@@ -3703,7 +3758,7 @@ export function ProgLangType_CheckProperty4Update(pobjProgLangTypeEN: clsProgLan
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3724,7 +3779,7 @@ export function ProgLangType_GetJSONStrByObj(pobjProgLangTypeEN: clsProgLangType
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -3745,7 +3800,7 @@ export function ProgLangType_GetObjLstByJSONStr(strJSON: string): Array<clsProgL
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrProgLangTypeObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -3765,7 +3820,7 @@ export function ProgLangType_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-05-27
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

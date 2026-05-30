@@ -1,6 +1,5 @@
 ﻿import { clsPrjFuncTemplateRelaBLEx } from './clsPrjFuncTemplateRelaBLEx';
 import { vCodeType_Sim_GetObjByCodeTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
-import { vFunction4GeneCode_Sim_GetObjLstCache } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4GeneCode_SimWApi';
 
 import { vFunctionTemplateRela_Sim_GetObjLstCache } from '@/ts/L3ForWApi/PrjFunction/clsvFunctionTemplateRela_SimWApi';
 import { Projects_GetObjByPrjIdCache } from '@/ts/L3ForWApi/PrjManage/clsProjectsWApi';
@@ -18,6 +17,7 @@ import {
   vFunctionTemplateRela_GetObjLstAsync,
   vFunctionTemplateRela_GetRecCountByCondAsync,
 } from '@/ts/L3ForWApi/PrjFunction/clsvFunctionTemplateRelaWApi';
+import { vFunction4GeneCode_Sim_GetObjLstAsync } from '@/ts/L3ForWApi/PrjFunction/clsvFunction4GeneCode_SimWApi';
 
 export class clsvFunctionTemplateRelaBLEx {
   /// <summary>
@@ -140,8 +140,22 @@ export class clsvFunctionTemplateRelaBLEx {
         strSqlDsTypeId,
         '',
       );
+    const strWhereCond0 = Format(
+      "functionTemplateId='{0}' And codeTypeId='{1}' And progLangTypeId='{2}' And sqlDsTypeId='{3}'",
+      strFunctionTemplateId,
+      strCodeTypeId,
+      strProgLangTypeId,
+      strSqlDsTypeId,
+    );
+    const strWhereCond1 = Format(
+      'FUnctId4GC in (Select funcId4GC From {0} Where {1})',
+      clsvFunctionTemplateRelaEN._CurrTabName,
+      strWhereCond0,
+    );
 
-    const arrvFunction4GeneCodeObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
+    const arrvFunction4GeneCodeObjLstCache = await vFunction4GeneCode_Sim_GetObjLstAsync(
+      strWhereCond1,
+    );
     let arrvFunction4GeneCodeObjLst = arrvFunctionTemplateRelaObjLst.map((x) =>
       this.GetFunction4GeneCodeObj(x, arrvFunction4GeneCodeObjLstCache),
     );
@@ -161,7 +175,20 @@ export class clsvFunctionTemplateRelaBLEx {
       strCodeTypeId,
       strRegionTypeId,
     );
-    const arrvFunction4GeneCodeObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
+    const strWhereCond0 = Format(
+      "functionTemplateId='{0}' And codeTypeId='{1}' And regionTypeId='{2}'",
+      strFunctionTemplateId,
+      strCodeTypeId,
+      strRegionTypeId,
+    );
+    const strWhereCond1 = Format(
+      'FUnctId4GC in (Select funcId4GC From {0} Where {1})',
+      clsvFunctionTemplateRelaEN._CurrTabName,
+      strWhereCond0,
+    );
+    const arrvFunction4GeneCodeObjLstCache = await vFunction4GeneCode_Sim_GetObjLstAsync(
+      strWhereCond1,
+    );
 
     let arrvFunction4GeneCodeObjLst = arrvFunctionTemplateRelaObjLst.map((x) =>
       this.GetFunction4GeneCodeObj(x, arrvFunction4GeneCodeObjLstCache),
@@ -200,7 +227,19 @@ export class clsvFunctionTemplateRelaBLEx {
     const arrFunctionTemplateRelaObjLst_Sel1 = arrvFunctionTemplateRela_SimExObjLst.filter(
       (x) => x.functionTemplateId == strFunctionTemplateId && x.funcTypeId == '10',
     );
-    const arrvFunction4GeneCodeObjLstCache = await vFunction4GeneCode_Sim_GetObjLstCache();
+
+    const strWhereCond0 = Format(
+      "functionTemplateId='{0}' And funcTypeId='10'",
+      strFunctionTemplateId,
+    );
+    const strWhereCond1 = Format(
+      'FUnctId4GC in (Select funcId4GC From {0} Where {1})',
+      clsvFunctionTemplateRelaEN._CurrTabName,
+      strWhereCond0,
+    );
+    const arrvFunction4GeneCodeObjLstCache = await vFunction4GeneCode_Sim_GetObjLstAsync(
+      strWhereCond1,
+    );
 
     const arrvFunction4GeneCodeObjLst = arrFunctionTemplateRelaObjLst_Sel1.map((x) =>
       this.GetFunction4GeneCodeObj(x, arrvFunction4GeneCodeObjLstCache),

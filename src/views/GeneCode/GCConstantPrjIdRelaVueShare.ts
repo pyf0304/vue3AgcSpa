@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:GCConstantPrjIdRelaVueShare(界面:GCConstantPrjIdRelaCRUD,00050344)
  * 表名:GCConstantPrjIdRela(00050641)
- * 版本:2025.06.21.1(服务器:PYF-AI)
- * 日期:2025/06/30 00:00:08
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/29 17:38:44
  * 生成者:
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  * 模块中文名:生成代码(GeneCode)
  * 框架-层名:Vue共享(TS)(Vue_Share_TS,0264)
@@ -17,8 +17,11 @@ import { reactive, ref } from 'vue';
 import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
 import { clsGCConstantPrjIdRelaENEx } from '@/ts/L0Entity/GeneCode/clsGCConstantPrjIdRelaENEx';
 import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
+import {
+  GCConstantPrjIdRelaKey,
+  clsGCConstantPrjIdRelaEN,
+} from '@/ts/L0Entity/GeneCode/clsGCConstantPrjIdRelaEN';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
-import { clsGCConstantPrjIdRelaEN } from '@/ts/L0Entity/GeneCode/clsGCConstantPrjIdRelaEN';
 
 const ascOrDesc4SortFun = ref('Asc');
 const sortGCConstantPrjIdRelaBy = ref('');
@@ -39,6 +42,7 @@ const refDivList = ref();
 const refDivEdit = ref();
 const refDivDetail = ref();
 const refGCConstantPrjIdRela_Detail = ref();
+const refGCConstantPrjIdRela_DetailAi = ref();
 const refGCConstantPrjIdRela_Edit = ref();
 const refGCConstantPrjIdRela_List = ref();
 const divVarSet = reactive({
@@ -49,6 +53,7 @@ const divVarSet = reactive({
   refDivEdit,
   refDivDetail,
   refGCConstantPrjIdRela_Detail,
+  refGCConstantPrjIdRela_DetailAi,
   refGCConstantPrjIdRela_Edit,
   refGCConstantPrjIdRela_List,
 });
@@ -61,6 +66,7 @@ export {
   refDivEdit,
   refDivDetail,
   refGCConstantPrjIdRela_Detail,
+  refGCConstantPrjIdRela_DetailAi,
   refGCConstantPrjIdRela_Edit,
   refGCConstantPrjIdRela_List,
 };
@@ -290,10 +296,10 @@ export const BindTabByList = async (
     refGCConstantPrjIdRela_List.value.selectAllChecked = false;
 };
 
-export function GCConstantPrjIdRela_DeleteKeyIdCache(strConstId: string, strPrjId: string): void {
-  if (IsNullOrEmpty(strConstId) == false && IsNullOrEmpty(strPrjId) == false) {
+export function GCConstantPrjIdRela_DeleteKeyIdCache(key: GCConstantPrjIdRelaKey): void {
+  if (IsNullOrEmpty(key.constId) == false && IsNullOrEmpty(key.prjId) == false) {
     // 使用 delete 删除特定的键
-    const cacheKey = `${strConstId}_${strPrjId}`;
+    const cacheKey = `${key.constId}_${key.prjId}`;
     delete gCConstantPrjIdRelaCache[cacheKey];
     return;
   }

@@ -29,7 +29,7 @@ import {
   ProgLangType_GetSubObjLstCache,
   ProgLangType_DelRecordAsync,
   ProgLangType_ReFreshCache,
-  ProgLangType_GetObjByProgLangTypeIdAsync,
+  ProgLangType_GetObjByKeyAsync,
   ProgLangType_GetObjExLstByPagerCache,
   ProgLangType_GetObjLstByProgLangTypeIdLstAsync,
   ProgLangType_AddNewRecordAsync,
@@ -519,7 +519,9 @@ export abstract class ProgLangTypeCRUD implements clsOperateList {
   public async SelectRecord(strProgLangTypeId: string) {
     const strThisFuncName = this.SelectRecord.name;
     try {
-      const objProgLangTypeEN = await ProgLangType_GetObjByProgLangTypeIdAsync(strProgLangTypeId);
+      const objProgLangTypeEN = await ProgLangType_GetObjByKeyAsync({
+        progLangTypeId: strProgLangTypeId,
+      });
       console.log('完成SelectRecord!', objProgLangTypeEN);
       Redirect('/Index/Main_ProgLangType');
     } catch (e) {
@@ -992,7 +994,7 @@ export abstract class ProgLangTypeCRUD implements clsOperateList {
     arrProgLangTypeExObjLst: Array<clsProgLangTypeENEx>,
     arrDataColumn: Array<clsDataColumn>,
   ) {
-    const arrFldName = clsProgLangTypeEN.AttributeName;
+    const arrFldName = clsProgLangTypeEN._AttributeName;
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;

@@ -67,7 +67,7 @@ import {
 } from '@/ts/L3ForWApiEx/RegionManage/clsViewRegionExWApi';
 import { PrjTabFldEx_GetFldIdLstByTabIdCache } from '@/ts/L3ForWApiEx/Table_Field/clsPrjTabFldExWApi';
 import { clsPubVar4Web } from '@/ts/FunClass/clsPubVar4Web';
-import { ApplicationType_GetObjByApplicationTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
+import { ApplicationType_GetObjByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 import {
   AppCodeTypeRelaEx_CopyToEx,
   AppCodeTypeRelaEx_FuncMapByFldName,
@@ -1519,9 +1519,9 @@ export default class DetailRegionFldsCRUDEx extends DetailRegionFldsCRUD impleme
       strViewId,
       clsPrivateSessionStorage.cmPrjId,
     );
-    const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-      objViewInfo.applicationTypeId,
-    );
+    const objApplicationType = await ApplicationType_GetObjByKeyCache({
+      applicationTypeId: objViewInfo.applicationTypeId,
+    });
     if (objApplicationType == null) {
       const strMsg = Format(
         '应用Id:[{0}]，没有相应的类型，请检查！',

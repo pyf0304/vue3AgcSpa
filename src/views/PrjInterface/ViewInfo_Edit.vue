@@ -368,7 +368,7 @@
   import { enumApplicationType } from '@/ts/L0Entity/GeneCode/clsApplicationTypeEN';
   import { enumViewTypeCodeTab } from '@/ts/L0Entity/PrjInterface/clsViewTypeCodeTabEN';
   import { PrjTab_GetObjByTabIdAsync } from '@/ts/L3ForWApi/Table_Field/clsPrjTabWApi';
-  import { ApplicationType_GetObjByApplicationTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
+  import { ApplicationType_GetObjByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 
   export default defineComponent({
     name: 'ViewInfoEdit',
@@ -417,9 +417,9 @@
         const intApplicationTypeId_Static = ApplicationTypeId_Static.value; //静态变量;//静态变量
         const strPrjId = PrjId_Session.value; //静态变量;//Session存储、local存储
         applicationTypeId.value = intApplicationTypeId_Static;
-        const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-          intApplicationTypeId_Static,
-        );
+        const objApplicationType = await ApplicationType_GetObjByKeyCache({
+          applicationTypeId: intApplicationTypeId_Static,
+        });
         if (objApplicationType == null) {
           applicationTypeName.value = Format('未知应用类型({0})', intApplicationTypeId_Static);
         } else {
@@ -885,9 +885,9 @@
             break;
 
           default:
-            objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-              intApplicationTypeId,
-            );
+            objApplicationType = await ApplicationType_GetObjByKeyCache({
+              applicationTypeId: intApplicationTypeId,
+            });
 
             if (objApplicationType == null) {
               const strMsg = Format(

@@ -8,7 +8,7 @@ import {
   FeatureRegionFlds_GetObjByViewFeatureIdCache,
   FeatureRegionFlds_GetObjLstCache,
 } from '@/ts/L3ForWApi/RegionManage/clsFeatureRegionFldsWApi';
-import { ApplicationType_GetNameByApplicationTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
+import { ApplicationType_GetNameByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 import { clsPrjFeatureEN } from '@/ts/L0Entity/PrjFunction/clsPrjFeatureEN';
 import { clsPrjFeatureENEx } from '@/ts/L0Entity/PrjFunction/clsPrjFeatureENEx';
 import { enumPrjFeatureType } from '@/ts/L0Entity/PrjFunction/clsPrjFeatureTypeEN';
@@ -110,7 +110,7 @@ export class clsPrjFeatureBLEx {
       if (objPrjFeatureENEx.buttonSet == null) {
         const strMsg = Format(
           '应用:{0}({1}),功能:{2}({3})没有相关的按钮，请管理员！',
-          ApplicationType_GetNameByApplicationTypeIdCache(intAppTypeId),
+          ApplicationType_GetNameByKeyCache({ applicationTypeId: intAppTypeId }),
           intAppTypeId,
           objPrjFeature.featureName,
           objPrjFeature.featureId,

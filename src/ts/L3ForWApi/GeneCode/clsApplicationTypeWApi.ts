@@ -1,8 +1,8 @@
 ﻿/**
  * 类名:clsApplicationTypeWApi
  * 表名:ApplicationType(00050127)
- * 版本:2026.04.19(服务器:WIN-SRV103-116)
- * 日期:2026/04/21 16:05:33
+ * 版本:2026.04.19(服务器:PYF-AI)
+ * 日期:2026/05/29 16:10:15
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
@@ -20,7 +20,7 @@
 /**
  * 应用程序类型(ApplicationType)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2026年04月21日.
+ * Created by pyf on 2026年05月29日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -39,7 +39,10 @@ import {
 } from '@/ts/PubFun/clsCommFunc4Web';
 import { applicationTypeCache, isFuncMapCache } from '@/views/GeneCode/ApplicationTypeVueShare';
 import { clsApplicationTypeENEx } from '@/ts/L0Entity/GeneCode/clsApplicationTypeENEx';
-import { clsApplicationTypeEN } from '@/ts/L0Entity/GeneCode/clsApplicationTypeEN';
+import {
+  clsApplicationTypeEN,
+  ApplicationTypeKey,
+} from '@/ts/L0Entity/GeneCode/clsApplicationTypeEN';
 import { Format, GetStrLen, tzDataType, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { ProgLangType_func } from '@/ts/L3ForWApi/SysPara/clsProgLangTypeWApi';
 import { clsProgLangTypeEN } from '@/ts/L0Entity/SysPara/clsProgLangTypeEN';
@@ -55,20 +58,25 @@ export const applicationType_ConstructorName = 'applicationType';
 /**
  * 根据关键字获取相应记录的对象
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdAsync)
- * @param intApplicationTypeId:关键字
+ * @param key:包含关键字的对象
  * @returns 对象
  **/
-export async function ApplicationType_GetObjByApplicationTypeIdAsync(
-  intApplicationTypeId: number,
+export async function ApplicationType_GetObjByKeyAsync(
+  key: ApplicationTypeKey,
 ): Promise<clsApplicationTypeEN | null> {
-  const strThisFuncName = 'GetObjByApplicationTypeIdAsync';
-
-  if (intApplicationTypeId == 0) {
+  const strThisFuncName = 'GetObjByKeyAsync';
+  if (
+    key.applicationTypeId === undefined ||
+    key.applicationTypeId === null ||
+    key.applicationTypeId === 0
+  ) {
     const strMsg = Format(
-      '参数:[intApplicationTypeId]不能为空!(In clsApplicationTypeWApi.GetObjByApplicationTypeIdAsync)',
+      '关键字段[ApplicationTypeId]不能为空!(in {0}.{1})',
+      applicationType_ConstructorName,
+      strThisFuncName,
     );
     console.error(strMsg);
-    throw strMsg;
+    throw new Error(strMsg);
   }
   const strAction = 'GetObjByApplicationTypeId';
   const strUrl = GetWebApiUrl(applicationType_Controller, strAction);
@@ -80,7 +88,7 @@ export async function ApplicationType_GetObjByApplicationTypeIdAsync(
       Authorization: `${token}`,
     },
     params: {
-      intApplicationTypeId,
+      intApplicationTypeId: key.applicationTypeId,
     },
   };
   try {
@@ -128,24 +136,22 @@ export async function ApplicationType_GetObjByApplicationTypeIdAsync(
 }
 
 /**
- * 根据关键字获取相关对象, 从localStorage缓存中获取.
+ * 根据关键字获取特定对象, 从 localStorage 中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
- * @param intApplicationTypeId:所给的关键字
+ * @param key:关键字对象
  * @returns 对象
  */
-export async function ApplicationType_GetObjByApplicationTypeIdlocalStorage(
-  intApplicationTypeId: number,
-) {
+export async function ApplicationType_GetObjByKeylocalStorage(key: ApplicationTypeKey) {
   const strThisFuncName = 'GetObjByApplicationTypeIdlocalStorage';
 
-  if (intApplicationTypeId == 0) {
+  if (key.applicationTypeId == 0) {
     const strMsg = Format(
-      '参数:[intApplicationTypeId]不能为空!(In clsApplicationTypeWApi.GetObjByApplicationTypeIdlocalStorage)',
+      '参数:[key.applicationTypeId]不能为空!(In clsApplicationTypeWApi.GetObjByApplicationTypeIdlocalStorage)',
     );
     console.error(strMsg);
     throw strMsg;
   }
-  const strKey = Format('{0}_{1}', clsApplicationTypeEN._CurrTabName, intApplicationTypeId);
+  const strKey = Format('{0}_{1}', clsApplicationTypeEN._CurrTabName, key.applicationTypeId);
   if (strKey == '') {
     console.error('关键字为空!不正确');
     throw new Error('关键字为空!不正确');
@@ -157,9 +163,7 @@ export async function ApplicationType_GetObjByApplicationTypeIdlocalStorage(
     return objApplicationTypeCache;
   }
   try {
-    const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdAsync(
-      intApplicationTypeId,
-    );
+    const objApplicationType = await ApplicationType_GetObjByKeyAsync(key);
     if (objApplicationType != null) {
       localStorage.setItem(strKey, JSON.stringify(objApplicationType));
       const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
@@ -171,7 +175,7 @@ export async function ApplicationType_GetObjByApplicationTypeIdlocalStorage(
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      intApplicationTypeId,
+      key.applicationTypeId,
       applicationType_ConstructorName,
       strThisFuncName,
     );
@@ -182,20 +186,20 @@ export async function ApplicationType_GetObjByApplicationTypeIdlocalStorage(
 }
 
 /**
- * 根据关键字获取相关对象, 从缓存中获取.
+ * 根据关键字获取特定对象, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
- * @param intApplicationTypeId:所给的关键字
+ * @param key:关键字对象
  * @returns 对象
  */
-export async function ApplicationType_GetObjByApplicationTypeIdCache(
-  intApplicationTypeId: number,
+export async function ApplicationType_GetObjByKeyCache(
+  key: ApplicationTypeKey,
   bolTryAsyncOnce = true,
 ) {
   const strThisFuncName = 'GetObjByApplicationTypeIdCache';
 
-  if (intApplicationTypeId == 0) {
+  if (key.applicationTypeId == 0) {
     const strMsg = Format(
-      '参数:[intApplicationTypeId]不能为空!(In clsApplicationTypeWApi.GetObjByApplicationTypeIdCache)',
+      '参数:[key.applicationTypeId]不能为空!(In clsApplicationTypeWApi.GetObjByApplicationTypeIdCache)',
     );
     console.error(strMsg);
     throw strMsg;
@@ -203,7 +207,7 @@ export async function ApplicationType_GetObjByApplicationTypeIdCache(
   const arrApplicationTypeObjLstCache = await ApplicationType_GetObjLstCache();
   try {
     const arrApplicationTypeSel = arrApplicationTypeObjLstCache.filter(
-      (x) => x.applicationTypeId == intApplicationTypeId,
+      (x) => x.applicationTypeId == key.applicationTypeId,
     );
     let objApplicationType: clsApplicationTypeEN;
     if (arrApplicationTypeSel.length > 0) {
@@ -211,9 +215,7 @@ export async function ApplicationType_GetObjByApplicationTypeIdCache(
       return objApplicationType;
     } else {
       if (bolTryAsyncOnce == true) {
-        const objApplicationTypeConst = await ApplicationType_GetObjByApplicationTypeIdAsync(
-          intApplicationTypeId,
-        );
+        const objApplicationTypeConst = await ApplicationType_GetObjByKeyAsync(key);
         if (objApplicationTypeConst != null) {
           ApplicationType_ReFreshThisCache();
           return objApplicationTypeConst;
@@ -225,7 +227,7 @@ export async function ApplicationType_GetObjByApplicationTypeIdCache(
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      intApplicationTypeId,
+      key.applicationTypeId,
       applicationType_ConstructorName,
       strThisFuncName,
     );
@@ -270,7 +272,7 @@ export async function ApplicationType_UpdateObjInLstCache(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-21
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -285,7 +287,7 @@ export function ApplicationType_SortFunDefa(
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-21
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -303,7 +305,7 @@ export function ApplicationType_SortFunDefa2Fld(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-21
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -466,15 +468,13 @@ export function ApplicationType_SortFunByKey(strKey: string, AscOrDesc: string) 
 /**
  * 根据关键字获取相关对象的名称属性, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
- * @param intApplicationTypeId:所给的关键字
- * @returns 对象
+ * @param key:关键字对象
+ * @returns 名称属性值
  */
-export async function ApplicationType_GetNameByApplicationTypeIdCache(
-  intApplicationTypeId: number,
-) {
-  if (intApplicationTypeId == 0) {
+export async function ApplicationType_GetNameByKeyCache(key: ApplicationTypeKey) {
+  if (key.applicationTypeId == 0) {
     const strMsg = Format(
-      '参数:[intApplicationTypeId]不能为空!(In clsApplicationTypeWApi.GetNameByApplicationTypeIdCache)',
+      '参数:[key.applicationTypeId]不能为空!(In clsApplicationTypeWApi.GetNameByKeyCache)',
     );
     console.error(strMsg);
     throw strMsg;
@@ -483,7 +483,7 @@ export async function ApplicationType_GetNameByApplicationTypeIdCache(
   if (arrApplicationTypeObjLstCache == null) return '';
   try {
     const arrApplicationTypeSel = arrApplicationTypeObjLstCache.filter(
-      (x) => x.applicationTypeId == intApplicationTypeId,
+      (x) => x.applicationTypeId == key.applicationTypeId,
     );
     let objApplicationType: clsApplicationTypeEN;
     if (arrApplicationTypeSel.length > 0) {
@@ -496,7 +496,7 @@ export async function ApplicationType_GetNameByApplicationTypeIdCache(
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象名称属性不成功!',
       e,
-      intApplicationTypeId,
+      key.applicationTypeId,
     );
     console.error(strMsg);
     alert(strMsg);
@@ -507,7 +507,7 @@ export async function ApplicationType_GetNameByApplicationTypeIdCache(
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2026-04-21
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -579,7 +579,7 @@ export async function ApplicationType_FilterFunByKey(strKey: string, value: any)
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2026-04-21
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -611,9 +611,9 @@ export async function ApplicationType_func(
   if (intApplicationTypeId == 0) {
     return '';
   }
-  const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-    intApplicationTypeId,
-  );
+  const objApplicationType = await ApplicationType_GetObjByKeyCache({
+    applicationTypeId: intApplicationTypeId,
+  });
   if (objApplicationType == null) return '';
   if (objApplicationType.GetFldValue(strOutFldName) == null) return '';
   return objApplicationType.GetFldValue(strOutFldName).toString();
@@ -622,7 +622,7 @@ export async function ApplicationType_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2026-04-21
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -1835,16 +1835,14 @@ export async function ApplicationType_GetObjLstByPagerAsync(
 /**
  * 调用WebApi来删除记录,根据关键字来删除记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_DelRecordAsync)
- * @param intApplicationTypeId:关键字
+ * @param key:关键字对象
  * @returns 获取删除的结果
  **/
-export async function ApplicationType_DelRecordAsync(
-  intApplicationTypeId: number,
-): Promise<number> {
+export async function ApplicationType_DelRecordAsync(key: ApplicationTypeKey): Promise<number> {
   const strThisFuncName = 'DelRecordAsync';
   const strAction = 'DelRecord';
   let strUrl = GetWebApiUrl(applicationType_Controller, strAction);
-  strUrl = Format('{0}?Id={1}', strUrl, intApplicationTypeId);
+  strUrl = Format('{0}?Id={1}', strUrl, key.applicationTypeId);
 
   const token = Storage.get(ACCESS_TOKEN_KEY);
   //console.error('token:', token);
@@ -2143,7 +2141,7 @@ export function ApplicationType_CopyToEx(
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2026-04-21
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -2176,7 +2174,7 @@ export function ApplicationType_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-04-21
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -2912,16 +2910,16 @@ export async function ApplicationType_IsExistRecordAsync(strWhereCond: string): 
 /**
  * 根据关键字判断是否存在记录, 从本地缓存中判断.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistCache)
- * @param intApplicationTypeId:所给的关键字
- * @returns 对象
+ * @param key:关键字对象
+ * @returns 是否存在
  */
-export async function ApplicationType_IsExistCache(intApplicationTypeId: number) {
+export async function ApplicationType_IsExistCache(key: ApplicationTypeKey): Promise<boolean> {
   const strThisFuncName = 'IsExistCache';
   const arrApplicationTypeObjLstCache = await ApplicationType_GetObjLstCache();
   if (arrApplicationTypeObjLstCache == null) return false;
   try {
     const arrApplicationTypeSel = arrApplicationTypeObjLstCache.filter(
-      (x) => x.applicationTypeId == intApplicationTypeId,
+      (x) => x.applicationTypeId == key.applicationTypeId,
     );
     if (arrApplicationTypeSel.length > 0) {
       return true;
@@ -2931,7 +2929,7 @@ export async function ApplicationType_IsExistCache(intApplicationTypeId: number)
   } catch (e) {
     const strMsg = Format(
       '根据关键字:[{0}]判断是否存在不成功!(in {1}.{2})',
-      intApplicationTypeId,
+      key.applicationTypeId,
       applicationType_ConstructorName,
       strThisFuncName,
     );
@@ -2944,10 +2942,10 @@ export async function ApplicationType_IsExistCache(intApplicationTypeId: number)
 /**
  * 根据关键字判断是否存在记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistAsync)
- * @param intApplicationTypeId:关键字
+ * @param key:包含关键字的对象
  * @returns 是否存在?存在返回True
  **/
-export async function ApplicationType_IsExistAsync(intApplicationTypeId: number): Promise<boolean> {
+export async function ApplicationType_IsExistAsync(key: ApplicationTypeKey): Promise<boolean> {
   const strThisFuncName = 'IsExistAsync';
   //检测记录是否存在
   const strAction = 'IsExist';
@@ -2960,7 +2958,7 @@ export async function ApplicationType_IsExistAsync(intApplicationTypeId: number)
       Authorization: `${token}`,
     },
     params: {
-      intApplicationTypeId,
+      intApplicationTypeId: key.applicationTypeId,
     },
   };
   try {
@@ -3325,7 +3323,7 @@ export function ApplicationType_GetLastRefreshTime(): string {
 }
 
 /**
- * 绑定基于Web的下拉框,在某一层下的下拉框
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050012)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
@@ -3360,7 +3358,7 @@ export async function ApplicationType_BindDdl_ApplicationTypeIdByIsVisibleInDivC
 }
 
 /**
- * 绑定基于Web的下拉框,在某一层下的下拉框
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050012)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_GetDdlData)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
@@ -3812,7 +3810,7 @@ export function ApplicationType_CheckProperty4Update(pobjApplicationTypeEN: clsA
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2026-04-21
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3835,7 +3833,7 @@ export function ApplicationType_GetJSONStrByObj(
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2026-04-21
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -3856,7 +3854,7 @@ export function ApplicationType_GetObjLstByJSONStr(strJSON: string): Array<clsAp
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2026-04-21
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrApplicationTypeObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -3876,7 +3874,7 @@ export function ApplicationType_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2026-04-21
+ * 日期:2026-05-29
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

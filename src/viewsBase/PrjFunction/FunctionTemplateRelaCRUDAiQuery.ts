@@ -141,7 +141,7 @@ export async function loadQueryOptionsAi() {
   ] = await Promise.all([
     FunctionTemplate_GetArrFunctionTemplate(),
     RegionType_GetArrRegionType(),
-    ProgLangType_GetArrProgLangTypeByIsVisible(),
+    ProgLangType_GetArrProgLangTypeByIsVisible(true),
     loadCodeTypeOptionsByProgLangTypeAi(ProgLangTypeId_Static.value),
     loadFunctionOptionsByCodeTypeAi(CodeTypeId_Static.value),
   ]);

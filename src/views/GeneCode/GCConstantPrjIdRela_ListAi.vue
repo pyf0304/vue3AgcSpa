@@ -40,7 +40,7 @@
             <!-- 第一列：checkbox -->
             <td>
               <input
-                :id="'chk' + item.constId"
+                :id="'chk' + item.constId + '|' + item.prjId"
                 v-model="item.checked"
                 type="checkbox"
                 name="chkInTab"

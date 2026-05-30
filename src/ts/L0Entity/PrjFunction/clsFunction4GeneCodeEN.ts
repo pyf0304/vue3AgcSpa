@@ -17,18 +17,24 @@
  * (AutoGCLib.EntityLayer4TypeScript:GeneCode)
  **/
 import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
-
+/**
+ * v函数4GC_Sim主键类型定义
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_KeyType)
+ **/
+export type Function4GeneCodeKey = {
+  funcId4GC: string;
+};
 export class clsFunction4GeneCodeEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
   public static CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
   public static CacheModeId = ''; //
-  public static PrimaryTypeId = '03'; //自增
+  public static _PrimaryTypeId = '03'; //自增
   public static IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
   public static WhereFormat = ''; //条件格式串
   public static _CurrTabName = 'Function4GeneCode'; //当前表名,与该类相关的表名
   public static _KeyFldName = 'FuncId4GC'; //当前表中的关键字名称,与该类相关的表中关键字名
   public static mintAttributeCount = 29;
-  public static AttributeName = [
+  public static _AttributeName = [
     'funcId4GC',
     'funcName',
     'funcId4Code',

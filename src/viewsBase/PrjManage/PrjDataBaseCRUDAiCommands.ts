@@ -6,12 +6,23 @@ export type PrjDataBaseCommandIdAi =
   | 'create'
   | 'update'
   | 'delete'
+  | 'detail'
   | 'export'
-  | 'query'
   | 'setUseState';
 
-/** Ai 命令配置：复用通用表命令结构。 */
-export type PrjDataBaseCommandSpecAi = TableCommandSpec<PrjDataBaseCommandIdAi>;
+/** Ai 命令配置：复用通用表命令结构并扩展辅助控件信息。 */
+export type PrjDataBaseCommandSpecAi = TableCommandSpec<PrjDataBaseCommandIdAi> & {
+  /** 辅助控件ID（如下拉框ID） */
+  auxControlId?: string;
+  /** 辅助控件类型 */
+  auxControlType?: 'select4Bool' | 'select' | 'text';
+  /** 辅助控件选项键（用于获取数据源） */
+  auxControlOptionsKey?: string;
+  /** 字段名 */
+  fieldName?: string;
+  /** 驼峰式字段名 */
+  fieldNameCamel?: string;
+};
 
 /** Ai 命令清单：用于统一渲染查询区与功能区按钮。 */
 export const PRJ_DATA_BASE_COMMAND_SPECS_AI: Array<PrjDataBaseCommandSpecAi> = [
@@ -19,51 +30,56 @@ export const PRJ_DATA_BASE_COMMAND_SPECS_AI: Array<PrjDataBaseCommandSpecAi> = [
     id: 'query',
     region: 'query',
     text: '查询',
-    elementId: 'btnQuery_Ai4',
+    elementId: 'btnQuery_Ai',
     btnClass: 'btn btn-outline-warning text-nowrap',
   },
   {
     id: 'create',
     region: 'feature',
     text: '添加',
-    elementId: 'btnCreate_Ai4',
+    elementId: 'btnCreate_Ai',
     btnClass: 'btn btn-outline-info btn-sm text-nowrap',
   },
   {
     id: 'update',
     region: 'feature',
     text: '修改',
-    elementId: 'btnUpdate_Ai4',
+    elementId: 'btnUpdate_Ai',
     btnClass: 'btn btn-outline-info btn-sm text-nowrap',
   },
   {
     id: 'delete',
     region: 'feature',
     text: '删除',
-    elementId: 'btnDelete_Ai4',
+    elementId: 'btnDelete_Ai',
+    btnClass: 'btn btn-outline-info btn-sm text-nowrap',
+  },
+  {
+    id: 'detail',
+    region: 'feature',
+    text: '详细信息',
+    elementId: 'btnDetail_Ai',
     btnClass: 'btn btn-outline-info btn-sm text-nowrap',
   },
   {
     id: 'export',
     region: 'feature',
     text: '导出Excel',
-    elementId: 'btnExportExcel_Ai4',
+    elementId: 'btnExportExcel_Ai',
     btnClass: 'btn btn-outline-info btn-sm text-nowrap',
-  },
-  {
-    id: 'query',
-    region: 'feature',
-    text: '查询',
-    elementId: 'btnQuery_Ai4',
-    btnClass: 'btn btn-outline-warning text-nowrap',
   },
   {
     id: 'setUseState',
     region: 'feature',
     text: 'btnSetUseStateId',
-    elementId: 'btnSetUseState_Ai4',
+    elementId: 'btnSetUseState_Ai',
     btnClass: 'btn btn-outline-info btn-sm text-nowrap',
     needAuxControl: true,
+    auxControlId: 'ddlUseStateId_SetFldValue',
+    auxControlType: 'select',
+    auxControlOptionsKey: 'UseState_Static',
+    fieldName: 'UseStateId',
+    fieldNameCamel: 'useStateId',
   },
 ];
 

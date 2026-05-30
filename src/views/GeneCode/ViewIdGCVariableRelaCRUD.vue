@@ -154,6 +154,11 @@
   import { clsRetrievalMethodEN } from '@/ts/L0Entity/SysPara/clsRetrievalMethodEN';
   import { GCVariable_GetObjLstCache } from '@/ts/L3ForWApi/GeneCode/clsGCVariableWApi';
   import { RetrievalMethod_GetObjLstCache } from '@/ts/L3ForWApi/SysPara/clsRetrievalMethodWApi';
+  import {
+    FeatureTypeId_Static,
+    FuncPurposeId_Static,
+    ProgLangTypeId_Static,
+  } from '@/views/PrjFunction/Function4GeneCodeVueShare';
   export default defineComponent({
     name: 'ViewIdGCVariableRelaCRUD',
     components: {
@@ -163,6 +168,11 @@
     },
 
     setup() {
+      // UserId_Local.value = userStore.getUserId;
+      FeatureTypeId_Static.value = '02';
+      ProgLangTypeId_Static.value = '09';
+      FuncPurposeId_Static.value = '02';
+
       PrjId_Session.value = clsPrivateSessionStorage.currSelPrjId;
       const route = useRoute(); // 获取当前路由信息
       if (typeof route.query.TabId === 'string') {

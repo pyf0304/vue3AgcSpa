@@ -26,8 +26,8 @@
   } from '@/ts/L3ForWApiEx/SystemSet/clsUserDefaPrjDataBaseExWApi';
   import { clsPubSessionStorage } from '@/ts/PubFun/clsPubSessionStorage';
   import {
-    PrjDataBase_GetNameByPrjDataBaseIdCache,
-    PrjDataBase_GetObjByPrjDataBaseIdCache,
+    PrjDataBase_GetNameByKeyCache,
+    PrjDataBase_GetObjByKeyCache,
   } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
   import { Projects_GetObjByPrjIdCache } from '@/ts/L3ForWApi/PrjManage/clsProjectsWApi';
 
@@ -119,18 +119,18 @@
     );
 
     if (objUserDefaPrjDataBaseEN != null) {
-      const strPrjDataBaseName = await PrjDataBase_GetNameByPrjDataBaseIdCache(
-        objUserDefaPrjDataBaseEN.prjDataBaseId,
-      );
+      const strPrjDataBaseName = await PrjDataBase_GetNameByKeyCache({
+        prjDataBaseId: objUserDefaPrjDataBaseEN.prjDataBaseId,
+      });
       clsPrivateSessionStorage.currPrjDataBaseId = objUserDefaPrjDataBaseEN.prjDataBaseId;
       clsPrivateSessionStorage.prjDataBaseName = strPrjDataBaseName;
     } else {
       clsPrivateSessionStorage.currPrjDataBaseId = options.value[0].value;
       clsPrivateSessionStorage.prjDataBaseName = options.value[0].label;
     }
-    const objPrjDataBase = await PrjDataBase_GetObjByPrjDataBaseIdCache(
-      clsPrivateSessionStorage.currPrjDataBaseId,
-    );
+    const objPrjDataBase = await PrjDataBase_GetObjByKeyCache({
+      prjDataBaseId: clsPrivateSessionStorage.currPrjDataBaseId,
+    });
     if (objPrjDataBase == null) return;
     Addi.value = Format('{0}{1}', objPrjDataBase.prjDataBaseId, objPrjDataBase.prjDataBaseName);
 

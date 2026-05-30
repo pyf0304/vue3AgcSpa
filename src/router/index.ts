@@ -26,7 +26,7 @@ export const routes: Array<RouteRecordRaw> = [
 
 export const router = createRouter({
   // process.env.BASE_URL
-  history: createWebHashHistory(''),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 });
 

@@ -10,7 +10,7 @@ import { clsViewRegionRelaEN } from '@/ts/L0Entity/RegionManage/clsViewRegionRel
 import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import {
   ApplicationType_BindDdl_ApplicationTypeIdByIsVisibleInDivCache,
-  ApplicationType_GetObjByApplicationTypeIdCache,
+  ApplicationType_GetObjByKeyCache,
 } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 import {
   ViewInfo_AddNewRecordAsync,
@@ -643,9 +643,9 @@ export class ViewInfoCRUDExBak20230626 extends ViewInfoCRUD implements IShowList
         alert(strMsg);
         return;
       }
-      const objApplicationType = await ApplicationType_GetObjByApplicationTypeIdCache(
-        objvViewInfoEN.applicationTypeId,
-      );
+      const objApplicationType = await ApplicationType_GetObjByKeyCache({
+        applicationTypeId: objvViewInfoEN.applicationTypeId,
+      });
       if (objApplicationType == null) {
         const strMsg = Format(
           '应用Id:[{0}]，没有相应的类型，请检查！',

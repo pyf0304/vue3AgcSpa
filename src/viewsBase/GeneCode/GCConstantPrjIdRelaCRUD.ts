@@ -26,10 +26,10 @@ import {
 import {
   GCConstantPrjIdRela_GetRecCountByCondAsync,
   GCConstantPrjIdRela_GetObjLstAsync,
-  GCConstantPrjIdRela_DelRecKeyLstAsync,
   GCConstantPrjIdRela_GetObjByKeyAsync,
   GCConstantPrjIdRela_FuncMapByFldName,
   GCConstantPrjIdRela_DelRecKeyLstsAsync,
+  GCConstantPrjIdRela_DelRecordAsync,
 } from '@/ts/L3ForWApi/GeneCode/clsGCConstantPrjIdRelaWApi';
 import {
   GCConstantPrjIdRelaEx_CopyToEx,
@@ -510,7 +510,11 @@ export abstract class GCConstantPrjIdRelaCRUD implements clsOperateList {
   public async DelRecord(strConstId: string, strPrjId: string) {
     const strThisFuncName = this.DelRecord.name;
     try {
-      const returnInt = await GCConstantPrjIdRela_DelRecKeyLstAsync(strConstId, strPrjId);
+      const returnInt = await GCConstantPrjIdRela_DelRecordAsync({
+        constId: strConstId,
+        prjId: strPrjId,
+      });
+
       if (returnInt > 0) {
         //GCConstantPrjIdRela_ReFreshCache();
         const strInfo = `删除${this.thisTabName}记录成功,共删除${returnInt}条记录!`;
