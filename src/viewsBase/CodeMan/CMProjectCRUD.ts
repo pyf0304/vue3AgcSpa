@@ -30,13 +30,13 @@ import {
   CMProject_GetSubObjLstCache,
   CMProject_DelRecordAsync,
   CMProject_ReFreshCache,
-  CMProject_GetObjByCmPrjIdAsync,
+  CMProject_GetObjByKeyAsync,
   CMProject_GetObjExLstByPagerCache,
   CMProject_GetObjLstByCmPrjIdLstAsync,
   CMProject_GetMaxStrIdAsync,
   CMProject_AddNewRecordAsync,
   CMProject_UpdateRecordAsync,
-  CMProject_DelCMProjectsAsync,
+  CMProject_DelKeysAsync,
 } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import {
   CMProjectEx_CopyToEx,
@@ -544,7 +544,7 @@ export abstract class CMProjectCRUD implements clsOperateList {
   public async DelRecord(strCmPrjId: string) {
     const strThisFuncName = this.DelRecord.name;
     try {
-      const returnInt = await CMProject_DelRecordAsync(strCmPrjId);
+      const returnInt = await CMProject_DelRecordAsync({ cmPrjId: strCmPrjId });
       if (returnInt > 0) {
         CMProject_ReFreshCache();
         const strInfo = `删除${this.thisTabName}记录成功,共删除${returnInt}条记录!`;
@@ -571,7 +571,7 @@ export abstract class CMProjectCRUD implements clsOperateList {
   public async SelectRecord(strCmPrjId: string) {
     const strThisFuncName = this.SelectRecord.name;
     try {
-      const objCMProjectEN = await CMProject_GetObjByCmPrjIdAsync(strCmPrjId);
+      const objCMProjectEN = await CMProject_GetObjByKeyAsync({ cmPrjId: strCmPrjId });
       console.log('完成SelectRecord!', objCMProjectEN);
       Redirect('/Index/Main_CMProject');
     } catch (e) {
@@ -1044,7 +1044,7 @@ export abstract class CMProjectCRUD implements clsOperateList {
     arrCMProjectExObjLst: Array<clsCMProjectENEx>,
     arrDataColumn: Array<clsDataColumn>,
   ) {
-    const arrFldName = clsCMProjectEN.AttributeName;
+    const arrFldName = clsCMProjectEN._AttributeName;
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;
@@ -1345,7 +1345,7 @@ export abstract class CMProjectCRUD implements clsOperateList {
   public async DelMultiRecord(arrCmPrjId: Array<string>) {
     const strThisFuncName = this.DelMultiRecord.name;
     try {
-      const returnInt = await CMProject_DelCMProjectsAsync(arrCmPrjId);
+      const returnInt = await CMProject_DelKeysAsync(arrCmPrjId);
       if (returnInt > 0) {
         CMProject_ReFreshCache();
         const strInfo = `删除${this.thisTabName}记录成功,共删除${returnInt}条记录!`;

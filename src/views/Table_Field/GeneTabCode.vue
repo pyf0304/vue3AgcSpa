@@ -24,8 +24,48 @@
       <div id="divCode" ref="refDivCode" class="col-8">
         <div>
           <table style="width: 100%">
+            <tr
+              ><td></td
+              ><td colspan="2"
+                ><button
+                  id="btnShowRecentWriteLogs"
+                  type="button"
+                  class="btn btn-sm btn-outline-secondary ml-2"
+                  @click="showRecentWriteLogs"
+                >
+                  最近5分钟写文件日志
+                </button>
+                <button
+                  id="btnShowRecentWriteLogs20"
+                  type="button"
+                  class="btn btn-sm btn-outline-info ml-2"
+                  @click="showRecentWriteLogs20"
+                >
+                  最近20条写文件日志
+                </button>
+                <button
+                  id="btnShowRecentWriteLogs20AndSync"
+                  type="button"
+                  class="btn btn-sm btn-outline-primary ml-2"
+                  @click="showRecentWriteLogs20AndSync"
+                >
+                  落盘日志文件并查看最近20条
+                </button>
+                <button
+                  id="btnClearWriteLogs"
+                  type="button"
+                  class="btn btn-sm btn-outline-danger ml-2"
+                  @click="clearWriteLogs"
+                >
+                  清空写文件日志 </button
+                ><br />
+                <span id="spnResult" class="text-warning">Bak</span></td
+              ></tr
+            >
             <tr>
-              <td colspan="3"><span id="spnResult" class="text-warning">spnResult</span></td>
+              <td colspan="1"><span id="spnCurrMachine" class="text-warning">本机名</span></td>
+              <td colspan="1"><span id="spnCurrMachine2" class="text-warning">不能获取</span></td>
+              <td colspan="1"> </td>
             </tr>
             <tr>
               <td>
@@ -172,6 +212,23 @@
 
       const refDivExcelExport = ref();
 
+      const showRecentWriteLogs = () => {
+        console.error('[GeneTabCode.vue] click -> showRecentWriteLogs(5min)');
+        GeneTabCodeEx.ShowRecentWriteLogsPopup(5);
+      };
+      const showRecentWriteLogs20 = () => {
+        console.error('[GeneTabCode.vue] click -> showRecentWriteLogs20(count=20)');
+        GeneTabCodeEx.ShowRecentWriteLogsByCountPopup(20);
+      };
+      const showRecentWriteLogs20AndSync = async () => {
+        console.error('[GeneTabCode.vue] click -> showRecentWriteLogs20AndSync(count=20)');
+        await GeneTabCodeEx.ShowRecentWriteLogsByCountPopupAndSyncFile(20);
+      };
+      const clearWriteLogs = () => {
+        console.error('[GeneTabCode.vue] click -> clearWriteLogs');
+        GeneTabCodeEx.ClearWriteLogs();
+      };
+
       onMounted(async () => {
         GeneTabCodeEx.divTree = refDivTree.value;
         GeneTabCodeEx.divCode = refDivCode.value;
@@ -238,6 +295,10 @@
         refDivDataLst,
 
         refDivExcelExport,
+        showRecentWriteLogs,
+        showRecentWriteLogs20,
+        showRecentWriteLogs20AndSync,
+        clearWriteLogs,
         treeData,
         selectNodeById,
         selectedNode,

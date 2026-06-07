@@ -430,10 +430,8 @@ export default class FeatureRegionFlds_EditEx extends FeatureRegionFlds_Edit {
       const strViewFeatureId = objFeatureRegionFldsEN.viewFeatureId; //.viewFeatureId;
       // const strFldId = this.releFldId;
       let returnBool2 = false;
-      if (
-        IsNullOrEmpty(strViewFeatureId) == false &&
-        refViewFeatureFlds1_Edit.value.fieldTypeId != ''
-      ) {
+      const strFieldTypeIdFromChildEditor = refViewFeatureFlds1_Edit.value?.fieldTypeId || '';
+      if (IsNullOrEmpty(strViewFeatureId) == false && strFieldTypeIdFromChildEditor != '') {
         returnBool2 =
           await FeatureRegionFldsCRUDEx.objViewFeatureFlds_EditEx.btnUpdateRecordSave_ClickV3(
             strViewFeatureId,

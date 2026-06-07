@@ -2,7 +2,7 @@
 
 import { clsCMProjectAppRela } from '@/ts/L0Entity/CodeMan/clsCMProjectAppRela';
 import {
-  CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync,
+  CMProjectAppRela_GetObjByKeyAsync,
   CMProjectAppRela_GetObjLstAsync,
 } from '@/ts/L3ForWApi/CodeMan/clsCMProjectAppRelaWApi';
 import { clsCMProjectAppRelaEN } from '@/ts/L0Entity/CodeMan/clsCMProjectAppRelaEN';
@@ -51,9 +51,9 @@ export const useCMProjectAppRelaStore = defineStore({
         (x) => x.cMProjectAppRelaId === lngCMProjectAppRelaId,
       );
       if (objCMProjectAppRela != null) return objCMProjectAppRela;
-      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
-        lngCMProjectAppRelaId,
-      );
+      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByKeyAsync({
+        cMProjectAppRelaId: lngCMProjectAppRelaId,
+      });
       if (objCMProjectAppRelaEN == null) return null;
       const objCMProjectAppRela1 = CMProjectAppRelaEx_CopyTo(objCMProjectAppRelaEN);
       this.CMProjectAppRelaLst.push(objCMProjectAppRela1);
@@ -71,9 +71,9 @@ export const useCMProjectAppRelaStore = defineStore({
           );
         return strApplicationTypeName;
       }
-      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
-        lngCMProjectAppRelaId,
-      );
+      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByKeyAsync({
+        cMProjectAppRelaId: lngCMProjectAppRelaId,
+      });
       if (objCMProjectAppRelaEN == null) return '';
       const objCMProjectAppRela1 = CMProjectAppRelaEx_CopyTo(objCMProjectAppRelaEN);
       this.CMProjectAppRelaLst.push(objCMProjectAppRela1);
@@ -94,9 +94,9 @@ export const useCMProjectAppRelaStore = defineStore({
           );
         return strApplicationTypeName;
       }
-      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
-        lngCMProjectAppRelaId,
-      );
+      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByKeyAsync({
+        cMProjectAppRelaId: lngCMProjectAppRelaId,
+      });
       if (objCMProjectAppRelaEN == null) return '';
       const objCMProjectAppRela1 = CMProjectAppRelaEx_CopyTo(objCMProjectAppRelaEN);
       this.CMProjectAppRelaLst.push(objCMProjectAppRela1);
@@ -111,9 +111,9 @@ export const useCMProjectAppRelaStore = defineStore({
         (x) => x.cMProjectAppRelaId === lngCMProjectAppRelaId,
       );
       if (objCMProjectAppRela != null) return objCMProjectAppRela.applicationTypeId;
-      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
-        lngCMProjectAppRelaId,
-      );
+      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByKeyAsync({
+        cMProjectAppRelaId: lngCMProjectAppRelaId,
+      });
       if (objCMProjectAppRelaEN == null) return 0;
       const objCMProjectAppRela1 = CMProjectAppRelaEx_CopyTo(objCMProjectAppRelaEN);
       this.CMProjectAppRelaLst.push(objCMProjectAppRela1);
@@ -124,9 +124,9 @@ export const useCMProjectAppRelaStore = defineStore({
         (x) => x.cMProjectAppRelaId === lngCMProjectAppRelaId,
       );
       if (objCMProjectAppRela != null) return objCMProjectAppRela.cmPrjId;
-      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
-        lngCMProjectAppRelaId,
-      );
+      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByKeyAsync({
+        cMProjectAppRelaId: lngCMProjectAppRelaId,
+      });
       if (objCMProjectAppRelaEN == null) return '';
       const objCMProjectAppRela1 = CMProjectAppRelaEx_CopyTo(objCMProjectAppRelaEN);
       this.CMProjectAppRelaLst.push(objCMProjectAppRela1);
@@ -141,9 +141,9 @@ export const useCMProjectAppRelaStore = defineStore({
         const strCmPrjName = cMProjectStore.getCmPrjNameByCmPrjId(objCMProjectAppRela.cmPrjId);
         return strCmPrjName;
       }
-      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
-        lngCMProjectAppRelaId,
-      );
+      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByKeyAsync({
+        cMProjectAppRelaId: lngCMProjectAppRelaId,
+      });
       if (objCMProjectAppRelaEN == null) return '';
       const objCMProjectAppRela1 = CMProjectAppRelaEx_CopyTo(objCMProjectAppRelaEN);
       this.CMProjectAppRelaLst.push(objCMProjectAppRela1);

@@ -429,7 +429,7 @@
   import 'bootstrap/dist/js/bootstrap.min.js';
   import 'bootstrap/dist/css/bootstrap.css';
   import { defineComponent, onMounted, ref } from 'vue';
-  import $ from 'jquery';
+  // import $ from 'jquery';
   import * as XLSX from 'xlsx';
   import router from '@/router';
   import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
@@ -965,7 +965,7 @@
         arrRegionType.value = await RegionType_GetArrRegionType(); //查询区域
         groupName_q.value = '0';
 
-        arrProgLangType.value = await ProgLangType_GetArrProgLangTypeByIsVisible(); //查询区域
+        arrProgLangType.value = await ProgLangType_GetArrProgLangTypeByIsVisible(true); //查询区域
         progLangTypeId_q.value = '0';
 
         regionTypeId_q.value = '0';

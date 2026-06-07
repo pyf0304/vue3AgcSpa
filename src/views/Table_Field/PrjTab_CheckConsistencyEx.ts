@@ -13,8 +13,8 @@ import { clsPrjTabENEx } from '@/ts/L0Entity/Table_Field/clsPrjTabENEx';
 import { clsPrjTabFldEN } from '@/ts/L0Entity/Table_Field/clsPrjTabFldEN';
 import { enumTabMainType } from '@/ts/L0Entity/Table_Field/clsTabMainTypeEN';
 import {
-  CMProject_GetNameByCmPrjIdCache,
-  CMProject_GetObjByCmPrjIdCache,
+  CMProject_GetNameByKeyCache,
+  CMProject_GetObjByKeyCache,
 } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import { ApplicationType_GetObjByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 import {
@@ -347,7 +347,7 @@ export class PrjTab_CheckConsistencyEx extends PrjTabCRUD implements IShowList {
         //PrjTab_EditEx.applicationTypeIdCache = arrCMProject[0].applicationTypeId;
         //PrjTab_EditEx.CmPrjIdCache = strCmPrjId;
       } else {
-        // const objCMProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+        // const objCMProject = await CMProject_GetObjByKeyCache(strCmPrjId);
         //PrjTab_EditEx.applicationTypeIdCache = objCMProject.applicationTypeId;
         //PrjTab_EditEx.CmPrjIdCache = strCmPrjId;
       }
@@ -975,7 +975,7 @@ export class PrjTab_CheckConsistencyEx extends PrjTabCRUD implements IShowList {
     spnCondition.className = 'text-secondary  font-weight-bold';
     lblCondition.appendChild(spnCondition);
 
-    const objCMProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+    const objCMProject = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
     if (objCMProject == null) {
       const strMsg = Format('CM项目Id:[{0}]，没有相应的CM项目，请检查！', strCmPrjId);
       console.error(strMsg);
@@ -1707,7 +1707,7 @@ export class PrjTab_CheckConsistencyEx extends PrjTabCRUD implements IShowList {
   public static async ChangeCmPrjId(strCmPrjId: string, divLayout: HTMLDivElement) {
     if (PrjTab_CheckConsistencyEx.CmPrjIdCache == strCmPrjId) return;
 
-    const objCMProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+    const objCMProject = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
     if (objCMProject == null) {
       const strMsg = Format('CM项目Id:[{0}]，没有相应的CM项目，请检查！', strCmPrjId);
       console.error(strMsg);
@@ -1740,7 +1740,7 @@ export class PrjTab_CheckConsistencyEx extends PrjTabCRUD implements IShowList {
       );
     }
     clsPrivateSessionStorage.cmPrjId = strCmPrjId;
-    const strCmPrjName = await CMProject_GetNameByCmPrjIdCache(strCmPrjId);
+    const strCmPrjName = await CMProject_GetNameByKeyCache({ cmPrjId: strCmPrjId });
     clsPrivateSessionStorage.cmPrjName = strCmPrjName;
     await UserDefaValue_LocalEx_setUserDefaValue(
       '0005',
@@ -1942,7 +1942,7 @@ export class PrjTab_CheckConsistencyEx extends PrjTabCRUD implements IShowList {
     spnCondition.className = 'text-secondary  font-weight-bold';
     lblCondition.appendChild(spnCondition);
 
-    const objCMProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+    const objCMProject = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
     if (objCMProject == null) {
       const strMsg = Format('CM项目Id:[{0}]，没有相应的CM项目，请检查！', strCmPrjId);
       console.error(strMsg);

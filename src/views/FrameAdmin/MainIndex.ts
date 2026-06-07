@@ -6,7 +6,7 @@ import { clsQxRoleMenusENEx } from '@/ts/L0Entity/MenuManage_GP/clsQxRoleMenusEN
 
 import { UserPrjGrant_GetObjLstAsync } from '@/ts/L3ForWApi/AuthorityManage/clsUserPrjGrantWApi';
 
-import { CMProject_GetNameByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProject_GetNameByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import { PrjDataBase_GetNameByKeyCache } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
 import {
   UserPrjGrantEx_CopyToEx,
@@ -152,7 +152,7 @@ export class MainIndex {
         }
       }
       clsPrivateSessionStorage.cmPrjId = strCmPrjId;
-      const strCmPrjName = await CMProject_GetNameByCmPrjIdCache(strCmPrjId);
+      const strCmPrjName = await CMProject_GetNameByKeyCache(strCmPrjId);
       clsPrivateSessionStorage.cmPrjName = strCmPrjName;
       console.log('cmPrjId:', strCmPrjId);
 
@@ -235,7 +235,7 @@ export class MainIndex {
     const strCmPrjId = this.cmPrjId;
     console.log('strCmPrjId in MainIndex', strCmPrjId);
     clsPrivateSessionStorage.cmPrjId = strCmPrjId;
-    const strCmPrjName = await CMProject_GetNameByCmPrjIdCache(strCmPrjId);
+    const strCmPrjName = await CMProject_GetNameByKeyCache({ cmPrjId: strCmPrjId });
     clsPrivateSessionStorage.cmPrjName = strCmPrjName;
 
     console.log('clsPrivateSessionStorage.cmPrjId', clsPrivateSessionStorage.cmPrjId);

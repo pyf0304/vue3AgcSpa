@@ -111,6 +111,7 @@ export const useviewInfoStore = defineStore({
     async delObjByRegionId(strRegionId: string): Promise<boolean> {
       if (strRegionId == null) return true;
       if (strRegionId == '') return true;
+      if (this.viewInfoLst.length === 0) return true;
       const arrViewId = await ViewRegionRelaEx_GetViewIdLstByRegionIdCache1(
         strRegionId,
         clsPrivateSessionStorage.cmPrjId,

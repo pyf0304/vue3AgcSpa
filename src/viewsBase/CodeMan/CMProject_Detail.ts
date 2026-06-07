@@ -12,7 +12,7 @@
  * 框架-层名:Vue_详细信息后台_TS(TS)(Vue_ViewScript_DetailCS_TS,0260)
  * 编程语言:TypeScript
  **/
-import { CMProject_GetObjByCmPrjIdAsync } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProject_GetObjByKeyAsync } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import { ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { CMProjectEx_FuncMapByFldName } from '@/ts/L3ForWApiEx/CodeMan/clsCMProjectExWApi';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
@@ -141,7 +141,7 @@ export abstract class CMProject_Detail {
     const strThisFuncName = this.DetailRecord4Func.name;
     this.btnCancelCMProject = '关闭';
     try {
-      const objCMProjectEN = await CMProject_GetObjByCmPrjIdAsync(strCmPrjId);
+      const objCMProjectEN = await CMProject_GetObjByKeyAsync({ cmPrjId: strCmPrjId });
       const objCMProjectENEx = new clsCMProjectENEx();
       ObjectAssign(objCMProjectENEx, objCMProjectEN);
       await CMProjectEx_FuncMapByFldName(clsCMProjectENEx.con_PrjName, objCMProjectENEx);

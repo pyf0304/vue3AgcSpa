@@ -6,7 +6,7 @@
  **/
 //import $ from "jquery";
 import axios from 'axios';
-import { CMProject_GetObjByCmPrjIdCache } from '../../L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProject_GetObjByKeyCache } from '../../L3ForWApi/CodeMan/clsCMProjectWApi';
 import { Projects_GetObjByPrjIdCache } from '../../L3ForWApi/PrjManage/clsProjectsWApi';
 import { PrjTabFld_GetObjLstCache } from '../../L3ForWApi/Table_Field/clsPrjTabFldWApi';
 import {
@@ -1435,7 +1435,9 @@ export async function vFieldTab_SimEx_BindDdl_FldIdWithNodeByTabIdCache(
 export async function vFieldTab_SimEx_GetvFieldTab_SimObjByNodeCache(
   objvDataNode_Sim: clsvDataNode_Sim,
 ): Promise<clsvFieldTab_SimEN | null> {
-  const objCMProject = await CMProject_GetObjByCmPrjIdCache(clsPrivateSessionStorage.cmPrjId);
+  const objCMProject = await CMProject_GetObjByKeyCache({
+    cmPrjId: clsPrivateSessionStorage.cmPrjId,
+  });
   if (objCMProject == null) {
     const strMsg = Format(
       'CM项目Id:[{0}]，没有相应的CM项目，请检查！',

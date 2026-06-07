@@ -418,10 +418,10 @@
           //   await SetDdl_VarIdInDiv(clsPrivateSessionStorage.currSelPrjId);
           //   break;
           case enumCtlType.DropDownList_06:
-            // refPubCombo_Edit.value.ddlCtlTypeId_SelectedIndexChanged();
+            await refPubCombo_Edit.value?.ddlCtlTypeId_SelectedIndexChanged?.(ctlTypeId.value);
             break;
           case enumCtlType.DropDownList_Bool_18:
-            // refPubCombo_Edit.value.ddlCtlTypeId_SelectedIndexChanged();
+            await refPubCombo_Edit.value?.ddlCtlTypeId_SelectedIndexChanged?.(ctlTypeId.value);
 
             break;
           case enumCtlType.TextBox_16:
@@ -438,6 +438,7 @@
             HideTrInDiv('trDdlItemsOptionId');
             break;
           default:
+            await refPubCombo_Edit.value?.ddlCtlTypeId_SelectedIndexChanged?.(ctlTypeId.value);
             break;
         }
 
@@ -465,11 +466,15 @@
 
         ctlTypeId.value = pobjViewFeatureFldsEN.ctlTypeId; // 控件类型
         await ddlCtlTypeId_SelectedIndexChanged();
-
         const objPubComboEN = ViewFeatureFldsEx_CopyToPubComboEx(pobjViewFeatureFldsEN);
         objPubComboEN.ddlItemsOptionId = pobjViewFeatureFldsEN.ddlItemsOptionId;
+        objPubComboEN.dsTabId = pobjViewFeatureFldsEN.dsTabId;
+        objPubComboEN.tabFeatureId4Ddl = pobjViewFeatureFldsEN.tabFeatureId4Ddl;
         if (pobjViewFeatureFldsEN.ctlTypeId == enumCtlType.DropDownList_06) {
           await refPubCombo_Edit.value.GetDataFromPubComboClass(objPubComboEN);
+          const comboEditor = refPubCombo_Edit.value as any;
+          comboEditor.tabFeatureId4Ddl = pobjViewFeatureFldsEN.tabFeatureId4Ddl || '';
+          await comboEditor?.ddlTabFeatureId4Ddl_SelectedIndexChanged?.();
         }
         // const strPrjId = clsPrivateSessionStorage.currSelPrjId;
         // if (
@@ -646,7 +651,21 @@
         pobjViewFeatureFldsEN.SetCtlTypeId(ctlTypeId.value); // 控件类型
         pobjViewFeatureFldsEN.SetDsTabId(refPubCombo_Edit.value.dsTabId); // 数据源表
 
-        pobjViewFeatureFldsEN.SetTabFeatureId4Ddl(selectedTabFeatureId.value); // 数据源表
+        const comboItemsOptionId = (refPubCombo_Edit.value?.itemsOptionId || '').trim();
+        if (ctlTypeId.value == enumCtlType.DropDownList_06) {
+          // 下拉框功能默认必须走“数据源表(02)”。
+          pobjViewFeatureFldsEN.SetDdlItemsOptionId(
+            IsNullOrEmpty(comboItemsOptionId) || comboItemsOptionId == '0'
+              ? '02'
+              : comboItemsOptionId,
+          );
+        } else if (ctlTypeId.value == enumCtlType.DropDownList_Bool_18) {
+          pobjViewFeatureFldsEN.SetDdlItemsOptionId('04');
+        } else if (IsNullOrEmpty(comboItemsOptionId) == false && comboItemsOptionId != '0') {
+          pobjViewFeatureFldsEN.SetDdlItemsOptionId(comboItemsOptionId);
+        }
+
+        pobjViewFeatureFldsEN.SetTabFeatureId4Ddl(refPubCombo_Edit.value.tabFeatureId4Ddl); // 数据源表
 
         pobjViewFeatureFldsEN.SetVarIdCond1(refPubCombo_Edit.value.varIdCond1); // 数据源表
         pobjViewFeatureFldsEN.SetVarIdCond2(refPubCombo_Edit.value.varIdCond2); // 数据源表

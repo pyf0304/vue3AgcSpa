@@ -94,6 +94,241 @@ export async function UserCodePathEx_SetGCPath(strOpUserId: string): Promise<num
 }
 
 /**
+ * 获取用户生成代码路径
+ * (AGC.WebApi.UserCodePathExApi:GetUserGCCodePath)
+ * @param strUserId: 用户Id
+ * @param strMachineName: 机器名称
+ * @param strPrjId: 项目Id
+ * @param strCmPrjId: CM工程Id
+ * @param intApplicationTypeId: 应用类型Id
+ * @param strCodeTypeId: 代码类型Id
+ * @returns 生成代码路径
+ */
+export async function UserCodePathEx_GetUserGCCodePath(
+  strUserId: string,
+  strMachineName: string,
+  strPrjId: string,
+  strCmPrjId: string,
+  intApplicationTypeId: number,
+  strCodeTypeId: string,
+): Promise<string> {
+  const strThisFuncName = UserCodePathEx_GetUserGCCodePath.name;
+  const strAction = 'GetUserGCCodePath';
+  const strUrl = GetWebApiUrl(userCodePathEx_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strUserId,
+      strMachineName,
+      strPrjId,
+      strCmPrjId,
+      intApplicationTypeId,
+      strCodeTypeId,
+    },
+  };
+
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.codePath;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        userCodePathEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        userCodePathEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 获取用户生成代码路径及备份路径
+ * (AGC.WebApi.UserCodePathExApi:GetUserGCCodePathWithBackup)
+ * @param strUserId: 用户Id
+ * @param strMachineName: 机器名称
+ * @param strPrjId: 项目Id
+ * @param strCmPrjId: CM工程Id
+ * @param intApplicationTypeId: 应用类型Id
+ * @param strCodeTypeId: 代码类型Id
+ * @returns 生成代码路径及备份路径
+ */
+export async function UserCodePathEx_GetUserGCCodePathWithBackup(
+  strUserId: string,
+  strMachineName: string,
+  strPrjId: string,
+  strCmPrjId: string,
+  intApplicationTypeId: number,
+  strCodeTypeId: string,
+): Promise<{ codePath: string; codePathBackup: string }> {
+  const strThisFuncName = UserCodePathEx_GetUserGCCodePathWithBackup.name;
+  const strAction = 'GetUserGCCodePathWithBackup';
+  const strUrl = GetWebApiUrl(userCodePathEx_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strUserId,
+      strMachineName,
+      strPrjId,
+      strCmPrjId,
+      intApplicationTypeId,
+      strCodeTypeId,
+    },
+  };
+
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return {
+        codePath: data.codePath,
+        codePathBackup: data.codePathBackup,
+      };
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        userCodePathEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        userCodePathEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 获取用户生成代码路径详细信息
+ * (AGC.WebApi.UserCodePathExApi:GetUserGCCodePathInfo)
+ * @param strUserId: 用户Id
+ * @param strMachineName: 机器名称
+ * @param strPrjId: 项目Id
+ * @param strCmPrjId: CM工程Id
+ * @param intApplicationTypeId: 应用类型Id
+ * @param strCodeTypeId: 代码类型Id
+ * @returns 用户生成代码路径扩展对象
+ */
+export async function UserCodePathEx_GetUserGCCodePathInfo(
+  strUserId: string,
+  strMachineName: string,
+  strPrjId: string,
+  strCmPrjId: string,
+  intApplicationTypeId: number,
+  strCodeTypeId: string,
+): Promise<clsUserCodePathENEx> {
+  const strThisFuncName = UserCodePathEx_GetUserGCCodePathInfo.name;
+  const strAction = 'GetUserGCCodePathInfo';
+  const strUrl = GetWebApiUrl(userCodePathEx_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strUserId,
+      strMachineName,
+      strPrjId,
+      strCmPrjId,
+      intApplicationTypeId,
+      strCodeTypeId,
+    },
+  };
+
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      const objUserCodePathEx = new clsUserCodePathENEx();
+      if (data.data != null) {
+        ObjectAssign(objUserCodePathEx, data.data);
+      }
+      return objUserCodePathEx;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        userCodePathEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        userCodePathEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
  * 把同一个类的对象,复制到另一个对象
  * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_CopyToEx)
  * @param objUserCodePathENS:源对象

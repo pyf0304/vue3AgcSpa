@@ -30,11 +30,11 @@ import {
   CMProjectAppRela_GetSubObjLstCache,
   CMProjectAppRela_DelRecordAsync,
   CMProjectAppRela_ReFreshCache,
-  CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync,
+  CMProjectAppRela_GetObjByKeyAsync,
   CMProjectAppRela_GetObjExLstByPagerCache,
   CMProjectAppRela_GetObjLstByCMProjectAppRelaIdLstAsync,
   CMProjectAppRela_AddNewRecordAsync,
-  CMProjectAppRela_DelCMProjectAppRelasAsync,
+  CMProjectAppRela_DelKeysAsync,
 } from '@/ts/L3ForWApi/CodeMan/clsCMProjectAppRelaWApi';
 import {
   CMProjectAppRelaEx_CopyToEx,
@@ -440,7 +440,9 @@ export abstract class CMProjectAppRelaCRUD implements clsOperateList {
   public async DelRecord(lngCMProjectAppRelaId: number) {
     const strThisFuncName = this.DelRecord.name;
     try {
-      const returnInt = await CMProjectAppRela_DelRecordAsync(lngCMProjectAppRelaId);
+      const returnInt = await CMProjectAppRela_DelRecordAsync({
+        cMProjectAppRelaId: lngCMProjectAppRelaId,
+      });
       if (returnInt > 0) {
         CMProjectAppRela_ReFreshCache(PrjId_Session.value);
         const strInfo = `删除${this.thisTabName}记录成功,共删除${returnInt}条记录!`;
@@ -467,9 +469,9 @@ export abstract class CMProjectAppRelaCRUD implements clsOperateList {
   public async SelectRecord(lngCMProjectAppRelaId: number) {
     const strThisFuncName = this.SelectRecord.name;
     try {
-      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
-        lngCMProjectAppRelaId,
-      );
+      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByKeyAsync({
+        cMProjectAppRelaId: lngCMProjectAppRelaId,
+      });
       console.log('完成SelectRecord!', objCMProjectAppRelaEN);
       Redirect('/Index/Main_CMProjectAppRela');
     } catch (e) {
@@ -852,7 +854,7 @@ export abstract class CMProjectAppRelaCRUD implements clsOperateList {
     arrCMProjectAppRelaExObjLst: Array<clsCMProjectAppRelaENEx>,
     arrDataColumn: Array<clsDataColumn>,
   ) {
-    const arrFldName = clsCMProjectAppRelaEN.AttributeName;
+    const arrFldName = clsCMProjectAppRelaEN._AttributeName;
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;
@@ -1106,7 +1108,7 @@ export abstract class CMProjectAppRelaCRUD implements clsOperateList {
   public async DelMultiRecord(arrCMProjectAppRelaId: Array<string>) {
     const strThisFuncName = this.DelMultiRecord.name;
     try {
-      const returnInt = await CMProjectAppRela_DelCMProjectAppRelasAsync(arrCMProjectAppRelaId);
+      const returnInt = await CMProjectAppRela_DelKeysAsync(arrCMProjectAppRelaId);
       if (returnInt > 0) {
         CMProjectAppRela_ReFreshCache(PrjId_Session.value);
         const strInfo = `删除${this.thisTabName}记录成功,共删除${returnInt}条记录!`;

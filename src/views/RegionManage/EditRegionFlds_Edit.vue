@@ -31,7 +31,7 @@
                   <option
                     v-for="(item, index) in arrvFieldTab_Sim"
                     :key="index"
-                    :value="item.fldId"
+                    :value="String(item.fldId).trim()"
                   >
                     {{ item.fldName }}
                   </option></select
@@ -113,7 +113,7 @@
                   <option
                     v-for="(item, index) in arrInOutType"
                     :key="index"
-                    :value="item.inOutTypeId"
+                    :value="String(item.inOutTypeId).trim()"
                   >
                     {{ item.inOutTypeName }}
                   </option></select
@@ -155,7 +155,11 @@
                   style="width: 250px"
                   @change="ddlCtlTypeId_SelectedIndexChanged()"
                 >
-                  <option v-for="(item, index) in arrCtlType" :key="index" :value="item.ctlTypeId">
+                  <option
+                    v-for="(item, index) in arrCtlType"
+                    :key="index"
+                    :value="String(item.ctlTypeId).trim()"
+                  >
                     {{ item.ctlTypeName }}
                   </option></select
                 >
@@ -181,7 +185,11 @@
                   class="form-control form-control-sm"
                   style="width: 250px"
                 >
-                  <option v-for="(item, index) in arrGCVariable" :key="index" :value="item.varId">
+                  <option
+                    v-for="(item, index) in arrGCVariable"
+                    :key="index"
+                    :value="String(item.varId).trim()"
+                  >
                     {{ item.varName }}
                   </option></select
                 >
@@ -322,7 +330,11 @@
                 style="width: 120px"
                 @change="ddlFldId_SelectedIndexChanged($event)"
               >
-                <option v-for="(item, index) in arrvFieldTab_Sim" :key="index" :value="item.fldId">
+                <option
+                  v-for="(item, index) in arrvFieldTab_Sim"
+                  :key="index"
+                  :value="String(item.fldId).trim()"
+                >
                   {{ item.fldName }}
                 </option></select
               >
@@ -374,7 +386,11 @@
                 style="width: 230px"
                 @change="ddlCtlTypeId_SelectedIndexChanged()"
               >
-                <option v-for="(item, index) in arrCtlType" :key="index" :value="item.ctlTypeId">
+                <option
+                  v-for="(item, index) in arrCtlType"
+                  :key="index"
+                  :value="String(item.ctlTypeId).trim()"
+                >
                   {{ item.ctlTypeName }}
                 </option></select
               >
@@ -398,7 +414,11 @@
                 class="form-control form-control-sm"
                 style="width: 230px"
               >
-                <option v-for="(item, index) in arrGCVariable" :key="index" :value="item.varId">
+                <option
+                  v-for="(item, index) in arrGCVariable"
+                  :key="index"
+                  :value="String(item.varId).trim()"
+                >
                   {{ item.varName }}
                 </option></select
               >
@@ -467,7 +487,7 @@
                 <option
                   v-for="(item, index) in arrInOutType"
                   :key="index"
-                  :value="item.inOutTypeId"
+                  :value="String(item.inOutTypeId).trim()"
                 >
                   {{ item.inOutTypeName }}
                 </option></select
@@ -582,7 +602,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, onMounted, ref } from 'vue';
+  import { defineComponent, onMounted, ref, watch } from 'vue';
 
   import EditRegionFlds_EditEx from './EditRegionFlds_EditEx';
   import pubCombo_EditCom from '@/ts/components/pubCombo_Edit.vue';
@@ -631,7 +651,7 @@
         default: false,
       },
     },
-    setup() {
+    setup(props) {
       const userStore = useUserStore();
 
       const pobjPubFun4Ddl = ref<clsPubFun4Ddl | null>(null);
@@ -671,9 +691,33 @@
       const arrDDLItemsOption = ref<clsDDLItemsOptionEN[] | null>([]);
       const arrvPrjTab_Sim = ref<clsvPrjTab_SimEN[] | null>([]);
       const arrGCVariable = ref<clsGCVariableEN[] | null>([]);
+
+      const normalizeSelectValue = (value: unknown): string => {
+        if (value == null) return '';
+        return String(value).trim();
+      };
+
+      const hasInitDdlInInlineMode = ref(false);
+
+      const InitDdlForInlineModeIfReady = async () => {
+        if (props.isDialog === true) return;
+        if (hasInitDdlInInlineMode.value === true) return;
+        if (IsNullOrEmpty(TabId_Static.value) === true) return;
+
+        await BindDdl4EditRegionInDiv();
+        hasInitDdlInInlineMode.value = true;
+      };
+
       onMounted(async () => {
-        // await BindDdl4EditRegionInDiv();
+        await InitDdlForInlineModeIfReady();
       });
+
+      watch(
+        () => [TabId_Static.value, CmPrjId_Local.value],
+        async () => {
+          await InitDdlForInlineModeIfReady();
+        },
+      );
       /** 函数功能:为编辑区绑定下拉框
        * (AutoGCLib.Vue_ViewScript_Edit_TS4Html:Gen_Vue_Ts_BindDdl4EditRegionInDiv)
        **/
@@ -690,21 +734,21 @@
         arrvFieldTab_Sim.value = await vFieldTab_SimEx_GetArrvFieldTab_SimByTabIdCache(
           strTabId_Static,
         ); //编辑区域
-        fldId.value = '0';
+        if (IsNullOrEmpty(fldId.value) == true) fldId.value = '0';
 
         arrInOutType.value = await InOutType_GetArrInOutType(); //编辑区域
-        inOutTypeId.value = '0';
+        if (IsNullOrEmpty(inOutTypeId.value) == true) inOutTypeId.value = '0';
 
         //  await this.SetDdl_CtlTypeIdInDiv(); //编辑区域
 
         arrCtlType.value = await CtlTypeEx_GetArrCtlTypeForNotAppleCache(); //编辑区域
-        ctlTypeId.value = '0';
+        if (IsNullOrEmpty(ctlTypeId.value) == true) ctlTypeId.value = '0';
 
         arrDDLItemsOption.value = await DDLItemsOption_GetArrDDLItemsOption(); //编辑区域
-        ddlItemsOptionId.value = '0';
+        if (IsNullOrEmpty(ddlItemsOptionId.value) == true) ddlItemsOptionId.value = '0';
 
         arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
-        dsTabId.value = '0';
+        if (IsNullOrEmpty(dsTabId.value) == true) dsTabId.value = '0';
 
         //  await this.SetDdl_VarIdInDiv(strPrjId); //编辑区域
         arrGCVariable.value = await GCVariableEx_GetArrGCVariableByPrjIdCache(
@@ -715,7 +759,7 @@
           arrGCVariable.value,
           clsPrivateSessionStorage.currSelPrjId,
         );
-        varId.value = '0';
+        if (IsNullOrEmpty(varId.value) == true) varId.value = '0';
 
         // public async B1indDdl4EditRegionInDiv() {
       }
@@ -835,28 +879,43 @@
           pobjPubFun4Ddl.value.divEdit = refDivEdit.value;
         }
 
-        ddlItemsOptionId.value = pobjEditRegionFldsEN.ddlItemsOptionId; // 下拉列表
-        dsTabId.value = pobjEditRegionFldsEN.dsTabId; // 数据源表
+        // 编辑回显前确保下拉框数据已加载，否则 v-model 值无法命中 option。
+        if (
+          arrvFieldTab_Sim.value == null ||
+          arrvFieldTab_Sim.value.length === 0 ||
+          arrInOutType.value == null ||
+          arrInOutType.value.length === 0 ||
+          arrCtlType.value == null ||
+          arrCtlType.value.length === 0 ||
+          arrGCVariable.value == null ||
+          arrGCVariable.value.length === 0
+        ) {
+          await BindDdl4EditRegionInDiv();
+        }
+
+        ddlItemsOptionId.value = normalizeSelectValue(pobjEditRegionFldsEN.ddlItemsOptionId); // 下拉列表
+        dsTabId.value = normalizeSelectValue(pobjEditRegionFldsEN.dsTabId); // 数据源表
         dsCondStr.value = pobjEditRegionFldsEN.dsCondStr; // 条件串
         dsSqlStr.value = pobjEditRegionFldsEN.dsSqlStr; // SQL串
         itemsString.value = pobjEditRegionFldsEN.itemsString; // 列表项串
 
-        fldId.value = pobjEditRegionFldsEN.fldId; // 字段Id
+        fldId.value = normalizeSelectValue(pobjEditRegionFldsEN.fldId); // 字段Id
         labelCaption.value = pobjEditRegionFldsEN.labelCaption; // 标签标题
         colSpan.value = pobjEditRegionFldsEN.colSpan; // 跨列数
         width.value = pobjEditRegionFldsEN.width; // 宽
-        inOutTypeId.value = pobjEditRegionFldsEN.inOutTypeId; // In/Out
+        inOutTypeId.value = normalizeSelectValue(pobjEditRegionFldsEN.inOutTypeId); // In/Out
         seqNum.value = pobjEditRegionFldsEN.seqNum; // 序号
 
-        ctlTypeId.value = pobjEditRegionFldsEN.ctlTypeId; // 控件类型
-        const objPubComboEN = EditRegionFldsEx_CopyToPubComboEx(pobjEditRegionFldsEN);
-        if (pobjEditRegionFldsEN.ctlTypeId == enumCtlType.DropDownList_06) {
-          await refPubCombo_Edit.value.GetDataFromPubComboClass(objPubComboEN);
-        }
+        ctlTypeId.value = normalizeSelectValue(pobjEditRegionFldsEN.ctlTypeId); // 控件类型
         await ddlCtlTypeId_SelectedIndexChanged();
 
+        const objPubComboEN = EditRegionFldsEx_CopyToPubComboEx(pobjEditRegionFldsEN);
+        if (normalizeSelectValue(pobjEditRegionFldsEN.ctlTypeId) == enumCtlType.DropDownList_06) {
+          await refPubCombo_Edit.value.GetDataFromPubComboClass(objPubComboEN);
+        }
+
         if (IsNullOrEmpty(pobjEditRegionFldsEN.varId) == false) {
-          varId.value = pobjEditRegionFldsEN.varId; // 变量Id
+          varId.value = normalizeSelectValue(pobjEditRegionFldsEN.varId); // 变量Id
         }
         //this.IsMultiRow = pobjEditRegionFldsEN.IsMultiRow;// 是否多行
         // fldId.value = pobjEditRegionFldsEN.fldId; // 字段Id

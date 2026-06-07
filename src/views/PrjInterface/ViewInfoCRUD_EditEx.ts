@@ -10,7 +10,7 @@ import { clsViewInfoEN } from '@/ts/L0Entity/PrjInterface/clsViewInfoEN';
 import { clsViewInfoENEx } from '@/ts/L0Entity/PrjInterface/clsViewInfoENEx';
 import { enumRegionType } from '@/ts/L0Entity/RegionManage/clsRegionTypeEN';
 import { clsViewRegionEN } from '@/ts/L0Entity/RegionManage/clsViewRegionEN';
-import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProject_GetObjByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import { ApplicationType_GetObjByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 
 import { FuncModule_Agc_GetObjByFuncModuleAgcIdCache } from '@/ts/L3ForWApi/PrjManage/clsFuncModule_AgcWApi';
@@ -332,7 +332,7 @@ export default class ViewInfoCRUD_EditEx extends ViewInfoCRUD implements IShowLi
 
         ApplicationTypeId_Static.value = arrCMProject[0].applicationTypeId;
       } else {
-        const objCMProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+        const objCMProject = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
         if (objCMProject == null) {
           const strMsg = Format('CM项目Id:[{0}]，没有相应的CM项目，请检查！', strCmPrjId);
           console.error(strMsg);
@@ -1089,7 +1089,7 @@ export default class ViewInfoCRUD_EditEx extends ViewInfoCRUD implements IShowLi
     spnCondition.className = 'text-secondary  font-weight-bold';
     lblCondition.appendChild(spnCondition);
 
-    const objCMProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+    const objCMProject = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
     if (objCMProject == null) {
       const strMsg = Format('CM项目Id:[{0}]，没有相应的CM项目，请检查！', strCmPrjId);
       console.error(strMsg);
@@ -1519,7 +1519,7 @@ export default class ViewInfoCRUD_EditEx extends ViewInfoCRUD implements IShowLi
       strCmPrjId,
     );
     ViewInfoCRUD_EditEx.CmPrjIdCache = strCmPrjId;
-    const objCMProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+    const objCMProject = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
     if (objCMProject == null) {
       const strMsg = Format('CM项目Id:[{0}]，没有相应的CM项目，请检查！', strCmPrjId);
       console.error(strMsg);

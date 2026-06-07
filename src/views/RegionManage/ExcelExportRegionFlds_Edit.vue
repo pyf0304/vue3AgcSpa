@@ -342,7 +342,7 @@
   import { clsPrjTabFldENEx } from '@/ts/L0Entity/Table_Field/clsPrjTabFldENEx';
   import { usevDataNode_SimStore } from '@/store/modules/vDataNode_Sim';
   import { getTdObjByIdInDivObj } from '@/ts/PubFun/clsCommFunc4Ctrl';
-  import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+  import { CMProject_GetObjByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
   export default defineComponent({
     name: 'ExcelExportRegionFldsEdit',
     components: {
@@ -404,9 +404,9 @@
           throw strMsg;
         }
 
-        const objCMProjects = await CMProject_GetObjByCmPrjIdCache(
-          clsPrivateSessionStorage.cmPrjId,
-        );
+        const objCMProjects = await CMProject_GetObjByKeyCache({
+          cmPrjId: clsPrivateSessionStorage.cmPrjId,
+        });
         if (objCMProjects == null) {
           const strMsg = Format(
             '在CM项目Id:[{0}]中，没有相应CM项目，请检查！',

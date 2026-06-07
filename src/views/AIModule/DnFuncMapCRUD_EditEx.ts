@@ -18,7 +18,7 @@ import { clsvFieldTab_SimENEx } from '@/ts/L0Entity/Table_Field/clsvFieldTab_Sim
 import { DnFunction_GetObjByDnFunctionIdCache } from '@/ts/L3ForWApi/AIModule/clsDnFunctionWApi';
 import { FuncMapMode_GetObjByFuncMapModeIdCache } from '@/ts/L3ForWApi/AIModule/clsFuncMapModeWApi';
 
-import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProject_GetObjByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 
 import { DataNodeEx_CopyNodeToNewVersion } from '@/ts/L3ForWApiEx/AIModule/clsDataNodeExWApi';
 
@@ -362,7 +362,7 @@ export default class DnFuncMapCRUD_EditEx extends DnFuncMapCRUD implements IShow
       //clsPubFun.SetCommFun4BL();
       const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
       // DnFuncMapCRUD_EditEx.CmPrjIdCache = strCmPrjId;
-      const objCMProjects = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+      const objCMProjects = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
 
       if (objCMProjects == null) {
         const strMsg = Format('在CM项目Id:[{0}]中，没有相应CM项目，请检查！', strCmPrjId);

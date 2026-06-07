@@ -231,7 +231,7 @@
               style="width: 60px"
             >
               <option v-for="(item, index) in arrvFieldTab_Sim" :key="index" :value="item.fldId">
-                {{ item.fldName }}
+                {{ GetFieldDisplayText(item) }}
               </option></select
             >
             <button
@@ -240,6 +240,26 @@
               class="btn btn-outline-info btn-sm text-nowrap"
               @click="btn_Click('SetHomologousFldId', '')"
               >设置同源字段</button
+            >
+          </div>
+        </li>
+        <li class="nav-item ml-3">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <select
+              id="ddlTargetFldId_ReplaceField"
+              v-model="targetFldId_f"
+              class="form-control form-control-sm"
+              style="width: 80px"
+            >
+              <option v-for="(item, index) in arrvFieldTab_Sim" :key="index" :value="item.fldId">
+                {{ GetFieldDisplayText(item) }}
+              </option></select
+            >
+            <button
+              id="btnReplaceField"
+              class="btn btn-outline-info btn-sm text-nowrap"
+              @click="btn_Click('ReplaceField', '')"
+              >替换字段</button
             >
           </div>
         </li>
@@ -305,6 +325,7 @@
     fldStateId_q,
     prjId_q,
     homologousFldId_f,
+    targetFldId_f,
     UserId_Local,
   } from '@/views/Table_Field/FieldTabVueShare';
   import { clsFieldTypeEN } from '@/ts/L0Entity/Table_Field/clsFieldTypeEN';
@@ -394,6 +415,13 @@
 
       const arrvFieldTab_Sim = ref<clsvFieldTab_SimEN[] | null>([]);
 
+      const GetFieldDisplayText = (item: { fldName: string; dataTypeId: string }) => {
+        if (arrDataTypeAbbr.value == null || arrDataTypeAbbr.value.length == 0) return item.fldName;
+        const objDataType = arrDataTypeAbbr.value.find((x) => x.dataTypeId == item.dataTypeId);
+        const strTypeText = objDataType?.dataTypeName ?? item.dataTypeId;
+        return `${item.fldName}(${strTypeText})`;
+      };
+
       /** 函数功能:为查询区绑定下拉框
        * (AutoGCLib.Vue_ViewScript_TS4Html:Gen_Vue_setup_Ts_BindDdl4QryRegion)
        **/
@@ -416,6 +444,7 @@
 
         arrvFieldTab_Sim.value = await vFieldTab_SimEx_GetArrvFieldTab_SimByPrjId(strPrjId); //功能区域
         homologousFldId_f.value = '0';
+        targetFldId_f.value = '0';
       }
       const strTitle = ref('工程字段维护');
 
@@ -463,10 +492,12 @@
         fldStateId_q,
         prjId_q,
         homologousFldId_f,
+        targetFldId_f,
         arrFieldType,
         arrDataTypeAbbr,
         arrFldState,
         arrvFieldTab_Sim,
+        GetFieldDisplayText,
         btnUpdateTabNumForFldId,
       };
     },

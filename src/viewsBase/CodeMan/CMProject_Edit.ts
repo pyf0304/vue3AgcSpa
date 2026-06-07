@@ -23,7 +23,7 @@ import {
   CMProject_IsExistRecordAsync,
   CMProject_GetUniCondStr4Update,
   CMProject_IsExistAsync,
-  CMProject_GetObjByCmPrjIdAsync,
+  CMProject_GetObjByKeyAsync,
   CMProject_CheckProperty4Update,
   CMProject_UpdateRecordAsync,
   CMProject_EditRecordExAsync,
@@ -184,7 +184,7 @@ export abstract class CMProject_Edit {
       this.opType = 'Add';
       const bolIsSuccess = await this.ShowDialog_CMProject(this.opType);
       if (bolIsSuccess == false) return;
-      if (['02', '03', '06'].indexOf(clsCMProjectEN.PrimaryTypeId) > -1) {
+      if (['02', '03', '06'].indexOf(clsCMProjectEN._PrimaryTypeId) > -1) {
         await this.AddNewRecordWithMaxId();
       } else {
         await this.AddNewRecord();
@@ -283,7 +283,7 @@ export abstract class CMProject_Edit {
         case '确认添加':
           //这是一个单表的插入的代码,由于逻辑层太简单,
           //就把逻辑层合并到控制层,
-          if (['02', '03', '06'].indexOf(clsCMProjectEN.PrimaryTypeId) > -1) {
+          if (['02', '03', '06'].indexOf(clsCMProjectEN._PrimaryTypeId) > -1) {
             returnKeyId = await this.AddNewRecordWithMaxIdSave();
             if (IsNullOrEmpty(returnKeyId) == false) {
               if (CMProject_Edit.strPageDispModeId == enumPageDispMode.PopupBox_01)
@@ -592,7 +592,7 @@ export abstract class CMProject_Edit {
     //2、检查该关键字的记录是否存在,如果不存在就返回不显示；
     let objCMProjectEN = new clsCMProjectEN();
     try {
-      const returnBool = await CMProject_IsExistAsync(strCmPrjId);
+      const returnBool = await CMProject_IsExistAsync({ cmPrjId: strCmPrjId });
       if (returnBool == false) {
         const strInfo = Format('关键字:[{0}] 的记录不存在!', strCmPrjId);
         //显示信息框
@@ -609,7 +609,7 @@ export abstract class CMProject_Edit {
       alert(strMsg);
     }
     try {
-      const objCMProjectENConst = await CMProject_GetObjByCmPrjIdAsync(strCmPrjId);
+      const objCMProjectENConst = await CMProject_GetObjByKeyAsync({ cmPrjId: strCmPrjId });
       if (objCMProjectENConst == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -643,7 +643,7 @@ export abstract class CMProject_Edit {
     const strThisFuncName = this.UpdateRecord.name;
     this.keyId = strCmPrjId;
     try {
-      const objCMProjectEN = await CMProject_GetObjByCmPrjIdAsync(strCmPrjId);
+      const objCMProjectEN = await CMProject_GetObjByKeyAsync({ cmPrjId: strCmPrjId });
       if (objCMProjectEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

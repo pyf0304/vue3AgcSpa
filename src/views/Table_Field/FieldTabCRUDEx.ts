@@ -2,9 +2,12 @@
 import { clsFieldTabENEx } from '@/ts/L0Entity/Table_Field/clsFieldTabENEx';
 import { FieldTab_GetRecCountByCondAsync } from '@/ts/L3ForWApi/Table_Field/clsFieldTabWApi';
 import {
+  FieldTabEx_ReplaceField,
+  ReplaceFieldDataRequest,
   FieldTabEx_DelRecordEx,
   FieldTabEx_CopyToPrjTab,
   FieldTabEx_GetObjExLstByPagerAsync,
+  FieldTabEx_UpdateTabNumForFldId,
 } from '@/ts/L3ForWApiEx/Table_Field/clsFieldTabExWApi';
 import {
   GetCheckedKeyIdsInDivObj,
@@ -13,12 +16,13 @@ import {
   GetSelectValueInDivObj,
 } from '@/ts/PubFun/clsCommFunc4Ctrl';
 import { GetCurrPageIndex, GetSortBy, ShowEmptyRecNumInfoByDiv } from '@/ts/PubFun/clsOperateList';
-import { Format } from '@/ts/PubFun/clsString';
+import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { IShowList } from '@/ts/PubFun/IShowList';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 import { FieldTabCRUD } from '@/viewsBase/Table_Field/FieldTabCRUD';
 
 import { vFieldTab_SimEx_BindDdl_FldIdByPrjIdInDivCache } from '@/ts/L3ForWApiEx/Table_Field/clsvFieldTab_SimExWApi';
+
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
 import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
 import { BindTab, SortFun } from '@/ts/PubFun/clsCommFunc4Web';
@@ -133,6 +137,9 @@ export default class FieldTabCRUDEx extends FieldTabCRUD implements IShowList {
         break;
       case 'SetHomologousFldId': //设置同源字段
         objPage.btnSetHomologousFldId_Click();
+        break;
+      case 'ReplaceField': //替换字段
+        objPage.btnReplaceField_Click();
         break;
       case 'SetFieldValue': //自定义功能
         break;
@@ -717,6 +724,62 @@ export default class FieldTabCRUDEx extends FieldTabCRUD implements IShowList {
     } catch (e) {
       const strMsg = Format(
         '复制到新表不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+    }
+  }
+
+  public async btnReplaceField_Click() {
+    const strThisFuncName = this.btnReplaceField_Click.name;
+    try {
+      const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+      if (arrKeyIds.length == 0) {
+        alert('请选择一条需要替换的源字段记录！');
+        return '';
+      }
+      if (arrKeyIds.length > 1) {
+        alert('请只选择一条源字段记录进行替换！');
+        return '';
+      }
+
+      const strSourceFieldId = arrKeyIds[0];
+      const strTargetFieldId = GetSelectValueInDivObj(
+        divVarSet.refDivFunction,
+        'ddlTargetFldId_ReplaceField',
+      );
+      if (IsNullOrEmpty(strTargetFieldId) == true || strTargetFieldId == '0') {
+        alert('请选择目标字段！');
+        return '';
+      }
+      if (strSourceFieldId == strTargetFieldId) {
+        alert('源字段与目标字段不能相同！');
+        return '';
+      }
+
+      const objRequest: ReplaceFieldDataRequest = {
+        strSourceFieldId,
+        strTargetFieldId,
+        strPrjId: clsPrivateSessionStorage.currSelPrjId,
+        strOpUser: clsPubLocalStorage.userId,
+      };
+      const objResult = await FieldTabEx_ReplaceField(objRequest);
+      if (objResult.success) {
+        await FieldTabEx_UpdateTabNumForFldId(strSourceFieldId);
+        await FieldTabEx_UpdateTabNumForFldId(strTargetFieldId);
+        const strMsg = IsNullOrEmpty(objResult.message) ? '替换字段成功！' : objResult.message;
+        alert(strMsg);
+        await this.BindGv_FieldTab4Func(divVarSet.refDivList);
+      } else {
+        const strMsg = IsNullOrEmpty(objResult.message) ? '替换字段失败！' : objResult.message;
+        alert(strMsg);
+      }
+    } catch (e) {
+      const strMsg = Format(
+        '替换字段不成功,{0}.(in {1}.{2})',
         e,
         this.constructor.name,
         strThisFuncName,

@@ -7,7 +7,7 @@ import { clsPrjTabEN } from '@/ts/L0Entity/Table_Field/clsPrjTabEN';
 import { clsvFieldTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvFieldTab_SimEN';
 import { clsvPrjTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvPrjTab_SimEN';
 import {
-  CMProject_GetObjByCmPrjIdCache,
+  CMProject_GetObjByKeyCache,
   CMProject_func,
 } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import { CtlType_func } from '@/ts/L3ForWApi/PrjInterface/clsCtlTypeWApi';
@@ -255,9 +255,9 @@ export async function DGRegionFldsEx_FuncMap_TabName(objDGRegionFlds: clsDGRegio
           );
 
           if (objFieldTab_Sim_Out == null) {
-            const objCMProject = await CMProject_GetObjByCmPrjIdCache(
-              clsPrivateSessionStorage.cmPrjId,
-            );
+            const objCMProject = await CMProject_GetObjByKeyCache({
+              cmPrjId: clsPrivateSessionStorage.cmPrjId,
+            });
             if (objCMProject == null) return;
             const strMsg = Format(
               '转换函数中，属性:[{0}], 输出字段Id:[{1}], 不存在。在 VersionNo=1, cmPrjId={2}，请检查！(In {3})',
@@ -281,9 +281,9 @@ export async function DGRegionFldsEx_FuncMap_TabName(objDGRegionFlds: clsDGRegio
             clsPrivateSessionStorage.currSelPrjId,
           );
           if (objFieldTab == null) return;
-          const objCMProject = await CMProject_GetObjByCmPrjIdCache(
-            clsPrivateSessionStorage.cmPrjId,
-          );
+          const objCMProject = await CMProject_GetObjByKeyCache({
+            cmPrjId: clsPrivateSessionStorage.cmPrjId,
+          });
           if (objCMProject == null) return;
           const strMsg = Format(
             '转换函数中，表tabId={0}({3}),字段fldId=[{1}({4})]==>{8}在获取转换路径时，出错:{7}。 VersionNo=1, cmPrjId={2}({5})，请检查！(In {6})',

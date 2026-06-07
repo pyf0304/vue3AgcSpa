@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsCMProjectAppRelaEN
  * 表名:CMProjectAppRela(00050600)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 22:28:05
- * 生成者:pyf
+ * 版本:2026.05.30(服务器:WIN-SRV103-116)
+ * 日期:2026/06/01 08:19:49
+ * 生成者:pyf2
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:代码管理(CodeMan)
  * 框架-层名:实体层(TS)(EntityLayer,0121)
@@ -18,17 +18,24 @@
  **/
 import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
+/**
+ * CM项目应用关系主键类型定义
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_KeyType)
+ **/
+export type CMProjectAppRelaKey = {
+  cMProjectAppRelaId: number;
+};
 export class clsCMProjectAppRelaEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
-  public static CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
-  public static CacheModeId = '03'; //localStorage
-  public static PrimaryTypeId = '02'; //identity
-  public static IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
-  public static WhereFormat = ''; //条件格式串
-  public static _CurrTabName = 'CMProjectAppRela'; //当前表名,与该类相关的表名
-  public static _KeyFldName = 'CMProjectAppRelaId'; //当前表中的关键字名称,与该类相关的表中关键字名
-  public static mintAttributeCount = 8;
-  public static AttributeName = [
+  public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
+  public static readonly _CacheModeId: string = '03'; //localStorage
+  public static readonly _PrimaryTypeId: string = '02'; //identity
+  public static readonly _IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
+  public static readonly _WhereFormat = ''; //条件格式串
+  public static readonly _CurrTabName: string = 'CMProjectAppRela'; //当前表名,与该类相关的表名
+  public static readonly _KeyFldName: string = 'CMProjectAppRelaId'; //当前表中的关键字名称,与该类相关的表中关键字名
+  public static readonly _AttributeCount = 8;
+  public static readonly _AttributeName = [
     'cMProjectAppRelaId',
     'cmPrjId',
     'applicationTypeId',
@@ -266,65 +273,49 @@ export class clsCMProjectAppRelaEN extends clsGeneralTab {
    * 常量:"CMProjectAppRelaId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CMProjectAppRelaId(): string {
-    return 'cMProjectAppRelaId';
-  } //Cm工程应用关系Id
+  public static readonly con_CMProjectAppRelaId = 'cMProjectAppRelaId'; //Cm工程应用关系Id
 
   /**
    * 常量:"CmPrjId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CmPrjId(): string {
-    return 'cmPrjId';
-  } //Cm工程Id
+  public static readonly con_CmPrjId = 'cmPrjId'; //Cm工程Id
 
   /**
    * 常量:"ApplicationTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ApplicationTypeId(): string {
-    return 'applicationTypeId';
-  } //应用程序类型ID
+  public static readonly con_ApplicationTypeId = 'applicationTypeId'; //应用程序类型ID
 
   /**
    * 常量:"OrderNum"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_OrderNum(): string {
-    return 'orderNum';
-  } //序号
+  public static readonly con_OrderNum = 'orderNum'; //序号
 
   /**
    * 常量:"PrjId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_PrjId(): string {
-    return 'prjId';
-  } //工程Id
+  public static readonly con_PrjId = 'prjId'; //工程Id
 
   /**
    * 常量:"UpdDate"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdDate(): string {
-    return 'updDate';
-  } //修改日期
+  public static readonly con_UpdDate = 'updDate'; //修改日期
 
   /**
    * 常量:"UpdUser"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdUser(): string {
-    return 'updUser';
-  } //修改者
+  public static readonly con_UpdUser = 'updUser'; //修改者
 
   /**
    * 常量:"Memo"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Memo(): string {
-    return 'memo';
-  } //说明
+  public static readonly con_Memo = 'memo'; //说明
 
   /**
    * 设置条件字段值.
@@ -343,6 +334,7 @@ export class clsCMProjectAppRelaEN extends clsGeneralTab {
     }
     this.sfFldComparisonOp = JSON.stringify(this.dicFldComparisonOp);
   }
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名

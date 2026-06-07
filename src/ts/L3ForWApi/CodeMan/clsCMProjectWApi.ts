@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsCMProjectWApi
  * 表名:CMProject(00050512)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:52:55
+ * 版本:2026.05.30(服务器:PYF-AI)
+ * 日期:2026/06/01 22:18:59
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:代码管理(CodeMan)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * CM项目(CMProject)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年06月14日.
+ * Created by pyf on 2026年06月01日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -40,7 +40,7 @@ import {
 } from '@/ts/PubFun/clsCommFunc4Web';
 import { cMProjectCache, isFuncMapCache } from '@/views/CodeMan/CMProjectVueShare';
 import { clsCMProjectENEx } from '@/ts/L0Entity/CodeMan/clsCMProjectENEx';
-import { clsCMProjectEN } from '@/ts/L0Entity/CodeMan/clsCMProjectEN';
+import { clsCMProjectEN, CMProjectKey } from '@/ts/L0Entity/CodeMan/clsCMProjectEN';
 import { Projects_func } from '@/ts/L3ForWApi/PrjManage/clsProjectsWApi';
 import { clsProjectsEN } from '@/ts/L0Entity/PrjManage/clsProjectsEN';
 import { ApplicationType_func } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
@@ -63,26 +63,21 @@ export const cMProject_ConstructorName = 'cMProject';
 /**
  * 根据关键字获取相应记录的对象
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdAsync)
- * @param strCmPrjId:关键字
+ * @param key:包含关键字的对象
  * @returns 对象
  **/
-export async function CMProject_GetObjByCmPrjIdAsync(
-  strCmPrjId: string,
+export async function CMProject_GetObjByKeyAsync(
+  key: CMProjectKey,
 ): Promise<clsCMProjectEN | null> {
-  const strThisFuncName = 'GetObjByCmPrjIdAsync';
-
-  if (IsNullOrEmpty(strCmPrjId) == true) {
-    const strMsg = Format('参数:[strCmPrjId]不能为空!(In clsCMProjectWApi.GetObjByCmPrjIdAsync)');
-    console.error(strMsg);
-    throw strMsg;
-  }
-  if (strCmPrjId.length != 6) {
+  const strThisFuncName = 'GetObjByKeyAsync';
+  if (key.cmPrjId === undefined || key.cmPrjId === null || key.cmPrjId === '') {
     const strMsg = Format(
-      '缓存分类变量:[strCmPrjId]的长度:[{0}]不正确!(clsCMProjectWApi.GetObjByCmPrjIdAsync)',
-      strCmPrjId.length,
+      '关键字段[CmPrjId]不能为空!(in {0}.{1})',
+      cMProject_ConstructorName,
+      strThisFuncName,
     );
     console.error(strMsg);
-    throw strMsg;
+    throw new Error(strMsg);
   }
   const strAction = 'GetObjByCmPrjId';
   const strUrl = GetWebApiUrl(cMProject_Controller, strAction);
@@ -94,7 +89,7 @@ export async function CMProject_GetObjByCmPrjIdAsync(
       Authorization: `${token}`,
     },
     params: {
-      strCmPrjId,
+      strCmPrjId: key.cmPrjId,
     },
   };
   try {
@@ -140,97 +135,40 @@ export async function CMProject_GetObjByCmPrjIdAsync(
     }
   }
 }
+//该表没有使用localStorage,不需要生成[GetObjByKeylocalStorage]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage )
 
 /**
- * 根据关键字获取相关对象, 从localStorage缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
- * @param strCmPrjId:所给的关键字
- * @returns 对象
- */
-export async function CMProject_GetObjByCmPrjIdlocalStorage(strCmPrjId: string) {
-  const strThisFuncName = 'GetObjByCmPrjIdlocalStorage';
-
-  if (IsNullOrEmpty(strCmPrjId) == true) {
-    const strMsg = Format(
-      '参数:[strCmPrjId]不能为空!(In clsCMProjectWApi.GetObjByCmPrjIdlocalStorage)',
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  if (strCmPrjId.length != 6) {
-    const strMsg = Format(
-      '缓存分类变量:[strCmPrjId]的长度:[{0}]不正确!(clsCMProjectWApi.GetObjByCmPrjIdlocalStorage)',
-      strCmPrjId.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  const strKey = Format('{0}_{1}', clsCMProjectEN._CurrTabName, strCmPrjId);
-  if (strKey == '') {
-    console.error('关键字为空!不正确');
-    throw new Error('关键字为空!不正确');
-  }
-  if (Object.prototype.hasOwnProperty.call(localStorage, strKey)) {
-    //缓存存在,直接返回
-    const strTempObj = localStorage.getItem(strKey) as string;
-    const objCMProjectCache: clsCMProjectEN = JSON.parse(strTempObj);
-    return objCMProjectCache;
-  }
-  try {
-    const objCMProject = await CMProject_GetObjByCmPrjIdAsync(strCmPrjId);
-    if (objCMProject != null) {
-      localStorage.setItem(strKey, JSON.stringify(objCMProject));
-      const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
-      console.log(strInfo);
-      return objCMProject;
-    }
-    return objCMProject;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
-      e,
-      strCmPrjId,
-      cMProject_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-    return;
-  }
-}
-
-/**
- * 根据关键字获取相关对象, 从缓存中获取.
+ * 根据关键字获取特定对象, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
- * @param strCmPrjId:所给的关键字
+ * @param key:关键字对象
  * @returns 对象
  */
-export async function CMProject_GetObjByCmPrjIdCache(strCmPrjId: string, bolTryAsyncOnce = true) {
-  const strThisFuncName = 'GetObjByCmPrjIdCache';
+export async function CMProject_GetObjByKeyCache(key: CMProjectKey, bolTryAsyncOnce = true) {
+  const strThisFuncName = 'GetObjByKeyCache';
 
-  if (IsNullOrEmpty(strCmPrjId) == true) {
-    const strMsg = Format('参数:[strCmPrjId]不能为空!(In clsCMProjectWApi.GetObjByCmPrjIdCache)');
+  if (IsNullOrEmpty(key.cmPrjId) == true) {
+    const strMsg = Format('参数:[key.cmPrjId]不能为空!(In clsCMProjectWApi.GetObjByKeyCache)');
     console.error(strMsg);
     throw strMsg;
   }
-  if (strCmPrjId.length != 6) {
+  if (key.cmPrjId.length != 6) {
     const strMsg = Format(
-      '缓存分类变量:[strCmPrjId]的长度:[{0}]不正确!(clsCMProjectWApi.GetObjByCmPrjIdCache)',
-      strCmPrjId.length,
+      '缓存分类变量:[key.cmPrjId]的长度:[{0}]不正确!(clsCMProjectWApi.GetObjByKeyCache)',
+      key.cmPrjId.length,
     );
     console.error(strMsg);
     throw strMsg;
   }
   const arrCMProjectObjLstCache = await CMProject_GetObjLstCache();
   try {
-    const arrCMProjectSel = arrCMProjectObjLstCache.filter((x) => x.cmPrjId == strCmPrjId);
+    const arrCMProjectSel = arrCMProjectObjLstCache.filter((x) => x.cmPrjId == key.cmPrjId);
     let objCMProject: clsCMProjectEN;
     if (arrCMProjectSel.length > 0) {
       objCMProject = arrCMProjectSel[0];
       return objCMProject;
     } else {
       if (bolTryAsyncOnce == true) {
-        const objCMProjectConst = await CMProject_GetObjByCmPrjIdAsync(strCmPrjId);
+        const objCMProjectConst = await CMProject_GetObjByKeyAsync(key);
         if (objCMProjectConst != null) {
           CMProject_ReFreshThisCache();
           return objCMProjectConst;
@@ -242,7 +180,7 @@ export async function CMProject_GetObjByCmPrjIdCache(strCmPrjId: string, bolTryA
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      strCmPrjId,
+      key.cmPrjId,
       cMProject_ConstructorName,
       strThisFuncName,
     );
@@ -285,7 +223,7 @@ export async function CMProject_UpdateObjInLstCache(objCMProject: clsCMProjectEN
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -297,7 +235,7 @@ export function CMProject_SortFunDefa(a: clsCMProjectEN, b: clsCMProjectEN): num
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -311,7 +249,7 @@ export function CMProject_SortFunDefa2Fld(a: clsCMProjectEN, b: clsCMProjectEN):
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -486,19 +424,19 @@ export function CMProject_SortFunByKey(strKey: string, AscOrDesc: string) {
 /**
  * 根据关键字获取相关对象的名称属性, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
- * @param strCmPrjId:所给的关键字
- * @returns 对象
+ * @param key:关键字对象
+ * @returns 名称属性值
  */
-export async function CMProject_GetNameByCmPrjIdCache(strCmPrjId: string) {
-  if (IsNullOrEmpty(strCmPrjId) == true) {
-    const strMsg = Format('参数:[strCmPrjId]不能为空!(In clsCMProjectWApi.GetNameByCmPrjIdCache)');
+export async function CMProject_GetNameByKeyCache(key: CMProjectKey) {
+  if (IsNullOrEmpty(key.cmPrjId) == true) {
+    const strMsg = Format('参数:[key.cmPrjId]不能为空!(In clsCMProjectWApi.GetNameByKeyCache)');
     console.error(strMsg);
     throw strMsg;
   }
-  if (strCmPrjId.length != 6) {
+  if (key.cmPrjId.length != 6) {
     const strMsg = Format(
-      '缓存分类变量:[strCmPrjId]的长度:[{0}]不正确!(clsCMProjectWApi.GetNameByCmPrjIdCache)',
-      strCmPrjId.length,
+      '缓存分类变量:[key.cmPrjId]的长度:[{0}]不正确!(clsCMProjectWApi.GetNameByKeyCache)',
+      key.cmPrjId.length,
     );
     console.error(strMsg);
     throw strMsg;
@@ -506,7 +444,7 @@ export async function CMProject_GetNameByCmPrjIdCache(strCmPrjId: string) {
   const arrCMProjectObjLstCache = await CMProject_GetObjLstCache();
   if (arrCMProjectObjLstCache == null) return '';
   try {
-    const arrCMProjectSel = arrCMProjectObjLstCache.filter((x) => x.cmPrjId == strCmPrjId);
+    const arrCMProjectSel = arrCMProjectObjLstCache.filter((x) => x.cmPrjId == key.cmPrjId);
     let objCMProject: clsCMProjectEN;
     if (arrCMProjectSel.length > 0) {
       objCMProject = arrCMProjectSel[0];
@@ -518,7 +456,7 @@ export async function CMProject_GetNameByCmPrjIdCache(strCmPrjId: string) {
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象名称属性不成功!',
       e,
-      strCmPrjId,
+      key.cmPrjId,
     );
     console.error(strMsg);
     alert(strMsg);
@@ -529,7 +467,7 @@ export async function CMProject_GetNameByCmPrjIdCache(strCmPrjId: string) {
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -605,7 +543,7 @@ export async function CMProject_FilterFunByKey(strKey: string, value: any) {
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -624,11 +562,11 @@ export async function CMProject_func(
     console.error(strMsg);
     throw new Error(strMsg);
   }
-  if (clsCMProjectEN.AttributeName.indexOf(strOutFldName) == -1) {
+  if (clsCMProjectEN._AttributeName.indexOf(strOutFldName) == -1) {
     const strMsg = Format(
       '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
       strOutFldName,
-      clsCMProjectEN.AttributeName.join(','),
+      clsCMProjectEN._AttributeName.join(','),
     );
     console.error(strMsg);
     throw new Error(strMsg);
@@ -637,7 +575,7 @@ export async function CMProject_func(
   if (IsNullOrEmpty(strCmPrjId) == true) {
     return '';
   }
-  const objCMProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+  const objCMProject = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
   if (objCMProject == null) return '';
   if (objCMProject.GetFldValue(strOutFldName) == null) return '';
   return objCMProject.GetFldValue(strOutFldName).toString();
@@ -646,7 +584,7 @@ export async function CMProject_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -997,11 +935,11 @@ export async function CMProject_GetObjLstClientCache() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsCMProjectEN._CurrTabName;
-  if (IsNullOrEmpty(clsCMProjectEN.WhereFormat) == false) {
-    strWhereCond = clsCMProjectEN.WhereFormat;
+  if (IsNullOrEmpty(clsCMProjectEN._WhereFormat) == false) {
+    strWhereCond = clsCMProjectEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsCMProjectEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsCMProjectEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsCMProjectEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsCMProjectEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1045,11 +983,11 @@ export async function CMProject_GetObjLstlocalStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsCMProjectEN._CurrTabName;
-  if (IsNullOrEmpty(clsCMProjectEN.WhereFormat) == false) {
-    strWhereCond = clsCMProjectEN.WhereFormat;
+  if (IsNullOrEmpty(clsCMProjectEN._WhereFormat) == false) {
+    strWhereCond = clsCMProjectEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsCMProjectEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsCMProjectEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsCMProjectEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsCMProjectEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1187,11 +1125,11 @@ export async function CMProject_GetObjLstsessionStorage() {
   //初始化列表缓存
   let strWhereCond = '1=1';
   const strKey = clsCMProjectEN._CurrTabName;
-  if (IsNullOrEmpty(clsCMProjectEN.WhereFormat) == false) {
-    strWhereCond = clsCMProjectEN.WhereFormat;
+  if (IsNullOrEmpty(clsCMProjectEN._WhereFormat) == false) {
+    strWhereCond = clsCMProjectEN._WhereFormat;
   }
-  if (IsNullOrEmpty(clsCMProjectEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsCMProjectEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsCMProjectEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsCMProjectEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1255,7 +1193,7 @@ export async function CMProject_GetObjLstCache(): Promise<Array<clsCMProjectEN>>
   //const strThisFuncName = "GetObjLst_Cache";
 
   let arrCMProjectObjLstCache;
-  switch (clsCMProjectEN.CacheModeId) {
+  switch (clsCMProjectEN._CacheModeId) {
     case '04': //sessionStorage
       arrCMProjectObjLstCache = await CMProject_GetObjLstsessionStorage();
       break;
@@ -1280,7 +1218,7 @@ export async function CMProject_GetObjLstCache(): Promise<Array<clsCMProjectEN>>
 export async function CMProject_GetObjLstPureCache() {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrCMProjectObjLstCache;
-  switch (clsCMProjectEN.CacheModeId) {
+  switch (clsCMProjectEN._CacheModeId) {
     case '04': //sessionStorage
       arrCMProjectObjLstCache = await CMProject_GetObjLstsessionStoragePureCache();
       break;
@@ -1819,14 +1757,14 @@ export async function CMProject_GetObjLstByPagerAsync(
 /**
  * 调用WebApi来删除记录,根据关键字来删除记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_DelRecordAsync)
- * @param strCmPrjId:关键字
+ * @param key:关键字对象
  * @returns 获取删除的结果
  **/
-export async function CMProject_DelRecordAsync(strCmPrjId: string): Promise<number> {
+export async function CMProject_DelRecordAsync(key: CMProjectKey): Promise<number> {
   const strThisFuncName = 'DelRecordAsync';
   const strAction = 'DelRecord';
   let strUrl = GetWebApiUrl(cMProject_Controller, strAction);
-  strUrl = Format('{0}?Id={1}', strUrl, strCmPrjId);
+  strUrl = Format('{0}?Id={1}', strUrl, key.cmPrjId);
 
   const token = Storage.get(ACCESS_TOKEN_KEY);
   //console.error('token:', token);
@@ -1879,9 +1817,9 @@ export async function CMProject_DelRecordAsync(strCmPrjId: string): Promise<numb
  * @param arrCmPrjId:关键字列表
  * @returns 实际删除记录的个数
  **/
-export async function CMProject_DelCMProjectsAsync(arrCmPrjId: Array<string>): Promise<number> {
-  const strThisFuncName = 'DelCMProjectsAsync';
-  const strAction = 'DelCMProjects';
+export async function CMProject_DelKeysAsync(arrCmPrjId: Array<string>): Promise<number> {
+  const strThisFuncName = 'DelKeysAsync';
+  const strAction = 'DelKeys';
   const strUrl = GetWebApiUrl(cMProject_Controller, strAction);
 
   const token = Storage.get(ACCESS_TOKEN_KEY);
@@ -1965,7 +1903,7 @@ export async function CMProject_GetObjExLstByPagerCache(
   const bolIsFuncMap = isFuncMapCache[isFuncMapKey];
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsCMProjectEN.AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
+    clsCMProjectEN._AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
     (bolIsFuncMap == false || bolIsFuncMap == undefined)
   ) {
     for (const newObj of arrCMProjectExObjLst) {
@@ -2109,7 +2047,7 @@ export function CMProject_CopyToEx(objCMProjectENS: clsCMProjectEN): clsCMProjec
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -2120,7 +2058,7 @@ export function CMProject_FuncMapByFldName(strFldName: string, objCMProjectEx: c
   strFldName = strFldName.replace('|Ex', '');
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsCMProjectEN.AttributeName;
+  const arrFldName = clsCMProjectEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -2149,7 +2087,7 @@ export function CMProject_FuncMapByFldName(strFldName: string, objCMProjectEx: c
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -3120,15 +3058,15 @@ export async function CMProject_IsExistRecordAsync(strWhereCond: string): Promis
 /**
  * 根据关键字判断是否存在记录, 从本地缓存中判断.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistCache)
- * @param strCmPrjId:所给的关键字
- * @returns 对象
+ * @param key:关键字对象
+ * @returns 是否存在
  */
-export async function CMProject_IsExistCache(strCmPrjId: string) {
+export async function CMProject_IsExistCache(key: CMProjectKey): Promise<boolean> {
   const strThisFuncName = 'IsExistCache';
   const arrCMProjectObjLstCache = await CMProject_GetObjLstCache();
   if (arrCMProjectObjLstCache == null) return false;
   try {
-    const arrCMProjectSel = arrCMProjectObjLstCache.filter((x) => x.cmPrjId == strCmPrjId);
+    const arrCMProjectSel = arrCMProjectObjLstCache.filter((x) => x.cmPrjId == key.cmPrjId);
     if (arrCMProjectSel.length > 0) {
       return true;
     } else {
@@ -3137,7 +3075,7 @@ export async function CMProject_IsExistCache(strCmPrjId: string) {
   } catch (e) {
     const strMsg = Format(
       '根据关键字:[{0}]判断是否存在不成功!(in {1}.{2})',
-      strCmPrjId,
+      key.cmPrjId,
       cMProject_ConstructorName,
       strThisFuncName,
     );
@@ -3150,10 +3088,10 @@ export async function CMProject_IsExistCache(strCmPrjId: string) {
 /**
  * 根据关键字判断是否存在记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistAsync)
- * @param strCmPrjId:关键字
+ * @param key:包含关键字的对象
  * @returns 是否存在?存在返回True
  **/
-export async function CMProject_IsExistAsync(strCmPrjId: string): Promise<boolean> {
+export async function CMProject_IsExistAsync(key: CMProjectKey): Promise<boolean> {
   const strThisFuncName = 'IsExistAsync';
   //检测记录是否存在
   const strAction = 'IsExist';
@@ -3166,7 +3104,7 @@ export async function CMProject_IsExistAsync(strCmPrjId: string): Promise<boolea
       Authorization: `${token}`,
     },
     params: {
-      strCmPrjId,
+      strCmPrjId: key.cmPrjId,
     },
   };
   try {
@@ -3513,7 +3451,7 @@ export function CMProject_ReFreshCache(): void {
   console.trace(strMsg);
   // 静态的对象列表,用于清空相关缓存,针对记录较少,作为参数表可以使用
   const strKey = clsCMProjectEN._CurrTabName;
-  switch (clsCMProjectEN.CacheModeId) {
+  switch (clsCMProjectEN._CacheModeId) {
     case '04': //sessionStorage
       sessionStorage.removeItem(strKey);
       break;
@@ -3537,7 +3475,7 @@ export function CMProject_ReFreshCache(): void {
 export function CMProject_ReFreshThisCache(): void {
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = clsCMProjectEN._CurrTabName;
-    switch (clsCMProjectEN.CacheModeId) {
+    switch (clsCMProjectEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -3569,7 +3507,7 @@ export function CMProject_GetLastRefreshTime(): string {
 }
 
 /**
- * 绑定基于Web的下拉框,在某一层下的下拉框
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050263)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
@@ -3614,12 +3552,12 @@ export async function CMProject_BindDdl_CmPrjIdByPrjIdInDivCache(
     arrObjLstSel,
     clsCMProjectEN.con_CmPrjId,
     clsCMProjectEN.con_CmPrjName,
-    'CM项目...',
+    '选CM项目...',
   );
 }
 
 /**
- * 绑定基于Web的下拉框,在某一层下的下拉框
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050263)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_GetDdlData)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
@@ -3650,7 +3588,7 @@ export async function CMProject_GetArrCMProjectByPrjId(strPrjId: string) {
   arrObjLstSel = arrObjLstSel.filter((x) => x.prjId == strPrjId);
   const obj0 = new clsCMProjectEN();
   obj0.cmPrjId = '0';
-  obj0.cmPrjName = '选cM项目...';
+  obj0.cmPrjName = '选CM项目...';
   arrCMProject.push(obj0);
   arrObjLstSel.forEach((x) => arrCMProject.push(x));
   return arrCMProject;
@@ -4090,7 +4028,7 @@ export function CMProject_CheckProperty4Update(pobjCMProjectEN: clsCMProjectEN) 
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -4111,7 +4049,7 @@ export function CMProject_GetJSONStrByObj(pobjCMProjectEN: clsCMProjectEN): stri
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -4132,7 +4070,7 @@ export function CMProject_GetObjLstByJSONStr(strJSON: string): Array<clsCMProjec
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrCMProjectObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -4152,7 +4090,7 @@ export function CMProject_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

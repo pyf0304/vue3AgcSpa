@@ -24,7 +24,7 @@
             <option
               v-for="(item, index) in arrDDLItemsOption"
               :key="index"
-              :value="item.ddlItemsOptionId"
+              :value="String(item.ddlItemsOptionId).trim()"
             >
               {{ item.ddlItemsOptionName }}
             </option></select
@@ -44,7 +44,11 @@
             class="form-control form-control-sm"
             style="width: 230px"
             @change="ddlDsTabId_SelectedIndexChanged(dsTabId)"
-            ><option v-for="(item, index) in arrvPrjTab_Sim" :key="index" :value="item.tabId">
+            ><option
+              v-for="(item, index) in arrvPrjTab_Sim"
+              :key="index"
+              :value="String(item.tabId).trim()"
+            >
               {{ item.tabName }}
             </option></select
           >
@@ -66,7 +70,7 @@
             ><option
               v-for="(item, index) in arrvTabFeature_Sim"
               :key="index"
-              :value="item.tabFeatureId"
+              :value="String(item.tabFeatureId).trim()"
             >
               {{ item.tabFeatureName }}
             </option></select
@@ -95,7 +99,11 @@
             class="form-control form-control-sm"
             style="width: 180px"
           >
-            <option v-for="(item, index) in arrGCVariable" :key="index" :value="item.varId">
+            <option
+              v-for="(item, index) in arrGCVariable"
+              :key="index"
+              :value="String(item.varId).trim()"
+            >
               {{ item.varName }}
             </option>
           </select>
@@ -131,7 +139,11 @@
             class="form-control form-control-sm"
             style="width: 190px"
           >
-            <option v-for="(item, index) in arrGCVariable" :key="index" :value="item.varId">
+            <option
+              v-for="(item, index) in arrGCVariable"
+              :key="index"
+              :value="String(item.varId).trim()"
+            >
               {{ item.varName }}
             </option>
           </select>
@@ -347,6 +359,11 @@
       const regionId = ref('');
       // const queryOptionId = ref('');
 
+      const normalizeSelectValue = (value: unknown): string => {
+        if (value == null) return '';
+        return String(value).trim();
+      };
+
       onMounted(async () => {
         hideAllTr();
         await BindDdl4EditRegionInDiv();
@@ -510,19 +527,23 @@
         console.log('GetDataFromPubComboClass--pobjQryRegionFldsEN:', pobjQryRegionFldsEN);
         // this.objPubFun4Ddl.divEdit = divVarSet.refDivEdit_PubCombo;
 
-        await ddlCtlTypeId_SelectedIndexChanged(pobjQryRegionFldsEN.ctlTypeId);
+        await ddlCtlTypeId_SelectedIndexChanged(
+          normalizeSelectValue(pobjQryRegionFldsEN.ctlTypeId),
+        );
         // const strPrjId = clsPrivateSessionStorage.currSelPrjId;
-        pobjQryRegionFldsEN.dsTabId = Is0EqEmpty(pobjQryRegionFldsEN.dsTabId);
+        pobjQryRegionFldsEN.dsTabId = Is0EqEmpty(normalizeSelectValue(pobjQryRegionFldsEN.dsTabId));
         if (props.isForFeatureFld == false) {
-          itemsOptionId.value = pobjQryRegionFldsEN.ddlItemsOptionId; // 下拉选项
+          itemsOptionId.value = normalizeSelectValue(pobjQryRegionFldsEN.ddlItemsOptionId); // 下拉选项
           await ddlDdlItemsOptionId_SelectedIndexChanged();
 
           if (IsNullOrEmpty(pobjQryRegionFldsEN.dsTabId) == false) {
-            dsTabId.value = pobjQryRegionFldsEN.dsTabId; // 数据源表
-            await ddlDsTabId_SelectedIndexChanged(pobjQryRegionFldsEN.dsTabId);
+            dsTabId.value = normalizeSelectValue(pobjQryRegionFldsEN.dsTabId); // 数据源表
+            await ddlDsTabId_SelectedIndexChanged(
+              normalizeSelectValue(pobjQryRegionFldsEN.dsTabId),
+            );
           }
           if (IsNullOrEmpty(pobjQryRegionFldsEN.tabFeatureId4Ddl) == false) {
-            tabFeatureId4Ddl.value = pobjQryRegionFldsEN.tabFeatureId4Ddl;
+            tabFeatureId4Ddl.value = normalizeSelectValue(pobjQryRegionFldsEN.tabFeatureId4Ddl);
             await ddlTabFeatureId4Ddl_SelectedIndexChanged();
 
             // await GCVariableEx_BindDdl_VarIdInDivCache1(
@@ -540,14 +561,18 @@
             // ); //编辑区域
             console.log('pobjQryRegionFldsEN.varIdCond1-if:', pobjQryRegionFldsEN.varIdCond1);
             if (IsNullOrEmpty(pobjQryRegionFldsEN.varIdCond1) == false) {
-              varIdCond1.value = pobjQryRegionFldsEN.varIdCond1;
+              varIdCond1.value = normalizeSelectValue(pobjQryRegionFldsEN.varIdCond1);
             }
             if (IsNullOrEmpty(pobjQryRegionFldsEN.varIdCond2) == false) {
-              varIdCond2.value = pobjQryRegionFldsEN.varIdCond2;
+              varIdCond2.value = normalizeSelectValue(pobjQryRegionFldsEN.varIdCond2);
             }
-            varIdCond1.value = IsNullOrEmptyEq0(pobjQryRegionFldsEN.varIdCond1); // '0';
+            varIdCond1.value = IsNullOrEmptyEq0(
+              normalizeSelectValue(pobjQryRegionFldsEN.varIdCond1),
+            ); // '0';
 
-            varIdCond2.value = IsNullOrEmptyEq0(pobjQryRegionFldsEN.varIdCond2);
+            varIdCond2.value = IsNullOrEmptyEq0(
+              normalizeSelectValue(pobjQryRegionFldsEN.varIdCond2),
+            );
           }
           dsCondStr.value = pobjQryRegionFldsEN.dsCondStr; // 条件串
           dsSqlStr.value = pobjQryRegionFldsEN.dsSqlStr; // 数据源SQL
@@ -555,11 +580,13 @@
         } else {
           if (IsNullOrEmpty(pobjQryRegionFldsEN.dsTabId) == false) {
             if (dsTabId.value != pobjQryRegionFldsEN.dsTabId)
-              dsTabId.value = Is0EqEmpty(pobjQryRegionFldsEN.dsTabId); // 数据源表
-            await ddlDsTabId_SelectedIndexChanged(pobjQryRegionFldsEN.dsTabId);
+              dsTabId.value = Is0EqEmpty(normalizeSelectValue(pobjQryRegionFldsEN.dsTabId)); // 数据源表
+            await ddlDsTabId_SelectedIndexChanged(
+              normalizeSelectValue(pobjQryRegionFldsEN.dsTabId),
+            );
           }
           if (IsNullOrEmpty(pobjQryRegionFldsEN.tabFeatureId4Ddl) == false) {
-            tabFeatureId4Ddl.value = pobjQryRegionFldsEN.tabFeatureId4Ddl;
+            tabFeatureId4Ddl.value = normalizeSelectValue(pobjQryRegionFldsEN.tabFeatureId4Ddl);
             await ddlTabFeatureId4Ddl_SelectedIndexChanged();
 
             // await GCVariableEx_BindDdl_VarIdInDivCache(
@@ -581,14 +608,18 @@
             // varIdCond2.value = '0';
             console.log('pobjQryRegionFldsEN.varIdCond1-else:', pobjQryRegionFldsEN.varIdCond1);
             if (IsNullOrEmpty(pobjQryRegionFldsEN.varIdCond1) == false) {
-              varIdCond1.value = pobjQryRegionFldsEN.varIdCond1;
+              varIdCond1.value = normalizeSelectValue(pobjQryRegionFldsEN.varIdCond1);
             }
             if (IsNullOrEmpty(pobjQryRegionFldsEN.varIdCond2) == false) {
-              varIdCond2.value = pobjQryRegionFldsEN.varIdCond2;
+              varIdCond2.value = normalizeSelectValue(pobjQryRegionFldsEN.varIdCond2);
             }
-            varIdCond1.value = IsNullOrEmptyEq0(pobjQryRegionFldsEN.varIdCond1); // '0';
+            varIdCond1.value = IsNullOrEmptyEq0(
+              normalizeSelectValue(pobjQryRegionFldsEN.varIdCond1),
+            ); // '0';
 
-            varIdCond2.value = IsNullOrEmptyEq0(pobjQryRegionFldsEN.varIdCond2);
+            varIdCond2.value = IsNullOrEmptyEq0(
+              normalizeSelectValue(pobjQryRegionFldsEN.varIdCond2),
+            );
           }
         }
         // await ddlTabFeatureId4Ddl_SelectedIndexChanged();
@@ -630,6 +661,17 @@
             }
             ShowTrInDiv('trTabFeatureId4Ddl');
             ShowTrInDiv('trDsTabId');
+
+            // 默认选中第一张可用数据源表，并加载“下拉框功能”选项。
+            if (IsNullOrEmpty(dsTabId.value) || dsTabId.value === '0') {
+              const objFirstTab = (arrvPrjTab_Sim.value || []).find(
+                (x) => !IsNullOrEmpty(x.tabId) && x.tabId !== '0',
+              );
+              dsTabId.value = objFirstTab?.tabId || '0';
+            }
+            if (!IsNullOrEmpty(dsTabId.value) && dsTabId.value !== '0') {
+              await ddlDsTabId_SelectedIndexChanged(dsTabId.value);
+            }
 
             break;
           case enumCtlType.DropDownList_Bool_18:

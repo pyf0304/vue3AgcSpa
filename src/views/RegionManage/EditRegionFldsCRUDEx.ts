@@ -26,7 +26,7 @@ import { clsViewRegionEN } from '@/ts/L0Entity/RegionManage/clsViewRegionEN';
 import { clsASPDivBLEx } from '@/ts/L2BLL/GeneCSharp/clsASPDivBLEx';
 import { clsASPHtmlTableBLEx } from '@/ts/L2BLL/GeneCSharp/clsASPHtmlTableBLEx';
 import { clsASPUlBLEx } from '@/ts/L2BLL/GeneCSharp/clsASPUlBLEx';
-import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProject_GetObjByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import { GCVariable_GetNameByVarIdCache } from '@/ts/L3ForWApi/GeneCode/clsGCVariableWApi';
 import {
   EditRegionFlds_GetObjBymIdCache,
@@ -370,7 +370,9 @@ export default class EditRegionFldsCRUDEx extends EditRegionFldsCRUD implements 
 
       //ViewRegion_U.PrjIdCache = clsPrivateSessionStorage.currSelPrjId;
       //ViewRegion_Edit_Sim.PrjIdCache = clsPrivateSessionStorage.currSelPrjId;
-      const objCMProjects = await CMProject_GetObjByCmPrjIdCache(clsPrivateSessionStorage.cmPrjId);
+      const objCMProjects = await CMProject_GetObjByKeyCache({
+        cmPrjId: clsPrivateSessionStorage.cmPrjId,
+      });
 
       if (objCMProjects == null) {
         const strMsg = Format(

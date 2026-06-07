@@ -31,6 +31,13 @@ import { vPrjTabNumEx_func } from '@/ts/L3ForWApiEx/Table_Field/clsvPrjTabNumExW
 import { vFieldTab_Sim_GetObjByFldIdCache } from '@/ts/L3ForWApi/Table_Field/clsvFieldTab_SimWApi';
 // import { Dictionary } from '@/ts/PubFun/tzDictionary';
 
+export interface ReplaceFieldDataRequest {
+  strSourceFieldId: string;
+  strTargetFieldId: string;
+  strPrjId: string;
+  strOpUser: string;
+}
+
 export const fieldTabEx_Controller = 'FieldTabExApi';
 export const fieldTabEx_ConstructorName = 'fieldTabEx';
 
@@ -906,6 +913,67 @@ export async function FieldTabEx_UpdateTabNumForFldId(strFldId: string): Promise
     const data = response.data;
     if (data.errorId == 0) {
       return data.returnBool;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        fieldTabEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        fieldTabEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 根据当前项目与应用类型，设置生成代码根目录及备份目录
+ * (AGC.WebApi.FieldTabExApi:ReplaceField)
+ * @param objRequest: 请求参数
+ * @returns 设置结果
+ */
+export async function FieldTabEx_ReplaceField(
+  objRequest: ReplaceFieldDataRequest,
+): Promise<{ success: boolean; message: string }> {
+  const strThisFuncName = FieldTabEx_ReplaceField.name;
+  const strAction = 'ReplaceField';
+  const strUrl = GetWebApiUrl(fieldTabEx_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+
+  try {
+    const response = await axios.post(strUrl, objRequest, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return {
+        success: data.success === undefined ? true : Boolean(data.success),
+        message: data.message ?? '',
+      };
     } else {
       console.error(data.errorMsg);
       throw data.errorMsg;

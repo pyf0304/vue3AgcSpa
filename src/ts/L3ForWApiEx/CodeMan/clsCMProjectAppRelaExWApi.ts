@@ -18,6 +18,7 @@ import { GetObjKeys, GetSortExpressInfo, ObjectAssign } from '@/ts/PubFun/clsCom
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 import { GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
+import { cMProjectAppRelaCache, isFuncMapCache } from '@/views/CodeMan/CMProjectAppRelaVueShare';
 
 export const cMProjectAppRelaEx_Controller = 'CMProjectAppRelaExApi';
 export const cMProjectAppRelaEx_ConstructorName = 'cMProjectAppRelaEx';
@@ -328,7 +329,7 @@ export function CMProjectAppRelaEx_FuncMapByFldName(
   const strThisFuncName = CMProjectAppRelaEx_FuncMapByFldName.name;
   let strMsg = '';
   //如果是本表中字段，不需要映射
-  const arrFldName = clsCMProjectAppRelaEN.AttributeName;
+  const arrFldName = clsCMProjectAppRelaEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -448,4 +449,169 @@ export async function CMProjectAppRelaEx_GetAppTypeIdLstByCmPrjId_Cache(
     alert(strMsg);
   }
   return [];
+}
+
+/**
+ * 根据分页条件从缓存中获取分页对象列表,只获取一页.
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_GetObjExLstByPagerCache)
+ * @param objPagerPara:分页参数结构
+ * @returns 对象列表
+ */
+export async function CMProjectAppRelaEx_GetObjExLstByPagerCache(
+  objPagerPara: stuPagerPara,
+  strPrjId: string,
+): Promise<Array<clsCMProjectAppRelaENEx>> {
+  const strThisFuncName = 'GetObjLstByPagerCache';
+  const objSortInfo = GetSortExpressInfo(objPagerPara);
+  const isFuncMapKey = `${objSortInfo.SortFld}`;
+  const arrCMProjectAppRelaObjLst = await CMProjectAppRela_GetObjLstCache(strPrjId);
+  //从缓存中获取对象，如果缓存中不存在就扩展复制
+  const arrNewObj = new Array<clsCMProjectAppRelaENEx>();
+  const arrCMProjectAppRelaExObjLst = arrCMProjectAppRelaObjLst.map((obj) => {
+    const cacheKey = `${obj.cMProjectAppRelaId}_${obj.prjId}`;
+    if (cMProjectAppRelaCache[cacheKey]) {
+      const oldObj = cMProjectAppRelaCache[cacheKey];
+      return oldObj;
+    } else {
+      const newObj = CMProjectAppRelaEx_CopyToEx(obj);
+      arrNewObj.push(newObj);
+      cMProjectAppRelaCache[cacheKey] = newObj;
+      return newObj;
+    }
+  });
+  for (const newObj of arrNewObj) {
+    for (const strFldName of Object.keys(isFuncMapCache)) {
+      await CMProjectAppRelaEx_FuncMapByFldName(strFldName, newObj);
+    }
+  }
+  //检查关于当前扩展排序字段是否获取得值，如果没有获取过，就获取，并存缓存
+  const bolIsFuncMap = isFuncMapCache[isFuncMapKey];
+  if (
+    IsNullOrEmpty(objSortInfo.SortFld) == false &&
+    clsCMProjectAppRelaEN._AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
+    (bolIsFuncMap == false || bolIsFuncMap == undefined)
+  ) {
+    for (const newObj of arrCMProjectAppRelaExObjLst) {
+      await CMProjectAppRelaEx_FuncMapByFldName(objSortInfo.SortFld, newObj);
+      const cacheKey = `${newObj.cMProjectAppRelaId}_${newObj.prjId}`;
+      cMProjectAppRelaCache[cacheKey] = newObj;
+    }
+    isFuncMapCache[isFuncMapKey] = true;
+  }
+  if (arrCMProjectAppRelaExObjLst.length == 0) return arrCMProjectAppRelaExObjLst;
+  let arrCMProjectAppRelaSel: Array<clsCMProjectAppRelaENEx> = arrCMProjectAppRelaExObjLst;
+  const objCMProjectAppRelaCond = objPagerPara.conditionCollection;
+  if (objCMProjectAppRelaCond == null) {
+    const strMsg = `根据分布条件从缓存中获取分页对象列表时，objPagerPara.conditionCollection为null,请检查！(in ${strThisFuncName})`;
+    alert(strMsg);
+    console.error(strMsg);
+    return arrCMProjectAppRelaExObjLst;
+  }
+  try {
+    for (const objCondition of objCMProjectAppRelaCond.GetConditions()) {
+      if (objCondition == null) continue;
+      const strKey = objCondition.fldName;
+      const strComparisonOp = objCondition.comparison;
+      const strValue = objCondition.fldValue;
+      arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter((x) => x.GetFldValue(strKey) != null);
+      const strType = typeof strValue;
+      switch (strType) {
+        case 'string':
+          if (strValue == null) continue;
+          if (strValue == '') continue;
+          if (strComparisonOp == '=') {
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
+            );
+          } else if (strComparisonOp == 'like') {
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
+            );
+          } else if (strComparisonOp == 'length greater') {
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
+            );
+          } else if (strComparisonOp == 'length not greater') {
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
+            );
+          } else if (strComparisonOp == 'length not less') {
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
+            );
+          } else if (strComparisonOp == 'length less') {
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
+            );
+          } else if (strComparisonOp == 'length equal') {
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
+            );
+          } else if (strComparisonOp == 'in') {
+            const arrValues = strValue.split(',');
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => arrValues.indexOf(x.GetFldValue(strKey).toString()) != -1,
+            );
+          }
+          break;
+        case 'boolean':
+          if (strValue == null) continue;
+          if (strComparisonOp == '=') {
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => x.GetFldValue(strKey) == strValue,
+            );
+          }
+          break;
+        case 'number':
+          if (Number(strValue) == 0) continue;
+          if (strComparisonOp == '=') {
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => x.GetFldValue(strKey) == strValue,
+            );
+          } else if (strComparisonOp == '>=') {
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => x.GetFldValue(strKey) >= strValue,
+            );
+          } else if (strComparisonOp == '<=') {
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => x.GetFldValue(strKey) <= strValue,
+            );
+          } else if (strComparisonOp == '>') {
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => x.GetFldValue(strKey) > strValue,
+            );
+          } else if (strComparisonOp == '<') {
+            arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.filter(
+              (x) => x.GetFldValue(strKey) <= strValue,
+            );
+          }
+          break;
+      }
+    }
+    if (arrCMProjectAppRelaSel.length == 0) return arrCMProjectAppRelaSel;
+    let intStart: number = objPagerPara.pageSize * (objPagerPara.pageIndex - 1);
+    if (intStart <= 0) intStart = 0;
+    const intEnd = intStart + objPagerPara.pageSize;
+    if (objPagerPara.orderBy != null && objPagerPara.orderBy.length > 0) {
+      arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.sort(
+        CMProjectAppRelaEx_SortFunByKey(objSortInfo.SortFld, objSortInfo.SortType),
+      );
+    } else {
+      //如果排序字段名[OrderBy]为空,就调用排序函数
+      arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.sort(objPagerPara.sortFun);
+    }
+    arrCMProjectAppRelaSel = arrCMProjectAppRelaSel.slice(intStart, intEnd);
+    return arrCMProjectAppRelaSel;
+  } catch (e) {
+    const strMsg = Format(
+      '错误:[{0}]. \n根据条件:[{1}]获取分页对象列表不成功!(In {2}.{3})',
+      e,
+      objPagerPara.whereCond,
+      cMProjectAppRelaEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    throw new Error(strMsg);
+  }
+  return new Array<clsCMProjectAppRelaENEx>();
 }

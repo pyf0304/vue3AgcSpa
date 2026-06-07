@@ -22,7 +22,7 @@ import {
   CMProjectAppRela_GetUniCondStr4Update,
   CMProjectAppRela_AddNewRecordWithReturnKeyAsync,
   CMProjectAppRela_IsExistAsync,
-  CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync,
+  CMProjectAppRela_GetObjByKeyAsync,
   CMProjectAppRela_CheckProperty4Update,
   CMProjectAppRela_UpdateRecordAsync,
   CMProjectAppRela_EditRecordExAsync,
@@ -185,7 +185,7 @@ export abstract class CMProjectAppRela_Edit {
       this.opType = 'Add';
       const bolIsSuccess = await this.ShowDialog_CMProjectAppRela(this.opType);
       if (bolIsSuccess == false) return;
-      if (['02', '03', '06'].indexOf(clsCMProjectAppRelaEN.PrimaryTypeId) > -1) {
+      if (['02', '03', '06'].indexOf(clsCMProjectAppRelaEN._PrimaryTypeId) > -1) {
         await this.AddNewRecordWithMaxId();
       } else {
         await this.AddNewRecord();
@@ -285,7 +285,7 @@ export abstract class CMProjectAppRela_Edit {
         case '确认添加':
           //这是一个单表的插入的代码,由于逻辑层太简单,
           //就把逻辑层合并到控制层,
-          if (['02', '03', '06'].indexOf(clsCMProjectAppRelaEN.PrimaryTypeId) > -1) {
+          if (['02', '03', '06'].indexOf(clsCMProjectAppRelaEN._PrimaryTypeId) > -1) {
             const returnKeyId = await this.AddNewRecordWithReturnKeySave();
             if (returnKeyId != 0) {
               refCMProjectAppRela_Edit.value.hideDialog();
@@ -547,7 +547,9 @@ export abstract class CMProjectAppRela_Edit {
     //2、检查该关键字的记录是否存在,如果不存在就返回不显示；
     let objCMProjectAppRelaEN = new clsCMProjectAppRelaEN();
     try {
-      const returnBool = await CMProjectAppRela_IsExistAsync(lngCMProjectAppRelaId);
+      const returnBool = await CMProjectAppRela_IsExistAsync({
+        cMProjectAppRelaId: lngCMProjectAppRelaId,
+      });
       if (returnBool == false) {
         const strInfo = Format('关键字:[{0}] 的记录不存在!', lngCMProjectAppRelaId);
         //显示信息框
@@ -564,9 +566,9 @@ export abstract class CMProjectAppRela_Edit {
       alert(strMsg);
     }
     try {
-      const objCMProjectAppRelaENConst = await CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
-        lngCMProjectAppRelaId,
-      );
+      const objCMProjectAppRelaENConst = await CMProjectAppRela_GetObjByKeyAsync({
+        cMProjectAppRelaId: lngCMProjectAppRelaId,
+      });
       if (objCMProjectAppRelaENConst == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -600,9 +602,9 @@ export abstract class CMProjectAppRela_Edit {
     const strThisFuncName = this.UpdateRecord.name;
     this.keyId = lngCMProjectAppRelaId;
     try {
-      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
-        lngCMProjectAppRelaId,
-      );
+      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByKeyAsync({
+        cMProjectAppRelaId: lngCMProjectAppRelaId,
+      });
       if (objCMProjectAppRelaEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -667,7 +669,7 @@ export abstract class CMProjectAppRela_Edit {
       const returnBool = await CMProjectAppRela_UpdateRecordAsync(objCMProjectAppRelaEN);
       if (returnBool == true) {
         CMProjectAppRela_ReFreshCache(PrjId_Session.value);
-        CMProjectAppRela_DeleteKeyIdCache(PrjId_Session.value, this.keyId);
+        CMProjectAppRela_DeleteKeyIdCache(PrjId_Session.value, { cMProjectAppRelaId: this.keyId });
       }
       return returnBool;
     } catch (e) {

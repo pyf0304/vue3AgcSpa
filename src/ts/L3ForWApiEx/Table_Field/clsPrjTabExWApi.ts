@@ -26,7 +26,7 @@ import { clsTabMainTypeEN } from '@/ts/L0Entity/Table_Field/clsTabMainTypeEN';
 import { clsTabStateEN } from '@/ts/L0Entity/Table_Field/clsTabStateEN';
 import { clsTabTypeEN } from '@/ts/L0Entity/Table_Field/clsTabTypeEN';
 
-import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProject_GetObjByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import { vTabCheckStatus_Sim_GetObjLstCache } from '@/ts/L3ForWApi/LogManage/clsvTabCheckStatus_SimWApi';
 import { SQLDSType_func } from '@/ts/L3ForWApi/PrjInterface/clsSQLDSTypeWApi';
 import { FuncModule_Agc_func } from '@/ts/L3ForWApi/PrjManage/clsFuncModule_AgcWApi';
@@ -1811,7 +1811,9 @@ export async function PrjTabEx_FuncMap_CmPrjNames(objPrjTab: clsPrjTabENEx, strC
       let strCmPrjNames = '';
       let i = 0;
       for (const objInFor of arrCMProjectPrjTabSel) {
-        const objCMProject = await CMProject_GetObjByCmPrjIdCache(objInFor.cmPrjId);
+        const objCMProject = await CMProject_GetObjByKeyCache({
+          cmPrjId: objInFor.cmPrjId,
+        });
         if (objCMProject == null) continue;
         if (i == 0) {
           strCmPrjNames += Format(

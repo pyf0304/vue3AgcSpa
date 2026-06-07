@@ -5,6 +5,9 @@
  * 注意:该类必须与调用界面处于同一个包，否则调用不成功!
  **/
 //import $ from "jquery";
+import axios from 'axios';
+import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
+import { Storage } from '@/utils/Storage';
 import { GetSortExpressInfo, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import {
   UserCodePrjMainPath_MachineName_SortFunByKey,
@@ -19,6 +22,16 @@ import { clsSysPara4WebApi } from '@/ts/PubConfig/clsSysPara4WebApi';
 export const userCodePrjMainPath_MachineNameEx_Controller = 'UserCodePrjMainPath_MachineNameExApi';
 export const userCodePrjMainPath_MachineNameEx_ConstructorName =
   'userCodePrjMainPath_MachineNameEx';
+
+export interface SetUserGCRootPathRequest {
+  strUserId: string;
+  strMachineName: string;
+  strPrjId: string;
+  strCmPrjId: string;
+  intApplicationTypeId: number;
+  strCodePath: string;
+  strCodePathBackup: string;
+}
 
 /**
  * 获取WebApi的地址
@@ -49,6 +62,223 @@ export function UserCodePrjMainPath_MachineNameEx_GetWebApiUrl(
     );
   }
   return strServiceUrl;
+}
+
+/**
+ * 根据当前项目与应用类型，获取生成代码根目录
+ * (AGC.WebApi.UserCodePrjMainPath_MachineNameExApi:GetGeneCodeRootPath)
+ * @param strUserId: 用户Id
+ * @param strMachineName: 机器名称
+ * @param strPrjId: 当前项目Id
+ * @param strCmPrjId: 当前CM工程Id
+ * @param intApplicationTypeId: 当前应用类型Id
+ * @returns 生成代码根目录
+ */
+export async function UserCodePrjMainPath_MachineNameEx_GetGeneCodeRootPath(
+  strUserId: string,
+  strMachineName: string,
+  strPrjId: string,
+  strCmPrjId: string,
+  intApplicationTypeId: number,
+): Promise<string> {
+  const strThisFuncName = UserCodePrjMainPath_MachineNameEx_GetGeneCodeRootPath.name;
+  const strAction = 'GetGeneCodeRootPath';
+  const strUrl = UserCodePrjMainPath_MachineNameEx_GetWebApiUrl(
+    userCodePrjMainPath_MachineNameEx_Controller,
+    strAction,
+  );
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strUserId,
+      strMachineName,
+      strPrjId,
+      strCmPrjId,
+      intApplicationTypeId,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return data.returnStr;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        userCodePrjMainPath_MachineNameEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        userCodePrjMainPath_MachineNameEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 根据当前项目与应用类型，获取生成代码根目录及备份目录
+ * (AGC.WebApi.UserCodePrjMainPath_MachineNameExApi:GetUserGCRootPathWithBackup)
+ * @param strUserId: 用户ID
+ * @param strMachineName: 机器名称
+ * @param strPrjId: 当前项目Id
+ * @param strCmPrjId: 当前CM工程Id
+ * @param intApplicationTypeId: 当前应用类型Id
+ * @returns 生成代码根目录及备份目录
+ */
+export async function UserCodePrjMainPath_MachineNameEx_GetUserGCRootPathWithBackup(
+  strUserId: string,
+  strMachineName: string,
+  strPrjId: string,
+  strCmPrjId: string,
+  intApplicationTypeId: number,
+): Promise<{ codePath: string; codePathBackup: string }> {
+  const strThisFuncName = UserCodePrjMainPath_MachineNameEx_GetUserGCRootPathWithBackup.name;
+  const strAction = 'GetUserGCRootPathWithBackup';
+  const strUrl = UserCodePrjMainPath_MachineNameEx_GetWebApiUrl(
+    userCodePrjMainPath_MachineNameEx_Controller,
+    strAction,
+  );
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+    params: {
+      strUserId,
+      strMachineName,
+      strPrjId,
+      strCmPrjId,
+      intApplicationTypeId,
+    },
+  };
+  try {
+    const response = await axios.get(strUrl, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return {
+        codePath: data.codePath,
+        codePathBackup: data.codePathBackup,
+      };
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        userCodePrjMainPath_MachineNameEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        userCodePrjMainPath_MachineNameEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 根据当前项目与应用类型，设置生成代码根目录及备份目录
+ * (AGC.WebApi.UserCodePrjMainPath_MachineNameExApi:SetUserGCRootPathWithBackup)
+ * @param objRequest: 请求参数
+ * @returns 设置结果
+ */
+export async function UserCodePrjMainPath_MachineNameEx_SetUserGCRootPathWithBackup(
+  objRequest: SetUserGCRootPathRequest,
+): Promise<{ success: boolean; message: string }> {
+  const strThisFuncName = UserCodePrjMainPath_MachineNameEx_SetUserGCRootPathWithBackup.name;
+  const strAction = 'SetUserGCRootPathWithBackup';
+  const strUrl = UserCodePrjMainPath_MachineNameEx_GetWebApiUrl(
+    userCodePrjMainPath_MachineNameEx_Controller,
+    strAction,
+  );
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+
+  try {
+    const response = await axios.post(strUrl, objRequest, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return {
+        success: data.success === undefined ? true : Boolean(data.success),
+        message: data.message ?? '',
+      };
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        userCodePrjMainPath_MachineNameEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        userCodePrjMainPath_MachineNameEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
 }
 
 /**

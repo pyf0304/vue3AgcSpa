@@ -93,8 +93,10 @@ export { qryVarSet };
 
 //功能区变量定义
 export const homologousFldId_f = ref('');
+export const targetFldId_f = ref('');
 const featureVarSet = reactive({
   homologousFldId_f,
+  targetFldId_f,
 });
 export { featureVarSet };
 

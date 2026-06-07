@@ -34,7 +34,7 @@ import { GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { ViewRegionEx_GetObjLstByViewIdCache } from '@/ts/L3ForWApiEx/RegionManage/clsViewRegionExWApi';
 import { clsViewInfoCmPrjIdRelaEN } from '@/ts/L0Entity/PrjInterface/clsViewInfoCmPrjIdRelaEN';
 import { useviewInfoStore } from '@/store/modules/viewInfo';
-import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProject_GetObjByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import { ViewInfoCmPrjIdRela_GetObjLstCache } from '@/ts/L3ForWApi/PrjInterface/clsViewInfoCmPrjIdRelaWApi';
 import { ViewRegionRelaEx_GetRegionNumByViewId } from '@/ts/L3ForWApiEx/RegionManage/clsViewRegionRelaExWApi';
 
@@ -1456,7 +1456,9 @@ export async function ViewInfoEx_FuncMap_CmPrjNames(
       let strCmPrjNames = '';
       let i = 0;
       for (const objInFor of arrViewInfoCmPrjIdRelaSel) {
-        const objCMProject = await CMProject_GetObjByCmPrjIdCache(objInFor.cmPrjId);
+        const objCMProject = await CMProject_GetObjByKeyCache({
+          cmPrjId: objInFor.cmPrjId,
+        });
         if (objCMProject == null) continue;
         if (i == 0) {
           strCmPrjNames += Format(

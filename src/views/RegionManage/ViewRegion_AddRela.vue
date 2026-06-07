@@ -30,11 +30,12 @@
   import { ViewRegion_AddRelaEx } from '@/views/RegionManage/ViewRegion_AddRelaEx';
   import { ViewRegionInTab } from '@/views/RegionManage/ViewRegionInTab';
 
-  import { PrjId_Session, refDivEdit } from '@/views/RegionManage/ViewRegionRelaVueShare';
+  import { refDivEdit } from '@/views/RegionManage/ViewRegionRelaVueShare';
 
   import { clsViewRegionEN } from '@/ts/L0Entity/RegionManage/clsViewRegionEN';
   // import { useUserStore } from '@/store/modulesShare/user';
   import { ViewRegionEx_GetArrViewRegionByViewIdEx } from '@/ts/L3ForWApiEx/RegionManage/clsViewRegionExWApi';
+  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
   export default defineComponent({
     name: 'ViewRegionEdit',
     components: {
@@ -58,9 +59,10 @@
        * (AutoGCLib.Vue_ViewScript_Edit_TS4Html:Gen_Vue_Ts_BindDdl4EditRegionInDiv)
        **/
       async function BindDdl4EditRegionInDiv() {
-        const strPrjId = PrjId_Session.value; //静态变量;//Session存储、local存储
+        // const strViewId = clsPri.value; //静态变量;//Session存储、local存储
+        const strViewId = clsPrivateSessionStorage.viewId_Main;
         //  await this.SetLst_RegionIdInDiv(); //编辑区域
-        arrViewRegion.value = await ViewRegionEx_GetArrViewRegionByViewIdEx(strPrjId); //编辑区域
+        arrViewRegion.value = await ViewRegionEx_GetArrViewRegionByViewIdEx(strViewId); //编辑区域
         regionId.value = '0';
 
         //  public async B1indDdl4EditRegionInDiv() {

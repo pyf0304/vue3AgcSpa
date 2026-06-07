@@ -629,7 +629,7 @@
   } from '@/ts/L3ForWApiEx/Table_Field/clsPrjTabFldExWApi';
   import { DGRegionFldsEx_GetRecCountByCondInUseCache } from '@/ts/L3ForWApiEx/RegionManage/clsDGRegionFldsExWApi';
   import { usevDataNode_SimStore } from '@/store/modules/vDataNode_Sim';
-  import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+  import { CMProject_GetObjByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
   export default defineComponent({
     name: 'DGRegionFldsEdit',
     components: {
@@ -709,7 +709,7 @@
         }
         const strCmPrjId = clsPrivateSessionStorage.cmPrjId; //定义条件字段
 
-        const objCMProjects = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+        const objCMProjects = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
 
         if (objCMProjects == null) {
           const strMsg = Format('在CM项目Id:[{0}]中，没有相应CM项目，请检查！', strCmPrjId);

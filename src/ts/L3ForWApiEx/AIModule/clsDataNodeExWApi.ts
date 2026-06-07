@@ -33,7 +33,7 @@ import {
 
 import {
   CMProject_func,
-  CMProject_GetObjByCmPrjIdCache,
+  CMProject_GetObjByKeyCache,
 } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import {
   BindDdl_ObjLstInDivObj,
@@ -343,7 +343,7 @@ export async function DataNodeEx_CreateObjByTabIdAndKeyFldLst(
   objDataNode.fldId = arrKeyLst[0]; // 字段
   objDataNode.keyFldLst = strKeyFldLst_new; // 字段
 
-  const objCMProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+  const objCMProject = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
   if (objCMProject == null) {
     const strMsg = Format('CM项目Id:[{0}]，没有相应的CM项目，请检查！', strCmPrjId);
     console.error(strMsg);
@@ -859,7 +859,7 @@ export async function DataNodeEx_BindDdl_ConnectedNodeV2(
   IsExcludeCurrTab = true,
 ) {
   const vDataNode_SimStore = usevDataNode_SimStore();
-  const objCmProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+  const objCmProject = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
   if (objCmProject == null) return;
   let arrConnectedNode = await DataNodeEx_GetConnectedNode(strStartNodeId, objCmProject.prjId);
   if (IsExcludeCurrTab == true) {

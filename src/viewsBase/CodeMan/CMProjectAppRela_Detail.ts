@@ -12,7 +12,7 @@
  * 框架-层名:Vue_详细信息后台_TS(TS)(Vue_ViewScript_DetailCS_TS,0260)
  * 编程语言:TypeScript
  **/
-import { CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync } from '@/ts/L3ForWApi/CodeMan/clsCMProjectAppRelaWApi';
+import { CMProjectAppRela_GetObjByKeyAsync } from '@/ts/L3ForWApi/CodeMan/clsCMProjectAppRelaWApi';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
 import { divVarSet, refCMProjectAppRela_Detail } from '@/views/CodeMan/CMProjectAppRelaVueShare';
 import { IShowList } from '@/ts/PubFun/IShowList';
@@ -138,9 +138,9 @@ export abstract class CMProjectAppRela_Detail {
     const strThisFuncName = this.DetailRecord.name;
     this.btnCancelCMProjectAppRela = '关闭';
     try {
-      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
-        lngCMProjectAppRelaId,
-      );
+      const objCMProjectAppRelaEN = await CMProjectAppRela_GetObjByKeyAsync({
+        cMProjectAppRelaId: lngCMProjectAppRelaId,
+      });
       if (objCMProjectAppRelaEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

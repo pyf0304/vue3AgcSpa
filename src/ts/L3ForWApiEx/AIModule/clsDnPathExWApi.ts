@@ -44,7 +44,7 @@ import {
   vDnPath_Sim_GetObjLstCache,
   vDnPath_Sim_ReFreshThisCache,
 } from '@/ts/L3ForWApi/AIModule/clsvDnPath_SimWApi';
-import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProject_GetObjByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 
 import { vPrjTabFld_DnPathId_GetObjLstCache } from '@/ts/L3ForWApi/Table_Field/clsvPrjTabFld_DnPathIdWApi';
 import { GetSpan_Empty, getTdObjByIdInDivObj } from '@/ts/PubFun/clsCommFunc4Ctrl';
@@ -294,7 +294,9 @@ function btnJumpAIToTabId_Click(strTabId: string) {
 async function GetSpan_DataNode(objvDataNode_Sim: clsvDataNode_Sim): Promise<HTMLSpanElement> {
   let spnDataNode: HTMLSpanElement = document.createElement('span');
   //const intVersionNo = 1;
-  const objCmProject = await CMProject_GetObjByCmPrjIdCache(clsPrivateSessionStorage.cmPrjId);
+  const objCmProject = await CMProject_GetObjByKeyCache({
+    cmPrjId: clsPrivateSessionStorage.cmPrjId,
+  });
   if (objCmProject == null) return spnDataNode;
   const objvFieldTab_Sim = await vFieldTab_Sim_GetObjByFldIdCache(
     objvDataNode_Sim.fldId,
@@ -329,7 +331,9 @@ export async function GetSpan_DataNode4End(
   spnDataNode_End.innerHTML = '(终点)';
   spnDataNode_End.className = 'text-primary font-weight-bold text-g';
   //const intVersionNo = 1;
-  const objCmProject = await CMProject_GetObjByCmPrjIdCache(clsPrivateSessionStorage.cmPrjId);
+  const objCmProject = await CMProject_GetObjByKeyCache({
+    cmPrjId: clsPrivateSessionStorage.cmPrjId,
+  });
   if (objCmProject == null) return spnDataNode;
   const objvFieldTab_Sim = await vFieldTab_Sim_GetObjByFldIdCache(
     objvDataNode_Sim.fldId,
@@ -724,7 +728,9 @@ export async function DnPathEx_CreateGraph4DnPath1(strDnPathId: string): Promise
   // const intVersionNo = 1;
   const divDnPath: HTMLDivElement = await GetDiv_FieldVersion(strDnPathId);
 
-  const objCmProject = await CMProject_GetObjByCmPrjIdCache(clsPrivateSessionStorage.cmPrjId);
+  const objCmProject = await CMProject_GetObjByKeyCache({
+    cmPrjId: clsPrivateSessionStorage.cmPrjId,
+  });
   if (objCmProject == null) return divDnPath;
   const arrDnPathNodeLst = await GetDnPathNodeLstCache(strDnPathId);
   if (arrDnPathNodeLst.length == 0) return divDnPath;
@@ -827,7 +833,9 @@ export async function DnPathEx_CreateGraph4DnPath_IncludeErr(
   // const intVersionNo = 1;
   const divDnPath: HTMLDivElement = await GetDiv_FieldVersion(strDnPathId);
 
-  const objCmProject = await CMProject_GetObjByCmPrjIdCache(clsPrivateSessionStorage.cmPrjId);
+  const objCmProject = await CMProject_GetObjByKeyCache({
+    cmPrjId: clsPrivateSessionStorage.cmPrjId,
+  });
   if (objCmProject == null) return divDnPath;
   const arrDnPathNodeLst = await GetDnPathNodeLstCache(strDnPathId);
   if (arrDnPathNodeLst.length == 0) return divDnPath;
@@ -954,7 +962,9 @@ export async function DnPathEx_CreateGraph4DnPathCache(
   // const intVersionNo = 1;
   const divDnPath: HTMLDivElement = await GetDiv_FieldVersion(strDnPathId);
 
-  const objCmProject = await CMProject_GetObjByCmPrjIdCache(clsPrivateSessionStorage.cmPrjId);
+  const objCmProject = await CMProject_GetObjByKeyCache({
+    cmPrjId: clsPrivateSessionStorage.cmPrjId,
+  });
   if (objCmProject == null) return divDnPath;
   const arrDnPathNodeLst = await GetDnPathNodeLstCache(strDnPathId);
   if (arrDnPathNodeLst.length == 0) return divDnPath;
@@ -1109,7 +1119,9 @@ export async function DnPathEx_CreateGraph4InOutDataNode(
   const strPrjId = await CMProjectEx_GetPrjIdByCmPrjIdCache(strCmPrjId);
   const divDnPath: HTMLDivElement = await GetDiv_FieldVersion(strTempDnPathId);
 
-  const objCmProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+  const objCmProject = await CMProject_GetObjByKeyCache({
+    cmPrjId: strCmPrjId,
+  });
   if (objCmProject == null) return divDnPath;
 
   let objGraphPath;

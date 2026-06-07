@@ -7,7 +7,7 @@ import { stuViewInfo4Session } from '@/ts/FunClass/stuViewInfo4Session';
 import { clsViewInfoEN } from '@/ts/L0Entity/PrjInterface/clsViewInfoEN';
 import { clsViewInfoENEx } from '@/ts/L0Entity/PrjInterface/clsViewInfoENEx';
 import { clsViewRegionRelaEN } from '@/ts/L0Entity/RegionManage/clsViewRegionRelaEN';
-import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProject_GetObjByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import {
   ApplicationType_BindDdl_ApplicationTypeIdByIsVisibleInDivCache,
   ApplicationType_GetObjByKeyCache,
@@ -284,7 +284,7 @@ export class ViewInfoCRUDExBak20230626 extends ViewInfoCRUD implements IShowList
 
         ApplicationTypeId_Static.value = arrCMProject[0].applicationTypeId;
       } else {
-        const objCMProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+        const objCMProject = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
         if (objCMProject == null) {
           const strMsg = Format('CM项目Id:[{0}]，没有相应的CM项目，请检查！', strCmPrjId);
           console.error(strMsg);

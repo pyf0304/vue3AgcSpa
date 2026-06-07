@@ -437,7 +437,7 @@ export default class CMProjectCRUDEx extends CMProjectCRUD implements IShowList 
     arrCMProjectExObjLst: Array<clsCMProjectENEx>,
     arrDataColumn: Array<clsDataColumn>,
   ) {
-    const arrFldName = clsCMProjectEN.AttributeName;
+    const arrFldName = clsCMProjectEN._AttributeName;
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;

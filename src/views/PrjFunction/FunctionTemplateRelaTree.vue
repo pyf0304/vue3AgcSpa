@@ -823,7 +823,8 @@
                 if (!codeTypeId) continue;
                 const codeType = codeTypeMap.get(codeTypeId);
                 if (!codeType || codeType.inUse !== true) continue;
-                const codeTypeName = codeType?.codeTypeSimName || codeType?.codeTypeName || codeTypeId;
+                const codeTypeName =
+                  codeType?.codeTypeSimName || codeType?.codeTypeName || codeTypeId;
                 const frontOrBack =
                   codeType?.frontOrBack && codeType.frontOrBack.trim() !== ''
                     ? normalizeFrontOrBack(codeType.frontOrBack)

@@ -1,4 +1,4 @@
-﻿import { CMProject_GetNameByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+﻿import { CMProject_GetNameByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import {
   UserPrjGrantEx_GetFirstObjByUserId,
   UserPrjGrantEx_GetUserLoginInfoByUserId,
@@ -85,7 +85,7 @@ export async function UserEx_GetUserDefaValue(): Promise<boolean> {
   }
   clsPrivateSessionStorage.cmPrjId = strCmPrjId;
 
-  const strCmPrjName = await CMProject_GetNameByCmPrjIdCache(strCmPrjId);
+  const strCmPrjName = await CMProject_GetNameByKeyCache({ cmPrjId: strCmPrjId });
   clsPrivateSessionStorage.cmPrjName = strCmPrjName;
   console.log('cmPrjId:', strCmPrjId);
 

@@ -60,6 +60,24 @@ const routes: Array<RouteRecordRaw> = [
         name: `${moduleName}-ViewIdGCVariableRelaCRUD`,
         component: () => import('@/views/GeneCode/ViewIdGCVariableRelaCRUD.vue'),
       },
+      {
+        path: 'CTCodeTypeGroupCRUDAi',
+        name: `${moduleName}-CTCodeTypeGroupCRUDAi`,
+        component: () => import('@/views/GeneCode/CTCodeTypeGroupCRUDAi.vue'),
+        meta: { title: 'CTCodeTypeGroup维护(Ai)', hideInMenu: true },
+      },
+      {
+        path: 'CTCodeTypeGroupRelaCRUDAi',
+        name: `${moduleName}-CTCodeTypeGroupRelaCRUDAi`,
+        component: () => import('@/views/GeneCode/CTCodeTypeGroupRelaCRUDAi.vue'),
+        meta: { title: 'CTCodeTypeGroupRela维护(Ai)', hideInMenu: true },
+      },
+      {
+        path: 'GC_CodeTypeRelationMindMapAi',
+        name: `${moduleName}-GC_CodeTypeRelationMindMapAi`,
+        component: () => import('@/views/GeneCode/GC_CodeTypeRelationMindMapAi.vue'),
+        meta: { title: '代码类型关系思维导图维护(Ai)', hideInMenu: true },
+      },
     ],
   },
 ];

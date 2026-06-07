@@ -1,12 +1,12 @@
 ﻿/**
  * 类名:clsCMProjectEN
  * 表名:CMProject(00050512)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:52:55
- * 生成者:pyf
+ * 版本:2026.05.30(服务器:WIN-SRV103-116)
+ * 日期:2026/06/01 17:04:21
+ * 生成者:pyf2
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:代码管理(CodeMan)
  * 框架-层名:实体层(TS)(EntityLayer,0121)
@@ -18,17 +18,24 @@
  **/
 import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
+/**
+ * CM项目主键类型定义
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_KeyType)
+ **/
+export type CMProjectKey = {
+  cmPrjId: string;
+};
 export class clsCMProjectEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
-  public static CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
-  public static CacheModeId = '04'; //sessionStorage
-  public static PrimaryTypeId = '03'; //自增
-  public static IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
-  public static WhereFormat = ''; //条件格式串
-  public static _CurrTabName = 'CMProject'; //当前表名,与该类相关的表名
-  public static _KeyFldName = 'CmPrjId'; //当前表中的关键字名称,与该类相关的表中关键字名
-  public static mintAttributeCount = 14;
-  public static AttributeName = [
+  public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
+  public static readonly _CacheModeId: string = '04'; //sessionStorage
+  public static readonly _PrimaryTypeId: string = '03'; //自增
+  public static readonly _IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
+  public static readonly _WhereFormat = ''; //条件格式串
+  public static readonly _CurrTabName: string = 'CMProject'; //当前表名,与该类相关的表名
+  public static readonly _KeyFldName: string = 'CmPrjId'; //当前表中的关键字名称,与该类相关的表中关键字名
+  public static readonly _AttributeCount = 14;
+  public static readonly _AttributeName = [
     'cmPrjId',
     'cmPrjName',
     'prjId',
@@ -392,113 +399,85 @@ export class clsCMProjectEN extends clsGeneralTab {
    * 常量:"CmPrjId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CmPrjId(): string {
-    return 'cmPrjId';
-  } //Cm工程Id
+  public static readonly con_CmPrjId = 'cmPrjId'; //Cm工程Id
 
   /**
    * 常量:"CmPrjName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_CmPrjName(): string {
-    return 'cmPrjName';
-  } //CM工程名
+  public static readonly con_CmPrjName = 'cmPrjName'; //CM工程名
 
   /**
    * 常量:"PrjId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_PrjId(): string {
-    return 'prjId';
-  } //工程Id
+  public static readonly con_PrjId = 'prjId'; //工程Id
 
   /**
    * 常量:"ApplicationTypeId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ApplicationTypeId(): string {
-    return 'applicationTypeId';
-  } //应用程序类型ID
+  public static readonly con_ApplicationTypeId = 'applicationTypeId'; //应用程序类型ID
 
   /**
    * 常量:"FunctionTemplateId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_FunctionTemplateId(): string {
-    return 'functionTemplateId';
-  } //函数模板Id
+  public static readonly con_FunctionTemplateId = 'functionTemplateId'; //函数模板Id
 
   /**
    * 常量:"VueDesignSysId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_VueDesignSysId(): string {
-    return 'vueDesignSysId';
-  } //Vue控件设计体系Id
+  public static readonly con_VueDesignSysId = 'vueDesignSysId'; //Vue控件设计体系Id
 
   /**
    * 常量:"IsFstLcase"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsFstLcase(): string {
-    return 'isFstLcase';
-  } //是否首字母小写
+  public static readonly con_IsFstLcase = 'isFstLcase'; //是否首字母小写
 
   /**
    * 常量:"IsCamelCase"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsCamelCase(): string {
-    return 'isCamelCase';
-  } //是否使用CamelCase
+  public static readonly con_IsCamelCase = 'isCamelCase'; //是否使用CamelCase
 
   /**
    * 常量:"ProjectFileName"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_ProjectFileName(): string {
-    return 'projectFileName';
-  } //工程文件名
+  public static readonly con_ProjectFileName = 'projectFileName'; //工程文件名
 
   /**
    * 常量:"UseStateId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UseStateId(): string {
-    return 'useStateId';
-  } //使用状态Id
+  public static readonly con_UseStateId = 'useStateId'; //使用状态Id
 
   /**
    * 常量:"IsRefresh4RelaView"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_IsRefresh4RelaView(): string {
-    return 'isRefresh4RelaView';
-  } //是否刷新相关视图
+  public static readonly con_IsRefresh4RelaView = 'isRefresh4RelaView'; //是否刷新相关视图
 
   /**
    * 常量:"UpdDate"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdDate(): string {
-    return 'updDate';
-  } //修改日期
+  public static readonly con_UpdDate = 'updDate'; //修改日期
 
   /**
    * 常量:"UpdUserId"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_UpdUserId(): string {
-    return 'updUserId';
-  } //修改用户Id
+  public static readonly con_UpdUserId = 'updUserId'; //修改用户Id
 
   /**
    * 常量:"Memo"
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
-  public static get con_Memo(): string {
-    return 'memo';
-  } //说明
+  public static readonly con_Memo = 'memo'; //说明
 
   /**
    * 设置条件字段值.
@@ -517,6 +496,7 @@ export class clsCMProjectEN extends clsGeneralTab {
     }
     this.sfFldComparisonOp = JSON.stringify(this.dicFldComparisonOp);
   }
+
   /**
    * 判断一个字符串是否是类的属性
    * @param propName: 属性名

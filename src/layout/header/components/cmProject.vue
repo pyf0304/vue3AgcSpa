@@ -18,7 +18,7 @@
   import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
   import { clsCMProjectEN } from '@/ts/L0Entity/CodeMan/clsCMProjectEN';
   import {
-    CMProject_GetNameByCmPrjIdCache,
+    CMProject_GetNameByKeyCache,
     CMProject_GetObjLstCache,
   } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
   import {
@@ -132,7 +132,7 @@
     }
 
     clsPrivateSessionStorage.cmPrjId = strCmPrjId;
-    const strCmPrjName = await CMProject_GetNameByCmPrjIdCache(strCmPrjId);
+    const strCmPrjName = await CMProject_GetNameByKeyCache({ cmPrjId: strCmPrjId });
     clsPrivateSessionStorage.cmPrjName = strCmPrjName;
     console.log('cmPrjId:', strCmPrjId);
     CmPrjId.value = strCmPrjId;

@@ -159,6 +159,11 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       port: 8099,
       strictPort: true,
       proxy: {
+        '/agent-local': {
+          target: 'http://127.0.0.1:9527',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/agent-local/, ''),
+        },
         '/api': {
           // target: 'https://nest-api.b1uqiyuan.site/api/',
 

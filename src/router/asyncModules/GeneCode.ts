@@ -22,5 +22,14 @@ export default {
     import('@/views/PrjFunction/Function4Code_FuncGC.vue'),
   'views/PrjFunction/FuncParaRelaCRUD': () => import('@/views/PrjFunction/FuncParaRelaCRUD.vue'),
   'views/PrjFunction/FuncPara4CodeCRUD': () => import('@/views/PrjFunction/FuncPara4CodeCRUD.vue'),
+
+  'views/GeneCode/GC_CodeTypeRelationCRUDAi': () =>
+    import('@/views/GeneCode/GC_CodeTypeRelationCRUDAi.vue'),
+  'views/GeneCode/CTCodeTypeGroupCRUDAi': () =>
+    import('@/views/GeneCode/CTCodeTypeGroupCRUDAi.vue'),
+  'views/GeneCode/CTCodeTypeGroupRelaCRUDAi': () =>
+    import('@/views/GeneCode/CTCodeTypeGroupRelaCRUDAi.vue'),
+  'views/GeneCode/GC_CodeTypeRelationMindMapAi': () =>
+    import('@/views/GeneCode/GC_CodeTypeRelationMindMapAi.vue'),
 } as const;
 // views/PrjManage/FuncModule_AgcCRUD

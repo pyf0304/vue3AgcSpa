@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsCMProjectAppRelaWApi
  * 表名:CMProjectAppRela(00050600)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 22:28:05
+ * 版本:2026.05.30(服务器:PYF-AI)
+ * 日期:2026/06/01 08:17:53
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:代码管理(CodeMan)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * CM项目应用关系(CMProjectAppRela)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年06月14日.
+ * Created by pyf on 2026年06月01日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -39,7 +39,10 @@ import {
 } from '@/ts/PubFun/clsCommFunc4Web';
 import { cMProjectAppRelaCache, isFuncMapCache } from '@/views/CodeMan/CMProjectAppRelaVueShare';
 import { clsCMProjectAppRelaENEx } from '@/ts/L0Entity/CodeMan/clsCMProjectAppRelaENEx';
-import { clsCMProjectAppRelaEN } from '@/ts/L0Entity/CodeMan/clsCMProjectAppRelaEN';
+import {
+  clsCMProjectAppRelaEN,
+  CMProjectAppRelaKey,
+} from '@/ts/L0Entity/CodeMan/clsCMProjectAppRelaEN';
 import { CMProject_func } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import { clsCMProjectEN } from '@/ts/L0Entity/CodeMan/clsCMProjectEN';
 import { ApplicationType_func } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
@@ -56,20 +59,25 @@ export const cMProjectAppRela_ConstructorName = 'cMProjectAppRela';
 /**
  * 根据关键字获取相应记录的对象
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdAsync)
- * @param lngCMProjectAppRelaId:关键字
+ * @param key:包含关键字的对象
  * @returns 对象
  **/
-export async function CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
-  lngCMProjectAppRelaId: number,
+export async function CMProjectAppRela_GetObjByKeyAsync(
+  key: CMProjectAppRelaKey,
 ): Promise<clsCMProjectAppRelaEN | null> {
-  const strThisFuncName = 'GetObjByCMProjectAppRelaIdAsync';
-
-  if (lngCMProjectAppRelaId == 0) {
+  const strThisFuncName = 'GetObjByKeyAsync';
+  if (
+    key.cMProjectAppRelaId === undefined ||
+    key.cMProjectAppRelaId === null ||
+    key.cMProjectAppRelaId === 0
+  ) {
     const strMsg = Format(
-      '参数:[lngCMProjectAppRelaId]不能为空!(In clsCMProjectAppRelaWApi.GetObjByCMProjectAppRelaIdAsync)',
+      '关键字段[CMProjectAppRelaId]不能为空!(in {0}.{1})',
+      cMProjectAppRela_ConstructorName,
+      strThisFuncName,
     );
     console.error(strMsg);
-    throw strMsg;
+    throw new Error(strMsg);
   }
   const strAction = 'GetObjByCMProjectAppRelaId';
   const strUrl = GetWebApiUrl(cMProjectAppRela_Controller, strAction);
@@ -81,7 +89,7 @@ export async function CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
       Authorization: `${token}`,
     },
     params: {
-      lngCMProjectAppRelaId,
+      lngCMProjectAppRelaId: key.cMProjectAppRelaId,
     },
   };
   try {
@@ -129,24 +137,22 @@ export async function CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
 }
 
 /**
- * 根据关键字获取相关对象, 从localStorage缓存中获取.
+ * 根据关键字获取特定对象, 从 localStorage 中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
- * @param lngCMProjectAppRelaId:所给的关键字
+ * @param key:关键字对象
  * @returns 对象
  */
-export async function CMProjectAppRela_GetObjByCMProjectAppRelaIdlocalStorage(
-  lngCMProjectAppRelaId: number,
-) {
+export async function CMProjectAppRela_GetObjByKeylocalStorage(key: CMProjectAppRelaKey) {
   const strThisFuncName = 'GetObjByCMProjectAppRelaIdlocalStorage';
 
-  if (lngCMProjectAppRelaId == 0) {
+  if (key.cMProjectAppRelaId == 0) {
     const strMsg = Format(
-      '参数:[lngCMProjectAppRelaId]不能为空!(In clsCMProjectAppRelaWApi.GetObjByCMProjectAppRelaIdlocalStorage)',
+      '参数:[key.cMProjectAppRelaId]不能为空!(In clsCMProjectAppRelaWApi.GetObjByCMProjectAppRelaIdlocalStorage)',
     );
     console.error(strMsg);
     throw strMsg;
   }
-  const strKey = Format('{0}_{1}', clsCMProjectAppRelaEN._CurrTabName, lngCMProjectAppRelaId);
+  const strKey = Format('{0}_{1}', clsCMProjectAppRelaEN._CurrTabName, key.cMProjectAppRelaId);
   if (strKey == '') {
     console.error('关键字为空!不正确');
     throw new Error('关键字为空!不正确');
@@ -158,9 +164,7 @@ export async function CMProjectAppRela_GetObjByCMProjectAppRelaIdlocalStorage(
     return objCMProjectAppRelaCache;
   }
   try {
-    const objCMProjectAppRela = await CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
-      lngCMProjectAppRelaId,
-    );
+    const objCMProjectAppRela = await CMProjectAppRela_GetObjByKeyAsync(key);
     if (objCMProjectAppRela != null) {
       localStorage.setItem(strKey, JSON.stringify(objCMProjectAppRela));
       const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
@@ -172,7 +176,7 @@ export async function CMProjectAppRela_GetObjByCMProjectAppRelaIdlocalStorage(
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      lngCMProjectAppRelaId,
+      key.cMProjectAppRelaId,
       cMProjectAppRela_ConstructorName,
       strThisFuncName,
     );
@@ -183,21 +187,21 @@ export async function CMProjectAppRela_GetObjByCMProjectAppRelaIdlocalStorage(
 }
 
 /**
- * 根据关键字获取相关对象, 从缓存中获取.
+ * 根据关键字获取特定对象, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
- * @param lngCMProjectAppRelaId:所给的关键字
+ * @param key:关键字对象
  * @returns 对象
  */
-export async function CMProjectAppRela_GetObjByCMProjectAppRelaIdCache(
-  lngCMProjectAppRelaId: number,
+export async function CMProjectAppRela_GetObjByKeyCache(
+  key: CMProjectAppRelaKey,
   strPrjId: string,
   bolTryAsyncOnce = true,
 ) {
   const strThisFuncName = 'GetObjByCMProjectAppRelaIdCache';
 
-  if (lngCMProjectAppRelaId == 0) {
+  if (key.cMProjectAppRelaId == 0) {
     const strMsg = Format(
-      '参数:[lngCMProjectAppRelaId]不能为空!(In clsCMProjectAppRelaWApi.GetObjByCMProjectAppRelaIdCache)',
+      '参数:[key.cMProjectAppRelaId]不能为空!(In clsCMProjectAppRelaWApi.GetObjByCMProjectAppRelaIdCache)',
     );
     console.error(strMsg);
     throw strMsg;
@@ -205,7 +209,7 @@ export async function CMProjectAppRela_GetObjByCMProjectAppRelaIdCache(
   const arrCMProjectAppRelaObjLstCache = await CMProjectAppRela_GetObjLstCache(strPrjId);
   try {
     const arrCMProjectAppRelaSel = arrCMProjectAppRelaObjLstCache.filter(
-      (x) => x.cMProjectAppRelaId == lngCMProjectAppRelaId,
+      (x) => x.cMProjectAppRelaId == key.cMProjectAppRelaId,
     );
     let objCMProjectAppRela: clsCMProjectAppRelaEN;
     if (arrCMProjectAppRelaSel.length > 0) {
@@ -213,9 +217,7 @@ export async function CMProjectAppRela_GetObjByCMProjectAppRelaIdCache(
       return objCMProjectAppRela;
     } else {
       if (bolTryAsyncOnce == true) {
-        const objCMProjectAppRelaConst = await CMProjectAppRela_GetObjByCMProjectAppRelaIdAsync(
-          lngCMProjectAppRelaId,
-        );
+        const objCMProjectAppRelaConst = await CMProjectAppRela_GetObjByKeyAsync(key);
         if (objCMProjectAppRelaConst != null) {
           CMProjectAppRela_ReFreshThisCache(strPrjId);
           return objCMProjectAppRelaConst;
@@ -227,7 +229,7 @@ export async function CMProjectAppRela_GetObjByCMProjectAppRelaIdCache(
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      lngCMProjectAppRelaId,
+      key.cMProjectAppRelaId,
       cMProjectAppRela_ConstructorName,
       strThisFuncName,
     );
@@ -275,7 +277,7 @@ export async function CMProjectAppRela_UpdateObjInLstCache(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -290,7 +292,7 @@ export function CMProjectAppRela_SortFunDefa(
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -307,7 +309,7 @@ export function CMProjectAppRela_SortFunDefa2Fld(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -413,7 +415,7 @@ export function CMProjectAppRela_SortFunByKey(strKey: string, AscOrDesc: string)
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -465,7 +467,7 @@ export async function CMProjectAppRela_FilterFunByKey(strKey: string, value: any
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -500,11 +502,11 @@ export async function CMProjectAppRela_func(
     console.error(strMsg);
     throw new Error(strMsg);
   }
-  if (clsCMProjectAppRelaEN.AttributeName.indexOf(strOutFldName) == -1) {
+  if (clsCMProjectAppRelaEN._AttributeName.indexOf(strOutFldName) == -1) {
     const strMsg = Format(
       '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
       strOutFldName,
-      clsCMProjectAppRelaEN.AttributeName.join(','),
+      clsCMProjectAppRelaEN._AttributeName.join(','),
     );
     console.error(strMsg);
     throw new Error(strMsg);
@@ -513,8 +515,8 @@ export async function CMProjectAppRela_func(
   if (lngCMProjectAppRelaId == 0) {
     return '';
   }
-  const objCMProjectAppRela = await CMProjectAppRela_GetObjByCMProjectAppRelaIdCache(
-    lngCMProjectAppRelaId,
+  const objCMProjectAppRela = await CMProjectAppRela_GetObjByKeyCache(
+    { cMProjectAppRelaId: lngCMProjectAppRelaId },
     strPrjIdClassfy,
   );
   if (objCMProjectAppRela == null) return '';
@@ -525,7 +527,7 @@ export async function CMProjectAppRela_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -895,14 +897,14 @@ export async function CMProjectAppRela_GetObjLstClientCache(strPrjId: string) {
   const strThisFuncName = 'GetObjLstClientCache';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsCMProjectAppRelaEN.WhereFormat) == false) {
-    strWhereCond = Format(clsCMProjectAppRelaEN.WhereFormat, strPrjId);
+  if (IsNullOrEmpty(clsCMProjectAppRelaEN._WhereFormat) == false) {
+    strWhereCond = Format(clsCMProjectAppRelaEN._WhereFormat, strPrjId);
   } else {
     strWhereCond = Format("PrjId='{0}'", strPrjId);
   }
   const strKey = Format('{0}_{1}', clsCMProjectAppRelaEN._CurrTabName, strPrjId);
-  if (IsNullOrEmpty(clsCMProjectAppRelaEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsCMProjectAppRelaEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsCMProjectAppRelaEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsCMProjectAppRelaEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -947,14 +949,14 @@ export async function CMProjectAppRela_GetObjLstlocalStorage(strPrjId: string) {
   const strThisFuncName = 'GetObjLstlocalStorage';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsCMProjectAppRelaEN.WhereFormat) == false) {
-    strWhereCond = Format(clsCMProjectAppRelaEN.WhereFormat, strPrjId);
+  if (IsNullOrEmpty(clsCMProjectAppRelaEN._WhereFormat) == false) {
+    strWhereCond = Format(clsCMProjectAppRelaEN._WhereFormat, strPrjId);
   } else {
     strWhereCond = Format("{0}='{1}'", clsCMProjectAppRelaEN.con_PrjId, strPrjId);
   }
   const strKey = Format('{0}_{1}', clsCMProjectAppRelaEN._CurrTabName, strPrjId);
-  if (IsNullOrEmpty(clsCMProjectAppRelaEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsCMProjectAppRelaEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsCMProjectAppRelaEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsCMProjectAppRelaEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1094,14 +1096,14 @@ export async function CMProjectAppRela_GetObjLstsessionStorage(strPrjId: string)
   const strThisFuncName = 'GetObjLstsessionStorage';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsCMProjectAppRelaEN.WhereFormat) == false) {
-    strWhereCond = Format(clsCMProjectAppRelaEN.WhereFormat, strPrjId);
+  if (IsNullOrEmpty(clsCMProjectAppRelaEN._WhereFormat) == false) {
+    strWhereCond = Format(clsCMProjectAppRelaEN._WhereFormat, strPrjId);
   } else {
     strWhereCond = Format("{0}='{1}'", clsCMProjectAppRelaEN.con_PrjId, strPrjId);
   }
   const strKey = Format('{0}_{1}', clsCMProjectAppRelaEN._CurrTabName, strPrjId);
-  if (IsNullOrEmpty(clsCMProjectAppRelaEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsCMProjectAppRelaEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsCMProjectAppRelaEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsCMProjectAppRelaEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1185,7 +1187,7 @@ export async function CMProjectAppRela_GetObjLstCache(
     throw strMsg;
   }
   let arrCMProjectAppRelaObjLstCache;
-  switch (clsCMProjectAppRelaEN.CacheModeId) {
+  switch (clsCMProjectAppRelaEN._CacheModeId) {
     case '04': //sessionStorage
       arrCMProjectAppRelaObjLstCache = await CMProjectAppRela_GetObjLstsessionStorage(strPrjId);
       break;
@@ -1210,7 +1212,7 @@ export async function CMProjectAppRela_GetObjLstCache(
 export async function CMProjectAppRela_GetObjLstPureCache(strPrjId: string) {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrCMProjectAppRelaObjLstCache;
-  switch (clsCMProjectAppRelaEN.CacheModeId) {
+  switch (clsCMProjectAppRelaEN._CacheModeId) {
     case '04': //sessionStorage
       arrCMProjectAppRelaObjLstCache = await CMProjectAppRela_GetObjLstsessionStoragePureCache(
         strPrjId,
@@ -1788,16 +1790,14 @@ export async function CMProjectAppRela_GetObjLstByPagerAsync(
 /**
  * 调用WebApi来删除记录,根据关键字来删除记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_DelRecordAsync)
- * @param lngCMProjectAppRelaId:关键字
+ * @param key:关键字对象
  * @returns 获取删除的结果
  **/
-export async function CMProjectAppRela_DelRecordAsync(
-  lngCMProjectAppRelaId: number,
-): Promise<number> {
+export async function CMProjectAppRela_DelRecordAsync(key: CMProjectAppRelaKey): Promise<number> {
   const strThisFuncName = 'DelRecordAsync';
   const strAction = 'DelRecord';
   let strUrl = GetWebApiUrl(cMProjectAppRela_Controller, strAction);
-  strUrl = Format('{0}?Id={1}', strUrl, lngCMProjectAppRelaId);
+  strUrl = Format('{0}?Id={1}', strUrl, key.cMProjectAppRelaId);
 
   const token = Storage.get(ACCESS_TOKEN_KEY);
   //console.error('token:', token);
@@ -1850,11 +1850,11 @@ export async function CMProjectAppRela_DelRecordAsync(
  * @param arrCMProjectAppRelaId:关键字列表
  * @returns 实际删除记录的个数
  **/
-export async function CMProjectAppRela_DelCMProjectAppRelasAsync(
+export async function CMProjectAppRela_DelKeysAsync(
   arrCMProjectAppRelaId: Array<string>,
 ): Promise<number> {
-  const strThisFuncName = 'DelCMProjectAppRelasAsync';
-  const strAction = 'DelCMProjectAppRelas';
+  const strThisFuncName = 'DelKeysAsync';
+  const strAction = 'DelKeys';
   const strUrl = GetWebApiUrl(cMProjectAppRela_Controller, strAction);
 
   const token = Storage.get(ACCESS_TOKEN_KEY);
@@ -1939,7 +1939,7 @@ export async function CMProjectAppRela_GetObjExLstByPagerCache(
   const bolIsFuncMap = isFuncMapCache[isFuncMapKey];
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsCMProjectAppRelaEN.AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
+    clsCMProjectAppRelaEN._AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
     (bolIsFuncMap == false || bolIsFuncMap == undefined)
   ) {
     for (const newObj of arrCMProjectAppRelaExObjLst) {
@@ -2097,7 +2097,7 @@ export function CMProjectAppRela_CopyToEx(
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -2111,7 +2111,7 @@ export function CMProjectAppRela_FuncMapByFldName(
   strFldName = strFldName.replace('|Ex', '');
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsCMProjectAppRelaEN.AttributeName;
+  const arrFldName = clsCMProjectAppRelaEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -2132,7 +2132,7 @@ export function CMProjectAppRela_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -2927,19 +2927,19 @@ export async function CMProjectAppRela_IsExistRecordAsync(strWhereCond: string):
 /**
  * 根据关键字判断是否存在记录, 从本地缓存中判断.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistCache)
- * @param lngCMProjectAppRelaId:所给的关键字
- * @returns 对象
+ * @param key:关键字对象
+ * @returns 是否存在
  */
 export async function CMProjectAppRela_IsExistCache(
-  lngCMProjectAppRelaId: number,
+  key: CMProjectAppRelaKey,
   strPrjId: string,
-) {
+): Promise<boolean> {
   const strThisFuncName = 'IsExistCache';
   const arrCMProjectAppRelaObjLstCache = await CMProjectAppRela_GetObjLstCache(strPrjId);
   if (arrCMProjectAppRelaObjLstCache == null) return false;
   try {
     const arrCMProjectAppRelaSel = arrCMProjectAppRelaObjLstCache.filter(
-      (x) => x.cMProjectAppRelaId == lngCMProjectAppRelaId,
+      (x) => x.cMProjectAppRelaId == key.cMProjectAppRelaId,
     );
     if (arrCMProjectAppRelaSel.length > 0) {
       return true;
@@ -2949,7 +2949,7 @@ export async function CMProjectAppRela_IsExistCache(
   } catch (e) {
     const strMsg = Format(
       '根据关键字:[{0}]判断是否存在不成功!(in {1}.{2})',
-      lngCMProjectAppRelaId,
+      key.cMProjectAppRelaId,
       cMProjectAppRela_ConstructorName,
       strThisFuncName,
     );
@@ -2962,12 +2962,10 @@ export async function CMProjectAppRela_IsExistCache(
 /**
  * 根据关键字判断是否存在记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistAsync)
- * @param lngCMProjectAppRelaId:关键字
+ * @param key:包含关键字的对象
  * @returns 是否存在?存在返回True
  **/
-export async function CMProjectAppRela_IsExistAsync(
-  lngCMProjectAppRelaId: number,
-): Promise<boolean> {
+export async function CMProjectAppRela_IsExistAsync(key: CMProjectAppRelaKey): Promise<boolean> {
   const strThisFuncName = 'IsExistAsync';
   //检测记录是否存在
   const strAction = 'IsExist';
@@ -2980,7 +2978,7 @@ export async function CMProjectAppRela_IsExistAsync(
       Authorization: `${token}`,
     },
     params: {
-      lngCMProjectAppRelaId,
+      lngCMProjectAppRelaId: key.cMProjectAppRelaId,
     },
   };
   try {
@@ -3288,14 +3286,14 @@ export function CMProjectAppRela_GetWebApiUrl(strController: string, strAction: 
 export function CMProjectAppRela_ReFreshCache(strPrjId: string): void {
   if (IsNullOrEmpty(strPrjId) == true) {
     const strMsg = Format(
-      '参数:[strPrjId]不能为空!(In clsCMProjectAppRelaWApi.clsCMProjectAppRelaWApi.ReFreshCache)',
+      '参数:[strPrjId]不能为空！(In clsCMProjectAppRelaWApi.clsCMProjectAppRelaWApi.ReFreshCache)',
     );
     console.error(strMsg);
     throw strMsg;
   }
   if (strPrjId.length != 4) {
     const strMsg = Format(
-      '缓存分类变量:[strPrjId]的长度:[{0}]不正确!(clsCMProjectAppRelaWApi.clsCMProjectAppRelaWApi.ReFreshCache)',
+      '缓存分类变量:[strPrjId]的长度:[{0}]不正确！(clsCMProjectAppRelaWApi.clsCMProjectAppRelaWApi.ReFreshCache)',
       strPrjId.length,
     );
     console.error(strMsg);
@@ -3306,7 +3304,7 @@ export function CMProjectAppRela_ReFreshCache(strPrjId: string): void {
   console.trace(strMsg);
   // 静态的对象列表,用于清空相关缓存,针对记录较少,作为参数表可以使用
   const strKey = Format('{0}_{1}', clsCMProjectAppRelaEN._CurrTabName, strPrjId);
-  switch (clsCMProjectAppRelaEN.CacheModeId) {
+  switch (clsCMProjectAppRelaEN._CacheModeId) {
     case '04': //sessionStorage
       sessionStorage.removeItem(strKey);
       break;
@@ -3330,14 +3328,14 @@ export function CMProjectAppRela_ReFreshCache(strPrjId: string): void {
 export function CMProjectAppRela_ReFreshThisCache(strPrjId: string): void {
   if (IsNullOrEmpty(strPrjId) == true) {
     const strMsg = Format(
-      '参数:[strPrjId]不能为空!(In clsCMProjectAppRelaWApi.CMProjectAppRela_ReFreshThisCache)',
+      '参数:[strPrjId]不能为空！(In clsCMProjectAppRelaWApi.CMProjectAppRela_ReFreshThisCache)',
     );
     console.error(strMsg);
     throw strMsg;
   }
   if (strPrjId.length != 4) {
     const strMsg = Format(
-      '缓存分类变量:[strPrjId]的长度:[{0}]不正确!(clsCMProjectAppRelaWApi.CMProjectAppRela_ReFreshThisCache)',
+      '缓存分类变量:[strPrjId]的长度:[{0}]不正确！(clsCMProjectAppRelaWApi.CMProjectAppRela_ReFreshThisCache)',
       strPrjId.length,
     );
     console.error(strMsg);
@@ -3345,7 +3343,7 @@ export function CMProjectAppRela_ReFreshThisCache(strPrjId: string): void {
   }
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = Format('{0}_{1}', clsCMProjectAppRelaEN._CurrTabName, strPrjId);
-    switch (clsCMProjectAppRelaEN.CacheModeId) {
+    switch (clsCMProjectAppRelaEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -3673,7 +3671,7 @@ export function CMProjectAppRela_CheckProperty4Update(
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -3696,7 +3694,7 @@ export function CMProjectAppRela_GetJSONStrByObj(
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -3717,7 +3715,7 @@ export function CMProjectAppRela_GetObjLstByJSONStr(strJSON: string): Array<clsC
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrCMProjectAppRelaObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -3737,7 +3735,7 @@ export function CMProjectAppRela_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-01
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

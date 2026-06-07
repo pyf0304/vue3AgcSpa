@@ -1,5 +1,5 @@
 ﻿import { clsViewInfoEN } from '@/ts/L0Entity/PrjInterface/clsViewInfoEN';
-import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProject_GetObjByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import { ApplicationType_BindDdl_ApplicationTypeIdByIsVisibleInDivCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
 import {
   CMProjectEx_BindDdl_CmPrjIdInDivCache,
@@ -200,7 +200,7 @@ export default class ViewInfoCRUDEx0 extends ViewInfoCRUD implements IShowList {
 
         ApplicationTypeId_Static.value = arrCMProject[0].applicationTypeId;
       } else {
-        const objCMProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+        const objCMProject = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
         if (objCMProject == null) {
           const strMsg = Format('CM项目Id:[{0}]，没有相应的CM项目，请检查！', strCmPrjId);
           console.error(strMsg);

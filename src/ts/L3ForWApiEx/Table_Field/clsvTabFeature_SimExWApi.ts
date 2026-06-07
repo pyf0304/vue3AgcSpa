@@ -8,7 +8,7 @@ import { enumPrjFeature } from '@/ts/L0Entity/PrjFunction/clsPrjFeatureEN';
 import { enumFieldType } from '@/ts/L0Entity/Table_Field/clsFieldTypeEN';
 import { clsvTabFeature_SimEN } from '@/ts/L0Entity/Table_Field/clsvTabFeature_SimEN';
 import { clsvTabFeature_SimENEx } from '@/ts/L0Entity/Table_Field/clsvTabFeature_SimENEx';
-import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProject_GetObjByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import { vPrjFeatureSim_GetObjByFeatureIdCache } from '@/ts/L3ForWApi/PrjFunction/clsvPrjFeatureSimWApi';
 import {
   vTabFeature_Sim_GetObjByTabFeatureIdAsync,
@@ -555,7 +555,9 @@ export async function vTabFeature_SimEx_GetFuncName(
         clsPrivateSessionStorage.currSelPrjId,
       );
 
-      objProject = await CMProject_GetObjByCmPrjIdCache(objTabFeature.cmPrjId);
+      objProject = await CMProject_GetObjByKeyCache({
+        cmPrjId: objTabFeature.cmPrjId,
+      });
       if (objProject == null) {
         const strMsg = Format('项目Id:[{0}]，没有相应的Cm项目，请检查！', objTabFeature.cmPrjId);
         console.error(strMsg);
@@ -593,7 +595,9 @@ export async function vTabFeature_SimEx_GetFuncName(
         strFldId,
         clsPrivateSessionStorage.currSelPrjId,
       );
-      objProject2 = await CMProject_GetObjByCmPrjIdCache(objTabFeature.cmPrjId);
+      objProject2 = await CMProject_GetObjByKeyCache({
+        cmPrjId: objTabFeature.cmPrjId,
+      });
       if (objProject2 == null) {
         const strMsg = Format('项目Id:[{0}]，没有相应的Cm项目，请检查！', objTabFeature.cmPrjId);
         console.error(strMsg);

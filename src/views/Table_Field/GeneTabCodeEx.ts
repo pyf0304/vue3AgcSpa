@@ -45,6 +45,16 @@ import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { IShowList } from '@/ts/PubFun/IShowList';
 import { AccessBindGvDefault, AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
 import { TreeNode } from '@/ts/components/TreeNode';
+import {
+  clearLocalFileAccessLogs,
+  getLocalAccessLogFilePath,
+  getLocalFileAccessRecentLogs,
+  getLocalFileAccessLogsByRecentMinutes,
+  getMachineNameFromLocalAgent,
+  syncLocalFileAccessLogsToFile,
+  traceUiClickAndSyncLocalAccessLog,
+  tryWriteCodeToLocalFile,
+} from '@/ts/LocalFileAccess/LocalFileAccess';
 import { codeTypeId } from '@/views/Table_Field/GeneTabCodeVueShare';
 import { useCMProjectAppRelaStore } from '@/store/modules/CMProjectAppRela';
 import { vFunction4Code_SimEx_GetObjByFuncId4CodeCacheEx } from '@/ts/L3ForWApiEx/PrjFunction/clsvFunction4Code_SimExWApi';
@@ -97,6 +107,149 @@ export class GeneTabCodeEx implements IShowList {
     return 10;
   }
 
+  private static traceClickAndSync(strAction: string, data?: Record<string, unknown>): void {
+    (async () => {
+      const objTraceResult = await traceUiClickAndSyncLocalAccessLog(strAction, data);
+      const strTraceResult = `[GeneTabCodeEx] click trace -> ${strAction}, syncResult: ${objTraceResult.msg}`;
+      console.error(strTraceResult);
+      SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnResult2', strTraceResult);
+    })().catch((e: any) => {
+      const strErrMsg = e?.message ?? String(e);
+      console.error(`[GeneTabCodeEx] click trace sync failed: ${strErrMsg}`);
+    });
+  }
+
+  private static async SetCurrentMachineNameView(): Promise<void> {
+    const strSpanId = 'spnCurrMachine2';
+    try {
+      const strMachineName = String(await getMachineNameFromLocalAgent()).trim();
+      if (IsNullOrEmpty(strMachineName) == false) {
+        SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, strSpanId, strMachineName);
+        return;
+      }
+      SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, strSpanId, '获取失败: 机器名为空');
+    } catch (e) {
+      const strErrMsg = (e as any)?.message ?? String(e);
+      SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, strSpanId, `获取失败: ${strErrMsg}`);
+      console.warn('SetCurrentMachineNameView warning:', e);
+    }
+  }
+
+  public static ShowRecentWriteLogsPopup(intMinutes = 5): void {
+    GeneTabCodeEx.traceClickAndSync('ShowRecentWriteLogsPopup', { intMinutes });
+    const strTrace = `[GeneTabCodeEx] ShowRecentWriteLogsPopup called, intMinutes=${intMinutes}, at=${new Date().toISOString()}`;
+    console.error(strTrace);
+    SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnResult2', strTrace);
+    const intMinutesSafe = Number.isFinite(intMinutes) ? Math.max(1, Math.floor(intMinutes)) : 5;
+    const arrLog = getLocalFileAccessLogsByRecentMinutes(intMinutesSafe, 'tryWriteCodeToLocalFile');
+
+    if (arrLog.length === 0) {
+      const strMsg = `最近${intMinutesSafe}分钟没有写文件日志。`;
+      SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnResult2', strMsg);
+      alert(strMsg);
+      return;
+    }
+
+    const intShowCount = 40;
+    const arrLogShow =
+      arrLog.length > intShowCount ? arrLog.slice(arrLog.length - intShowCount) : arrLog;
+    const strHeader =
+      arrLog.length > intShowCount
+        ? `最近${intMinutesSafe}分钟写文件日志共${arrLog.length}条，仅显示最后${intShowCount}条:`
+        : `最近${intMinutesSafe}分钟写文件日志共${arrLog.length}条:`;
+
+    const arrLine = arrLogShow.map((x, idx) => {
+      const strData = JSON.stringify(x.data);
+      return `${idx + 1}. [${x.time}] [${x.level}] [${x.phase}] ${strData}`;
+    });
+    const strMsg = `${strHeader}\n${arrLine.join('\n')}`;
+
+    SetSpanHtmlByIdInDivObj(
+      GeneTabCodeEx.divCode,
+      'spnResult2',
+      `已弹出最近${intMinutesSafe}分钟写文件日志，共${arrLog.length}条`,
+    );
+    alert(strMsg);
+  }
+
+  public static ShowRecentWriteLogsByCountPopup(intCount = 20): void {
+    GeneTabCodeEx.traceClickAndSync('ShowRecentWriteLogsByCountPopup', { intCount });
+    const strTrace = `[GeneTabCodeEx] ShowRecentWriteLogsByCountPopup called, intCount=${intCount}, at=${new Date().toISOString()}`;
+    console.error(strTrace);
+    SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnResult2', strTrace);
+    const intCountSafe = Number.isFinite(intCount) ? Math.max(1, Math.floor(intCount)) : 20;
+    let arrLog = getLocalFileAccessRecentLogs(intCountSafe, 'tryWriteCodeToLocalFile');
+    let strHeader = `最近${intCountSafe}条写文件日志:`;
+    if (arrLog.length === 0) {
+      arrLog = getLocalFileAccessRecentLogs(intCountSafe);
+      strHeader = `最近${intCountSafe}条日志(写文件筛选为空，显示全量日志):`;
+    }
+    if (arrLog.length === 0) {
+      const strMsg = `当前没有写文件日志。`;
+      SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnResult2', strMsg);
+      alert(strMsg);
+      return;
+    }
+
+    strHeader = `${strHeader}(实际${arrLog.length}条)`;
+    const arrLine = arrLog.map((x, idx) => {
+      const strData = JSON.stringify(x.data);
+      return `${idx + 1}. [${x.time}] [${x.level}] [${x.phase}] ${strData}`;
+    });
+    const strMsg = `${strHeader}\n${arrLine.join('\n')}`;
+
+    SetSpanHtmlByIdInDivObj(
+      GeneTabCodeEx.divCode,
+      'spnResult2',
+      `已弹出最近${arrLog.length}条写文件日志`,
+    );
+    alert(strMsg);
+  }
+
+  public static async ShowRecentWriteLogsByCountPopupAndSyncFile(intCount = 20): Promise<void> {
+    GeneTabCodeEx.traceClickAndSync('ShowRecentWriteLogsByCountPopupAndSyncFile', { intCount });
+    const strTrace = `[GeneTabCodeEx] ShowRecentWriteLogsByCountPopupAndSyncFile called, intCount=${intCount}, at=${new Date().toISOString()}`;
+    console.error(strTrace);
+    SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnResult2', strTrace);
+    const intCountSafe = Number.isFinite(intCount) ? Math.max(1, Math.floor(intCount)) : 20;
+    let arrLog = getLocalFileAccessRecentLogs(intCountSafe, 'tryWriteCodeToLocalFile');
+    let strHeader = `最近${intCountSafe}条写文件日志:`;
+    if (arrLog.length === 0) {
+      arrLog = getLocalFileAccessRecentLogs(intCountSafe);
+      strHeader = `最近${intCountSafe}条日志(写文件筛选为空，显示全量日志):`;
+    }
+    const objSyncResult = await syncLocalFileAccessLogsToFile(500);
+    const strLogFilePath = getLocalAccessLogFilePath();
+
+    const strMsg =
+      arrLog.length === 0
+        ? `${strHeader}(实际0条)\n(当前没有写文件日志)\n\n日志文件:${strLogFilePath}\n落盘结果:${objSyncResult.msg}`
+        : `${strHeader}(实际${arrLog.length}条)\n${arrLog
+            .map((x, idx) => {
+              const strData = JSON.stringify(x.data);
+              return `${idx + 1}. [${x.time}] [${x.level}] [${x.phase}] ${strData}`;
+            })
+            .join('\n')}\n\n日志文件:${strLogFilePath}\n落盘结果:${objSyncResult.msg}`;
+
+    SetSpanHtmlByIdInDivObj(
+      GeneTabCodeEx.divCode,
+      'spnResult2',
+      `已处理最近日志并尝试落盘，条数:${arrLog.length}`,
+    );
+    alert(strMsg);
+  }
+
+  public static ClearWriteLogs(): void {
+    GeneTabCodeEx.traceClickAndSync('ClearWriteLogs');
+    const strTrace = `[GeneTabCodeEx] ClearWriteLogs called, at=${new Date().toISOString()}`;
+    console.error(strTrace);
+    SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnResult2', strTrace);
+    const intRemoved = clearLocalFileAccessLogs('tryWriteCodeToLocalFile');
+    const strMsg = `已清空写文件日志 ${intRemoved} 条。`;
+    SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnResult2', strMsg);
+    alert(strMsg);
+  }
+
   BindGv(strType: string, strPara: string) {
     console.log(strType, strPara);
     alert('该类没有绑定该函数：[this.BindGv_vTabInfo]！');
@@ -142,6 +295,7 @@ export class GeneTabCodeEx implements IShowList {
     // clsPrivateSessionStorage.tabId1 = '00050006';
     // 在此处放置用户代码以初始化页面
     try {
+      await GeneTabCodeEx.SetCurrentMachineNameView();
       // const strOp = this.GetOp;
       //console.error("strOp", strOp);
       //if (strOp == "GeneCode" ) {
@@ -250,7 +404,14 @@ export class GeneTabCodeEx implements IShowList {
       CheckControlExistInDivObj(GeneTabCodeEx.divCode, 'span', 'spnLangType');
       CheckControlExistInDivObj(GeneTabCodeEx.divCode, 'span', 'spnGCUserId');
       CheckControlExistInDivObj(GeneTabCodeEx.divCode, 'span', 'spnTabName');
+      await GeneTabCodeEx.SetCurrentMachineNameView();
       if (objGCResult.errorId == 0) {
+        const objWriteResult = await tryWriteCodeToLocalFile(
+          intApplicationTypeId,
+          strCodeTypeId,
+          objGCResult.re_FileNameWithModuleName,
+          objGCResult.codeText,
+        );
         SetTextAreaValueByIdInDivObj(GeneTabCodeEx.divCode, 'txtCodeText', objGCResult.codeText);
         SetInputValueInDivObj(GeneTabCodeEx.divCode, 'txtClsName', objGCResult.re_ClsName);
         SetInputValueInDivObj(
@@ -272,7 +433,9 @@ export class GeneTabCodeEx implements IShowList {
         SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnGCUserId', objGCResult.gcUserId);
         SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnTabName', objGCResult.tabName);
 
-        const strInfo = `生成代码成功!时间:${strCurrDate}`;
+        const strInfo = objWriteResult.isSuccess
+          ? `生成代码成功并已写入文件!${objWriteResult.msg}. 时间:${strCurrDate}`
+          : `生成代码成功, 但写入文件失败:${objWriteResult.msg}. 时间:${strCurrDate}`;
         SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnResult', strInfo);
         //显示信息框
         //alert(strInfo);
@@ -384,7 +547,14 @@ export class GeneTabCodeEx implements IShowList {
       CheckControlExistInDivObj(GeneTabCodeEx.divCode, 'span', 'spnLangType');
       CheckControlExistInDivObj(GeneTabCodeEx.divCode, 'span', 'spnGCUserId');
       CheckControlExistInDivObj(GeneTabCodeEx.divCode, 'span', 'spnTabName');
+      await GeneTabCodeEx.SetCurrentMachineNameView();
       if (objGCResult.errorId == 0) {
+        const objWriteResult = await tryWriteCodeToLocalFile(
+          intApplicationTypeId,
+          strCodeTypeId,
+          objGCResult.re_FileNameWithModuleName,
+          objGCResult.codeText,
+        );
         SetTextAreaValueByIdInDivObj(GeneTabCodeEx.divCode, 'txtCodeText', objGCResult.codeText);
         SetInputValueInDivObj(GeneTabCodeEx.divCode, 'txtClsName', objGCResult.re_FuncName);
         SetInputValueInDivObj(GeneTabCodeEx.divCode, 'txtFileName', objGCResult.re_FuncCHName);
@@ -401,7 +571,9 @@ export class GeneTabCodeEx implements IShowList {
         SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnLangType', objGCResult.langType);
         SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnGCUserId', objGCResult.gcUserId);
         SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnTabName', objGCResult.tabName);
-        const strInfo = `生成代码成功!时间:${strCurrDate}`;
+        const strInfo = objWriteResult.isSuccess
+          ? `生成代码成功并已写入文件!${objWriteResult.msg}. 时间:${strCurrDate}`
+          : `生成代码成功, 但写入文件失败:${objWriteResult.msg}. 时间:${strCurrDate}`;
         SetSpanHtmlByIdInDivObj(GeneTabCodeEx.divCode, 'spnResult', strInfo);
       } else {
         SetTextAreaValueByIdInDivObj(GeneTabCodeEx.divCode, 'txtCodeText', objGCResult.errorMsg);
@@ -430,6 +602,7 @@ export class GeneTabCodeEx implements IShowList {
     }
     return true; //一定要有一个返回值，否则会出错！
   }
+
   public get qsTabId() {
     const strName = 'tabId';
     const reg = new RegExp(`(^|&)${strName}=([^&]*)(&|$)`, 'i');
@@ -721,7 +894,7 @@ export class GeneTabCodeEx implements IShowList {
   //     clsPubLocalStorage.userId,
   //   );
   //   if (arrUserCodePrjMainPath == null) {
-  //     const objCmProject = await CMProject_GetObjByCmPrjIdCache(clsPrivateSessionStorage.cmPrjId);
+  //     const objCmProject = await CMProject_GetObjByKeyCache(clsPrivateSessionStorage.cmPrjId);
   //     if (objCmProject == null) return;
   //     const strMsg = Format(
   //       'Cm工程:{0}({1})没有相关的应用类型，请检查！(in {2}.{3})',
@@ -854,7 +1027,7 @@ export class GeneTabCodeEx implements IShowList {
     //   clsPubLocalStorage.userId,
     // );
     // if (arrUserCodePrjMainPath == null) {
-    //   const objCmProject = await CMProject_GetObjByCmPrjIdCache(clsPrivateSessionStorage.cmPrjId);
+    //   const objCmProject = await CMProject_GetObjByKeyCache(clsPrivateSessionStorage.cmPrjId);
     //   if (objCmProject == null) return arrTreeNode;
     //   const strMsg = Format(
     //     'Cm工程:{0}({1})没有相关的应用类型，请检查！(in {2}.{3})',

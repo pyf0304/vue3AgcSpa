@@ -9,7 +9,7 @@ import {
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { IShowList } from '@/ts/PubFun/IShowList';
 
-import { CMProject_GetObjByCmPrjIdCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProject_GetObjByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
 import { CMProjectEx_GetObjLstByPrjIdCache } from '@/ts/L3ForWApiEx/CodeMan/clsCMProjectExWApi';
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
 import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
@@ -220,7 +220,7 @@ export default class ViewInfo_UEx extends ViewInfo_U implements IShowList {
 
         ApplicationTypeId_Static.value = arrCMProject[0].applicationTypeId;
       } else {
-        const objCMProject = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+        const objCMProject = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
         if (objCMProject == null) {
           const strMsg = Format('CM项目Id:[{0}]，没有相应的CM项目，请检查！', strCmPrjId);
           console.error(strMsg);

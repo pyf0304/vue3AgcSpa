@@ -14,7 +14,7 @@ import { clsVueCtrlDesignSysEN } from '@/ts/L0Entity/SysPara/clsVueCtrlDesignSys
 import {
   CMProject_AddNewRecordWithMaxIdAsync,
   CMProject_CheckPropertyNew,
-  CMProject_GetObjByCmPrjIdCache,
+  CMProject_GetObjByKeyCache,
   CMProject_GetObjLstCache,
   CMProject_GetUniCondStr,
   CMProject_IsExistRecordAsync,
@@ -36,7 +36,7 @@ export const cMProjectEx_Controller = 'CMProjectExApi';
 export const cMProjectEx_ConstructorName = 'cMProjectEx';
 
 export async function CMProjectEx_GetPrjIdByCmPrjIdCache(strCmPrjId: string): Promise<string> {
-  const objCMProjectEN = await CMProject_GetObjByCmPrjIdCache(strCmPrjId);
+  const objCMProjectEN = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
   if (objCMProjectEN == null) return '';
   return objCMProjectEN.prjId;
 }
@@ -218,7 +218,7 @@ export function CMProjectEx_FuncMapByFldName(strFldName: string, objCMProjectEx:
   const strThisFuncName = CMProjectEx_FuncMapByFldName.name;
   let strMsg = '';
   //如果是本表中字段，不需要映射
-  const arrFldName = clsCMProjectEN.AttributeName;
+  const arrFldName = clsCMProjectEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
