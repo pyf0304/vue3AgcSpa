@@ -28,6 +28,18 @@
                 >可视化</button
               >
               <button
+                id="btnTogglePropertyPanel"
+                class="btn btn-outline-secondary btn-sm text-nowrap"
+                @click="toggleMainEditor"
+                >{{ showMainEditor ? '隐藏属性' : '显示属性' }}</button
+              >
+              <button
+                id="btnToggleCodeGenPanel"
+                class="btn btn-outline-secondary btn-sm text-nowrap"
+                @click="toggleCodeGen"
+                >{{ showCodeGen ? '隐藏生成代码' : '显示生成代码' }}</button
+              >
+              <button
                 id="btnUpdateRecord_ViewRegion"
                 class="btn btn-outline-success btn-sm text-nowrap"
                 @click="btn_Click('seeDiv', '')"
@@ -180,7 +192,7 @@
           </ul>
         </div>
       </div>
-      <div class="float-left ml-2" style="width: 73%">
+      <div class="float-left ml-2" style="width: 96%">
         <div class="tab-header">
           <div
             v-for="tab in showTabs"
@@ -214,32 +226,34 @@
           </div>
         </div>
       </div>
-      <!-- 编辑层  -->
+    </div>
 
-      <div id="divEdit_CodeGene" class="float-right" style="width: 23%">
-        <div class="tab-header">
-          <div
-            v-for="tab in editTabs"
-            :key="tab.id"
-            :class="{ active: tab.id === editActiveTabId }"
-            @click="editChangeTab(tab.id)"
-          >
-            {{ tab.label }}
-          </div>
+    <div
+      v-show="showMainEditor || showCodeGen"
+      id="divEdit_CodeGene"
+      class="qry-right-panel"
+      style="width: 420px"
+    >
+      <div class="qry-right-panel-content">
+        <div v-show="showMainEditor" class="d-flex justify-content-between align-items-center my-2">
+          <div class="h6 mb-0">属性区</div>
+          <button class="btn btn-outline-secondary btn-sm" @click="toggleMainEditor">隐藏</button>
         </div>
 
         <div class="tab-content">
-          <div v-if="editActiveTabId === 'tab1'">
-            <!-- <keep-alive> -->
+          <div v-show="showMainEditor">
             <QryRegionFlds_EditCom
               ref="refQryRegionFlds_Edit"
               :is-dialog="false"
             ></QryRegionFlds_EditCom>
-            <!-- </keep-alive> -->
           </div>
 
-          <div v-if="editActiveTabId === 'tab2'">
-            <!-- <keep-alive> -->
+          <div v-show="showCodeGen" class="mt-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="h6 mb-0">生成代码</div>
+              <button class="btn btn-outline-secondary btn-sm" @click="toggleCodeGen">隐藏</button>
+            </div>
+
             <div>
               <div id="divCodeTypeLst"></div>
               <div>
@@ -262,9 +276,9 @@
                   value="结果"
                 />
                 <span class="text-warning">生成的代码</span><br />
-                <textarea id="txtCodeText" style="width: 100%; height: 720px"></textarea></div
-            ></div>
-            <!-- </keep-alive> -->
+                <textarea id="txtCodeText" style="width: 100%; height: 720px"></textarea>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -327,26 +341,15 @@
       RegionId_Static.value = '';
       CmPrjId_Local.value = clsPrivateSessionStorage.cmPrjId;
 
-      const editTabs = [
-        { id: 'tab1', label: '属性' },
-        { id: 'tab2', label: '代码生成' },
-      ];
-      const editActiveTabId = ref('tab1');
-      const editChangeTab = (tabId: string) => {
-        editActiveTabId.value = tabId;
+      const showMainEditor = ref(true);
+      const showCodeGen = ref(true);
 
-        switch (tabId) {
-          case 'tab1':
-            setTimeout(InitEdit, 100);
-            break;
-          case 'tab2':
-            break;
-        }
+      const toggleMainEditor = () => {
+        showMainEditor.value = !showMainEditor.value;
       };
-      const InitEdit = async () => {
-        // divVarSet.refDivEdit = QryRegionFlds_Edit.EditObj.$refs.refDivEdit;
-        const objPage = new QryRegionFldsCRUDEx();
-        await objPage.InitEdit();
+
+      const toggleCodeGen = () => {
+        showCodeGen.value = !showCodeGen.value;
       };
       const showTabs = [
         { id: 'tab3', label: '可视化区域' },
@@ -425,6 +428,7 @@
           case 'Update':
           case 'UpdateRecord':
           case 'UpdateRecordInTab':
+            showMainEditor.value = true;
             break;
           case 'Update_ViewRegion':
             QryRegionFldsCRUDEx.EditRegionRef = refViewRegion_Edit_Sim;
@@ -444,9 +448,10 @@
         refDivVisualEffects,
         refDivDataLst,
 
-        editTabs,
-        editActiveTabId,
-        editChangeTab,
+        showMainEditor,
+        showCodeGen,
+        toggleMainEditor,
+        toggleCodeGen,
         showTabs,
         showActiveTabId,
         showChangeTab,
@@ -513,5 +518,25 @@
 
   .selected-td {
     background-color: #e6c3c3; /* Set your desired background color */
+  }
+
+  .qry-right-panel {
+    position: fixed;
+    top: 4px;
+    right: 8px;
+    z-index: 2000;
+    height: calc(100vh - 24px);
+    min-height: 860px;
+    background: #fff;
+    border: 1px solid #d8d8d8;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding: 6px;
+  }
+
+  .qry-right-panel-content {
+    height: 100%;
+    overflow: auto;
+    padding-right: 2px;
   }
 </style>

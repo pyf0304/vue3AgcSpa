@@ -253,6 +253,24 @@
                     >
                   </div>
                 </li>
+
+                <li class="nav-item ml-3">
+                  <button
+                    id="btnTogglePropertyPanel"
+                    class="btn btn-outline-secondary btn-sm text-nowrap"
+                    @click="toggleMainFeatureEditor"
+                    >{{ showMainFeatureEditor ? '隐藏属性' : '显示属性' }}</button
+                  >
+                </li>
+
+                <li class="nav-item ml-3">
+                  <button
+                    id="btnToggleCodeGeneTab"
+                    class="btn btn-outline-secondary btn-sm text-nowrap"
+                    @click="toggleCodeGenTab"
+                    >{{ showCodeGenTab ? '隐藏生成代码' : '显示生成代码' }}</button
+                  >
+                </li>
               </ul>
             </div>
           </div>
@@ -329,189 +347,179 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            <div
-              id="divEdit_CodeGene1"
-              class="container1 col-4"
-              style="overflow: auto; height: 630px; width: 420px"
-            >
-              <div class="tab-header">
-                <div
-                  v-for="tab in editTabs"
-                  :key="tab.id"
-                  :class="{ active: tab.id === editActiveTabId }"
-                  @click="editChangeTab(tab.id)"
-                >
-                  {{ tab.label }}
-                </div>
+    <div v-show="showMainFeatureEditor || showCodeGenTab" class="right-panel" style="width: 420px">
+      <div class="tab-content right-panel-content">
+        <transition name="panel-stretch">
+          <div v-show="showMainFeatureEditor" class="panel-body panel-body-property">
+            <div class="d-flex justify-content-between align-items-center my-2">
+              <div class="h6 mb-0">属性区</div>
+
+              <button class="btn btn-outline-secondary btn-sm" @click="toggleMainFeatureEditor">
+                {{ showMainFeatureEditor ? '隐藏属性' : '查看属性' }}
+              </button>
+            </div>
+
+            <FeatureRegionFlds_EditCom
+              ref="refFeatureRegionFlds_Edit"
+              :is-dialog="false"
+            ></FeatureRegionFlds_EditCom>
+
+            <div class="mt-3">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="h6 mb-0">子字段</div>
+
+                <button class="btn btn-outline-success btn-sm" @click="openCreateChildField">
+                  新增子字段
+                </button>
               </div>
 
-              <div class="tab-content">
-                <div v-if="editActiveTabId === 'tab1'">
-                  <!-- <keep-alive> -->
+              <div class="table-responsive border rounded p-2 bg-white">
+                <table class="table table-sm table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th style="width: 60px">序号</th>
 
-                  <FeatureRegionFlds_EditCom
-                    ref="refFeatureRegionFlds_Edit"
-                    :is-dialog="false"
-                  ></FeatureRegionFlds_EditCom>
+                      <th style="width: 140px">类型</th>
 
-                  <div class="mt-3">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <div class="h6 mb-0">子字段</div>
+                      <th style="width: 140px">相关字段</th>
 
-                      <button class="btn btn-outline-success btn-sm" @click="openCreateChildField">
-                        新增子字段
-                      </button>
-                    </div>
+                      <th style="width: 100px">控件</th>
 
-                    <div class="table-responsive border rounded p-2 bg-white">
-                      <table class="table table-sm table-hover align-middle mb-0">
-                        <thead>
-                          <tr>
-                            <th style="width: 60px">序号</th>
+                      <th>标签</th>
 
-                            <th style="width: 140px">类型</th>
+                      <th style="width: 90px">在用</th>
 
-                            <th style="width: 140px">相关字段</th>
+                      <th style="width: 140px">操作</th>
+                    </tr>
+                  </thead>
 
-                            <th style="width: 100px">控件</th>
-
-                            <th>标签</th>
-
-                            <th style="width: 90px">在用</th>
-
-                            <th style="width: 140px">操作</th>
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          <tr
-                            v-for="item in arrViewFeatureFlds"
-                            :key="`${item.viewFeatureId}|${item.mId}`"
-                          >
-                            <td>{{ item.orderNum }}</td>
-
-                            <td>{{ getFieldTypeName(item.fieldTypeId) }}</td>
-
-                            <td class="child-field-break">{{
-                              getRelaFieldName(item.releFldId)
-                            }}</td>
-
-                            <td>{{ getCtlTypeName(item.ctlTypeId) }}</td>
-
-                            <td>{{ item.labelCaption }}</td>
-
-                            <td>{{ item.inUse === true ? '是' : '否' }}</td>
-
-                            <td>
-                              <div class="btn-group btn-group-sm">
-                                <button
-                                  class="btn btn-outline-success"
-                                  @click="openEditChildField(item)"
-                                  >修改</button
-                                >
-
-                                <button
-                                  class="btn btn-outline-danger"
-                                  @click="deleteChildField(item)"
-                                  >删除</button
-                                >
-                              </div>
-                            </td>
-                          </tr>
-
-                          <tr v-if="arrViewFeatureFlds.length === 0">
-                            <td colspan="7" class="text-center text-secondary"
-                              >当前没有子字段记录。</td
-                            >
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-
-                    <a-modal
-                      v-model:visible="childDialogVisible"
-                      :title="childDialogTitle"
-                      width="900px"
-                      :destroy-on-close="false"
-                      @cancel="closeChildDialog"
+                  <tbody>
+                    <tr
+                      v-for="item in arrViewFeatureFlds"
+                      :key="`${item.viewFeatureId}|${item.mId}`"
                     >
-                      <div v-if="childDialogMode === 'create'" class="mb-2">
-                        <label class="form-label mb-1">字段类型</label>
+                      <td>{{ item.orderNum }}</td>
 
-                        <select
-                          v-model="selectedFieldTypeId"
-                          class="form-control form-control-sm"
-                          @change="prepareCreateChildEditor"
-                        >
-                          <option
-                            v-for="item in fieldTypeOptions"
-                            :key="item.fieldTypeId"
-                            :value="item.fieldTypeId"
+                      <td>{{ getFieldTypeName(item.fieldTypeId) }}</td>
+
+                      <td class="child-field-break">{{ getRelaFieldName(item.releFldId) }}</td>
+
+                      <td>{{ getCtlTypeName(item.ctlTypeId) }}</td>
+
+                      <td>{{ item.labelCaption }}</td>
+
+                      <td>{{ item.inUse === true ? '是' : '否' }}</td>
+
+                      <td>
+                        <div class="btn-group btn-group-sm">
+                          <button class="btn btn-outline-success" @click="openEditChildField(item)"
+                            >修改</button
                           >
-                            {{ item.fieldTypeName }}({{ item.fieldTypeId }})
-                          </option>
-                        </select>
-                      </div>
 
-                      <ViewFeatureFlds_EditInCom
-                        ref="childEditorRef"
-                        :is-dialog="true"
-                      ></ViewFeatureFlds_EditInCom>
+                          <button class="btn btn-outline-danger" @click="deleteChildField(item)"
+                            >删除</button
+                          >
+                        </div>
+                      </td>
+                    </tr>
 
-                      <template #footer>
-                        <a-button @click="closeChildDialog">取消</a-button>
-
-                        <a-button type="primary" @click="saveChildField">保存</a-button>
-                      </template>
-                    </a-modal>
-                  </div>
-
-                  <!-- </keep-alive> -->
-                </div>
-
-                <div v-if="editActiveTabId === 'tab2'">
-                  <!-- <keep-alive> -->
-
-                  <div>
-                    <div id="divCodeTypeLst"></div>
-
-                    <div>
-                      <span id="lblResult" class="text-warning"></span><br />
-
-                      <input
-                        id="lblClassName"
-                        type="text"
-                        class="Content"
-                        style="width: 100%; height: 24px"
-                        Text="结果"
-                      />
-
-                      <br />
-
-                      <span id="lblResult" class="text-warning"></span>
-
-                      <span class="text-warning">文件名</span><br />
-
-                      <input
-                        id="lblFileName"
-                        type="text"
-                        class="text-info"
-                        style="width: 100%"
-                        value="结果"
-                      />
-
-                      <span class="text-warning">生成的代码</span><br />
-
-                      <textarea id="txtCodeText" style="width: 100%; height: 720px"></textarea></div
-                  ></div>
-
-                  <!-- </keep-alive> -->
-                </div>
+                    <tr v-if="arrViewFeatureFlds.length === 0">
+                      <td colspan="7" class="text-center text-secondary">当前没有子字段记录。</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
+        </transition>
+
+        <a-modal
+          v-model:visible="childDialogVisible"
+          :title="childDialogTitle"
+          width="900px"
+          :destroy-on-close="false"
+          @cancel="closeChildDialog"
+        >
+          <div v-if="childDialogMode === 'create'" class="mb-2">
+            <label class="form-label mb-1">字段类型</label>
+
+            <select
+              v-model="selectedFieldTypeId"
+              class="form-control form-control-sm"
+              @change="prepareCreateChildEditor"
+            >
+              <option
+                v-for="item in fieldTypeOptions"
+                :key="item.fieldTypeId"
+                :value="item.fieldTypeId"
+              >
+                {{ item.fieldTypeName }}({{ item.fieldTypeId }})
+              </option>
+            </select>
+          </div>
+
+          <ViewFeatureFlds_EditInCom
+            ref="childEditorRef"
+            :is-dialog="true"
+          ></ViewFeatureFlds_EditInCom>
+
+          <template #footer>
+            <a-button @click="closeChildDialog">取消</a-button>
+
+            <a-button type="primary" @click="saveChildField">保存</a-button>
+          </template>
+        </a-modal>
+
+        <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
+          <div class="h6 mb-0">生成代码</div>
+          <button class="btn btn-outline-secondary btn-sm" @click="toggleCodeGenTab">隐藏</button>
         </div>
+
+        <transition name="panel-stretch">
+          <div v-show="showCodeGenTab" class="panel-body panel-body-code">
+            <!-- <keep-alive> -->
+
+            <div>
+              <div id="divCodeTypeLst"></div>
+
+              <div>
+                <span id="lblResult" class="text-warning"></span><br />
+
+                <input
+                  id="lblClassName"
+                  type="text"
+                  class="Content"
+                  style="width: 100%; height: 24px"
+                  Text="结果"
+                />
+
+                <br />
+
+                <span id="lblResult" class="text-warning"></span>
+
+                <span class="text-warning">文件名</span><br />
+
+                <input
+                  id="lblFileName"
+                  type="text"
+                  class="text-info"
+                  style="width: 100%"
+                  value="结果"
+                />
+
+                <span class="text-warning">生成的代码</span><br />
+
+                <textarea id="txtCodeText" style="width: 100%; height: 720px"></textarea></div
+            ></div>
+
+            <!-- </keep-alive> -->
+          </div>
+        </transition>
       </div>
     </div>
 
@@ -654,6 +662,10 @@
       const ctlTypeOptions = ref<Array<clsCtlTypeEN>>([]);
 
       const childDialogVisible = ref(false);
+
+      const showMainFeatureEditor = ref(true);
+
+      const showCodeGenTab = ref(true);
 
       const childDialogMode = ref<'create' | 'update'>('create');
 
@@ -868,6 +880,8 @@
         selectedFieldTypeId.value =
           firstRealItem?.fieldTypeId || fieldTypeOptions.value[0]?.fieldTypeId || '';
 
+        showMainFeatureEditor.value = false;
+
         childDialogMode.value = 'create';
 
         childDialogTitle.value = '新增子字段';
@@ -880,6 +894,8 @@
       };
 
       const openEditChildField = async (item: any) => {
+        showMainFeatureEditor.value = false;
+
         childDialogMode.value = 'update';
 
         childDialogTitle.value = '修改子字段';
@@ -913,6 +929,8 @@
 
       const closeChildDialog = () => {
         childDialogVisible.value = false;
+
+        showMainFeatureEditor.value = true;
       };
 
       const saveChildField = async () => {
@@ -975,6 +993,8 @@
           await reloadChildFieldList();
 
           childDialogVisible.value = false;
+
+          showMainFeatureEditor.value = true;
         } catch (e: any) {
           console.error(e);
 
@@ -1019,36 +1039,12 @@
         }
       };
 
-      const editTabs = [
-        { id: 'tab1', label: '属性' },
-
-        { id: 'tab2', label: '代码生成' },
-      ];
-
-      const editActiveTabId = ref('tab1');
-
-      const editChangeTab = (tabId: string) => {
-        editActiveTabId.value = tabId;
-
-        switch (tabId) {
-          case 'tab1':
-            setTimeout(InitEdit, 100);
-
-            setTimeout(reloadChildFieldList, 200);
-
-            break;
-
-          case 'tab2':
-            break;
-        }
+      const toggleMainFeatureEditor = () => {
+        showMainFeatureEditor.value = !showMainFeatureEditor.value;
       };
 
-      const InitEdit = async () => {
-        // divVarSet.refDivEdit = FeatureRegionFlds_Edit.EditObj.$refs.refDivEdit;
-
-        const objPage = new FeatureRegionFldsCRUDEx();
-
-        await objPage.InitEdit();
+      const toggleCodeGenTab = () => {
+        showCodeGenTab.value = !showCodeGenTab.value;
       };
 
       const showTabs = [
@@ -1099,6 +1095,8 @@
         FeatureRegionFldsCRUDEx.GetPropValueV2 = GetPropValue;
 
         FeatureRegionFldsCRUDEx.OnCurrentFeatureChanged = () => {
+          showMainFeatureEditor.value = true;
+
           reloadChildFieldList();
         };
 
@@ -1146,10 +1144,16 @@
           case 'CreateWithMaxId':
             break;
           case 'Update':
+            showMainFeatureEditor.value = true;
+
             break;
           case 'UpdateRecord':
+            showMainFeatureEditor.value = true;
+
             break;
           case 'UpdateRecordInTab':
+            showMainFeatureEditor.value = true;
+
             break;
 
           case 'Update_ViewRegion':
@@ -1193,11 +1197,9 @@
 
         refDivDataLst,
 
-        editTabs,
+        toggleMainFeatureEditor,
 
-        editActiveTabId,
-
-        editChangeTab,
+        toggleCodeGenTab,
 
         showTabs,
 
@@ -1212,6 +1214,10 @@
         fieldTypeOptions,
 
         childDialogVisible,
+
+        showMainFeatureEditor,
+
+        showCodeGenTab,
 
         childDialogMode,
 
@@ -1290,5 +1296,49 @@
 
   .child-field-break {
     white-space: pre-line;
+  }
+
+  .right-panel {
+    position: fixed;
+    top: 4px;
+    right: 8px;
+    z-index: 2000;
+    height: calc(100vh - 24px);
+    min-height: 860px;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #d8d8d8;
+    border-radius: 6px;
+    padding: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .right-panel-content {
+    overflow: auto;
+    flex: 1;
+    padding-right: 2px;
+  }
+
+  .panel-body {
+    overflow: visible;
+  }
+
+  .panel-body-property,
+  .panel-body-code {
+    max-height: none;
+  }
+
+  .panel-stretch-enter-active,
+  .panel-stretch-leave-active {
+    transition: all 0.25s ease;
+    transform-origin: top;
+  }
+
+  .panel-stretch-enter-from,
+  .panel-stretch-leave-to {
+    opacity: 0;
+    transform: scaleY(0.95);
+    max-height: 0;
   }
 </style>
