@@ -107,7 +107,7 @@
   import 'bootstrap/dist/js/bootstrap.min.js';
   import 'bootstrap/dist/css/bootstrap.css';
   import router from '@/router';
-  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
+  import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
   // import { clsViewInfoENEx } from '@/ts/L0Entity/PrjInterface/clsViewInfoENEx';
 
   export default defineComponent({
@@ -135,7 +135,7 @@
       const btn_ClickInRow = (item: any) => {
         // console.log(item);
         // alert(item.viewId);
-        clsPrivateSessionStorage.viewId_Main = item.viewId;
+        viewId_Main.value = item.viewId;
         emit('on-edit-view-region', {
           viewId: item.viewId,
           content: '这是界面关键字:ViewId',
@@ -196,8 +196,8 @@
       btn_ClickInRow2(item: any) {
         // console.log(item);
         // alert(item.viewId + item.viewName);
-        clsPrivateSessionStorage.viewId_Main = item.viewId;
-        router.push({ name: 'account-editViewRegion', params: { viewId: item.viewId } });
+        viewId_Main.value = item.viewId;
+        router.push({ name: 'account-editViewRegion', query: { viewId: item.viewId } });
       },
       toggleAllCheckboxes() {
         this.items.forEach((item) => {

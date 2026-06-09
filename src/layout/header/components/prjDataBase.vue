@@ -43,6 +43,7 @@
   //   { value: 'option3', label: '选项3' },
   // ];
   const options = ref<Option[]>([]);
+  let initDefaultPrjDataBasePromise: Promise<void> | null = null;
   // console.log('options:', options);
   const Addi = ref('测试');
   const getLocaleText = computed(() => {
@@ -68,7 +69,7 @@
   // 定义 getData 函数
 
   const getData = async () => {
-    console.log('开始绑定数据：CMProject');
+    console.log('开始绑定数据：PrjDataBase');
     const strPrjId = clsPrivateSessionStorage.currSelPrjId;
     const arrObjLst_Sel = await PrjDataBaseEx_GetObjExLstByPrjId(strPrjId);
 
@@ -76,10 +77,7 @@
       value: x.prjDataBaseId,
       label: x.prjDataBaseName,
     }));
-    // console.log('结束绑定数据：CMProject', strPrjId);
-    setTimeout(() => {
-      GetDefaPrjDataBaseId();
-    }, 100);
+    await ensureDefaultPrjDataBaseReady();
   };
 
   // 暴露 getData 函数给父组件
@@ -135,6 +133,15 @@
     Addi.value = Format('{0}{1}', objPrjDataBase.prjDataBaseId, objPrjDataBase.prjDataBaseName);
 
     clsPubSessionStorage.currDataBaseTypeId = objPrjDataBase.dataBaseTypeId;
+  }
+
+  async function ensureDefaultPrjDataBaseReady() {
+    if (!initDefaultPrjDataBasePromise) {
+      initDefaultPrjDataBasePromise = GetDefaPrjDataBaseId().finally(() => {
+        initDefaultPrjDataBasePromise = null;
+      });
+    }
+    await initDefaultPrjDataBasePromise;
   }
 
   onMounted(() => {

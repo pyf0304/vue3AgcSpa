@@ -47,6 +47,7 @@ import {
   TabId_Static,
 } from '@/views/RegionManage/DGRegionFldsVueShare';
 import { vFieldTab_Sim_GetObjByFldIdCache } from '@/ts/L3ForWApi/Table_Field/clsvFieldTab_SimWApi';
+import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 /* DGRegionFlds_EditEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScript_EditCSEx_TS4TypeScript:GeneCode)
@@ -373,8 +374,10 @@ export default class DGRegionFlds_EditEx extends DGRegionFlds_Edit {
       const returnBool = await DGRegionFlds_UpdateRecordAsync(objDGRegionFldsEN);
       // const bolResult = false;
       if (returnBool == true) {
+        const strViewId =
+          new URLSearchParams(window.location.search).get('viewId') || viewId_Main.value;
         await DGRegionFldsEx_CheckRegionFldsUp(
-          clsPrivateSessionStorage.viewId_Main,
+          strViewId,
           objDGRegionFldsEN.regionId,
           clsPrivateSessionStorage.cmPrjId,
           objDGRegionFldsEN.updUser,

@@ -1,17 +1,17 @@
 ﻿/**
- * 类名:PrjDataBaseCRUD(界面:PrjDataBaseCRUD,00050346)
- * 表名:PrjDataBase(00050176)
- * 版本:2026.04.19(服务器:PYF-AI)
- * 日期:2026/04/19 19:43:14
- * 生成者:
- 工程名称:AGC(0005)
- CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:109.244.40.104,8433AGC_CS12
- * PrjDataBaseId:0005
- * 模块中文名:工程管理(PrjManage)
- * 框架-层名:Vue_界面后台_TS(TS)(Vue_ViewScriptCS_TS,0254)
- * 编程语言:TypeScript
- **/
+   * 类名:PrjDataBaseCRUD(界面:PrjDataBaseCRUD,00050346)
+   * 表名:PrjDataBase(00050176)
+   * 版本:2026.04.19(服务器:PYF-AI)
+   * 日期:2026/04/19 19:43:14
+   * 生成者:
+   工程名称:AGC(0005)
+  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
+  * 相关数据库:109.244.40.104,8433AGC_CS12
+  * PrjDataBaseId:0005
+  * 模块中文名:工程管理(PrjManage)
+  * 框架-层名:Vue_界面后台_TS(TS)(Vue_ViewScriptCS_TS,0254)
+  * 编程语言:TypeScript
+  **/
 //import $ from "jquery";
 import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
 import {
@@ -36,7 +36,7 @@ import {
   PrjDataBase_GetMaxStrIdAsync,
   PrjDataBase_AddNewRecordAsync,
   PrjDataBase_UpdateRecordAsync,
-  PrjDataBase_DelPrjDataBasesAsync,
+  PrjDataBase_DelKeysAsync,
 } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
 import { UseState_BindDdl_UseStateIdInDivCache } from '@/ts/L3ForWApi/SysPara/clsUseStateWApi';
 import {
@@ -1335,7 +1335,7 @@ export abstract class PrjDataBaseCRUD implements clsOperateList {
   public async DelMultiRecord(arrPrjDataBaseId: Array<string>) {
     const strThisFuncName = this.DelMultiRecord.name;
     try {
-      const returnInt = await PrjDataBase_DelPrjDataBasesAsync(arrPrjDataBaseId);
+      const returnInt = await PrjDataBase_DelKeysAsync(arrPrjDataBaseId);
       if (returnInt > 0) {
         PrjDataBase_ReFreshCache();
         const strInfo = `删除${this.thisTabName}记录成功,共删除${returnInt}条记录!`;

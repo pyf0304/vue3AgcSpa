@@ -19,7 +19,7 @@ import { clsViewRelaTabENEx } from '@/ts/L0Entity/PrjInterface/clsViewRelaTabENE
 import { clsViewRelaTabEN } from '@/ts/L0Entity/PrjInterface/clsViewRelaTabEN';
 import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
 import { IsNullOrEmpty, Format } from '@/ts/PubFun/clsString';
-import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
+import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 const ascOrDesc4SortFun = ref('Asc');
 const sortViewRelaTabBy = ref('');
@@ -87,7 +87,7 @@ export const CombineViewRelaTabCondition = async (): Promise<string> => {
   //使条件串的初值为"1 = 1",以便在该串的后面用"and "添加其他条件,
   //例如 1 = 1 && UserName = '张三'
   let strWhereCond = ' 1 = 1 ';
-  const strViewId = clsPrivateSessionStorage.viewId_Main;
+  const strViewId = viewId_Main.value;
   if (IsNullOrEmpty(strViewId) == false) {
     strWhereCond += Format(" and {0}='{1}'", clsViewRelaTabEN.con_ViewId, strViewId);
   }

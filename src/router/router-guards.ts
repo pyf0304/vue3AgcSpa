@@ -1,4 +1,4 @@
-﻿import { isNavigationFailure } from 'vue-router';
+﻿import { isNavigationFailure, NavigationFailureType } from 'vue-router';
 import NProgress from 'nprogress'; // progress bar
 import { LOGIN_NAME, REDIRECT_NAME } from './constant';
 import type { WhiteNameList } from './constant';
@@ -12,42 +12,84 @@ import { to as _to } from '@/utils/awaitTo';
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
 const defaultRoutePath = '/dashboard/welcome';
+let userInitPromise: Promise<unknown> | null = null;
+
+async function ensureUserReady(userStore: ReturnType<typeof useUserStore>) {
+  if (userStore.menus.length > 0) return null;
+  if (!userInitPromise) {
+    userInitPromise = userStore.afterLogin().finally(() => {
+      userInitPromise = null;
+    });
+  }
+  const [err] = await _to(userInitPromise);
+  return err ?? null;
+}
 
 export function createRouterGuards(router: Router, whiteNameList: WhiteNameList) {
   router.beforeEach(async (to, _, next) => {
-    NProgress.start(); // start progress bar
+    if (!NProgress.isStarted()) {
+      NProgress.start(); // start progress bar
+    }
     const userStore = useUserStore();
     const token = Storage.get(ACCESS_TOKEN_KEY, null);
 
     if (token) {
       if (to.name === LOGIN_NAME) {
-        next({ path: defaultRoutePath });
-      } else {
-        const hasRoute = router.hasRoute(to.name!);
-        if (userStore.menus.length === 0) {
-          // 从后台获取菜单
-          const [err] = await _to(userStore.afterLogin());
-          if (err) {
-            userStore.resetToken();
-            return next({ name: LOGIN_NAME });
-          }
-          if (!hasRoute) {
-            // 如果该路由不存在，可能是动态注册的路由，它还没准备好，需要再重定向一次到该路由
-            next({ ...to, replace: true });
-          } else {
-            next();
-          }
-        } else {
-          next();
-        }
+        return next({ path: defaultRoutePath });
       }
+
+      const err = await ensureUserReady(userStore);
+      if (err) {
+        console.error('router guard ensureUserReady failed', {
+          toName: to.name,
+          toPath: to.fullPath,
+          err,
+        });
+        userStore.resetToken();
+        return next({ name: LOGIN_NAME });
+      }
+
+      const hasNamedRoute = typeof to.name === 'string' && router.hasRoute(to.name);
+      const hasMatchedRoute = to.matched.length > 0;
+      console.log('router guard route state', {
+        toName: to.name,
+        toPath: to.fullPath,
+        matchedCount: to.matched.length,
+        matchedNames: to.matched.map((item) => item.name),
+        hasNamedRoute,
+        hasMatchedRoute,
+        retry: to.query.__guard_retry ?? '0',
+      });
+
+      if (hasNamedRoute || hasMatchedRoute) {
+        return next();
+      }
+
+      if (to.query.__guard_retry === '1') {
+        console.warn('router guard fallback to /404 after retry', {
+          toName: to.name,
+          toPath: to.fullPath,
+        });
+        return next('/404');
+      }
+
+      // 动态路由刚注册完成后，只对目标地址重进一次，避免无名路由或404兜底时死循环。
+      console.warn('router guard retry navigation', {
+        toName: to.name,
+        toPath: to.fullPath,
+      });
+      return next({
+        path: to.fullPath,
+        replace: true,
+        query: { ...to.query, __guard_retry: '1' },
+      });
     } else {
       // not login
       if (whiteNameList.some((n) => n === to.name)) {
         // 在免登录名单，直接进入
-        next();
+        return next();
       } else {
-        next({
+        return next({
           name: LOGIN_NAME,
           query: { redirect: to.fullPath },
           replace: true,
@@ -66,8 +108,13 @@ export function createRouterGuards(router: Router, whiteNameList: WhiteNameList)
     const keepAliveStore = useKeepAliveStore();
     const token = Storage.get(ACCESS_TOKEN_KEY, null);
 
-    if (isNavigationFailure(failure)) {
-      console.error('failed navigation', failure);
+    if (failure) {
+      const isUnexpectedFailure =
+        !isNavigationFailure(failure, NavigationFailureType.cancelled) &&
+        !isNavigationFailure(failure, NavigationFailureType.duplicated);
+      if (isUnexpectedFailure) {
+        console.error('failed navigation', failure);
+      }
     }
     // 在这里设置需要缓存的组件名称
     const toCompName = getComponentName(to);
@@ -100,6 +147,7 @@ export function createRouterGuards(router: Router, whiteNameList: WhiteNameList)
   });
 
   router.onError((error) => {
+    NProgress.done();
     console.log(error, '路由错误');
   });
 }

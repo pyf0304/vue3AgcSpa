@@ -74,12 +74,6 @@ export class PrjTab_AllPropEx {
 
     //$('#spnApplicationTypeId').html(objPrjTab4Session.applicationTypeId.toString());
     //$('#spnApplicationTypeName').html(objPrjTab4Session.applicationTypeName);
-
-    //var objA_GC: HTMLAnchorElement = <HTMLAnchorElement>liGeneViewCode.firstChild;
-    //if (objA_GC.href.indexOf("?") == -1) {
-    //    var strHtml = Format("{0}?viewId={1}", objA_GC.href, clsPrivateSessionStorage.viewId_Main);
-    //    objA_GC.href = strHtml;
-    //}
   }
 
   /*
@@ -525,8 +519,7 @@ export class PrjTab_AllPropEx {
       //   outTabId: objViewInfo.outRelaTabId,
       //   cmPrjId: clsPrivateSessionStorage.cmPrjId,
       // };
-      clsPrivateSessionStorage.viewId_Main = objViewInfo.viewId;
-      clsPrivateSessionStorage.viewName = objViewInfo.viewName;
+
       clsPrivateSessionStorage.funcModuleNameSim = objFuncModule_Agc.funcModuleNameSim;
       clsPrivateSessionStorage.funcModuleEnName = objFuncModule_Agc.funcModuleEnName;
 
@@ -535,7 +528,6 @@ export class PrjTab_AllPropEx {
 
       // this.SetSessionAsync('objViewInfo4Session', strJson);
 
-      clsPrivateSessionStorage.viewId_Main = objViewInfo.viewId;
       //Redirect("/Index/Main_ViewInfo.js");
       //Redirect("/PrjInterface/ViewInfo_U");
       // '../PrjInterface/ViewInfo_U?viewId={0}&Op=TabFldEdit',

@@ -97,6 +97,7 @@ import {
   refDetailRegionFlds_Edit,
   RegionId_Static,
   TabId_Static,
+  CmPrjId_Local,
   viewVarSet,
 } from '@/views/RegionManage/DetailRegionFldsVueShare';
 import {
@@ -105,6 +106,7 @@ import {
 } from '@/views/RegionManage/ViewRegion_UVueShare';
 
 import { vFieldTab_Sim_GetObjByFldIdCache } from '@/ts/L3ForWApi/Table_Field/clsvFieldTab_SimWApi';
+import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 /** DetailRegionFldsCRUDEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -355,7 +357,7 @@ export default class DetailRegionFldsCRUDEx extends DetailRegionFldsCRUD impleme
   public async PageLoadCache() {
     const strThisFuncName = this.PageLoadCache.name;
     const viewRegionStore = useviewRegionStore();
-    // clsPrivateSessionStorage.viewId_Main = '00050322';
+    // viewId_Main.value = '00050322';
     // 在此处放置用户代码以初始化页面
     try {
       switch (this.qsOp) {
@@ -376,7 +378,14 @@ export default class DetailRegionFldsCRUDEx extends DetailRegionFldsCRUD impleme
 
       //const objViewRegion_Edit = arrViewRegion.find(x => x.viewId == strViewId && x.regionTypeId == enumRegionType.DetailRegion_0006);
       //const objViewRegion_Detail = await ViewRegionEx_GetObjByRegionTypeIdAndViewIdCache(strViewId, enumRegionType.DetailRegion_0006, clsPrivateSessionStorage.currSelPrjId);
-      const strViewId = clsPrivateSessionStorage.viewId_Main;
+      const strViewId = DetailRegionFldsCRUDEx.strViewId4Region || viewId_Main.value;
+      if (IsNullOrEmpty(strViewId) == true) {
+        const strMsg = `详细区缺少界面Id，页面启动不成功.(in ${this.constructor.name}.${strThisFuncName})`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      CmPrjId_Local.value = clsPrivateSessionStorage.cmPrjId;
       const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
       RegionId_Static.value = await ViewRegionEx_GetRegionIdByTypeCache(
         strViewId,
@@ -501,12 +510,13 @@ export default class DetailRegionFldsCRUDEx extends DetailRegionFldsCRUD impleme
     }
     let objDT: Array<object>;
     let objDR: object = new Object();
-    const objViewInfo = await viewInfoStore.getObj(clsPrivateSessionStorage.viewId_Main);
+    const strViewId = DetailRegionFldsCRUDEx.strViewId4Region || viewId_Main.value;
+    const objViewInfo = await viewInfoStore.getObj(strViewId);
     if (objViewInfo == null) {
       const strMsg = Format(
         '在项目:[{0}]中，界面Id:[{1}]没有相应界面，请检查！',
         clsPrivateSessionStorage.currSelPrjName,
-        clsPrivateSessionStorage.viewId_Main,
+        strViewId,
       );
       console.error(strMsg);
       alert(strMsg);

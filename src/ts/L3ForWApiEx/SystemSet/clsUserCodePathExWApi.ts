@@ -31,13 +31,30 @@ import { useCMProjectAppRelaStore } from '@/store/modules/CMProjectAppRela';
 export const userCodePathEx_Controller = 'UserCodePathExApi';
 export const userCodePathEx_ConstructorName = 'userCodePathEx';
 
+export interface SetUserGCCodePathRequest {
+  strUserId: string;
+  strMachineName: string;
+  strPrjId: string;
+  strCmPrjId: string;
+  intApplicationTypeId: number;
+  strCodeTypeId: string;
+  strCodePath: string;
+  strCodePathBackup: string;
+}
+
 /**
  * 设置GC路径
  * (AGC.BusinessLogicEx.clsFunction4CodeBLEx:GeneCodeV2)
+ * @param strUserId: 用户Id
+ * @param strMachineName: 机器名称
  * @param strOpUserId: 操作用户Id
  * @returns 获取的相应对象列表
  */
-export async function UserCodePathEx_SetGCPath(strOpUserId: string): Promise<number> {
+export async function UserCodePathEx_SetGCPath(
+  strUserId: string,
+  strMachineName: string,
+  strOpUserId: string,
+): Promise<number> {
   const strThisFuncName = UserCodePathEx_SetGCPath.name;
   const strAction = 'SetGCPath';
   const strUrl = GetWebApiUrl(userCodePathEx_Controller, strAction);
@@ -47,11 +64,14 @@ export async function UserCodePathEx_SetGCPath(strOpUserId: string): Promise<num
 
   const token = Storage.get(ACCESS_TOKEN_KEY);
   //console.error('token:', token);
+
   const config = {
     headers: {
       Authorization: `${token}`,
     },
     params: {
+      strUserId,
+      strMachineName,
       strOpUserId,
     },
   };
@@ -60,6 +80,72 @@ export async function UserCodePathEx_SetGCPath(strOpUserId: string): Promise<num
     const data = response.data;
     if (data.errorId == 0) {
       return data.returnInt;
+    } else {
+      console.error(data.errorMsg);
+      throw data.errorMsg;
+    }
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusText == undefined) {
+      throw error;
+    }
+    if (error.statusText == 'error') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}不成功！(in {1}.{2})',
+        strUrl,
+        userCodePathEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else if (error.statusText == 'Not Found') {
+      const strInfo = Format(
+        '网络错误！访问地址:{0}可能不存在！(in {1}.{2})',
+        strUrl,
+        userCodePathEx_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strInfo);
+      throw strInfo;
+    } else {
+      throw error.statusText;
+    }
+  }
+}
+
+/**
+ * 设置用户生成代码路径及备份路径
+ * (AGC.WebApi.UserCodePathExApi:SetUserGCCodePathWithBackup)
+ * @param objRequest: 请求参数
+ * @returns 设置结果
+ */
+export async function UserCodePathEx_SetUserGCCodePathWithBackup(
+  objRequest: SetUserGCCodePathRequest,
+): Promise<{ success: boolean; message: string }> {
+  const strThisFuncName = UserCodePathEx_SetUserGCCodePathWithBackup.name;
+  const strAction = 'SetUserGCCodePathWithBackup';
+  const strUrl = GetWebApiUrl(userCodePathEx_Controller, strAction);
+
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const config = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+
+  try {
+    const response = await axios.post(strUrl, objRequest, config);
+    const data = response.data;
+    if (data.errorId == 0) {
+      return {
+        success:
+          data.success === undefined
+            ? data.returnBool === undefined
+              ? true
+              : Boolean(data.returnBool)
+            : Boolean(data.success),
+        message: data.message ?? '',
+      };
     } else {
       console.error(data.errorMsg);
       throw data.errorMsg;

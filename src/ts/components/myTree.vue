@@ -2,7 +2,13 @@
   <div class="tree">
     <ul>
       <li v-for="node in treeData" :key="node.id">
-        <span :class="{ expanded: node.expanded }" @click="toggleNode(node)">
+        <span
+          :class="{ expanded: node.expanded }"
+          :title="getNodeTitle(node)"
+          @click="toggleNode(node)"
+          @mouseenter="emitNodeHover($event, node)"
+          @mouseleave="emitNodeLeave($event, node)"
+        >
           {{ node.label }}
         </span>
         <ul v-if="node.expanded">
@@ -12,7 +18,10 @@
                 expanded: childNode.expanded,
                 selected: childNode === selectedNode0,
               }"
+              :title="getNodeTitle(childNode)"
               @click="toggleNode(childNode)"
+              @mouseenter="emitNodeHover($event, childNode)"
+              @mouseleave="emitNodeLeave($event, childNode)"
             >
               {{ childNode.label }}
             </span>
@@ -23,7 +32,10 @@
                     expanded: grandchildNode.expanded,
                     selected: grandchildNode === selectedNode0,
                   }"
+                  :title="getNodeTitle(grandchildNode)"
                   @click="toggleNode(grandchildNode)"
+                  @mouseenter="emitNodeHover($event, grandchildNode)"
+                  @mouseleave="emitNodeLeave($event, grandchildNode)"
                 >
                   {{ grandchildNode.label }}
                 </span>
@@ -34,7 +46,10 @@
                         nochild: ggrandchildNode.children == null,
                         selected: ggrandchildNode === selectedNode0,
                       }"
+                      :title="getNodeTitle(ggrandchildNode)"
                       @click="toggleNode(ggrandchildNode)"
+                      @mouseenter="emitNodeHover($event, ggrandchildNode)"
+                      @mouseleave="emitNodeLeave($event, ggrandchildNode)"
                     >
                       <span v-html="ggrandchildNode.label"></span>
                     </span>
@@ -65,9 +80,39 @@
         default: null,
       },
     },
-    emits: ['on-node-click'],
+    emits: ['on-node-click', 'on-node-hover', 'on-node-leave'],
     setup(props, { emit }) {
       const selectedNode0 = ref(props.selectedNode);
+
+      const getNodeTitle = (node: TreeNode) => {
+        return node.title ?? '';
+      };
+
+      const emitNodeHover = (event: MouseEvent, node: TreeNode) => {
+        emit('on-node-hover', {
+          type: node.type,
+          id: node.id,
+          label: node.label,
+          title: getNodeTitle(node),
+          parentId: getParentIdLst(node),
+          event,
+          element: event.currentTarget,
+          node,
+        });
+      };
+
+      const emitNodeLeave = (event: MouseEvent, node: TreeNode) => {
+        emit('on-node-leave', {
+          type: node.type,
+          id: node.id,
+          label: node.label,
+          title: getNodeTitle(node),
+          parentId: getParentIdLst(node),
+          event,
+          element: event.currentTarget,
+          node,
+        });
+      };
 
       const toggleNode = (node: TreeNode) => {
         // console.error('node in toggleNode', node);
@@ -250,6 +295,9 @@
         selectNodeSim,
         populateParentNodes,
         getParentIdLst,
+        getNodeTitle,
+        emitNodeHover,
+        emitNodeLeave,
       };
     },
   });

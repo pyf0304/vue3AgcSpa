@@ -139,7 +139,6 @@
     emptyRecNumInfo,
     PrjId_Session,
     TabId_Static,
-    ViewId_Main_Session,
     varId_q,
     viewId_q,
     retrievalMethodId_f,
@@ -178,7 +177,6 @@
       if (typeof route.query.TabId === 'string') {
         TabId_Static.value = route.query.TabId;
       }
-      ViewId_Main_Session.value = clsPrivateSessionStorage.viewId_Main;
 
       const arrGCVariable = ref<clsGCVariableEN[]>([]);
       /**

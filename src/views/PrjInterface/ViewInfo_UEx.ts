@@ -22,6 +22,7 @@ import {
   UserId_Local,
   viewVarSet,
 } from '@/views/PrjInterface/ViewInfo_UVueShare';
+import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 /** ViewInfo_UEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -107,7 +108,7 @@ export default class ViewInfo_UEx extends ViewInfo_U implements IShowList {
       case 'UpdateRecord': //修改记录
       case 'Update': //修改记录
       case 'UpdateRecordInTab': //修改记录InTab
-        strKeyId = clsPrivateSessionStorage.viewId_Main;
+        strKeyId = viewId_Main.value;
         refViewInfo_Edit2.value.btnViewInfo_Edit_Click(strCommandName, strKeyId);
         break;
       case 'CopyRecord': //复制记录

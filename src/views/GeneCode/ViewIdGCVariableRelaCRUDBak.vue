@@ -166,7 +166,7 @@
     refDivFunction,
     refDivList,
   } from '@/views/GeneCode/ViewIdGCVariableRelaVueShare';
-  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
+  import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
   export default defineComponent({
     name: 'ViewIdGCVariableRelaCRUD',
@@ -177,7 +177,7 @@
     },
 
     setup() {
-      ViewId_Main_Session.value = clsPrivateSessionStorage.viewId_Main;
+      ViewId_Main_Session.value = viewId_Main.value;
       /** 函数功能:为查询区绑定下拉框
        * (AutoGCLib.Vue_ViewScript_TS4Html:Gen_Vue_setup_Ts_BindDdl4QryRegionInDiv)
        **/

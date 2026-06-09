@@ -692,7 +692,7 @@
       */
       async function BindDdl4EditRegionInDiv() {
         const strTabId_Static = TabId_Static.value; //静态变量;//静态变量
-        const strCmPrjId = CmPrjId_Local.value; //静态变量;//Session存储、local存储
+        const strCmPrjId = CmPrjId_Local.value || clsPrivateSessionStorage.cmPrjId; //静态变量;//Session存储、local存储
 
         arrvFieldTab_Sim.value = await vFieldTab_SimEx_GetArrvFieldTab_SimByTabIdCache(
           strTabId_Static,

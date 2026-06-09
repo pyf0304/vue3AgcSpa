@@ -11,10 +11,12 @@ import { clsAppCodeTypeRelaENEx } from '@/ts/L0Entity/GeneCode/clsAppCodeTypeRel
 import { enumCodeType } from '@/ts/L0Entity/GeneCode/clsCodeTypeEN';
 import { enumRegionType } from '@/ts/L0Entity/RegionManage/clsRegionTypeEN';
 import { AutoGeneCode_GeneCodeAsync } from '@/ts/L3ForWApiEx/GeneCode/AutoGeneCodeWApi';
+import { GC_CodeTypeRelation_GetObjLstAsync } from '@/ts/L3ForWApi/GeneCode/clsGC_CodeTypeRelationWApi';
 import {
   ApplicationType_GetNameByKeyCache,
   ApplicationType_GetObjByKeyCache,
 } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
+import { createContextMenu, destroyContextMenu } from '@/components/basic/context-menu';
 
 import {
   AppCodeTypeRelaEx_CopyToEx,
@@ -26,6 +28,7 @@ import { ViewRegionEx_GetObjLstByViewIdCache } from '@/ts/L3ForWApiEx/RegionMana
 import { GetDistinctArray } from '@/ts/PubFun/clsCommFunc4Ctrl';
 import { GetWidthByWordStr } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsDateTime } from '@/ts/PubFun/clsDateTime';
+import { buildCodeTypeTooltip, showCodeTypePathEditDialog } from '@/ts/PubFun/CodeTypePathUi';
 import { clsPubSessionStorage } from '@/ts/PubFun/clsPubSessionStorage';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { IShowList } from '@/ts/PubFun/IShowList';
@@ -40,7 +43,10 @@ import {
   UserCodePrjMainPath_MachineNameEx_GetUserGCRootPathWithBackup,
   UserCodePrjMainPath_MachineNameEx_SetUserGCRootPathWithBackup,
 } from '@/ts/L3ForWApiEx/SystemSet/clsUserCodePrjMainPath_MachineNameExWApi';
-import { UserCodePathEx_GetUserGCCodePathWithBackup } from '@/ts/L3ForWApiEx/SystemSet/clsUserCodePathExWApi';
+import {
+  UserCodePathEx_GetUserGCCodePathWithBackup,
+  UserCodePathEx_SetUserGCCodePathWithBackup,
+} from '@/ts/L3ForWApiEx/SystemSet/clsUserCodePathExWApi';
 import { UserCodePath_GetObjLstCache } from '@/ts/L3ForWApi/SystemSet/clsUserCodePathWApi';
 import { AccessBindGvDefault, AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
 import {
@@ -54,7 +60,7 @@ import {
 } from '@/ts/LocalFileAccess/LocalFileAccess';
 import { useviewInfoStore } from '@/store/modules/viewInfo';
 import { viewInfo4GC } from '@/views/PrjInterface/GeneViewCodeVueShare';
-import { tabComponentRef } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
+import { tabComponentRef, viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 /** GeneViewCodeEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -78,6 +84,7 @@ export class GeneViewCodeEx implements IShowList {
   public static divDetail: HTMLDivElement; //列表中的分页区的层对象
   public static divExcelExport: HTMLDivElement; //列表中的分页区的层对象
   public static divCodeTypeLst: HTMLDivElement; //列表中的分页区的层对象
+  private static codeTypePathMenuTimer: number | null = null;
 
   public static GetLocalCodeRootPathFromStorage(): string {
     for (const strKey of GeneViewCodeEx.LOCAL_CODE_ROOT_KEYS) {
@@ -167,7 +174,7 @@ export class GeneViewCodeEx implements IShowList {
    */
   public async PageLoadCache() {
     const strThisFuncName = this.PageLoadCache.name;
-    // clsPrivateSessionStorage.viewId_Main = '00050322';
+    // viewId_Main.value = '00050322';
     // 在此处放置用户代码以初始化页面
     try {
       switch (this.qsOp) {
@@ -185,7 +192,7 @@ export class GeneViewCodeEx implements IShowList {
       await GeneViewCodeEx.SetCurrentMachineNameView();
       GeneViewCodeEx.ShowRecentWriteLogsByCountOnPage(20);
       await this.VisualEffects();
-      await this.ShowCodeTypeButton(clsPrivateSessionStorage.viewId_Main);
+      await this.ShowCodeTypeButton(viewId_Main.value);
     } catch (e: any) {
       const strMsg = `页面启动不成功,${e}.(in ${this.constructor.name}.${strThisFuncName})`;
       console.error(strMsg);
@@ -239,7 +246,7 @@ export class GeneViewCodeEx implements IShowList {
       let intApplicationTypeId = 0;
 
       const viewInfoStore = useviewInfoStore();
-      const objViewInfo = await viewInfoStore.getObj(clsPrivateSessionStorage.viewId_Main);
+      const objViewInfo = await viewInfoStore.getObj(viewId_Main.value);
       if (objViewInfo != null) {
         intApplicationTypeId = Number(objViewInfo.applicationTypeId) || 0;
       }
@@ -335,7 +342,7 @@ export class GeneViewCodeEx implements IShowList {
       }
 
       const viewInfoStore = useviewInfoStore();
-      const objViewInfo = await viewInfoStore.getObj(clsPrivateSessionStorage.viewId_Main);
+      const objViewInfo = await viewInfoStore.getObj(viewId_Main.value);
       if (objViewInfo == null) {
         return { isSuccess: false, msg: '当前界面信息不存在，无法设置代码根目录。' };
       }
@@ -410,6 +417,226 @@ export class GeneViewCodeEx implements IShowList {
       const strErrMsg = e?.message ?? String(e);
       return `用户代码路径: (获取失败: ${strErrMsg})`;
     }
+  }
+
+  private static async BuildCodeTypeButtonTooltip(
+    strMachineName: string,
+    intApplicationTypeId: number,
+    strCodeTypeId: string,
+    strDependsOn: string,
+    bolCanOverwrite: boolean | undefined,
+    strMainTabId: string,
+    arrExtraLines: Array<string> = [],
+  ): Promise<string> {
+    const strCodePathTip = await GeneViewCodeEx.GetCodePathTipByCodeType(
+      strMachineName,
+      intApplicationTypeId,
+      strCodeTypeId,
+    );
+    return buildCodeTypeTooltip({
+      codePathTip: strCodePathTip,
+      dependsOn: strDependsOn,
+      overwriteEnabled: bolCanOverwrite,
+      targetRequired: strDependsOn == 'Table',
+      targetLabel: '当前界面主表Id',
+      targetValue: strMainTabId,
+      extraLines: arrExtraLines,
+    });
+  }
+
+  private static UpdateCodeTypeButtonTooltips(
+    strCodeTypeId: string,
+    strTooltip: string,
+    objCurrentButton?: HTMLButtonElement | HTMLInputElement,
+  ): void {
+    const arrButtonId = [`btn${strCodeTypeId}`, `btn${strCodeTypeId}1`];
+    for (const strButtonId of arrButtonId) {
+      const objButton = document.getElementById(strButtonId) as
+        | HTMLButtonElement
+        | HTMLInputElement
+        | null;
+      if (objButton != null) {
+        objButton.title = strTooltip;
+      }
+    }
+    if (objCurrentButton != null) {
+      objCurrentButton.title = strTooltip;
+    }
+  }
+
+  private static clearCodeTypePathMenuTimer(): void {
+    if (GeneViewCodeEx.codeTypePathMenuTimer != null) {
+      window.clearTimeout(GeneViewCodeEx.codeTypePathMenuTimer);
+      GeneViewCodeEx.codeTypePathMenuTimer = null;
+    }
+  }
+
+  private static async SetCodeTypePathByMenu(
+    objButton: HTMLButtonElement | HTMLInputElement,
+    strCodeTypeId: string,
+    strCodeTypeName: string,
+  ): Promise<void> {
+    try {
+      const strUserId = clsPubLocalStorage.userId;
+      const strPrjId = clsPrivateSessionStorage.currSelPrjId;
+      const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
+      if (
+        IsNullOrEmpty(strUserId) == true ||
+        IsNullOrEmpty(strPrjId) == true ||
+        IsNullOrEmpty(strCmPrjId) == true
+      ) {
+        alert('用户或项目上下文为空，无法设置代码类型路径！');
+        return;
+      }
+
+      const strMachineName = String(await getMachineNameFromLocalAgent()).trim();
+      if (IsNullOrEmpty(strMachineName) == true) {
+        alert('当前机器名为空，无法设置路径！');
+        return;
+      }
+
+      const viewInfoStore = useviewInfoStore();
+      const objViewInfo = await viewInfoStore.getObj(viewId_Main.value);
+      if (objViewInfo == null) {
+        alert('当前界面信息不存在，无法设置路径！');
+        return;
+      }
+
+      const intApplicationTypeId = Number(objViewInfo.applicationTypeId) || 0;
+      if (intApplicationTypeId <= 0) {
+        alert('应用类型为空，无法设置路径！');
+        return;
+      }
+
+      const objCodeType = await vCodeType_Sim_GetObjByCodeTypeIdCache(strCodeTypeId);
+      if (objCodeType == null) {
+        alert(`代码类型Id:[${strCodeTypeId}]不存在，无法设置路径！`);
+        return;
+      }
+
+      let objCodePath: { codePath: string; codePathBackup: string } = {
+        codePath: '',
+        codePathBackup: '',
+      };
+      try {
+        objCodePath = await UserCodePathEx_GetUserGCCodePathWithBackup(
+          strUserId,
+          strMachineName,
+          strPrjId,
+          strCmPrjId,
+          intApplicationTypeId,
+          strCodeTypeId,
+        );
+      } catch (e) {
+        console.warn('SetCodeTypePathByMenu get current code path warning:', e);
+      }
+      if (
+        IsNullOrEmpty(objCodePath.codePath) == true &&
+        IsNullOrEmpty(objCodePath.codePathBackup) == true
+      ) {
+        const objRootPathInfo = await GeneViewCodeEx.GetCurrentUserAppRootPathWithBackup(
+          strMachineName,
+        );
+        objCodePath = {
+          codePath: objRootPathInfo.codePath,
+          codePathBackup: objRootPathInfo.codePathBackup,
+        };
+      }
+
+      const objRootPathInfo = await GeneViewCodeEx.GetCurrentUserAppRootPathWithBackup(
+        strMachineName,
+      );
+
+      let strOverwriteSummary = '覆盖策略: (未知)';
+      if (objCodeType.isDefaultOverride === true) {
+        strOverwriteSummary = '覆盖策略: 可覆盖';
+      } else if (objCodeType.isDefaultOverride === false) {
+        strOverwriteSummary = '覆盖策略: 不可覆盖';
+      }
+
+      const objDialogResult = await showCodeTypePathEditDialog({
+        title: `设置代码类型路径`,
+        codeTypeName: strCodeTypeName,
+        codeTypeId: strCodeTypeId,
+        codePath: objCodePath.codePath ?? '',
+        codePathBackup: objCodePath.codePathBackup ?? '',
+        restoreCodePath: objRootPathInfo.codePath ?? '',
+        restoreCodePathBackup: objRootPathInfo.codePathBackup ?? '',
+        summaryLines: [
+          `当前机器: ${strMachineName}`,
+          `依赖类型: ${objCodeType.dependsOn || '(未知)'}`,
+          objCodeType.dependsOn == 'Table'
+            ? `TabId要求: 必填(当前界面主表Id: ${objViewInfo.mainTabId || '空'})`
+            : 'TabId要求: 非必填',
+          strOverwriteSummary,
+        ],
+      });
+      if (objDialogResult == null) return;
+
+      const objResult = await UserCodePathEx_SetUserGCCodePathWithBackup({
+        strUserId,
+        strMachineName,
+        strPrjId,
+        strCmPrjId,
+        intApplicationTypeId,
+        strCodeTypeId,
+        strCodePath: objDialogResult.codePath,
+        strCodePathBackup: objDialogResult.codePathBackup,
+      });
+
+      if (objResult.success == false) {
+        alert(objResult.message || '设置代码类型路径失败！');
+        return;
+      }
+
+      const strButtonTooltip = await GeneViewCodeEx.BuildCodeTypeButtonTooltip(
+        strMachineName,
+        intApplicationTypeId,
+        strCodeTypeId,
+        objCodeType.dependsOn,
+        objCodeType.isDefaultOverride,
+        String(objViewInfo.mainTabId || '空'),
+      );
+      GeneViewCodeEx.UpdateCodeTypeButtonTooltips(strCodeTypeId, strButtonTooltip, objButton);
+      alert(objResult.message || `已设置代码类型路径: ${strCodeTypeName}(${strCodeTypeId})`);
+    } catch (e: any) {
+      const strMsg = Format('设置路径不成功,{0}.(codeTypeId:{1})', e?.message ?? e, strCodeTypeId);
+      console.error(strMsg);
+      alert(strMsg);
+    }
+  }
+
+  private static bindCodeTypePathHoverMenu(
+    objButton: HTMLButtonElement | HTMLInputElement,
+    strCodeTypeId: string,
+    strCodeTypeName: string,
+  ): void {
+    const showMenu = async (evt: MouseEvent) => {
+      GeneViewCodeEx.clearCodeTypePathMenuTimer();
+      destroyContextMenu();
+      GeneViewCodeEx.codeTypePathMenuTimer = window.setTimeout(async () => {
+        await createContextMenu({
+          event: evt,
+          items: [
+            {
+              label: '设置路径',
+              handler: async () => {
+                await GeneViewCodeEx.SetCodeTypePathByMenu(
+                  objButton,
+                  strCodeTypeId,
+                  strCodeTypeName,
+                );
+              },
+            },
+          ],
+        });
+      }, 600);
+    };
+
+    objButton.addEventListener('mouseenter', showMenu);
+    objButton.addEventListener('mouseleave', () => {
+      GeneViewCodeEx.clearCodeTypePathMenuTimer();
+    });
   }
 
   private static renderWriteLogsOnPage(arrLog: Array<any>, strTitle: string): void {
@@ -693,29 +920,37 @@ export class GeneViewCodeEx implements IShowList {
           objButton.setAttribute('disabled', 'disabled');
           objButton.className = 'btn btn-outline-primary btn-sm disabled';
         } else {
-          objButton.onclick = function (this) {
-            GeneViewCodeEx.btnCodeType_Click(this, event);
+          objButton.onclick = async function (this: HTMLButtonElement, evt: Event) {
+            await GeneViewCodeEx.btnCodeType_Click(this, evt);
           };
           objButton.className = 'btn btn-outline-primary btn-sm';
         }
+        GeneViewCodeEx.bindCodeTypePathHoverMenu(
+          objButton,
+          objInFor.codeTypeId,
+          objInFor.codeTypeName,
+        );
         objButton.setAttribute('style', 'margin-right:10px;margin-top:5px;left:0px;');
 
         const objHtmlInputButton = <HTMLInputElement>document.createElement('input');
         objHtmlInputButton.type = 'button';
         objHtmlInputButton.id = Format('btn{0}1', objInFor.codeTypeId);
 
-        const strCodePathTip = await GeneViewCodeEx.GetCodePathTipByCodeType(
+        const bolCanOverwrite = mapCodeTypeOverwrite.get(objInFor.codeTypeId);
+        const strButtonTooltip = await GeneViewCodeEx.BuildCodeTypeButtonTooltip(
           strMachineName4CodePath,
           objViewInfo.applicationTypeId,
           objInFor.codeTypeId,
+          objInFor.dependsOn,
+          bolCanOverwrite,
+          String(objViewInfo.mainTabId || '空'),
+          bolIsExistRegion == false ? ['该界面无相关区域'] : [],
         );
-        const bolCanOverwrite = mapCodeTypeOverwrite.get(objInFor.codeTypeId);
-        let strOverwriteTip = '覆盖策略: (未知)';
-        if (bolCanOverwrite === true) {
-          strOverwriteTip = '覆盖策略: 可覆盖';
-        } else if (bolCanOverwrite === false) {
-          strOverwriteTip = '覆盖策略: 不可覆盖';
-        }
+        GeneViewCodeEx.UpdateCodeTypeButtonTooltips(
+          objInFor.codeTypeId,
+          strButtonTooltip,
+          objButton,
+        );
 
         objHtmlInputButton.name = Format('btn{0}1', objInFor.codeTypeId);
         if (bolIsExistRegion == false) {
@@ -724,11 +959,11 @@ export class GeneViewCodeEx implements IShowList {
             'btn btn-outline-secondary btn-sm ml-2 disabled',
           );
           objHtmlInputButton.setAttribute('disabled', 'disabled');
-          objHtmlInputButton.title = `${strCodePathTip}\n${strOverwriteTip}\n该界面无相关区域`;
         } else {
           objHtmlInputButton.setAttribute('class', 'btn btn-outline-primary btn-sm ml-2');
-          objHtmlInputButton.title = `${strCodePathTip}\n${strOverwriteTip}`;
         }
+        objButton.title = strButtonTooltip;
+        objHtmlInputButton.title = strButtonTooltip;
 
         objHtmlInputButton.setAttribute('codeTypeId', objInFor.codeTypeId);
         objHtmlInputButton.setAttribute('viewId', strViewId);
@@ -736,13 +971,18 @@ export class GeneViewCodeEx implements IShowList {
           'applicationTypeId',
           objViewInfo.applicationTypeId.toString(),
         );
-        objHtmlInputButton.onclick = function (this) {
-          GeneViewCodeEx.btnCodeType_Click(this, event);
+        objHtmlInputButton.onclick = async function (this: HTMLInputElement, evt: Event) {
+          await GeneViewCodeEx.btnCodeType_Click(this, evt);
         };
         objHtmlInputButton.value = Format(
           '{0}({1})',
           objInFor.codeTypeSimName,
           objInFor.progLangTypeSimName,
+        );
+        GeneViewCodeEx.bindCodeTypePathHoverMenu(
+          objHtmlInputButton,
+          objInFor.codeTypeId,
+          objInFor.codeTypeName,
         );
 
         const strStrLen = GetWidthByWordStr(objHtmlInputButton.value);
@@ -797,18 +1037,170 @@ export class GeneViewCodeEx implements IShowList {
     const strApplicationTypeId = strApplicationTypeId0;
     const strCodeTypeId = strCodeTypeId0;
 
-    GeneViewCodeEx.GeneCode4View(
-      strViewId?.toString(),
-      strCodeTypeId?.toString(),
-      Number(strApplicationTypeId),
+    const intApplicationTypeId = Number(strApplicationTypeId);
+    if (this.IsGeneByDependencyEnabled()) {
+      const arrCodeTypeGeneOrder = await this.GetGeneOrderByDependency4View(
+        strCodeTypeId.toString(),
+        intApplicationTypeId,
+      );
+      $('#lblResult').html(`按依赖顺序生成: ${arrCodeTypeGeneOrder.join(' -> ')}`);
+      const intTotal = arrCodeTypeGeneOrder.length;
+      const bolStopOnFail = this.IsStopOnStepFailureEnabled();
+      for (let i = 0; i < arrCodeTypeGeneOrder.length; i++) {
+        const strCodeTypeIdInFor = arrCodeTypeGeneOrder[i];
+        this.SetGeneProgressText(
+          `本次已生成到第${i + 1}步/共${intTotal}步（${strCodeTypeIdInFor}）`,
+        );
+        const bolIsSuccess = await GeneViewCodeEx.GeneCode4View(
+          strViewId.toString(),
+          strCodeTypeIdInFor,
+          intApplicationTypeId,
+        );
+        if (bolIsSuccess === false) {
+          if (bolStopOnFail) {
+            this.SetGeneProgressText(`第${i + 1}步失败，已按设置停止（共${intTotal}步）`);
+            $('#lblResult').html(`第${i + 1}步生成失败，已停止后续步骤`);
+            return;
+          }
+          this.SetGeneProgressText(`第${i + 1}步失败，按设置继续后续步骤（共${intTotal}步）`);
+        }
+      }
+      this.SetGeneProgressText(`本次已生成到第${intTotal}步/共${intTotal}步，已完成`);
+      return;
+    }
+
+    this.SetGeneProgressText(`本次已生成到第1步/共1步（${strCodeTypeId}）`);
+    await GeneViewCodeEx.GeneCode4View(
+      strViewId.toString(),
+      strCodeTypeId.toString(),
+      intApplicationTypeId,
     );
+    this.SetGeneProgressText('本次已生成到第1步/共1步，已完成');
+  }
+
+  private static IsGeneByDependencyEnabled(): boolean {
+    const objInput = document.getElementById('chkGeneByDependency_View') as HTMLInputElement | null;
+    return objInput?.checked === true;
+  }
+
+  private static IsStopOnStepFailureEnabled(): boolean {
+    const objInput = document.getElementById('chkStopOnFail_View') as HTMLInputElement | null;
+    if (objInput == null) return true;
+    return objInput.checked === true;
+  }
+
+  private static SetGeneProgressText(strText: string): void {
+    $('#lblGeneProgress').text(strText);
+  }
+
+  private static async GetGeneOrderByDependency4View(
+    strCodeTypeId: string,
+    intApplicationTypeId: number,
+  ): Promise<Array<string>> {
+    const arrAppCodeTypeRelaObjLst0 = await AppCodeTypeRelaEx_GetObjExLstByApplicationTypeIdExCache(
+      intApplicationTypeId,
+    );
+    const arrAppCodeTypeRelaObjLst: Array<clsAppCodeTypeRelaENEx> = arrAppCodeTypeRelaObjLst0.map(
+      AppCodeTypeRelaEx_CopyToEx,
+    );
+
+    let arrCodeTypeIdInApp = arrAppCodeTypeRelaObjLst
+      .filter((x) => x.dependsOn === 'View')
+      .map((x) => x.codeTypeId);
+    if (arrCodeTypeIdInApp.length === 0) {
+      arrCodeTypeIdInApp = arrAppCodeTypeRelaObjLst.map((x) => x.codeTypeId);
+    }
+
+    const codeTypeSet = new Set<string>(arrCodeTypeIdInApp);
+    codeTypeSet.add(strCodeTypeId);
+    const arrCodeTypeId = [...codeTypeSet];
+    if (arrCodeTypeId.length === 0) return [strCodeTypeId];
+
+    const strInSql = arrCodeTypeId.map((x) => `'${x}'`).join(',');
+    const arrRelation = await GC_CodeTypeRelation_GetObjLstAsync(
+      `ParentCodeTypeId in (${strInSql})`,
+    );
+
+    // 规则: Parent 依赖 Child, 生成 Parent 之前先生成 Child。
+    const dependencyByNode = new Map<string, Array<string>>();
+    arrCodeTypeId.forEach((id) => dependencyByNode.set(id, []));
+    arrRelation.forEach((edge) => {
+      if (!codeTypeSet.has(edge.parentCodeTypeId) || !codeTypeSet.has(edge.childCodeTypeId)) return;
+      const arrDep = dependencyByNode.get(edge.parentCodeTypeId) ?? [];
+      if (arrDep.includes(edge.childCodeTypeId)) return;
+      arrDep.push(edge.childCodeTypeId);
+      dependencyByNode.set(edge.parentCodeTypeId, arrDep);
+    });
+
+    const requiredSet = new Set<string>();
+    const dfsDep = (id: string) => {
+      if (requiredSet.has(id)) return;
+      requiredSet.add(id);
+      const arrDep = dependencyByNode.get(id) ?? [];
+      arrDep.forEach((depId) => dfsDep(depId));
+    };
+    dfsDep(strCodeTypeId);
+
+    const indegree = new Map<string, number>();
+    const outgoing = new Map<string, Array<string>>();
+    requiredSet.forEach((id) => {
+      indegree.set(id, 0);
+      outgoing.set(id, []);
+    });
+
+    requiredSet.forEach((nodeId) => {
+      const arrDep = dependencyByNode.get(nodeId) ?? [];
+      arrDep.forEach((depId) => {
+        if (!requiredSet.has(depId)) return;
+        outgoing.get(depId)?.push(nodeId);
+        indegree.set(nodeId, (indegree.get(nodeId) ?? 0) + 1);
+      });
+    });
+
+    const compareId = (a: string, b: string) => a.localeCompare(b, 'zh-CN');
+    const queue = [...requiredSet].filter((id) => (indegree.get(id) ?? 0) === 0).sort(compareId);
+    const orderedId: Array<string> = [];
+
+    while (queue.length > 0) {
+      const currId = queue.shift() as string;
+      orderedId.push(currId);
+      const arrNext = outgoing.get(currId) ?? [];
+      arrNext.forEach((nextId) => {
+        const intNextInDegree = (indegree.get(nextId) ?? 0) - 1;
+        indegree.set(nextId, intNextInDegree);
+        if (intNextInDegree === 0) {
+          queue.push(nextId);
+          queue.sort(compareId);
+        }
+      });
+    }
+
+    if (orderedId.length < requiredSet.size) {
+      const arrRemain = [...requiredSet].filter((id) => orderedId.includes(id) === false);
+      arrRemain.sort(compareId);
+      orderedId.push(...arrRemain);
+    }
+    return orderedId;
   }
 
   public static async GeneCode4View(
     strViewId: string,
     strCodeTypeId: string,
     intApplicationTypeId: number,
-  ) {
+  ): Promise<boolean> {
+    const objViewInfoStore = useviewInfoStore();
+    const objViewInfo = await objViewInfoStore.getObj(strViewId);
+    if (objViewInfo == null) {
+      alert(`界面Id:[${strViewId}]不存在，无法生成代码！`);
+      return false;
+    }
+
+    const objCodeType = await vCodeType_Sim_GetObjByCodeTypeIdCache(strCodeTypeId);
+    if (objCodeType == null) {
+      alert(`代码类型Id:[${strCodeTypeId}]不存在，无法生成代码！`);
+      return false;
+    }
+
     const objGCPara: clsGCPara = new clsGCPara();
 
     objGCPara.prjId = clsPrivateSessionStorage.currSelPrjId; // this.getQueryString("prjId");//"0116";
@@ -816,7 +1208,7 @@ export class GeneViewCodeEx implements IShowList {
     objGCPara.prjDataBaseId = clsPrivateSessionStorage.currPrjDataBaseId; // this.getQueryString("prjDataBaseId");//"0111";
     objGCPara.gcUserId = clsPubLocalStorage.userId; // this.getQueryString("GCUserId");//"pyf";
 
-    const vsTabId = ''; //this.getQueryString("tabId");
+    const vsTabId = '';
     const vsViewId = strViewId; // this.getQueryString("viewId");//WebApp,,,wfmExamType_QUDI
     const vsTypeParas = '';
     const vsDataBaseType = clsPubSessionStorage.currDataBaseTypeId; // this.getQueryString("DataBaseType");//"MsSql";
@@ -830,33 +1222,43 @@ export class GeneViewCodeEx implements IShowList {
     objGCPara.applicationTypeId = intApplicationTypeId;
     if (objGCPara.codeTypeId == '') {
       alert('生成代码的代码类型不能为空！');
-      return;
+      return false;
+    }
+
+    if (objCodeType.dependsOn == 'Table') {
+      objGCPara.tabId = String(objViewInfo.mainTabId ?? '').trim();
+      if (objGCPara.tabId == '') {
+        alert(
+          `代码类型:[${objCodeType.codeTypeId}](${objCodeType.codeTypeName})依赖Table，当前界面:[${objViewInfo.viewId}]未设置主表Id(mainTabId)，无法生成！`,
+        );
+        return false;
+      }
     }
 
     if (objGCPara.tabId == '' && objGCPara.viewId == '') {
       alert('生成代码的表Id 或者界面Id不能全为空！');
-      return;
+      return false;
     }
 
     if (objGCPara.prjId == '') {
       alert('生成代码的工程Id不能为空！');
-      return;
+      return false;
     }
     if (objGCPara.cmPrjId == '') {
       alert('生成代码的CM工程Id不能为空！');
-      return;
+      return false;
     }
     if (objGCPara.dataBaseType == '') {
       alert('生成代码的数据库类型不能为空！');
-      return;
+      return false;
     }
     if (objGCPara.prjDataBaseId == '') {
       alert('生成代码的数据库Id不能为空！');
-      return;
+      return false;
     }
     if (objGCPara.gcUserId == '') {
       alert('生成代码的用户Id不能为空！');
-      return;
+      return false;
     }
     try {
       const strCurrDate = clsDateTime.getTodayDateTimeStr(1);
@@ -865,7 +1267,7 @@ export class GeneViewCodeEx implements IShowList {
         const strInfo = `生成代码不成功!时间:${strCurrDate}`;
         $('#lblResult').html(strInfo);
         $('#txtCodeText').val(strInfo);
-        return;
+        return false;
         //显示信息框
         //alert(strInfo);
       }
@@ -875,6 +1277,7 @@ export class GeneViewCodeEx implements IShowList {
           strCodeTypeId,
           objGCResult.re_FileNameWithModuleName,
           objGCResult.codeText,
+          objViewInfo.isShare,
         );
         tabComponentRef.value.codeText = objGCResult.codeText;
         tabComponentRef.value.className = objGCResult.re_ClsName;
@@ -899,6 +1302,7 @@ export class GeneViewCodeEx implements IShowList {
         GeneViewCodeEx.ShowRecentWriteLogsByCountOnPage(20);
         //显示信息框
         //alert(strInfo);
+        return true;
       } else {
         tabComponentRef.value.codeText = objGCResult.errorMsg;
         tabComponentRef.value.className = objGCResult.re_ClsName;
@@ -916,13 +1320,14 @@ export class GeneViewCodeEx implements IShowList {
         const strInfo = `生成代码不成功!时间:${strCurrDate}`;
         $('#lblResult').html(strInfo);
         $('#lblSavedFilePath').text('');
+        return false;
       }
     } catch (e: any) {
       const strMsg = `生成代码不成功,${e}.`;
       alert(strMsg);
       $('#lblSavedFilePath').text('');
+      return false;
     }
-    return true; //一定要有一个返回值，否则会出错！
   }
 
   private static async TryWriteCodeToLocalFile(
@@ -930,12 +1335,14 @@ export class GeneViewCodeEx implements IShowList {
     strCodeTypeId: string,
     strFilePath: string,
     strCodeText: string,
+    bolIsViewShare = false,
   ): Promise<{ isSuccess: boolean; msg: string }> {
     return await tryWriteCodeToLocalFile(
       intApplicationTypeId,
       strCodeTypeId,
       strFilePath,
       strCodeText,
+      bolIsViewShare,
     );
   }
 

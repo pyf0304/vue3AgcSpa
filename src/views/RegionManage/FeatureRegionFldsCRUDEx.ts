@@ -122,6 +122,7 @@ import {
   RegionId_Static,
   TabId4Region_Static,
   viewVarSet,
+  CmPrjId_Local,
   TabId_Static,
 } from '@/views/RegionManage/FeatureRegionFldsVueShare';
 import { RegionId_Static as RegionId_Static_U } from '@/views/RegionManage/ViewRegion_UVueShare';
@@ -145,6 +146,7 @@ import {
 import { TabId_Static as TabId_Static_ViewIdGcVar } from '@/views/GeneCode/ViewIdGCVariableRelaVueShare';
 import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
 import { FeatureRegionFldsEx_GetObjExLstByPagerCache } from '@/ts/L3ForWApiEx/RegionManage/clsFeatureRegionFldsExWApi';
+import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 /** FeatureRegionFldsCRUDEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -527,10 +529,21 @@ export default class FeatureRegionFldsCRUDEx extends FeatureRegionFldsCRUD imple
     const strThisFuncName = this.PageLoadCache.name;
     const viewInfoStore = useviewInfoStore();
     const viewRegionStore = useviewRegionStore();
-    // clsPrivateSessionStorage.viewId_Main = '00050322';
+
     // 在此处放置用户代码以初始化页面
     try {
-      let strViewId = clsPrivateSessionStorage.viewId_Main;
+      const strViewId = (await clsPubVar4Web.GetViewId(this.qsViewId)) || viewId_Main.value;
+      if (IsNullOrEmpty(strViewId) == true) {
+        const strMsg = Format(
+          '在编辑功能区域时，界面Id为空，请检查！(in {0}.{1})',
+          this.constructor.name,
+          strThisFuncName,
+        );
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      CmPrjId_Local.value = clsPrivateSessionStorage.cmPrjId;
       const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
       RegionId_Static.value = await ViewRegionEx_GetRegionIdByTypeCache(
         strViewId,
@@ -554,18 +567,6 @@ export default class FeatureRegionFldsCRUDEx extends FeatureRegionFldsCRUD imple
 
       switch (this.qsOp) {
         case 'ViewEdit':
-          strViewId = await clsPubVar4Web.GetViewId(this.qsViewId);
-
-          if (IsNullOrEmpty(strViewId) == true) {
-            const strMsg = Format(
-              '在编辑功能区域时，界面Id为空，请检查！(in {0}.{1})',
-              this.constructor.name,
-              strThisFuncName,
-            );
-            console.error(strMsg);
-            alert(strMsg);
-            return;
-          }
           FeatureRegionFldsCRUDEx.strViewId4Region = strViewId;
 
           break;
@@ -1772,13 +1773,13 @@ export default class FeatureRegionFldsCRUDEx extends FeatureRegionFldsCRUD imple
     });
   }
   public async VisualEffects1(divContainer: HTMLDivElement) {
-    const strViewId = clsPrivateSessionStorage.viewId_Main;
+    const strViewId = FeatureRegionFldsCRUDEx.strViewId4Region || viewId_Main.value;
     console.log(divContainer, strViewId);
   }
   public async VisualEffects(divContainer: HTMLDivElement, strRegionId: string) {
     const strThisFuncName = this.VisualEffects.name;
     console.log(strRegionId);
-    const strViewId = clsPrivateSessionStorage.viewId_Main;
+    const strViewId = FeatureRegionFldsCRUDEx.strViewId4Region || viewId_Main.value;
     if (divContainer == null) {
       const strMsg = Format('层在该界面不存在！');
       throw strMsg;

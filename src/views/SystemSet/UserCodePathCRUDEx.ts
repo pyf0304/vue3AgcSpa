@@ -21,6 +21,7 @@ import { clsUserCodePathENEx } from '@/ts/L0Entity/SystemSet/clsUserCodePathENEx
 import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
 import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
+import { getBrowserInfo } from '@/ts/PubFun/tzPubFun';
 import { AccessBindGvDefault, AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
 import { CMProjectEx_BindDdl_CmPrjIdInDivCache } from '@/ts/L3ForWApiEx/CodeMan/clsCMProjectExWApi';
 import {
@@ -239,7 +240,13 @@ export default class UserCodePathCRUDEx extends UserCodePathCRUD implements ISho
   public async btnSetGCPath_Click() {
     try {
       const strOpUserId = clsPubLocalStorage.userId;
-      const intCount = await UserCodePathEx_SetGCPath(strOpUserId);
+      const arrBrowserInfo = getBrowserInfo().split('|');
+      const strMachineName = arrBrowserInfo.length >= 3 ? arrBrowserInfo[2] : 'PC';
+      const intCount = await UserCodePathEx_SetGCPath(
+        clsPubLocalStorage.userId,
+        strMachineName,
+        strOpUserId,
+      );
 
       await this.BindGv_UserCodePath4Func(divVarSet.refDivList);
       const strMsg = Format('共设置了:{0}记录.', intCount);

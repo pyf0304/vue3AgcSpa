@@ -2,6 +2,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import { createRouterGuards } from './router-guards';
+import common from './staticModules';
 
 import outsideLayout from './outsideLayout';
 import { whiteNameList } from './constant';
@@ -17,7 +18,8 @@ export const routes: Array<RouteRecordRaw> = [
     meta: {
       title: '首页',
     },
-    children: [],
+    // 预注册静态公共路由，避免深链在动态路由生成前出现 No match 警告。
+    children: [...common],
   },
 
   // Layout之外的路由
@@ -29,6 +31,8 @@ export const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 });
+
+const ENABLE_ROUTER_GUARDS = true;
 
 // reset router
 export function resetRouter() {
@@ -42,7 +46,9 @@ export function resetRouter() {
 
 export async function setupRouter(app: App) {
   // 创建路由守卫
-  createRouterGuards(router, whiteNameList);
+  if (ENABLE_ROUTER_GUARDS) {
+    createRouterGuards(router, whiteNameList);
+  }
 
   app.use(router);
 

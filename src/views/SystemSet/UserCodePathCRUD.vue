@@ -143,6 +143,7 @@
   import 'bootstrap/dist/js/bootstrap.min.js';
   import 'bootstrap/dist/css/bootstrap.css';
   import { defineComponent, onMounted, ref } from 'vue';
+  import { useRoute } from 'vue-router';
   import router from '@/router';
   import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
   import { useUserStore } from '@/store/modulesShare/user';
@@ -189,6 +190,7 @@
 
     setup() {
       const userStore = useUserStore();
+      const route = useRoute();
 
       PrjId_Session.value = clsPrivateSessionStorage.currSelPrjId;
       UserId_Local.value = userStore.getUserId;
@@ -337,7 +339,8 @@
         arrvCodeType_Sim.value = await vCodeType_Sim_GetArrvCodeType_SimByProgLangTypeId(
           strProgLangTypeId_Static,
         ); //查询区域
-        codeTypeId_q.value = '0';
+        const strCodeTypeIdFromRoute = String(route.query.codeTypeId ?? '').trim();
+        codeTypeId_q.value = strCodeTypeIdFromRoute.length === 0 ? '0' : strCodeTypeIdFromRoute;
 
         BindDdl_TrueAndFalseInDivObj(divVarSet.refDivQuery, 'ddlIsTemplate_q');
       }

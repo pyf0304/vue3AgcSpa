@@ -15,32 +15,6 @@ const routes: Array<RouteRecordRaw> = [
     },
     children: [
       {
-        path: 'FunctionTemplateRelaTree',
-        name: `${moduleName}-template-rela-tree`,
-        component: () =>
-          import(
-            /* webpackChunkName: "function-template-rela-tree" */ '@/views/PrjFunction/FunctionTemplateRelaTree.vue'
-          ),
-        meta: {
-          title: '模板代码类型函数树',
-          icon: 'icon-zhuomian',
-          keepAlive: true,
-        },
-      },
-      {
-        path: 'FunctionTemplateRelaCRUDAi',
-        name: 'FunctionTemplateRelaCRUDAi',
-        component: () =>
-          import(
-            /* webpackChunkName: "function-template-rela-crud" */ '@/views/PrjFunction/FunctionTemplateRelaCRUDAi.vue'
-          ),
-        meta: {
-          title: '函数与模板关系维护',
-          icon: 'icon-zhuomian',
-          keepAlive: true,
-        },
-      },
-      {
         path: 'editFunctionTemplateRela/:mId',
         name: 'editFunctionTemplateRela',
         component: () =>

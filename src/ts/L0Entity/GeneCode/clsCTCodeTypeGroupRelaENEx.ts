@@ -3,7 +3,7 @@
  * 类名:clsCTCodeTypeGroupRelaENEx
  * 表名:CTCodeTypeGroupRela(00050647)
  * 版本:2026.05.30(服务器:PYF-AI)
- * 日期:2026/06/06 13:31:26
+ * 日期:2026/06/07 14:01:09
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集

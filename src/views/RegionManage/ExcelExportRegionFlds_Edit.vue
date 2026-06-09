@@ -308,6 +308,7 @@
   import { defineComponent, onMounted, ref } from 'vue';
   import { Format, Is0EqEmpty, IsNullOrEmpty } from '@/ts/PubFun/clsString';
   import {
+    CmPrjId_Local,
     refDivEdit,
     RegionId_Static,
     TabId_Static,
@@ -396,7 +397,7 @@
         outFldId.value = '0';
         // public async B1indDdl4EditRegionInDiv() {
         // 在此处放置用户代码以初始化页面
-        const strCmPrjId = clsPrivateSessionStorage.cmPrjId; //定义条件字段
+        const strCmPrjId = CmPrjId_Local.value || clsPrivateSessionStorage.cmPrjId; //定义条件字段
         if (strCmPrjId == '9991') {
           const strMsg = Format(
             "ExcelExportRegionFlds_Edit.PrjIdCache='9991'，还没有被赋正确的值,请检查!",
@@ -405,13 +406,10 @@
         }
 
         const objCMProjects = await CMProject_GetObjByKeyCache({
-          cmPrjId: clsPrivateSessionStorage.cmPrjId,
+          cmPrjId: strCmPrjId,
         });
         if (objCMProjects == null) {
-          const strMsg = Format(
-            '在CM项目Id:[{0}]中，没有相应CM项目，请检查！',
-            clsPrivateSessionStorage.cmPrjId,
-          );
+          const strMsg = Format('在CM项目Id:[{0}]中，没有相应CM项目，请检查！', strCmPrjId);
           console.error(strMsg);
           alert(strMsg);
           return;

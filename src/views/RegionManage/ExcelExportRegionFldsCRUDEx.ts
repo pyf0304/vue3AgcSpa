@@ -90,12 +90,14 @@ import {
   ExcelExportRegionFlds_DeleteKeyIdCache,
   refExcelExportRegionFlds_Edit,
   RegionId_Static,
+  CmPrjId_Local,
   TabId_Static,
   viewVarSet,
 } from '@/views/RegionManage/ExcelExportRegionFldsVueShare';
 import { RegionId_Static as RegionId_Static_Sim } from '@/views/RegionManage/ViewRegion_UVueShare';
 
 import { vFieldTab_Sim_GetNameByFldIdCache } from '@/ts/L3ForWApi/Table_Field/clsvFieldTab_SimWApi';
+import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 /** ExcelExportRegionFldsCRUDEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -361,7 +363,14 @@ export default class ExcelExportRegionFldsCRUDEx
 
       ExcelExportRegionFldsCRUDEx.strViewId4Region = await clsPubVar4Web.GetViewId(this.qsViewId);
 
-      const strViewId = clsPrivateSessionStorage.viewId_Main;
+      const strViewId = ExcelExportRegionFldsCRUDEx.strViewId4Region || viewId_Main.value;
+      if (IsNullOrEmpty(strViewId) == true) {
+        const strMsg = `导出区缺少界面Id，页面启动不成功.(in ${this.constructor.name}.${strThisFuncName})`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      CmPrjId_Local.value = clsPrivateSessionStorage.cmPrjId;
       const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
       RegionId_Static.value = await ViewRegionEx_GetRegionIdByTypeCache(
         strViewId,

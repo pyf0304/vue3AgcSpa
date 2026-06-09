@@ -109,6 +109,18 @@
             <div>
               <span class="text-muted">本机名:</span>
               <span id="lblCurrMachine2" class="text-warning">获取中...</span>
+              <label for="chkGeneByDependency_View" class="text-secondary mb-0 ml-3">
+                <input id="chkGeneByDependency_View" type="checkbox" class="mr-1" />
+                是否按依赖关系
+              </label>
+              <label for="chkStopOnFail_View" class="text-secondary mb-0 ml-3">
+                <input id="chkStopOnFail_View" type="checkbox" class="mr-1" checked />
+                失败即停止
+              </label>
+            </div>
+            <div class="mt-1">
+              <span class="text-muted">生成进度:</span>
+              <span id="lblGeneProgress" class="text-info">未开始</span>
             </div>
             <div class="mt-1">
               <span class="text-muted">生成根目录:</span>

@@ -68,6 +68,7 @@ import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
 import { BindTab, SortFun } from '@/ts/PubFun/clsCommFunc4Web';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 import { GetCurrPageIndex } from '@/ts/PubFun/clsOperateList';
+import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 /** ViewRelaTabCRUDEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -466,7 +467,7 @@ export default class ViewRelaTabCRUDEx extends ViewRelaTabCRUD implements IShowL
   public async CombinevViewRelaTabConditionObj(): Promise<clsViewRelaTabEN> {
     //使条件串的初值为"1 = 1",以便在该串的后面用"and "添加其他条件,
     //例如 1 = 1 && UserName = '张三'
-    const strViewId = clsPrivateSessionStorage.viewId_Main;
+    const strViewId = viewId_Main.value;
     // const strWhereCond = `viewId='${strViewId}'`;
     const objViewRelaTab_Cond: clsViewRelaTabEN = new clsViewRelaTabEN();
     objViewRelaTab_Cond.SetCondFldValue(clsViewRelaTabEN.con_ViewId, strViewId, '=');
@@ -485,7 +486,7 @@ export default class ViewRelaTabCRUDEx extends ViewRelaTabCRUD implements IShowL
    * 界面Id
    */
   public get viewId(): string {
-    return clsPrivateSessionStorage.viewId_Main;
+    return viewId_Main.value;
   }
   /*
    * 工程ID
@@ -513,7 +514,7 @@ export default class ViewRelaTabCRUDEx extends ViewRelaTabCRUD implements IShowL
 
   private async CombineViewRelaTabConditionEx(): Promise<string> {
     let strWhereCond = ' 1 = 1 ';
-    const strViewId = clsPrivateSessionStorage.viewId_Main;
+    const strViewId = viewId_Main.value;
     if (IsNullOrEmpty(strViewId) == false) {
       strWhereCond += Format(" and {0}='{1}'", clsViewRelaTabEN.con_ViewId, strViewId);
     }
@@ -912,7 +913,7 @@ export default class ViewRelaTabCRUDEx extends ViewRelaTabCRUD implements IShowL
   }
 
   private async RefreshRelaTabFilterOptions(): Promise<void> {
-    const strViewId = clsPrivateSessionStorage.viewId_Main;
+    const strViewId = viewId_Main.value;
     const arrViewTabTypeOptDefault = [
       { value: '', label: '--全部界面表类型--' },
       {
@@ -1091,7 +1092,7 @@ export default class ViewRelaTabCRUDEx extends ViewRelaTabCRUD implements IShowL
   }
 
   private async BuildImportRelaTabCandidateList(): Promise<Array<clsViewRelaTabEN>> {
-    const strViewId = clsPrivateSessionStorage.viewId_Main;
+    const strViewId = viewId_Main.value;
     const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
     const strPrjId = clsPrivateSessionStorage.currSelPrjId;
     const strUpdUser = clsPubLocalStorage.userId;
@@ -1604,7 +1605,7 @@ export default class ViewRelaTabCRUDEx extends ViewRelaTabCRUD implements IShowL
     try {
       const arrCandidate = await this.BuildImportRelaTabCandidateList();
       const objViewInfo = await ViewInfo_GetObjByViewIdCache(
-        clsPrivateSessionStorage.viewId_Main,
+        viewId_Main.value,
         clsPrivateSessionStorage.currSelPrjId,
       );
       if (arrCandidate.length == 0) {
@@ -1626,7 +1627,7 @@ export default class ViewRelaTabCRUDEx extends ViewRelaTabCRUD implements IShowL
       const mapRegionTypeNameByRegionId = new Map<string, string>();
       const mapRegionTabIdByRegionId = new Map<string, string>();
       const arrRegion = await ViewRegionEx_GetObjLstByViewIdCache(
-        clsPrivateSessionStorage.viewId_Main,
+        viewId_Main.value,
         clsPrivateSessionStorage.cmPrjId,
       );
       for (const objRegion of arrRegion) {

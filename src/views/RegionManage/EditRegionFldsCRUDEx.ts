@@ -27,6 +27,7 @@ import { clsASPDivBLEx } from '@/ts/L2BLL/GeneCSharp/clsASPDivBLEx';
 import { clsASPHtmlTableBLEx } from '@/ts/L2BLL/GeneCSharp/clsASPHtmlTableBLEx';
 import { clsASPUlBLEx } from '@/ts/L2BLL/GeneCSharp/clsASPUlBLEx';
 import { CMProject_GetObjByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
+import { CMProjectEx_AddDefaCmProject } from '@/ts/L3ForWApiEx/CodeMan/clsCMProjectExWApi';
 import { GCVariable_GetNameByVarIdCache } from '@/ts/L3ForWApi/GeneCode/clsGCVariableWApi';
 import {
   EditRegionFlds_GetObjBymIdCache,
@@ -65,6 +66,7 @@ import { IShowList } from '@/ts/PubFun/IShowList';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 
 import { clsPubVar4Web } from '@/ts/FunClass/clsPubVar4Web';
+import { clsPubVar } from '@/ts/PubConfig/clsPubVar';
 import { clsAppCodeTypeRelaENEx } from '@/ts/L0Entity/GeneCode/clsAppCodeTypeRelaENEx';
 import { enumCodeType } from '@/ts/L0Entity/GeneCode/clsCodeTypeEN';
 import { enumRegionType } from '@/ts/L0Entity/RegionManage/clsRegionTypeEN';
@@ -86,6 +88,10 @@ import { vPrjTab_SimEx_GetNameByTabIdCache } from '@/ts/L3ForWApiEx/Table_Field/
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
 import { Position_SetDiv_Bottom_FeatureRegion } from '@/ts/PubFun/clsPosition';
 import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
+import {
+  UserDefaValue_LocalEx_getUserDefaValue,
+  UserDefaValue_LocalEx_setUserDefaValue,
+} from '@/ts/L3ForWApiEx/UserManage/clsUserDefaValue_LocalExWApi';
 import { GetCtrlIdEdit } from '@/ts/L2BLL/GeneCSharp/clsASPControlGroupBLEx2';
 import { AccessBindGvDefault, AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
 import { enumActiveTabName } from '@/ts/PubFun/enumActiveTabName';
@@ -93,6 +99,7 @@ import { useviewInfoStore } from '@/store/modules/viewInfo';
 import { useviewRegionStore } from '@/store/modules/viewRegion';
 import {
   CombineEditRegionFldsConditionObj,
+  CmPrjId_Local,
   divVarSet,
   EditRegionFlds_DeleteKeyIdCache,
   refEditRegionFlds_Edit,
@@ -103,6 +110,7 @@ import {
 import { RegionId_Static as RegionId_Static_Sim } from '@/views/RegionManage/ViewRegion_UVueShare';
 
 import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
+import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 /** EditRegionFldsCRUDEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -118,6 +126,51 @@ export default class EditRegionFldsCRUDEx extends EditRegionFldsCRUD implements 
   public static divVisualEffects: HTMLDivElement; // = GetUniDivInDoc('divVisualEffects');
   public static ActiveTabName = enumActiveTabName.VisualEffects_01;
   public static objCMProjects: clsCMProjectEN;
+
+  private static async getCmPrjIdReady() {
+    if (IsNullOrEmpty(clsPrivateSessionStorage.cmPrjId) == false) {
+      return clsPrivateSessionStorage.cmPrjId;
+    }
+
+    const strCurrPrjId = clsPrivateSessionStorage.currPrjId || clsPubVar.currPrjId;
+    clsPrivateSessionStorage.currPrjId = strCurrPrjId;
+
+    let strCmPrjId = await UserDefaValue_LocalEx_getUserDefaValue(
+      strCurrPrjId,
+      clsPrivateSessionStorage.currSelPrjId,
+      clsPubLocalStorage.userId,
+      '默认CM工程',
+    );
+    if (IsNullOrEmpty(strCmPrjId) || strCmPrjId == '0') {
+      strCmPrjId = await CMProjectEx_AddDefaCmProject(
+        clsPrivateSessionStorage.currSelPrjId,
+        clsPrivateSessionStorage.currSelPrjName,
+        clsPubLocalStorage.userId,
+      );
+      if (IsNullOrEmpty(strCmPrjId) == false) {
+        await UserDefaValue_LocalEx_setUserDefaValue(
+          strCurrPrjId,
+          clsPrivateSessionStorage.currSelPrjId,
+          clsPubLocalStorage.userId,
+          '默认CM工程',
+          strCmPrjId,
+        );
+      }
+    }
+
+    if (IsNullOrEmpty(strCmPrjId)) {
+      const strMsg = Format(
+        '在工程:[{0}({1})]获取默认CM工程不成功，请检查!',
+        clsPrivateSessionStorage.currSelPrjName,
+        clsPrivateSessionStorage.currSelPrjId,
+      );
+      console.error(strMsg);
+      throw new Error(strMsg);
+    }
+
+    clsPrivateSessionStorage.cmPrjId = strCmPrjId;
+    return strCmPrjId;
+  }
   //public static mstrListDiv=  "EditRegionFldsCRUDEx.divDataList";
   //public static mstrSortvEditRegionFldsBy=  "mId";
   /*
@@ -350,7 +403,7 @@ export default class EditRegionFldsCRUDEx extends EditRegionFldsCRUD implements 
   public async PageLoadCache() {
     const strThisFuncName = this.PageLoadCache.name;
     const viewRegionStore = useviewRegionStore();
-    // clsPrivateSessionStorage.viewId_Main = '00050322';
+
     // 在此处放置用户代码以初始化页面
     try {
       console.log('this.qsOp:', this.qsOp);
@@ -367,26 +420,30 @@ export default class EditRegionFldsCRUDEx extends EditRegionFldsCRUD implements 
       }
       Position_SetDiv_Bottom_FeatureRegion('tab1');
       EditRegionFldsCRUDEx.strViewId4Region = await clsPubVar4Web.GetViewId(this.qsViewId);
+      const strViewId = viewId_Main.value;
+      if (IsNullOrEmpty(strViewId) == true) {
+        const strMsg = `编辑区缺少界面Id，页面启动不成功.(in ${this.constructor.name}.${strThisFuncName})`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      viewId_Main.value = strViewId;
 
       //ViewRegion_U.PrjIdCache = clsPrivateSessionStorage.currSelPrjId;
       //ViewRegion_Edit_Sim.PrjIdCache = clsPrivateSessionStorage.currSelPrjId;
+      const strCmPrjId = await EditRegionFldsCRUDEx.getCmPrjIdReady();
       const objCMProjects = await CMProject_GetObjByKeyCache({
-        cmPrjId: clsPrivateSessionStorage.cmPrjId,
+        cmPrjId: strCmPrjId,
       });
 
       if (objCMProjects == null) {
-        const strMsg = Format(
-          '在CM项目Id:[{0}]中，没有相应CM项目，请检查！',
-          clsPrivateSessionStorage.cmPrjId,
-        );
+        const strMsg = Format('在CM项目Id:[{0}]中，没有相应CM项目，请检查！', strCmPrjId);
         console.error(strMsg);
         alert(strMsg);
         return;
       }
       EditRegionFldsCRUDEx.objCMProjects = objCMProjects;
-
-      const strViewId = clsPrivateSessionStorage.viewId_Main;
-      const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
+      CmPrjId_Local.value = strCmPrjId;
       RegionId_Static.value = await ViewRegionEx_GetRegionIdByTypeCache(
         strViewId,
         enumRegionType.EditRegion_0003,
@@ -403,6 +460,7 @@ export default class EditRegionFldsCRUDEx extends EditRegionFldsCRUD implements 
         RegionId_Static.value = objViewRegion_Edit.regionId;
 
         TabId_Static.value = objViewRegion_Edit.tabId;
+        clsPrivateSessionStorage.editRegion_TabId_Main = objViewRegion_Edit.tabId;
 
         this.strTabName4Region = await vPrjTab_SimEx_GetNameByTabIdCache(
           objViewRegion_Edit.tabId,
@@ -412,7 +470,6 @@ export default class EditRegionFldsCRUDEx extends EditRegionFldsCRUD implements 
 
       const objViewRegion_Detail = new ViewRegion_Detail_SimEx(this);
       RegionId_Static_Sim.value = RegionId_Static.value;
-      await objViewRegion_Detail.btnDetailRecord_Click();
       //加载编辑区
       const objPageEditRegionFlds_Edit: EditRegionFlds_EditEx = new EditRegionFlds_EditEx(
         'EditRegionFlds_EditEx',
@@ -424,16 +481,37 @@ export default class EditRegionFldsCRUDEx extends EditRegionFldsCRUD implements 
       // objPageEditRegionFlds_Edit.divName4Edit = 'divEdit_Loc1';
       // await objPageEditRegionFlds_Edit.AddDPV_Edit(objPageEditRegionFlds_Edit.divName4Edit);
 
-      // 为编辑区绑定下拉框
-      await refEditRegionFlds_Edit.value.BindDdl4EditRegionInDiv();
-
       objPageEditRegionFlds_Edit.bolIsLoadEditRegion = true;
 
       // viewVarSet.sortEditRegionFldsBy = 'seqNum Asc';
       // //2、显示无条件的表内容在GridView中
       // await this.BindGv_EditRegionFlds4Func();
 
-      this.VisualEffects(EditRegionFldsCRUDEx.divVisualEffects, RegionId_Static.value);
+      setTimeout(async () => {
+        try {
+          await objViewRegion_Detail.btnDetailRecord_Click();
+        } catch (e) {
+          console.error('EditRegionFldsCRUDEx.btnDetailRecord_Click', e);
+        }
+      }, 0);
+
+      setTimeout(async () => {
+        try {
+          if (refEditRegionFlds_Edit.value?.BindDdl4EditRegionInDiv) {
+            await refEditRegionFlds_Edit.value.BindDdl4EditRegionInDiv();
+          }
+        } catch (e) {
+          console.error('EditRegionFldsCRUDEx.BindDdl4EditRegionInDiv', e);
+        }
+      }, 0);
+
+      setTimeout(async () => {
+        try {
+          await this.VisualEffects(EditRegionFldsCRUDEx.divVisualEffects, RegionId_Static.value);
+        } catch (e) {
+          console.error('EditRegionFldsCRUDEx.VisualEffects', e);
+        }
+      }, 0);
     } catch (e: any) {
       const strMsg = `页面启动不成功,${e}.(in ${this.constructor.name}.${strThisFuncName})`;
       console.error(strMsg);

@@ -94,11 +94,13 @@ import {
   RegionId_Static,
   TabId_Static,
   viewVarSet,
+  CmPrjId_Local,
 } from '@/views/RegionManage/DGRegionFldsVueShare';
 import { RegionId_Static as RegionId_Static_Sim } from '@/views/RegionManage/ViewRegion_UVueShare';
 
 import { vFieldTab_Sim_GetNameByFldIdCache } from '@/ts/L3ForWApi/Table_Field/clsvFieldTab_SimWApi';
 import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
+import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 /** DGRegionFldsCRUDEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -373,7 +375,7 @@ export default class DGRegionFldsCRUDEx extends DGRegionFldsCRUD implements ISho
     const strThisFuncName = this.PageLoadCache.name;
     const viewRegionStore = useviewRegionStore();
     //测试用
-    // clsPrivateSessionStorage.viewId_Main = '00050322';
+    // viewId_Main.value = '00050322';
     // 在此处放置用户代码以初始化页面
     try {
       switch (this.qsOp) {
@@ -389,7 +391,14 @@ export default class DGRegionFldsCRUDEx extends DGRegionFldsCRUD implements ISho
       }
       DGRegionFldsCRUDEx.strViewId4Region = await clsPubVar4Web.GetViewId(this.qsViewId);
 
-      const strViewId = clsPrivateSessionStorage.viewId_Main;
+      const strViewId = DGRegionFldsCRUDEx.strViewId4Region || viewId_Main.value;
+      if (IsNullOrEmpty(strViewId) == true) {
+        const strMsg = `列表区缺少界面Id，页面启动不成功.(in ${this.constructor.name}.${strThisFuncName})`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      CmPrjId_Local.value = clsPrivateSessionStorage.cmPrjId;
       const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
       RegionId_Static.value = await ViewRegionEx_GetRegionIdByTypeCache(
         strViewId,

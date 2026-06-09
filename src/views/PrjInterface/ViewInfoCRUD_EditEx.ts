@@ -67,6 +67,7 @@ import {
   UserId_Local,
   viewVarSet,
 } from '@/views/PrjInterface/ViewInfoVueShare';
+import { viewId_Main, viewName_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 /** ViewInfoCRUD_EditEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -708,8 +709,8 @@ export default class ViewInfoCRUD_EditEx extends ViewInfoCRUD implements IShowLi
         outTabId: objViewInfo.outRelaTabId,
         cmPrjId: clsPrivateSessionStorage.cmPrjId,
       };
-      clsPrivateSessionStorage.viewId_Main = objViewInfo.viewId;
-      clsPrivateSessionStorage.viewName = objViewInfo.viewName;
+      viewId_Main.value = objViewInfo.viewId;
+      viewName_Main.value = objViewInfo.viewName;
       clsPrivateSessionStorage.funcModuleNameSim = objFuncModule_Agc.funcModuleNameSim;
       clsPrivateSessionStorage.funcModuleEnName = objFuncModule_Agc.funcModuleEnName;
 
@@ -722,7 +723,7 @@ export default class ViewInfoCRUD_EditEx extends ViewInfoCRUD implements IShowLi
       //this.GetDataFromUserPrjGrantClass(objUserPrjGrantEN);
 
       //alert("完成SelectViewId!");
-      clsPrivateSessionStorage.viewId_Main = objViewInfo.viewId;
+      viewId_Main.value = objViewInfo.viewId;
       Redirect('/Index/Main_ViewInfo.js');
     } catch (e: any) {
       console.error(e);
@@ -989,20 +990,23 @@ export default class ViewInfoCRUD_EditEx extends ViewInfoCRUD implements IShowLi
     switch (objViewRegion.regionTypeId) {
       case enumRegionType.EditRegion_0003:
         iRegionEdit.src = Format(
-          '../RegionManage/EditRegionFldsCRUD?regionId={0}&Op=ViewEdit',
+          '../RegionManage/EditRegionFldsCRUD?regionId={0}&viewId={1}&Op=ViewEdit',
           strRegionId,
+          strViewId,
         );
         break;
       case enumRegionType.QueryRegion_0001:
         iRegionEdit.src = Format(
-          '../RegionManage/QryRegionFldsCRUD?regionId={0}&Op=ViewEdit',
+          '../RegionManage/QryRegionFldsCRUD?regionId={0}&viewId={1}&Op=ViewEdit',
           strRegionId,
+          strViewId,
         );
         break;
       case enumRegionType.DetailRegion_0006:
         iRegionEdit.src = Format(
-          '../RegionManage/DetailRegionFldsCRUD?regionId={0}&Op=ViewEdit',
+          '../RegionManage/DetailRegionFldsCRUD?regionId={0}&viewId={1}&Op=ViewEdit',
           strRegionId,
+          strViewId,
         );
         break;
       case enumRegionType.FeatureRegion_0008:
@@ -1014,14 +1018,16 @@ export default class ViewInfoCRUD_EditEx extends ViewInfoCRUD implements IShowLi
         break;
       case enumRegionType.ExcelExportRegion_0007:
         iRegionEdit.src = Format(
-          '../RegionManage/ExcelExportRegionFldsCRUD?regionId={0}&Op=ViewEdit',
+          '../RegionManage/ExcelExportRegionFldsCRUD?regionId={0}&viewId={1}&Op=ViewEdit',
           strRegionId,
+          strViewId,
         );
         break;
       case enumRegionType.ListRegion_0002:
         iRegionEdit.src = Format(
-          '../RegionManage/DGRegionFldsCRUD?regionId={0}&Op=ViewEdit',
+          '../RegionManage/DGRegionFldsCRUD?regionId={0}&viewId={1}&Op=ViewEdit',
           strRegionId,
+          strViewId,
         );
         break;
     }

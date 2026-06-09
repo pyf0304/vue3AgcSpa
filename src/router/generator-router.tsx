@@ -91,11 +91,6 @@ export function filterAsyncRoute(
           ) : (
             constantRouterComponents[viewPath] || NotFound
           );
-        if (route.name == '/netdisk/managepyf') {
-          console.error('route-name:', route);
-        } else if (route.name == '/netdisk/manage') {
-          console.error('route-name(manage):', route);
-        }
         route.component = Component;
 
         const perms = routes

@@ -1,30 +1,4 @@
 ﻿export class clsPrivateSessionStorage {
-  public static get viewId_Main(): string {
-    const strKey = 'viewId_Main';
-    let strViewId = '';
-    if (Object.prototype.hasOwnProperty.call(sessionStorage, strKey)) {
-      //缓存存在，直接返回
-      strViewId = sessionStorage.getItem(strKey) as string;
-    } else {
-      console.error('缓存clsPrivateSessionStorage.viewId为空！');
-    }
-    return strViewId;
-  }
-
-  //设置教学班Id
-  public static set viewId_Main(strViewId: string) {
-    try {
-      //清空本类缓存
-      const strKey = 'viewId_Main';
-      sessionStorage.removeItem(strKey);
-      //把值存入session
-      sessionStorage.setItem(strKey, strViewId);
-    } catch (e: any) {
-      const strMsg = `存入缓存出错,${e}.`;
-      console.error(strMsg);
-      throw strMsg;
-    }
-  }
   public static get tabId_Main(): string {
     const strKey = 'tabId_Main';
     let strTabId = '';
@@ -44,6 +18,29 @@
       const strKey = 'tabId_Main';
       sessionStorage.removeItem(strKey);
       //把值存入session
+      sessionStorage.setItem(strKey, strTabId);
+    } catch (e: any) {
+      const strMsg = `存入缓存出错,${e}.`;
+      console.error(strMsg);
+      throw strMsg;
+    }
+  }
+
+  /** 编辑区域链路专用的主表Id，避免与其他页面争用tabId_Main */
+  public static get editRegion_TabId_Main(): string {
+    const strKey = 'editRegion_TabId_Main';
+    let strTabId = '';
+    if (Object.prototype.hasOwnProperty.call(sessionStorage, strKey)) {
+      strTabId = sessionStorage.getItem(strKey) as string;
+    }
+    return strTabId;
+  }
+
+  /** 编辑区域链路专用的主表Id，避免与其他页面争用tabId_Main */
+  public static set editRegion_TabId_Main(strTabId: string) {
+    try {
+      const strKey = 'editRegion_TabId_Main';
+      sessionStorage.removeItem(strKey);
       sessionStorage.setItem(strKey, strTabId);
     } catch (e: any) {
       const strMsg = `存入缓存出错,${e}.`;
@@ -72,33 +69,6 @@
       sessionStorage.removeItem(strKey);
       //把值存入session
       sessionStorage.setItem(strKey, strTabName);
-    } catch (e: any) {
-      const strMsg = `存入缓存出错,${e}.`;
-      console.error(strMsg);
-      throw strMsg;
-    }
-  }
-
-  public static get viewName(): string {
-    const strKey = 'viewName';
-    let strViewName = '';
-    if (Object.prototype.hasOwnProperty.call(sessionStorage, strKey)) {
-      //缓存存在，直接返回
-      strViewName = sessionStorage.getItem(strKey) as string;
-    } else {
-      console.error('缓存clsPrivateSessionStorage.viewName为空！');
-    }
-    return strViewName;
-  }
-
-  //设置教学班Id
-  public static set viewName(strViewName: string) {
-    try {
-      //清空本类缓存
-      const strKey = 'viewName';
-      sessionStorage.removeItem(strKey);
-      //把值存入session
-      sessionStorage.setItem(strKey, strViewName);
     } catch (e: any) {
       const strMsg = `存入缓存出错,${e}.`;
       console.error(strMsg);

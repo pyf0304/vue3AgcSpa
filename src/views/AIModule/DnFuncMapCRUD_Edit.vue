@@ -120,16 +120,25 @@
         }
         // return '';
       }
+
+      let isNavigatingToTabRelaInfo = false;
+      const pushToTabRelaInfo = () => {
+        if (route.name === 'account-editTabRelaInfo' || isNavigatingToTabRelaInfo) return;
+        isNavigatingToTabRelaInfo = true;
+        router.push({ name: 'account-editTabRelaInfo' }).finally(() => {
+          isNavigatingToTabRelaInfo = false;
+        });
+      };
+
       function EditPrjTab(strTabId: string) {
         clsPrivateSessionStorage.tabId_Main = strTabId;
         if (route == null) {
-          router.push({ name: 'account-editTabRelaInfo' });
+          pushToTabRelaInfo();
 
           return;
         }
         console.log('route:', route);
-        const params = route.params.tabId ? { tabId: route.params.tabId } : { tabId: strTabId };
-        router.push({ name: 'account-editTabRelaInfo', params });
+        pushToTabRelaInfo();
 
         // alert(strTabId);
       }

@@ -35,7 +35,7 @@
   import { clsViewRegionEN } from '@/ts/L0Entity/RegionManage/clsViewRegionEN';
   // import { useUserStore } from '@/store/modulesShare/user';
   import { ViewRegionEx_GetArrViewRegionByViewIdEx } from '@/ts/L3ForWApiEx/RegionManage/clsViewRegionExWApi';
-  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
+  import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
   export default defineComponent({
     name: 'ViewRegionEdit',
     components: {
@@ -60,7 +60,7 @@
        **/
       async function BindDdl4EditRegionInDiv() {
         // const strViewId = clsPri.value; //静态变量;//Session存储、local存储
-        const strViewId = clsPrivateSessionStorage.viewId_Main;
+        const strViewId = viewId_Main.value;
         //  await this.SetLst_RegionIdInDiv(); //编辑区域
         arrViewRegion.value = await ViewRegionEx_GetArrViewRegionByViewIdEx(strViewId); //编辑区域
         regionId.value = '0';

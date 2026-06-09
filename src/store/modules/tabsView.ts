@@ -13,6 +13,9 @@ interface TabsViewState {
 
 // 不需要出现在标签页中的路由
 export const blackList = [REDIRECT_NAME, LOGIN_NAME, PAGE_NOT_FOUND_NAME] as const;
+const isBlackListRouteName = (name: RouteLocationNormalized['name']): boolean => {
+  return typeof name === 'string' && (blackList as readonly string[]).includes(name);
+};
 
 export const useTabsViewStore = defineStore({
   id: 'tabs-view',
@@ -29,7 +32,11 @@ export const useTabsViewStore = defineStore({
     getCurrentTab: (state) => {
       const currentRoute = router.currentRoute.value!;
       return state.tabsList.find((item) => {
-        return !item.meta?.hideInTabs && item.fullPath === currentRoute.fullPath;
+        return (
+          !item.meta?.hideInTabs &&
+          (item.fullPath === currentRoute.fullPath ||
+            (Boolean(item.name) && Boolean(currentRoute.name) && item.name === currentRoute.name))
+        );
       });
     },
   },
@@ -48,15 +55,35 @@ export const useTabsViewStore = defineStore({
       keepAliveStore.remove(compNames);
     },
     /** 初始化标签页 */
-    initTabs(routes) {
-      this.tabsList = routes;
+    initTabs(routes: RouteLocationNormalized[]) {
+      const dedupedRoutes = routes.reduce<RouteLocationNormalized[]>((prev, curr) => {
+        if (isBlackListRouteName(curr.name)) return prev;
+        const currKey = curr.name ?? curr.path ?? curr.fullPath;
+        const idx = prev.findIndex((item) => {
+          const itemKey = item.name ?? item.path ?? item.fullPath;
+          return itemKey === currKey;
+        });
+        if (idx === -1) {
+          prev.push(curr);
+        } else {
+          prev[idx] = { ...prev[idx], ...curr };
+        }
+        return prev;
+      }, []);
+      this.tabsList = dedupedRoutes;
     },
     /** 添加标签页 */
-    addTabs(route): boolean {
-      if (blackList.includes(route.name)) return false;
-      const isExists = this.tabsList.some((item) => item.fullPath == route.fullPath);
-      if (!isExists) {
+    addTabs(route: RouteLocationNormalized): boolean {
+      if (isBlackListRouteName(route.name)) return false;
+      const routeKey = route.name ?? route.path ?? route.fullPath;
+      const idx = this.tabsList.findIndex((item) => {
+        const itemKey = item.name ?? item.path ?? item.fullPath;
+        return itemKey === routeKey;
+      });
+      if (idx === -1) {
         this.tabsList.push(route);
+      } else {
+        this.tabsList[idx] = { ...this.tabsList[idx], ...route };
       }
       return true;
     },

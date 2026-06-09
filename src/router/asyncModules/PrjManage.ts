@@ -9,6 +9,4 @@ export default {
   'views/PrjManage/PrjDataBaseCRUD': () => import('@/views/PrjManage/PrjDataBaseCRUD.vue'),
 
   'views/PrjManage/PrjDataBaseCRUDAi': () => import('@/views/PrjManage/PrjDataBaseCRUDAi.vue'),
-  'views/PrjManage/PrjDataBaseCRUDAi3': () => import('@/views/PrjManage/PrjDataBaseCRUDAi3.vue'),
-  'views/PrjManage/PrjDataBaseCRUDAi4': () => import('@/views/PrjManage/PrjDataBaseCRUDAi4.vue'),
 } as const;

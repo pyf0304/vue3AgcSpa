@@ -46,6 +46,7 @@
   const options = ref<Option[]>([]);
   // console.log('options:', options);
   const Addi = ref('测试');
+  let initDefaultCmPrjPromise: Promise<void> | null = null;
   const getLocaleText = computed(() => {
     const key = selectedKeys.value[0];
     if (!key) {
@@ -78,10 +79,7 @@
       value: x.cmPrjId,
       label: `${x.cmPrjName}(${x.cmPrjId})`,
     }));
-    // console.log('结束绑定数据：CMProject', strPrjId);
-    setTimeout(() => {
-      GetDefaCmPrjId();
-    }, 100);
+    await ensureDefaultCmPrjReady();
   };
 
   // 暴露 getData 函数给父组件
@@ -138,6 +136,15 @@
     CmPrjId.value = strCmPrjId;
     //    return strCmPrjId;
     Addi.value = strCmPrjName;
+  }
+
+  async function ensureDefaultCmPrjReady() {
+    if (!initDefaultCmPrjPromise) {
+      initDefaultCmPrjPromise = GetDefaCmPrjId().finally(() => {
+        initDefaultCmPrjPromise = null;
+      });
+    }
+    await initDefaultCmPrjPromise;
   }
 
   onMounted(() => {

@@ -14,6 +14,8 @@ import { AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { useviewInfoStore } from '@/store/modules/viewInfo';
 
+import { viewId_Main, viewName_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
+
 declare let strUrl_Session_SetString: string;
 // declare let strUrl_Session_GetString: string;
 // declare let strUserLoginInfo: string;
@@ -33,6 +35,10 @@ export class ViewInfo_AllPropEx {
     if (index > -1) {
       arrLi.splice(index, 1);
     }
+  }
+
+  private static getMainViewId() {
+    return viewId_Main.value;
   }
 
   /*
@@ -122,6 +128,7 @@ export class ViewInfo_AllPropEx {
     let myIframe: HTMLIFrameElement;
     let strRegionId = '';
     let objViewInfo;
+    const strMainViewId = ViewInfo_AllPropEx.getMainViewId();
     switch (strCommandName) {
       case 'ViewInfo_U': //自定义功能:设置用于扩展类
         myIframe = document.getElementById('iframe_ViewInfo_U') as HTMLIFrameElement;
@@ -143,29 +150,31 @@ export class ViewInfo_AllPropEx {
 
       case 'QryRegionFldsCRUD': //自定义功能:设置用于扩展类
         strRegionId = await ViewRegionEx_GetRegionIdByTypeCache(
-          clsPrivateSessionStorage.viewId_Main,
+          strMainViewId,
           enumRegionType.QueryRegion_0001,
           clsPrivateSessionStorage.cmPrjId,
         );
         myIframe = document.getElementById('iframe_QryRegionFldsCRUD') as HTMLIFrameElement;
         if (IsNullOrEmpty(myIframe.src) == true) {
           myIframe.src = Format(
-            '../RegionManage/QryRegionFldsCRUD?regionId={0}&Op=ViewEdit',
+            '../RegionManage/QryRegionFldsCRUD?regionId={0}&Op=ViewEdit&viewId={1}',
             strRegionId,
+            strMainViewId,
           );
         }
         break;
       case 'FeatureRegionFldsCRUD': //自定义功能:设置用于扩展类
         strRegionId = await ViewRegionEx_GetRegionIdByTypeCache(
-          clsPrivateSessionStorage.viewId_Main,
+          strMainViewId,
           enumRegionType.FeatureRegion_0008,
           clsPrivateSessionStorage.cmPrjId,
         );
         myIframe = document.getElementById('iframe_FeatureRegionFldsCRUD') as HTMLIFrameElement;
         if (IsNullOrEmpty(myIframe.src) == true) {
           myIframe.src = Format(
-            '../RegionManage/FeatureRegionFldsCRUD?regionId={0}&Op=ViewEdit',
+            '../RegionManage/FeatureRegionFldsCRUD?regionId={0}&Op=ViewEdit&viewId={1}',
             strRegionId,
+            strMainViewId,
           );
         }
 
@@ -173,15 +182,16 @@ export class ViewInfo_AllPropEx {
 
       case 'DGRegionFldsCRUD': //自定义功能:设置用于扩展类
         strRegionId = await ViewRegionEx_GetRegionIdByTypeCache(
-          clsPrivateSessionStorage.viewId_Main,
+          strMainViewId,
           enumRegionType.ListRegion_0002,
           clsPrivateSessionStorage.cmPrjId,
         );
         myIframe = document.getElementById('iframe_DGRegionFldsCRUD') as HTMLIFrameElement;
         if (IsNullOrEmpty(myIframe.src) == true) {
           myIframe.src = Format(
-            '../RegionManage/DGRegionFldsCRUD?regionId={0}&Op=ViewEdit',
+            '../RegionManage/DGRegionFldsCRUD?regionId={0}&Op=ViewEdit&viewId={1}',
             strRegionId,
+            strMainViewId,
           );
         }
 
@@ -189,15 +199,16 @@ export class ViewInfo_AllPropEx {
 
       case 'EditRegionFldsCRUD': //自定义功能:设置用于扩展类
         strRegionId = await ViewRegionEx_GetRegionIdByTypeCache(
-          clsPrivateSessionStorage.viewId_Main,
+          strMainViewId,
           enumRegionType.EditRegion_0003,
           clsPrivateSessionStorage.cmPrjId,
         );
         myIframe = document.getElementById('iframe_EditRegionFldsCRUD') as HTMLIFrameElement;
         if (IsNullOrEmpty(myIframe.src) == true) {
           myIframe.src = Format(
-            '../RegionManage/EditRegionFldsCRUD?regionId={0}&Op=ViewEdit',
+            '../RegionManage/EditRegionFldsCRUD?regionId={0}&Op=ViewEdit&viewId={1}',
             strRegionId,
+            strMainViewId,
           );
         }
 
@@ -205,15 +216,16 @@ export class ViewInfo_AllPropEx {
 
       case 'DetailRegionFldsCRUD': //自定义功能:设置用于扩展类
         strRegionId = await ViewRegionEx_GetRegionIdByTypeCache(
-          clsPrivateSessionStorage.viewId_Main,
+          strMainViewId,
           enumRegionType.DetailRegion_0006,
           clsPrivateSessionStorage.cmPrjId,
         );
         myIframe = document.getElementById('iframe_DetailRegionFldsCRUD') as HTMLIFrameElement;
         if (IsNullOrEmpty(myIframe.src) == true) {
           myIframe.src = Format(
-            '../RegionManage/DetailRegionFldsCRUD?regionId={0}&Op=ViewEdit',
+            '../RegionManage/DetailRegionFldsCRUD?regionId={0}&Op=ViewEdit&viewId={1}',
             strRegionId,
+            strMainViewId,
           );
         }
 
@@ -221,15 +233,16 @@ export class ViewInfo_AllPropEx {
 
       case 'ExcelExportRegionFldsCRUD': //自定义功能:设置用于扩展类
         strRegionId = await ViewRegionEx_GetRegionIdByTypeCache(
-          clsPrivateSessionStorage.viewId_Main,
+          strMainViewId,
           enumRegionType.ExcelExportRegion_0007,
           clsPrivateSessionStorage.cmPrjId,
         );
         myIframe = document.getElementById('iframe_ExcelExportRegionFldsCRUD') as HTMLIFrameElement;
         if (IsNullOrEmpty(myIframe.src) == true) {
           myIframe.src = Format(
-            '../RegionManage/ExcelExportRegionFldsCRUD?regionId={0}&Op=ViewEdit',
+            '../RegionManage/ExcelExportRegionFldsCRUD?regionId={0}&Op=ViewEdit&viewId={1}',
             strRegionId,
+            strMainViewId,
           );
         }
 
@@ -240,7 +253,7 @@ export class ViewInfo_AllPropEx {
         if (IsNullOrEmpty(myIframe.src) == true) {
           myIframe.src = Format(
             '../PrjInterface/GeneViewCode?viewId={0}&Op=ViewEdit',
-            clsPrivateSessionStorage.viewId_Main,
+            strMainViewId,
           );
         }
         break;
@@ -265,7 +278,7 @@ export class ViewInfo_AllPropEx {
   public async PageLoadCache() {
     const strThisFuncName = this.PageLoadCache.name;
     const viewInfoStore = useviewInfoStore();
-    const strViewId = clsPrivateSessionStorage.viewId_Main;
+    const strViewId = ViewInfo_AllPropEx.getMainViewId();
     const objViewInfo = await viewInfoStore.getObj(strViewId);
     if (objViewInfo == null) {
       const strMsg = Format(
@@ -280,20 +293,21 @@ export class ViewInfo_AllPropEx {
     //SetSpanHtmlByIdInDiv("divLayout", "spnTabName", objvPrjTab.tabName);
     //SetSpanHtmlByIdInDiv("divLayout", "spnTabId", strViewId);
 
-    ViewInfo_AllPropEx.DispViewInfo();
+    ViewInfo_AllPropEx.DispViewInfo(objViewInfo);
   }
 
-  public static async DispViewInfo() {
+  public static async DispViewInfo(objViewInfo: any) {
+    const strMainViewId = ViewInfo_AllPropEx.getMainViewId();
     //let objViewInfo4Session = clsPubSessionStorage.ViewInfo4Session;
     SetSpanHtmlByIdInDivObj(
       ViewInfo_AllPropEx.divLayout,
       'spnViewName',
-      `${clsPrivateSessionStorage.viewName}(${clsPrivateSessionStorage.viewId_Main})`,
+      `${viewName_Main.value}(${strMainViewId})`,
     );
     SetSpanHtmlByIdInDivObj(
       ViewInfo_AllPropEx.divLayout,
       'spnFuncModuleName_Sim',
-      `${clsPrivateSessionStorage.funcModuleNameSim}(${clsPrivateSessionStorage.funcModuleEnName})`,
+      `${clsPrivateSessionStorage.funcModuleNameSim}`,
     );
 
     SetSpanHtmlByIdInDivObj(
@@ -301,6 +315,24 @@ export class ViewInfo_AllPropEx {
       'spnApplicationTypeName',
       `${clsPrivateSessionStorage.applicationTypeName}(${clsPrivateSessionStorage.applicationTypeId})`,
     );
+
+    const spnViewName = document.getElementById('spnViewName') as HTMLSpanElement | null;
+    if (spnViewName != null) {
+      const strIsShare = objViewInfo?.isShare == true ? '是' : '否';
+      spnViewName.title = `是否共享: ${strIsShare}`;
+    }
+
+    const spnFuncModuleNameSim = document.getElementById(
+      'spnFuncModuleName_Sim',
+    ) as HTMLSpanElement | null;
+    if (spnFuncModuleNameSim != null) {
+      const strFuncModuleAgcId = objViewInfo?.funcModuleAgcId ?? '';
+      const strFuncModuleEnName = clsPrivateSessionStorage.funcModuleEnName;
+      spnFuncModuleNameSim.title =
+        strFuncModuleAgcId == ''
+          ? ''
+          : `模块Id: ${strFuncModuleAgcId}，模块名: ${clsPrivateSessionStorage.funcModuleNameSim}，英文名: ${strFuncModuleEnName}`;
+    }
 
     const liQueryRegion: HTMLLIElement = <HTMLLIElement>document.getElementById('liQueryRegion');
     const liEditRegion: HTMLLIElement = <HTMLLIElement>document.getElementById('liEditRegion');
@@ -315,12 +347,12 @@ export class ViewInfo_AllPropEx {
 
     const arrLi: Array<HTMLLIElement> = new Array<HTMLLIElement>();
 
-    arrLi.push(liQueryRegion);
-    arrLi.push(liEditRegion);
-    arrLi.push(liListRegion);
-    arrLi.push(liFeatureRegion);
-    arrLi.push(liExcelExportRegion);
-    arrLi.push(liDetailRegion);
+    if (liQueryRegion != null) arrLi.push(liQueryRegion);
+    if (liEditRegion != null) arrLi.push(liEditRegion);
+    if (liListRegion != null) arrLi.push(liListRegion);
+    if (liFeatureRegion != null) arrLi.push(liFeatureRegion);
+    if (liExcelExportRegion != null) arrLi.push(liExcelExportRegion);
+    if (liDetailRegion != null) arrLi.push(liDetailRegion);
     //arrLi.push(liDetailRegion);
 
     //liQueryRegion.style.display = "none";
@@ -333,12 +365,13 @@ export class ViewInfo_AllPropEx {
     //console.log("liDetailRegion.style.display", liDetailRegion.style.display);
 
     const arrViewRegion = await ViewRegionEx_GetObjLstByViewIdCache(
-      clsPrivateSessionStorage.viewId_Main,
+      strMainViewId,
       clsPrivateSessionStorage.cmPrjId,
     );
     for (const objViewRegion of arrViewRegion) {
       switch (objViewRegion.regionTypeId) {
         case enumRegionType.QueryRegion_0001:
+          if (liQueryRegion == null) break;
           liQueryRegion.style.display = 'block';
           ViewInfo_AllPropEx.remove(arrLi, liQueryRegion);
           //var objLi: HTMLLIElement = <HTMLLIElement>document.getElementById("liQueryRegion");
@@ -357,6 +390,7 @@ export class ViewInfo_AllPropEx {
 
           break;
         case enumRegionType.EditRegion_0003:
+          if (liEditRegion == null) break;
           liEditRegion.style.display = 'block';
           ViewInfo_AllPropEx.remove(arrLi, liEditRegion);
           //var objLi: HTMLLIElement = <HTMLLIElement>document.getElementById("liEditRegion");
@@ -374,6 +408,7 @@ export class ViewInfo_AllPropEx {
           }
           break;
         case enumRegionType.ListRegion_0002:
+          if (liListRegion == null) break;
           liListRegion.style.display = 'block';
           ViewInfo_AllPropEx.remove(arrLi, liListRegion);
           //var objLi: HTMLLIElement = <HTMLLIElement>document.getElementById("liListRegion");
@@ -391,6 +426,7 @@ export class ViewInfo_AllPropEx {
           }
           break;
         case enumRegionType.FeatureRegion_0008:
+          if (liFeatureRegion == null) break;
           liFeatureRegion.style.display = 'block';
           ViewInfo_AllPropEx.remove(arrLi, liFeatureRegion);
           //var objLi: HTMLLIElement = <HTMLLIElement>document.getElementById("liFeatureRegion");
@@ -408,6 +444,7 @@ export class ViewInfo_AllPropEx {
           }
           break;
         case enumRegionType.DetailRegion_0006:
+          if (liDetailRegion == null) break;
           liDetailRegion.style.display = 'block';
           ViewInfo_AllPropEx.remove(arrLi, liDetailRegion);
           //console.log("liDetailRegion.style.display", liDetailRegion.style.display);
@@ -426,6 +463,7 @@ export class ViewInfo_AllPropEx {
           }
           break;
         case enumRegionType.ExcelExportRegion_0007:
+          if (liExcelExportRegion == null) break;
           liExcelExportRegion.style.display = 'block';
           ViewInfo_AllPropEx.remove(arrLi, liExcelExportRegion);
           //var objLi: HTMLLIElement = <HTMLLIElement>document.getElementById("liExcelExportRegion");

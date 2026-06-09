@@ -5,6 +5,7 @@
  * */
 
 import { clsPrivateSessionStorage } from '../PubConfig/clsPrivateSessionStorage';
+import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 import { IsNullOrEmpty } from '@/ts/PubFun/clsString';
 
 // declare const document: any;
@@ -28,17 +29,17 @@ export class clsPubVar4Web {
 
   public static async GetViewId(qsViewId: string) {
     if (IsNullOrEmpty(qsViewId) == false) {
-      if (clsPrivateSessionStorage.viewId_Main != qsViewId) {
-        clsPrivateSessionStorage.viewId_Main = qsViewId;
+      if (viewId_Main.value != qsViewId) {
+        viewId_Main.value = qsViewId;
         //    const strTabName = await vPrjTab_SimEx_GetNameByTabIdCache(qsViewId, clsPrivateSessionStorage.cmPrjId);
         //    clsPrivateSessionStorage.tabName = strTabName;
       }
       return qsViewId;
     } else {
-      if (IsNullOrEmpty(clsPrivateSessionStorage.viewId_Main) == true) {
+      if (IsNullOrEmpty(viewId_Main.value) == true) {
         console.error('在获取[viewId]时，值为空！');
       }
-      return clsPrivateSessionStorage.viewId_Main;
+      return viewId_Main.value;
     }
   }
   public static async SetTabId(strTabId: string) {

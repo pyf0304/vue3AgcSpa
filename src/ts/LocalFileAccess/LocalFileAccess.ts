@@ -369,6 +369,7 @@ export async function tryWriteCodeToLocalFile(
   strCodeTypeId: string,
   strFilePath: string,
   strCodeText: string,
+  bolIsViewShare = false,
 ): Promise<LocalFileWriteResult> {
   // 1) 记录入口参数，便于在页面日志中回溯一次完整调用。
   logLocalAccess('info', 'tryWriteCodeToLocalFile', 'call', {
@@ -387,6 +388,7 @@ export async function tryWriteCodeToLocalFile(
     intApplicationTypeId,
     strCodeTypeId,
     strFilePath,
+    bolIsViewShare,
   );
   if (prepareResult.ok == false) return prepareResult.error;
 
@@ -447,6 +449,7 @@ async function prepareTryWriteContext(
   intApplicationTypeId: number,
   strCodeTypeId: string,
   strFilePath: string,
+  bolIsViewShare: boolean,
 ): Promise<PrepareWriteContextResult> {
   const objCodeType = await vCodeType_Sim_GetObjByCodeTypeIdCache(strCodeTypeId);
   const bolOverwrite = objCodeType?.isDefaultOverride ?? false;
@@ -461,6 +464,7 @@ async function prepareTryWriteContext(
     strCodeTypeId,
     strFilePath,
     strMachineName,
+    bolIsViewShare,
   );
   if (isAbsolutePath(strTargetPath) == false) {
     const strRootErr = IsNullOrEmpty(glbLastRootResolveErrorMsg)
@@ -776,6 +780,7 @@ async function getLocalCodeRootPath(
   intApplicationTypeId: number,
   strCodeTypeId: string,
   strMachineName: string,
+  bolIsViewShare: boolean,
 ): Promise<string> {
   glbLastRootResolveErrorMsg = '';
   try {
@@ -799,13 +804,13 @@ async function getLocalCodeRootPath(
         IsNullOrEmpty(objCodePath.codePath) == false &&
         isAbsolutePath(objCodePath.codePath) == true
       ) {
-        return normalizePath(objCodePath.codePath);
+        return adjustViewRootPath(normalizePath(objCodePath.codePath), bolIsViewShare);
       }
       if (
         IsNullOrEmpty(objCodePath.codePathBackup) == false &&
         isAbsolutePath(objCodePath.codePathBackup) == true
       ) {
-        return normalizePath(objCodePath.codePathBackup);
+        return adjustViewRootPath(normalizePath(objCodePath.codePathBackup), bolIsViewShare);
       }
 
       logLocalAccess('warn', 'getLocalCodeRootPath', 'result', {
@@ -842,17 +847,20 @@ async function getLocalCodeRootPath(
       ) {
         if (IsNullOrEmpty(objUserCodePath.codePath) == false) {
           if (isAbsolutePath(objUserCodePath.codePath) == true) {
-            return normalizePath(objUserCodePath.codePath);
+            return adjustViewRootPath(normalizePath(objUserCodePath.codePath), bolIsViewShare);
           }
-          return joinPath(objUserCodePath.projectPath, objUserCodePath.codePath);
+          return adjustViewRootPath(
+            joinPath(objUserCodePath.projectPath, objUserCodePath.codePath),
+            bolIsViewShare,
+          );
         }
-        return normalizePath(objUserCodePath.projectPath);
+        return adjustViewRootPath(normalizePath(objUserCodePath.projectPath), bolIsViewShare);
       }
       if (
         IsNullOrEmpty(objUserCodePath.codePath) == false &&
         isAbsolutePath(objUserCodePath.codePath) == true
       ) {
-        return normalizePath(objUserCodePath.codePath);
+        return adjustViewRootPath(normalizePath(objUserCodePath.codePath), bolIsViewShare);
       }
     }
   } catch (e) {
@@ -865,12 +873,18 @@ async function getLocalCodeRootPath(
   return '';
 }
 
+function adjustViewRootPath(strRootPath: string, bolIsViewShare: boolean): string {
+  if (bolIsViewShare == false) return strRootPath;
+  return strRootPath.replace(/(^|\/)views(\/|$)/, '$1viewsShare$2');
+}
+
 // 将原始文件路径解析为最终写入路径。
 async function resolveWritePath(
   intApplicationTypeId: number,
   strCodeTypeId: string,
   strFilePath: string,
   strMachineName: string,
+  bolIsViewShare: boolean,
 ): Promise<string> {
   const strFilePath2 = normalizePath(strFilePath);
   if (isAbsolutePath(strFilePath2) == true) return strFilePath2;
@@ -879,6 +893,7 @@ async function resolveWritePath(
     intApplicationTypeId,
     strCodeTypeId,
     strMachineName,
+    bolIsViewShare,
   );
   if (IsNullOrEmpty(strRootPath) == true) return strFilePath2;
   return joinPath(strRootPath, strFilePath2);

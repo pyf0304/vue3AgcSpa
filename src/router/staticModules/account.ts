@@ -37,12 +37,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/AuthorityManage/SelectProject.vue'),
         meta: { title: t('routes.account.selectPrj'), hideInMenu: true },
       },
-      {
-        path: 'testTabs',
-        name: `${moduleName}-testTabs`,
-        component: () => import('@/views/tabs/myTabs.vue'),
-        meta: { title: t('routes.account.testTabs'), hideInMenu: true },
-      },
+
       {
         path: 'editViewRegion',
         name: `${moduleName}-editViewRegion`,
@@ -54,29 +49,6 @@ const routes: Array<RouteRecordRaw> = [
         name: `${moduleName}-editTabRelaInfo`,
         component: () => import('@/views/Table_Field/PrjTab_AllProp.vue'),
         meta: { title: t('routes.account.editTabRelaInfo'), hideInMenu: true },
-      },
-      {
-        path: 'ViewIdGCVariableRelaCRUD',
-        name: `${moduleName}-ViewIdGCVariableRelaCRUD`,
-        component: () => import('@/views/GeneCode/ViewIdGCVariableRelaCRUD.vue'),
-      },
-      {
-        path: 'CTCodeTypeGroupCRUDAi',
-        name: `${moduleName}-CTCodeTypeGroupCRUDAi`,
-        component: () => import('@/views/GeneCode/CTCodeTypeGroupCRUDAi.vue'),
-        meta: { title: 'CTCodeTypeGroup维护(Ai)', hideInMenu: true },
-      },
-      {
-        path: 'CTCodeTypeGroupRelaCRUDAi',
-        name: `${moduleName}-CTCodeTypeGroupRelaCRUDAi`,
-        component: () => import('@/views/GeneCode/CTCodeTypeGroupRelaCRUDAi.vue'),
-        meta: { title: 'CTCodeTypeGroupRela维护(Ai)', hideInMenu: true },
-      },
-      {
-        path: 'GC_CodeTypeRelationMindMapAi',
-        name: `${moduleName}-GC_CodeTypeRelationMindMapAi`,
-        component: () => import('@/views/GeneCode/GC_CodeTypeRelationMindMapAi.vue'),
-        meta: { title: '代码类型关系思维导图维护(Ai)', hideInMenu: true },
       },
     ],
   },

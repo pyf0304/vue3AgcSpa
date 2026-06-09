@@ -3,10 +3,10 @@ import { clsViewInfoENEx } from '@/ts/L0Entity/PrjInterface/clsViewInfoENEx';
 import { ViewInfoEx_FuncMapByFldName } from '@/ts/L3ForWApiEx/PrjInterface/clsViewInfoExWApi';
 import { Format } from '@/ts/PubFun/clsString';
 import { ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
-import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
 import { AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
 import { useviewInfoStore } from '@/store/modules/viewInfo';
 import { refViewInfo_Detail } from '@/views/PrjInterface/ViewInfo_UVueShare';
+import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 /* vViewInfo_DetailEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScript_DetailCSEx_TS4TypeScript:GeneCode)
@@ -39,7 +39,7 @@ export default class ViewInfo_DetailEx extends ViewInfo_Detail {
    */
   public async btnDetailRecord_Click() {
     this.opType = 'Detail';
-    const strKeyId = clsPrivateSessionStorage.viewId_Main;
+    const strKeyId = viewId_Main.value;
     if (strKeyId == '') {
       alert('请选择需要修改的记录！');
       return;

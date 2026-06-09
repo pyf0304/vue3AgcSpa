@@ -70,6 +70,34 @@
         </button>
       </div>
 
+      <div class="form-inline mt-2">
+        <label class="mr-2 mb-1">组内代码类型</label>
+        <select
+          v-model="selectedExistingCodeTypeId"
+          class="form-control form-control-sm mr-2 mb-1"
+          style="min-width: 260px"
+          :disabled="loading || !canAdd"
+        >
+          <option value="">请选择组内代码类型</option>
+          <option
+            v-for="x in currentGroupCodeTypeOptions"
+            :key="x.codeTypeId"
+            :value="x.codeTypeId"
+          >
+            {{ x.codeTypeName }} ({{ x.codeTypeId }})
+          </option>
+        </select>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-danger mb-1"
+          :disabled="loading || !canAdd || selectedExistingCodeTypeId === ''"
+          @click="removeFromCurrentGroup"
+        >
+          {{ loading ? '处理中...' : '从当前组移除' }}
+        </button>
+      </div>
+
       <div class="text-warning mt-1" style="min-height: 20px">{{ message }}</div>
     </div>
   </div>
@@ -86,7 +114,9 @@
   import { vCodeType_Sim_GetObjLstAsync } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
   import {
     CTCodeTypeGroupRela_AddNewRecordAsync,
+    CTCodeTypeGroupRela_DelRecordAsync,
     CTCodeTypeGroupRela_GetObjByKeyAsync,
+    CTCodeTypeGroupRela_GetObjLstAsync,
   } from '@/ts/L3ForWApi/GeneCode/clsCTCodeTypeGroupRelaWApi';
 
   export default defineComponent({
@@ -104,8 +134,10 @@
       const codeTypeOptions = ref<Array<clsvCodeType_SimEN>>([]);
       const applicationTypeOptions = ref<Array<clsApplicationTypeEN>>([]);
       const appCodeTypeRelaList = ref<Array<clsAppCodeTypeRelaEN>>([]);
+      const currentGroupCodeTypeIds = ref<Array<string>>([]);
       const selectedApplicationTypeId = ref(0);
       const selectedCodeTypeId = ref('');
+      const selectedExistingCodeTypeId = ref('');
       const isMainGroupText = ref('false');
       const orderNum = ref(1);
 
@@ -119,21 +151,41 @@
 
       const availableApplicationTypeOptions = computed(() => {
         const availableIds = new Set<number>(
-          appCodeTypeRelaList.value.map((x) => x.applicationTypeId),
+          appCodeTypeRelaList.value
+            .filter((x) => x.isVisible === true)
+            .map((x) => x.applicationTypeId),
         );
-        return applicationTypeOptions.value.filter((x) => availableIds.has(x.applicationTypeId));
+        return applicationTypeOptions.value.filter(
+          (x) => x.isVisible === true && availableIds.has(x.applicationTypeId),
+        );
       });
 
       const filteredCodeTypeOptions = computed(() => {
+        const excludedIdSet = new Set(currentGroupCodeTypeIds.value);
+        const byName = (a: clsvCodeType_SimEN, b: clsvCodeType_SimEN) =>
+          a.codeTypeName.localeCompare(b.codeTypeName, 'zh-CN');
         if (selectedApplicationTypeId.value === 0) {
-          return codeTypeOptions.value;
+          return codeTypeOptions.value.filter((x) => !excludedIdSet.has(x.codeTypeId)).sort(byName);
         }
         const codeTypeIdSet = new Set(
           appCodeTypeRelaList.value
-            .filter((x) => x.applicationTypeId === selectedApplicationTypeId.value)
+            .filter(
+              (x) =>
+                x.isVisible === true && x.applicationTypeId === selectedApplicationTypeId.value,
+            )
             .map((x) => x.codeTypeId),
         );
-        return codeTypeOptions.value.filter((x) => codeTypeIdSet.has(x.codeTypeId));
+        return codeTypeOptions.value
+          .filter((x) => codeTypeIdSet.has(x.codeTypeId) && !excludedIdSet.has(x.codeTypeId))
+          .sort(byName);
+      });
+
+      const currentGroupCodeTypeOptions = computed(() => {
+        const byName = (a: clsvCodeType_SimEN, b: clsvCodeType_SimEN) =>
+          a.codeTypeName.localeCompare(b.codeTypeName, 'zh-CN');
+        return codeTypeOptions.value
+          .filter((x) => currentGroupCodeTypeIds.value.includes(x.codeTypeId))
+          .sort(byName);
       });
 
       watch(filteredCodeTypeOptions, (lst) => {
@@ -144,15 +196,34 @@
         }
       });
 
+      watch(currentGroupCodeTypeOptions, (lst) => {
+        if (selectedExistingCodeTypeId.value === '') return;
+        const exists = lst.some((x) => x.codeTypeId === selectedExistingCodeTypeId.value);
+        if (!exists) {
+          selectedExistingCodeTypeId.value = '';
+        }
+      });
+
       const loadBaseData = async () => {
         const [codeTypes, appTypes, appCodeTypeRelas] = await Promise.all([
           vCodeType_Sim_GetObjLstAsync('1=1'),
           ApplicationType_GetObjLstAsync('1=1'),
           AppCodeTypeRela_GetObjLstAsync('1=1'),
         ]);
-        codeTypeOptions.value = codeTypes;
+        codeTypeOptions.value = codeTypes.filter((x) => x.inUse === true);
         applicationTypeOptions.value = appTypes;
         appCodeTypeRelaList.value = appCodeTypeRelas;
+      };
+
+      const loadCurrentGroupRelas = async () => {
+        if (!canAdd.value) {
+          currentGroupCodeTypeIds.value = [];
+          return;
+        }
+        const relas = await CTCodeTypeGroupRela_GetObjLstAsync(
+          `CtGroupId='${props.currentGroupId}'`,
+        );
+        currentGroupCodeTypeIds.value = relas.map((x) => x.codeTypeId);
       };
 
       const addToCurrentGroup = async () => {
@@ -189,6 +260,8 @@
             return;
           }
 
+          await loadCurrentGroupRelas();
+
           message.value = '添加成功。';
           emit('added');
         } catch (error: any) {
@@ -199,9 +272,56 @@
         }
       };
 
+      const removeFromCurrentGroup = async () => {
+        if (!canAdd.value) {
+          message.value = '请先在上方选择代码组。';
+          return;
+        }
+        if (selectedExistingCodeTypeId.value === '') {
+          message.value = '请选择要移除的代码类型。';
+          return;
+        }
+
+        const ok = confirm('确认将该代码类型从当前组移除吗?');
+        if (!ok) return;
+
+        loading.value = true;
+        message.value = '正在移除...';
+        try {
+          const delCount = await CTCodeTypeGroupRela_DelRecordAsync({
+            ctGroupId: props.currentGroupId,
+            codeTypeId: selectedExistingCodeTypeId.value,
+          });
+          if (delCount <= 0) {
+            message.value = '移除失败，请稍后重试。';
+            return;
+          }
+
+          selectedExistingCodeTypeId.value = '';
+          await loadCurrentGroupRelas();
+          message.value = '已从当前组移除。';
+          emit('added');
+        } catch (error: any) {
+          console.error(error);
+          message.value = `移除失败: ${String(error)}`;
+        } finally {
+          loading.value = false;
+        }
+      };
+
       onMounted(async () => {
         await loadBaseData();
+        await loadCurrentGroupRelas();
       });
+
+      watch(
+        () => props.currentGroupId,
+        async () => {
+          selectedCodeTypeId.value = '';
+          selectedExistingCodeTypeId.value = '';
+          await loadCurrentGroupRelas();
+        },
+      );
 
       return {
         loading,
@@ -209,13 +329,16 @@
         codeTypeOptions,
         availableApplicationTypeOptions,
         filteredCodeTypeOptions,
+        currentGroupCodeTypeOptions,
         selectedApplicationTypeId,
         selectedCodeTypeId,
+        selectedExistingCodeTypeId,
         isMainGroupText,
         orderNum,
         canAdd,
         displayGroupId,
         addToCurrentGroup,
+        removeFromCurrentGroup,
       };
     },
   });

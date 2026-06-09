@@ -19,6 +19,8 @@
           :tree-data="treeData"
           :selected-node="selectedNode"
           @on-node-click="NodeClick"
+          @on-node-hover="NodeHover"
+          @on-node-leave="NodeLeave"
         />
       </div>
       <div id="divCode" ref="refDivCode" class="col-8">
@@ -65,7 +67,16 @@
             <tr>
               <td colspan="1"><span id="spnCurrMachine" class="text-warning">本机名</span></td>
               <td colspan="1"><span id="spnCurrMachine2" class="text-warning">不能获取</span></td>
-              <td colspan="1"> </td>
+              <td colspan="1">
+                <label for="chkGeneByDependency" class="text-secondary mb-0">
+                  <input id="chkGeneByDependency" type="checkbox" class="mr-1" />
+                  是否按依赖关系
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>生成进度</td>
+              <td colspan="2"><span id="spnGeneProgress" class="text-info">未开始</span></td>
             </tr>
             <tr>
               <td>
@@ -158,7 +169,11 @@
   import 'bootstrap/dist/css/bootstrap.css';
   import { defineComponent, onMounted, ref } from 'vue';
   //import { Format, IsNullOrEmpty } from "@/ts/PubFun/clsString"
-  import { GeneTabCodeEx } from '@/views/Table_Field/GeneTabCodeEx';
+  import {
+    GeneTabCodeEx,
+    GeneTabCodeEx_HideCodeTypePathHoverMenu,
+    GeneTabCodeEx_ShowCodeTypePathHoverMenu,
+  } from '@/views/Table_Field/GeneTabCodeEx';
   import { TreeNode } from '@/ts/components/TreeNode';
   import { enumTabMainType } from '@/ts/L0Entity/Table_Field/clsTabMainTypeEN';
   import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
@@ -346,7 +361,7 @@
           const arrParentId = strParentIdLst.split('|');
           const strCodeTypeId = data.id;
           const intApplicationTypeId = arrParentId[0];
-          GeneTabCodeEx.CodeType_Click(strTabId, strCodeTypeId, intApplicationTypeId);
+          await GeneTabCodeEx.CodeType_Click(strTabId, strCodeTypeId, intApplicationTypeId);
         } else if (data.type === 'Function4GeneCode') {
           // alert(`Function4GeneCode:${data.id}`);
           const strTabId = clsPrivateSessionStorage.tabId_Main;
@@ -367,6 +382,24 @@
         }
 
         console.log('data:', data);
+      },
+      async NodeHover(data: any) {
+        if (data.type !== 'CodeType') return;
+        const strParentIdLst = String(data.parentId ?? '');
+        const arrParentId = strParentIdLst.split('|').filter((x: string) => x.length > 0);
+        const intApplicationTypeId = Number(arrParentId[0] ?? 0);
+        if (intApplicationTypeId <= 0) return;
+        await GeneTabCodeEx_ShowCodeTypePathHoverMenu(
+          data.event,
+          data.element as HTMLElement,
+          data.node,
+          data.id,
+          intApplicationTypeId,
+        );
+      },
+      NodeLeave(data: any) {
+        if (data.type !== 'CodeType') return;
+        GeneTabCodeEx_HideCodeTypePathHoverMenu();
       },
     },
   });

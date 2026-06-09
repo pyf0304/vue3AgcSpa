@@ -2914,8 +2914,7 @@ async function ShowInterface4CurrTab(strTabId: string) {
     //   outTabId: objViewInfo.outRelaTabId,
     //   cmPrjId: clsPrivateSessionStorage.cmPrjId,
     // };
-    clsPrivateSessionStorage.viewId_Main = objViewInfo.viewId;
-    clsPrivateSessionStorage.viewName = objViewInfo.viewName;
+
     clsPrivateSessionStorage.funcModuleNameSim = objFuncModule_Agc.funcModuleNameSim;
     clsPrivateSessionStorage.funcModuleEnName = objFuncModule_Agc.funcModuleEnName;
 
@@ -2924,7 +2923,6 @@ async function ShowInterface4CurrTab(strTabId: string) {
 
     // this.SetSessionAsync('objViewInfo4Session', strJson);
 
-    clsPrivateSessionStorage.viewId_Main = objViewInfo.viewId;
     //Redirect("/Index/Main_ViewInfo.js");
     //Redirect("/PrjInterface/ViewInfo_U");
     // '../PrjInterface/ViewInfo_U?viewId={0}&Op=TabFldEdit',

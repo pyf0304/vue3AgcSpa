@@ -56,6 +56,7 @@ import { viewVarSet } from '@/views/RegionManage/ViewRegionVueShare';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 import { GetCurrPageIndex } from '@/ts/PubFun/clsOperateList';
 import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
+import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 /* ViewRegionInTab 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:GeneCode)
@@ -63,6 +64,10 @@ import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
 export class ViewRegionInTab extends ViewRegionRelaCRUD implements IShowList {
   public static Edit_MultiCreateRef: Ref<any>;
   public static Edit_AddRelaObj: any;
+
+  private getCurrentViewId(): string {
+    return this.qsViewId || ViewId_Main_Session.value || viewId_Main.value;
+  }
 
   /*
    * 每页记录数，在扩展类可以修改
@@ -233,7 +238,8 @@ export class ViewRegionInTab extends ViewRegionRelaCRUD implements IShowList {
       //ViewRegionCRUD.CmPrjIdCache = clsPrivateSessionStorage.cmPrjId;
 
       //const objViewInfo4Session = clsPubSessionStorage.ViewInfo4Session;
-      const strViewId = clsPrivateSessionStorage.viewId_Main;
+      const strViewId = this.getCurrentViewId();
+      ViewId_Main_Session.value = strViewId;
       console.log(strViewId);
       ViewRegion_MultiCreateEx.strViewIdCache = strViewId;
       // const strCondition = `viewId='${strViewId}'`;
@@ -295,7 +301,7 @@ export class ViewRegionInTab extends ViewRegionRelaCRUD implements IShowList {
     //如果该条件控件的内容不为空,就组成一个条件并添加到总条件串中。
     try {
       //const objViewInfo4Session = clsPubSessionStorage.ViewInfo4Session;
-      const strViewId = clsPrivateSessionStorage.viewId_Main;
+      const strViewId = this.getCurrentViewId();
       const arrRegionId = await ViewRegionRelaEx_GetRegionIdLstByViewIdCache(
         strViewId,
         clsPrivateSessionStorage.cmPrjId,
@@ -356,7 +362,7 @@ export class ViewRegionInTab extends ViewRegionRelaCRUD implements IShowList {
     //使条件串的初值为"1 = 1",以便在该串的后面用"and "添加其他条件,
     //例如 1 = 1 && UserName = '张三'
     //objViewInfo4Session = stuViewInfo4Session.GetObjByHtmlString(strViewInfo4Session);
-    const strViewId = clsPrivateSessionStorage.viewId_Main;
+    const strViewId = this.getCurrentViewId();
     // const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
 
     console.log(strViewId);
@@ -761,7 +767,7 @@ export class ViewRegionInTab extends ViewRegionRelaCRUD implements IShowList {
           throw strMsg;
         }
         if (returnBool == true) {
-          const intNumber = await ViewInfoEx_SetViewUpdDate(clsPrivateSessionStorage.viewId_Main);
+          const intNumber = await ViewInfoEx_SetViewUpdDate(this.getCurrentViewId());
           if (intNumber > 0) {
             viewInfoStore.delObjByRegionId(objViewRegionEN.regionId);
             viewRegionStore.delObj(objViewRegionEN.regionId);

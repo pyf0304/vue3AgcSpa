@@ -16,7 +16,7 @@ import {
   PrjDataBase_GetObjExLstByPagerCache,
   PrjDataBase_GetObjLstByPrjDataBaseIdLstAsync,
   PrjDataBase_UpdateRecordAsync,
-  PrjDataBase_DelPrjDataBasesAsync,
+  PrjDataBase_DelKeysAsync,
 } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
 import { PrjDataBaseEx_FuncMapByFldName } from '@/ts/L3ForWApiEx/PrjManage/clsPrjDataBaseExWApi';
 import { UseState_BindDdl_UseStateIdInDivCache } from '@/ts/L3ForWApi/SysPara/clsUseStateWApi';
@@ -191,7 +191,7 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
   public async DelMultiRecord(arrPrjDataBaseId: Array<string>) {
     const strThisFuncName = this.DelMultiRecord.name;
     try {
-      const returnInt = await PrjDataBase_DelPrjDataBasesAsync(arrPrjDataBaseId);
+      const returnInt = await PrjDataBase_DelKeysAsync(arrPrjDataBaseId);
       if (returnInt > 0) {
         PrjDataBase_ReFreshCache();
         alert(`删除${this.thisTabName}记录成功,共删除${returnInt}条记录!`);

@@ -174,6 +174,7 @@
     refViewRegion_Edit,
     PrjId_Session as PrjId_Session_ViewRegion,
   } from '@/views/RegionManage/ViewRegionVueShare';
+  import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
   export default defineComponent({
     name: 'ViewRegionInTab',
@@ -187,7 +188,10 @@
       PrjId_Session.value = clsPrivateSessionStorage.currSelPrjId;
       PrjId_Session_ViewRegion.value = clsPrivateSessionStorage.currSelPrjId;
       CmPrjId_Local.value = clsPrivateSessionStorage.cmPrjId;
-      ViewId_Main_Session.value = clsPrivateSessionStorage.viewId_Main;
+      ViewId_Main_Session.value =
+        typeof window !== 'undefined'
+          ? new ViewRegionInTab().qsViewId || viewId_Main.value
+          : viewId_Main.value;
 
       const strTitle = ref('界面区域维护');
 

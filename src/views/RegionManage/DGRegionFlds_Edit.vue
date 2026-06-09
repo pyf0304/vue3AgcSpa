@@ -598,6 +598,7 @@
   import { CtlType_GetArrCtlType } from '@/ts/L3ForWApi/PrjInterface/clsCtlTypeWApi';
   import { DgFuncType_GetArrDgFuncType } from '@/ts/L3ForWApi/PrjInterface/clsDgFuncTypeWApi';
   import {
+    CmPrjId_Local,
     refDivEdit,
     RegionId_Static,
     TabId_Static,
@@ -707,7 +708,7 @@
           const strMsg = Format("DGRegionFlds_Edit.PrjIdCache='9991'，还没有被赋正确的值,请检查!");
           throw strMsg;
         }
-        const strCmPrjId = clsPrivateSessionStorage.cmPrjId; //定义条件字段
+        const strCmPrjId = CmPrjId_Local.value || clsPrivateSessionStorage.cmPrjId; //定义条件字段
 
         const objCMProjects = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
 

@@ -252,6 +252,13 @@
         return objPage.value;
       };
 
+      const filterInUseCodeTypes = (
+        list: clsvCodeType_SimEN[] | null | undefined,
+      ): clsvCodeType_SimEN[] => {
+        if (list == null) return [];
+        return list.filter((x) => x.inUse === true);
+      };
+
       const getQueryValue = (key: GC_CodeTypeRelationQueryFieldSpecAi['key']): string => {
         switch (key) {
           case 'parentCodeTypeId_q':
@@ -450,12 +457,12 @@
         });
 
         const queryOptions = await loadQueryOptionsAi();
-        arrvCodeType_Sim.value = queryOptions.arrvCodeType_Sim;
+        arrvCodeType_Sim.value = filterInUseCodeTypes(queryOptions.arrvCodeType_Sim);
         arrCTRelationType.value = queryOptions.arrCTRelationType;
 
         const featureOptions = await loadFeatureOptionsAi();
         console.log('featureOptions:', featureOptions);
-        arrvCodeType_Sim.value = featureOptions.arrvCodeType_Sim;
+        arrvCodeType_Sim.value = filterInUseCodeTypes(featureOptions.arrvCodeType_Sim);
         arrCTRelationType.value = featureOptions.arrCTRelationType;
         childCodeTypeId_f.value = '0';
         ctRelationTypeId_f.value = '0';

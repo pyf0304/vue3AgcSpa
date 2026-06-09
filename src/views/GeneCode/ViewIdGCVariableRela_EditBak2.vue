@@ -155,12 +155,7 @@
     },
     setup() {
       const userStore = useUserStore();
-      // const route = useRoute(); // 获取当前路由信息
-      // if (typeof route.params.viewId === 'string') {
-      //   ViewIdStatic.value = route.params.viewId;
 
-      //   // clsPrivateSessionStorage.viewId_Main = viewId.value;
-      // }
       onMounted(async () => {
         console.log(ViewId_Main_Session.value);
       });

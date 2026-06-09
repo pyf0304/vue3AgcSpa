@@ -358,6 +358,7 @@
   import { ViewInfoEx_GetRegionTypeIdLst } from '@/ts/L3ForWApiEx/PrjInterface/clsViewInfoExWApi';
 
   import { useviewInfoStore } from '@/store/modules/viewInfo';
+  import { viewId_Main, viewName_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
   // import router from '@/router';
   export default defineComponent({
@@ -720,18 +721,20 @@
         const arrObjLst = new Array<clsViewInfoENEx>();
         dataList.value = arrObjLst;
       }
+
+      let isNavigatingToViewRegion = false;
       const EditViewRegion = async (data: any) => {
         const viewInfoStore = useviewInfoStore();
         console.log('data:', data);
-        clsPrivateSessionStorage.viewId_Main = data.viewId;
+        viewId_Main.value = data.viewId;
 
         const objViewInfo = await viewInfoStore.getObj(data.viewId);
         if (objViewInfo == null) return;
-        clsPrivateSessionStorage.viewName = objViewInfo.viewName;
+        viewName_Main.value = objViewInfo.viewName;
         clsPrivateSessionStorage.applicationTypeId = objViewInfo.applicationTypeId.toString();
         // const objViewInfoEx = ViewInfoEx_CopyToEx(objViewInfo);
         // ViewInfoEx_FuncMapByFldName(clsViewInfoENEx.con_FuncModuleName, objViewInfoEx);
-        const strViewId = clsPrivateSessionStorage.viewId_Main;
+        const strViewId = viewId_Main.value;
         const objFuncModule_Agc = await FuncModule_Agc_GetObjByFuncModuleAgcIdCache(
           objViewInfo.funcModuleAgcId,
           clsPrivateSessionStorage.currSelPrjId,
@@ -753,10 +756,19 @@
         // router.push({ name: 'account-editViewRegion', params: { viewId: strViewId } });
         // router.push({ name: 'account-editViewRegion' });
         console.log('route:', route);
-        const params = route.params.viewId
-          ? { viewId: route.params.viewId }
-          : { viewId: strViewId };
-        router.push({ name: 'account-editViewRegion', params });
+        const query = {
+          viewId: typeof route.query.viewId === 'string' ? route.query.viewId : strViewId,
+        };
+        const isSameTarget =
+          route.name === 'account-editViewRegion' &&
+          typeof route.query.viewId === 'string' &&
+          route.query.viewId === query.viewId;
+        if (isSameTarget || isNavigatingToViewRegion) return;
+
+        isNavigatingToViewRegion = true;
+        router.push({ name: 'account-editViewRegion', query }).finally(() => {
+          isNavigatingToViewRegion = false;
+        });
       };
 
       return {

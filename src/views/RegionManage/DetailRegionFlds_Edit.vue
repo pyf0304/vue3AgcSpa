@@ -446,6 +446,7 @@
   } from '@/ts/L3ForWApiEx/Table_Field/clsvFieldTab_SimExWApi';
   import { CtlType_GetArrCtlType } from '@/ts/L3ForWApi/PrjInterface/clsCtlTypeWApi';
   import {
+    CmPrjId_Local,
     refDivEdit,
     RegionId_Static,
     TabId_Static,
@@ -536,7 +537,7 @@
           );
           throw strMsg;
         }
-        const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
+        const strCmPrjId = CmPrjId_Local.value || clsPrivateSessionStorage.cmPrjId;
         const objCMProjects = await CMProject_GetObjByKeyCache({ cmPrjId: strCmPrjId });
 
         if (objCMProjects == null) {

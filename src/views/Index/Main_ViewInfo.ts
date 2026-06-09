@@ -6,6 +6,7 @@ import { SetSpanHtmlByIdInDiv } from '@/ts/PubFun/clsCommFunc4Ctrl';
 import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
 import { clsPubSessionStorage } from '@/ts/PubFun/clsPubSessionStorage';
 import { Format } from '@/ts/PubFun/clsString';
+import { viewId_Main, viewName_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 declare let strUrl_Session_SetString: string;
 
 /// <summary>
@@ -135,8 +136,8 @@ export class Main_ViewInfo {
 
   public static async DispViewInfo() {
     //let objViewInfo4Session = clsPubSessionStorage.ViewInfo4Session;
-    $('#spnViewId').html(clsPrivateSessionStorage.viewId_Main);
-    $('#spnViewName').html(clsPrivateSessionStorage.viewName);
+    $('#spnViewId').html(viewId_Main.value);
+    $('#spnViewName').html(viewName_Main.value);
 
     $('#spnFuncModuleNameSim').html(clsPrivateSessionStorage.funcModuleNameSim);
     $('#spnFuncModuleENName').html(clsPrivateSessionStorage.funcModuleEnName);
@@ -158,11 +159,7 @@ export class Main_ViewInfo {
     if (liGeneViewCode != null) {
       const objA_GC: HTMLAnchorElement = <HTMLAnchorElement>liGeneViewCode.firstChild;
       if (objA_GC.href.indexOf('?') == -1) {
-        const strHtml = Format(
-          '{0}?viewId={1}',
-          objA_GC.href,
-          clsPrivateSessionStorage.viewId_Main,
-        );
+        const strHtml = Format('{0}?viewId={1}', objA_GC.href, viewId_Main.value);
         objA_GC.href = strHtml;
       }
     }
@@ -176,7 +173,7 @@ export class Main_ViewInfo {
     if (liDetailRegion != null) arrLi.push(liDetailRegion);
 
     const arrViewRegion = await ViewRegionEx_GetObjLstByViewIdCache(
-      clsPrivateSessionStorage.viewId_Main,
+      viewId_Main.value,
       clsPrivateSessionStorage.cmPrjId,
     );
     let objLi;
@@ -369,8 +366,8 @@ export class Main_ViewInfo {
 
   public static async DispViewInfoV2() {
     //let objViewInfo4Session = clsPubSessionStorage.ViewInfo4Session;
-    $('#spnViewId').html(clsPrivateSessionStorage.viewId_Main);
-    $('#spnViewName').html(clsPrivateSessionStorage.viewName);
+    $('#spnViewId').html(viewId_Main.value);
+    $('#spnViewName').html(viewName_Main.value);
 
     $('#spnApplicationTypeId').html(clsPrivateSessionStorage.applicationTypeId);
     $('#spnApplicationTypeName').html(clsPubSessionStorage.applicationTypeName);
@@ -392,7 +389,7 @@ export class Main_ViewInfo {
     console.log('liDetailRegion.style.display', ifrDetailRegion.style.display);
 
     const arrViewRegion = await ViewRegionEx_GetObjLstByViewIdCache(
-      clsPrivateSessionStorage.viewId_Main,
+      viewId_Main.value,
       clsPrivateSessionStorage.cmPrjId,
     );
     // let objLi;
@@ -405,7 +402,7 @@ export class Main_ViewInfo {
           strHtml = Format(
             '../../RegionManage/QryRegionFldsCRUD?Op=ViewEdit&regionId={0}&viewId={1}',
             objViewRegion.regionId,
-            clsPrivateSessionStorage.viewId_Main,
+            viewId_Main.value,
           );
           ifrEditRegion.src = strHtml;
           break;
@@ -415,7 +412,7 @@ export class Main_ViewInfo {
           strHtml = Format(
             '../../RegionManage/EditRegionFldsCRUD?Op=ViewEdit&regionId={0}&viewId={1}',
             objViewRegion.regionId,
-            clsPrivateSessionStorage.viewId_Main,
+            viewId_Main.value,
           );
           ifrEditRegion.src = strHtml;
           break;
@@ -425,7 +422,7 @@ export class Main_ViewInfo {
           strHtml = Format(
             '../../RegionManage/DGRegionFldsCRUD?Op=ViewEdit&regionId={0}&viewId={1}',
             objViewRegion.regionId,
-            clsPrivateSessionStorage.viewId_Main,
+            viewId_Main.value,
           );
           ifrEditRegion.src = strHtml;
 
@@ -436,7 +433,7 @@ export class Main_ViewInfo {
           strHtml = Format(
             '../../RegionManage/FeatureRegionFldsCRUD?Op=ViewEdit&regionId={0}&viewId={1}',
             objViewRegion.regionId,
-            clsPrivateSessionStorage.viewId_Main,
+            viewId_Main.value,
           );
           ifrEditRegion.src = strHtml;
           break;
@@ -446,7 +443,7 @@ export class Main_ViewInfo {
           strHtml = Format(
             '../../RegionManage/DetailRegionFldsCRUD?Op=ViewEdit&regionId={0}&viewId={1}',
             objViewRegion.regionId,
-            clsPrivateSessionStorage.viewId_Main,
+            viewId_Main.value,
           );
           ifrEditRegion.src = strHtml;
           break;
@@ -456,7 +453,7 @@ export class Main_ViewInfo {
           strHtml = Format(
             '../../RegionManage/ExcelExportRegionFldsCRUD?Op=ViewEdit&regionId={0}&viewId={1}',
             objViewRegion.regionId,
-            clsPrivateSessionStorage.viewId_Main,
+            viewId_Main.value,
           );
           ifrEditRegion.src = strHtml;
 

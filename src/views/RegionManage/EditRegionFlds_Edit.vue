@@ -723,7 +723,7 @@
        **/
       async function BindDdl4EditRegionInDiv() {
         const strTabId_Static = TabId_Static.value; //静态变量;//静态变量
-        const strCmPrjId = CmPrjId_Local.value; //静态变量;//Session存储、local存储
+        const strCmPrjId = CmPrjId_Local.value || clsPrivateSessionStorage.cmPrjId; //静态变量;//Session存储、local存储
         if (strTabId_Static == '') {
           const strMsg = Format('EditRegionFldsEdit.TabId_Static.value为空,请检查！');
           console.error(strMsg);

@@ -201,6 +201,7 @@
   import { clsViewRegionEN } from '@/ts/L0Entity/RegionManage/clsViewRegionEN';
   import { ViewInfo_GetArrViewInfoByPrjId } from '@/ts/L3ForWApi/PrjInterface/clsViewInfoWApi';
   import { ViewRegion_GetArrViewRegionByPrjId } from '@/ts/L3ForWApi/RegionManage/clsViewRegionWApi';
+  import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
   export default defineComponent({
     name: 'ViewRegionRelaCRUD',
     components: {
@@ -213,7 +214,7 @@
     setup() {
       PrjId_Session.value = clsPrivateSessionStorage.currSelPrjId;
       CmPrjId_Local.value = clsPrivateSessionStorage.cmPrjId;
-      ViewId_Main_Session.value = clsPrivateSessionStorage.viewId_Main;
+      ViewId_Main_Session.value = viewId_Main.value;
       const objPage = ref<ViewRegionRelaCRUDEx>();
       const objPage_Edit = ref<ViewRegionRela_EditEx>();
       const objPage_Detail = ref<ViewRegionRela_DetailEx>();

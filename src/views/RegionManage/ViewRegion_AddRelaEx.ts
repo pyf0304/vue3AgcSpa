@@ -68,7 +68,7 @@ export class ViewRegion_AddRelaEx extends ViewRegionRela_Edit {
         break;
       case 'AddNewRecord': //添加记录
       case 'Create': //添加记录
-        // ViewRegion_AddRelaEx.strViewIdCache = clsPrivateSessionStorage.viewId_Main;
+        // ViewRegion_AddRelaEx.strViewIdCache = viewId_Main.value;
 
         objViewInfo = await viewInfoStore.getObj(ViewId_Main_Session.value);
         if (objViewInfo == null) {

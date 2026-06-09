@@ -52,7 +52,7 @@
         // // { label: '界面列表', component: ViewInfoCRUD },
         // { label: '刷新', component: RefreshViewInfo },
       ];
-      // const strViewId = clsPrivateSessionStorage.viewId_Main;
+
       // const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
 
       const activeTab = ref(0);

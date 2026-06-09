@@ -17,6 +17,8 @@ export const PrjId_Session = ref(''); //1、界面列表区主表的缓存分类
 export const ApplicationTypeId_Static = ref(0); //5、处理添加、修改记录时PutData所用的Session缓存变量,用于获取界面编辑主表时所用的Session类字段值
 export const UserId_Static = ref(''); //5、处理添加、修改记录时PutData所用的Session缓存变量,用于获取界面编辑主表时所用的Session类字段值
 export const viewId_Main = ref(''); //5、处理添加、修改记录时PutData所用的Session缓存变量,用于获取界面编辑主表时所用的Session类字段值
+export const viewName_Main = ref(''); //5、处理添加、修改记录时PutData所用的Session缓存变量,用于获取界面编辑主表时所用的Session类字段值
+
 const tabComponentRef = ref();
 const refDivLayout = ref();
 const refDivQuery = ref();

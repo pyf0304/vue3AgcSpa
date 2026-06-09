@@ -79,11 +79,13 @@ import {
   RegionId_Static,
   TabId_Static,
   QryRegionFlds_DeleteKeyIdCache,
+  CmPrjId_Local,
   refQryRegionFlds_Edit,
 } from '@/views/RegionManage/QryRegionFldsVueShare';
 import { RegionId_Static as RegionId_Static_Sim } from '@/views/RegionManage/ViewRegion_UVueShare';
 
 import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
+import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 // import { divVarSet } from '@/views/RegionManage/QryRegionFldsCRUD.vue';
 
@@ -373,7 +375,7 @@ export default class QryRegionFldsCRUDEx extends QryRegionFldsCRUD implements IS
     const strThisFuncName = this.PageLoadCache.name;
     const viewInfoStore = useviewInfoStore();
     const viewRegionStore = useviewRegionStore();
-    // clsPrivateSessionStorage.viewId_Main = '00050322';
+
     try {
       switch (this.qsOp) {
         case 'ViewEdit':
@@ -388,7 +390,14 @@ export default class QryRegionFldsCRUDEx extends QryRegionFldsCRUD implements IS
       }
       Position_SetDiv_Bottom('divEdit_Loc');
 
-      const strViewId = clsPrivateSessionStorage.viewId_Main;
+      const strViewId = (await clsPubVar4Web.GetViewId(this.qsViewId)) || viewId_Main.value;
+      if (IsNullOrEmpty(strViewId) == true) {
+        const strMsg = `查询区缺少界面Id，页面启动不成功.(in ${this.constructor.name}.${strThisFuncName})`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      CmPrjId_Local.value = clsPrivateSessionStorage.cmPrjId;
       const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
       RegionId_Static.value = await ViewRegionEx_GetRegionIdByTypeCache(
         strViewId,
@@ -1216,6 +1225,15 @@ export default class QryRegionFldsCRUDEx extends QryRegionFldsCRUD implements IS
       const strMsg = `设置记录不成功,${e}.(In btnSetWidth_Click())`;
       alert(strMsg);
     }
+  }
+  public get qsViewId() {
+    const strName = 'viewId';
+    const reg = new RegExp(`(^|&)${strName}=([^&]*)(&|$)`, 'i');
+    const r = window.location.search.substr(1).match(reg);
+    if (r != null) {
+      return unescape(r[2]);
+    }
+    return '';
   }
   public get qsOp() {
     const strName = 'Op';

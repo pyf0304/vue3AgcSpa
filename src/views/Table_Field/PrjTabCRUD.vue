@@ -678,10 +678,20 @@
         }
         PrjTabCRUDEx.btn_Click(strCommandName, strKeyId);
       }
+
+      let isNavigatingToTabRelaInfo = false;
+      const pushToTabRelaInfo = () => {
+        if (route.name === 'account-editTabRelaInfo' || isNavigatingToTabRelaInfo) return;
+        isNavigatingToTabRelaInfo = true;
+        router.push({ name: 'account-editTabRelaInfo' }).finally(() => {
+          isNavigatingToTabRelaInfo = false;
+        });
+      };
+
       const EditTabRelaInfo = async (data: any) => {
         console.log('data:', data);
         clsPrivateSessionStorage.tabId_Main = data.tabId;
-        // const strViewId = clsPrivateSessionStorage.viewId_Main;
+
         // const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
         // const arrRegionTypeId = await ViewInfoEx_GetRegionTypeIdLst(strViewId, strCmPrjId);
         // clsPrivateSessionStorage.regionTypeIdLst = arrRegionTypeId;
@@ -689,8 +699,7 @@
         // router.push({ name: 'account-editTabRelaInfo' });
 
         console.log('route:', route);
-        const params = route.params.tabId ? { tabId: route.params.tabId } : { tabId: data.tabId };
-        router.push({ name: 'account-editTabRelaInfo', params });
+        pushToTabRelaInfo();
       };
       return {
         showErrorMessage,

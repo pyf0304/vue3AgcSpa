@@ -1,8 +1,8 @@
 ﻿/**
  * 类名:clsPrjDataBaseWApi
  * 表名:PrjDataBase(00050176)
- * 版本:2026.04.19(服务器:PYF-AI)
- * 日期:2026/05/27 16:46:59
+ * 版本:2026.05.30(服务器:PYF-AI)
+ * 日期:2026/06/07 18:04:41
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
@@ -20,7 +20,7 @@
 /**
  * 数据库对象(PrjDataBase)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2026年05月27日.
+ * Created by pyf on 2026年06月07日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -278,7 +278,7 @@ export async function PrjDataBase_UpdateObjInLstCache(objPrjDataBase: clsPrjData
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -290,7 +290,7 @@ export function PrjDataBase_SortFunDefa(a: clsPrjDataBaseEN, b: clsPrjDataBaseEN
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -304,7 +304,7 @@ export function PrjDataBase_SortFunDefa2Fld(a: clsPrjDataBaseEN, b: clsPrjDataBa
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -372,6 +372,11 @@ export function PrjDataBase_SortFunByKey(strKey: string, AscOrDesc: string) {
       case clsPrjDataBaseEN.con_UseStateId:
         return (a: clsPrjDataBaseEN, b: clsPrjDataBaseEN) => {
           return a.useStateId.localeCompare(b.useStateId);
+        };
+      case clsPrjDataBaseEN.con_InUse:
+        return (a: clsPrjDataBaseEN) => {
+          if (a.inUse == true) return 1;
+          else return -1;
         };
       case clsPrjDataBaseEN.con_UserId:
         return (a: clsPrjDataBaseEN, b: clsPrjDataBaseEN) => {
@@ -456,6 +461,11 @@ export function PrjDataBase_SortFunByKey(strKey: string, AscOrDesc: string) {
         return (a: clsPrjDataBaseEN, b: clsPrjDataBaseEN) => {
           return b.useStateId.localeCompare(a.useStateId);
         };
+      case clsPrjDataBaseEN.con_InUse:
+        return (b: clsPrjDataBaseEN) => {
+          if (b.inUse == true) return 1;
+          else return -1;
+        };
       case clsPrjDataBaseEN.con_UserId:
         return (a: clsPrjDataBaseEN, b: clsPrjDataBaseEN) => {
           if (b.userId == null) return -1;
@@ -532,7 +542,7 @@ export async function PrjDataBase_GetNameByKeyCache(key: PrjDataBaseKey) {
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -586,6 +596,10 @@ export async function PrjDataBase_FilterFunByKey(strKey: string, value: any) {
       return (obj: clsPrjDataBaseEN) => {
         return obj.useStateId === value;
       };
+    case clsPrjDataBaseEN.con_InUse:
+      return (obj: clsPrjDataBaseEN) => {
+        return obj.inUse === value;
+      };
     case clsPrjDataBaseEN.con_UserId:
       return (obj: clsPrjDataBaseEN) => {
         return obj.userId === value;
@@ -608,7 +622,7 @@ export async function PrjDataBase_FilterFunByKey(strKey: string, value: any) {
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -649,7 +663,7 @@ export async function PrjDataBase_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -1888,11 +1902,9 @@ export async function PrjDataBase_DelRecordAsync(key: PrjDataBaseKey): Promise<n
  * @param arrPrjDataBaseId:关键字列表
  * @returns 实际删除记录的个数
  **/
-export async function PrjDataBase_DelPrjDataBasesAsync(
-  arrPrjDataBaseId: Array<string>,
-): Promise<number> {
-  const strThisFuncName = 'DelPrjDataBasesAsync';
-  const strAction = 'DelPrjDataBases';
+export async function PrjDataBase_DelKeysAsync(arrPrjDataBaseId: Array<string>): Promise<number> {
+  const strThisFuncName = 'DelKeysAsync';
+  const strAction = 'DelKeys';
   const strUrl = GetWebApiUrl(prjDataBase_Controller, strAction);
 
   const token = Storage.get(ACCESS_TOKEN_KEY);
@@ -2120,7 +2132,7 @@ export function PrjDataBase_CopyToEx(objPrjDataBaseENS: clsPrjDataBaseEN): clsPr
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -2155,7 +2167,7 @@ export function PrjDataBase_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -3493,6 +3505,14 @@ export function PrjDataBase_CheckPropertyNew(pobjPrjDataBaseEN: clsPrjDataBaseEN
       `(errid:Watl000411)字段[使用状态Id]不能为空(In 数据库对象)!(clsPrjDataBaseBL:CheckPropertyNew0)`,
     );
   }
+  if (
+    null === pobjPrjDataBaseEN.inUse ||
+    (pobjPrjDataBaseEN.inUse != null && pobjPrjDataBaseEN.inUse.toString() === '')
+  ) {
+    throw new Error(
+      `(errid:Watl000411)字段[是否在用]不能为空(In 数据库对象)!(clsPrjDataBaseBL:CheckPropertyNew0)`,
+    );
+  }
   //检查字段长度, 若字符型字段长度超出规定的长度,即非法!
   if (
     IsNullOrEmpty(pobjPrjDataBaseEN.prjDataBaseId) == false &&
@@ -3698,6 +3718,15 @@ export function PrjDataBase_CheckPropertyNew(pobjPrjDataBaseEN: clsPrjDataBaseEN
   ) {
     throw new Error(
       `(errid:Watl000414)字段[使用状态Id(useStateId)]的值:[${pobjPrjDataBaseEN.useStateId}], 非法,应该为字符型(In 数据库对象(PrjDataBase))!(clsPrjDataBaseBL:CheckPropertyNew0)`,
+    );
+  }
+  if (
+    null != pobjPrjDataBaseEN.inUse &&
+    undefined !== pobjPrjDataBaseEN.inUse &&
+    tzDataType.isBoolean(pobjPrjDataBaseEN.inUse) === false
+  ) {
+    throw new Error(
+      `(errid:Watl000414)字段[是否在用(inUse)]的值:[${pobjPrjDataBaseEN.inUse}], 非法,应该为布尔型(In 数据库对象(PrjDataBase))!(clsPrjDataBaseBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3958,6 +3987,15 @@ export function PrjDataBase_CheckProperty4Update(pobjPrjDataBaseEN: clsPrjDataBa
     );
   }
   if (
+    null != pobjPrjDataBaseEN.inUse &&
+    undefined !== pobjPrjDataBaseEN.inUse &&
+    tzDataType.isBoolean(pobjPrjDataBaseEN.inUse) === false
+  ) {
+    throw new Error(
+      `(errid:Watl000417)字段[是否在用(inUse)]的值:[${pobjPrjDataBaseEN.inUse}], 非法,应该为布尔型(In 数据库对象(PrjDataBase))!(clsPrjDataBaseBL:CheckProperty4Update)`,
+    );
+  }
+  if (
     IsNullOrEmpty(pobjPrjDataBaseEN.userId) == false &&
     undefined !== pobjPrjDataBaseEN.userId &&
     tzDataType.isString(pobjPrjDataBaseEN.userId) === false
@@ -4005,7 +4043,7 @@ export function PrjDataBase_CheckProperty4Update(pobjPrjDataBaseEN: clsPrjDataBa
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -4026,7 +4064,7 @@ export function PrjDataBase_GetJSONStrByObj(pobjPrjDataBaseEN: clsPrjDataBaseEN)
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -4047,7 +4085,7 @@ export function PrjDataBase_GetObjLstByJSONStr(strJSON: string): Array<clsPrjDat
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrPrjDataBaseObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -4067,7 +4105,7 @@ export function PrjDataBase_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2026-05-27
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -4259,6 +4297,18 @@ export function PrjDataBase_GetCombineCondition(objPrjDataBaseCond: clsPrjDataBa
       objPrjDataBaseCond.useStateId,
       strComparisonOpUseStateId,
     );
+  }
+  if (
+    Object.prototype.hasOwnProperty.call(
+      objPrjDataBaseCond.dicFldComparisonOp,
+      clsPrjDataBaseEN.con_InUse,
+    ) == true
+  ) {
+    if (objPrjDataBaseCond.inUse == true) {
+      strWhereCond += Format(" And {0} = '1'", clsPrjDataBaseEN.con_InUse);
+    } else {
+      strWhereCond += Format(" And {0} = '0'", clsPrjDataBaseEN.con_InUse);
+    }
   }
   if (
     Object.prototype.hasOwnProperty.call(

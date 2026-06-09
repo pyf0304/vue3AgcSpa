@@ -1,8 +1,9 @@
-﻿/**
+﻿
+ /**
  * 类名:clsPrjDataBaseEN
  * 表名:PrjDataBase(00050176)
- * 版本:2026.04.19(服务器:PYF-AI)
- * 日期:2026/05/27 16:46:28
+ * 版本:2026.05.30(服务器:PYF-AI)
+ * 日期:2026/06/07 19:11:31
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
@@ -12,7 +13,7 @@
  * 框架-层名:实体层(TS)(EntityLayer,0121)
  * 编程语言:TypeScript
  **/
-/**
+ /**
  * 数据库对象(PrjDataBase)
  * (AutoGCLib.EntityLayer4TypeScript:GeneCode)
  **/
@@ -25,486 +26,538 @@ import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 export type PrjDataBaseKey = {
   prjDataBaseId: string;
 };
-export class clsPrjDataBaseEN extends clsGeneralTab {
-  public static _RefreshTimeLst = new Array<string>();
-  public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
-  public static readonly _CacheModeId: string = '03'; //localStorage
-  public static readonly _PrimaryTypeId: string = '03'; //自增
-  public static readonly _IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
-  public static readonly _WhereFormat = ''; //条件格式串
-  public static readonly _CurrTabName: string = 'PrjDataBase'; //当前表名,与该类相关的表名
-  public static readonly _KeyFldName: string = 'PrjDataBaseId'; //当前表中的关键字名称,与该类相关的表中关键字名
-  public static readonly _AttributeCount = 14;
-  public static readonly _AttributeName = [
-    'prjDataBaseId',
-    'prjDataBaseName',
-    'dataBaseName',
-    'databaseOwner',
-    'dataBasePwd',
-    'dataBaseTypeId',
-    'dataBaseUserId',
-    'ipAddress',
-    'sid',
-    'tableSpace',
-    'useStateId',
-    'userId',
-    'updDate',
-    'memo',
-  ];
-  //以下是属性变量
+export class  clsPrjDataBaseEN extends clsGeneralTab
+{
+public static _RefreshTimeLst = new Array<string>();
+public static _CacheAddiCondition = "";//缓存附加条件,作为向后台调取数据的附加条件
+public static readonly _CacheModeId: string = "03"; //localStorage
+public static readonly _PrimaryTypeId: string = "03"; //自增
+public static readonly _IsUseDelSign = false; //使用删除标志,记录不能删除,仅设置删除标志
+public static readonly _WhereFormat = ""; //条件格式串
+public static readonly _CurrTabName: string = "PrjDataBase"; //当前表名,与该类相关的表名
+public static readonly _KeyFldName: string = "PrjDataBaseId"; //当前表中的关键字名称,与该类相关的表中关键字名
+public static readonly _AttributeCount = 15;
+public static readonly _AttributeName = ["prjDataBaseId", "prjDataBaseName", "dataBaseName", "databaseOwner", "dataBasePwd", "dataBaseTypeId", "dataBaseUserId", "ipAddress", "sid", "tableSpace", "useStateId", "inUse", "userId", "updDate", "memo"];
+//以下是属性变量
 
-  /**
-   * 构造函数
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClassConstructor1)
-   */
-  constructor() {
-    super();
-  }
+/**
+ * 构造函数
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClassConstructor1)
+*/
+ constructor()
+ {
+ super();
+ }
 
-  /**
-   * 设置对象中私有属性.
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsPrivateVar)
-   */
-  private mstrPrjDataBaseId = ''; //项目数据库Id
-  private mstrPrjDataBaseName = ''; //项目数据库名
-  private mstrDataBaseName = ''; //数据库名
-  private mstrDatabaseOwner = ''; //数据库拥有者
-  private mstrDataBasePwd = ''; //数据库的用户口令
-  private mstrDataBaseTypeId = ''; //数据库类型ID
-  private mstrDataBaseUserId = ''; //数据库的用户ID
-  private mstrIpAddress = ''; //服务器
-  private mstrSid = ''; //SID
-  private mstrTableSpace = ''; //表空间
-  private mstrUseStateId = ''; //使用状态Id
-  private mstrUserId = ''; //用户Id
-  private mstrUpdDate = ''; //修改日期
-  private mstrMemo = ''; //说明
+/**
+ * 设置对象中私有属性.
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsPrivateVar)
+*/
+private mstrPrjDataBaseId = "";    //项目数据库Id
+private mstrPrjDataBaseName = "";    //项目数据库名
+private mstrDataBaseName = "";    //数据库名
+private mstrDatabaseOwner = "";    //数据库拥有者
+private mstrDataBasePwd = "";    //数据库的用户口令
+private mstrDataBaseTypeId = "";    //数据库类型ID
+private mstrDataBaseUserId = "";    //数据库的用户ID
+private mstrIpAddress = "";    //服务器
+private mstrSid = "";    //SID
+private mstrTableSpace = "";    //表空间
+private mstrUseStateId = "";    //使用状态Id
+private mbolInUse = false;    //是否在用
+private mstrUserId = "";    //用户Id
+private mstrUpdDate = "";    //修改日期
+private mstrMemo = "";    //说明
 
-  /**
-   * 项目数据库Id(说明:;字段类型:char;字段长度:4;是否可空:False)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetPrjDataBaseId(value: string) {
-    if (value != undefined) {
-      this.prjDataBaseId = value;
-      this.hmProperty['prjDataBaseId'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * 项目数据库Id(说明:;字段类型:char;字段长度:4;是否可空:False)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetPrjDataBaseId (value: string)
+{
+if (value  != undefined)
+{
+ this.prjDataBaseId = value;
+    this.hmProperty["prjDataBaseId"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 项目数据库名(说明:;字段类型:varchar;字段长度:50;是否可空:True)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetPrjDataBaseName(value: string) {
-    if (value != undefined) {
-      this.prjDataBaseName = value;
-      this.hmProperty['prjDataBaseName'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * 项目数据库名(说明:;字段类型:varchar;字段长度:50;是否可空:True)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetPrjDataBaseName (value: string)
+{
+if (value  != undefined)
+{
+ this.prjDataBaseName = value;
+    this.hmProperty["prjDataBaseName"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 数据库名(说明:;字段类型:varchar;字段长度:50;是否可空:False)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetDataBaseName(value: string) {
-    if (value != undefined) {
-      this.dataBaseName = value;
-      this.hmProperty['dataBaseName'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * 数据库名(说明:;字段类型:varchar;字段长度:50;是否可空:False)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetDataBaseName (value: string)
+{
+if (value  != undefined)
+{
+ this.dataBaseName = value;
+    this.hmProperty["dataBaseName"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 数据库拥有者(说明:;字段类型:varchar;字段长度:30;是否可空:True)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetDatabaseOwner(value: string) {
-    if (value != undefined) {
-      this.databaseOwner = value;
-      this.hmProperty['databaseOwner'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * 数据库拥有者(说明:;字段类型:varchar;字段长度:30;是否可空:True)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetDatabaseOwner (value: string)
+{
+if (value  != undefined)
+{
+ this.databaseOwner = value;
+    this.hmProperty["databaseOwner"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 数据库的用户口令(说明:;字段类型:varchar;字段长度:30;是否可空:True)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetDataBasePwd(value: string) {
-    if (value != undefined) {
-      this.dataBasePwd = value;
-      this.hmProperty['dataBasePwd'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * 数据库的用户口令(说明:;字段类型:varchar;字段长度:30;是否可空:True)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetDataBasePwd (value: string)
+{
+if (value  != undefined)
+{
+ this.dataBasePwd = value;
+    this.hmProperty["dataBasePwd"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 数据库类型ID(说明:;字段类型:char;字段长度:2;是否可空:False)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetDataBaseTypeId(value: string) {
-    if (value != undefined) {
-      this.dataBaseTypeId = value;
-      this.hmProperty['dataBaseTypeId'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * 数据库类型ID(说明:;字段类型:char;字段长度:2;是否可空:False)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetDataBaseTypeId (value: string)
+{
+if (value  != undefined)
+{
+ this.dataBaseTypeId = value;
+    this.hmProperty["dataBaseTypeId"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 数据库的用户ID(说明:;字段类型:varchar;字段长度:30;是否可空:True)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetDataBaseUserId(value: string) {
-    if (value != undefined) {
-      this.dataBaseUserId = value;
-      this.hmProperty['dataBaseUserId'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * 数据库的用户ID(说明:;字段类型:varchar;字段长度:30;是否可空:True)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetDataBaseUserId (value: string)
+{
+if (value  != undefined)
+{
+ this.dataBaseUserId = value;
+    this.hmProperty["dataBaseUserId"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 服务器(说明:;字段类型:varchar;字段长度:25;是否可空:False)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetIpAddress(value: string) {
-    if (value != undefined) {
-      this.ipAddress = value;
-      this.hmProperty['ipAddress'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * 服务器(说明:;字段类型:varchar;字段长度:25;是否可空:False)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetIpAddress (value: string)
+{
+if (value  != undefined)
+{
+ this.ipAddress = value;
+    this.hmProperty["ipAddress"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * SID(说明:;字段类型:varchar;字段长度:50;是否可空:False)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetSid(value: string) {
-    if (value != undefined) {
-      this.sid = value;
-      this.hmProperty['sid'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * SID(说明:;字段类型:varchar;字段长度:50;是否可空:False)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetSid (value: string)
+{
+if (value  != undefined)
+{
+ this.sid = value;
+    this.hmProperty["sid"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 表空间(说明:;字段类型:varchar;字段长度:50;是否可空:True)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetTableSpace(value: string) {
-    if (value != undefined) {
-      this.tableSpace = value;
-      this.hmProperty['tableSpace'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * 表空间(说明:;字段类型:varchar;字段长度:50;是否可空:True)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetTableSpace (value: string)
+{
+if (value  != undefined)
+{
+ this.tableSpace = value;
+    this.hmProperty["tableSpace"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 使用状态Id(说明:;字段类型:char;字段长度:4;是否可空:False)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetUseStateId(value: string) {
-    if (value != undefined) {
-      this.useStateId = value;
-      this.hmProperty['useStateId'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * 使用状态Id(说明:;字段类型:char;字段长度:4;是否可空:False)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetUseStateId (value: string)
+{
+if (value  != undefined)
+{
+ this.useStateId = value;
+    this.hmProperty["useStateId"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 用户Id(说明:;字段类型:varchar;字段长度:18;是否可空:True)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetUserId(value: string) {
-    if (value != undefined) {
-      this.userId = value;
-      this.hmProperty['userId'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * 是否在用(说明:;字段类型:bit;字段长度:1;是否可空:True)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetInUse (value: boolean)
+{
+if (value  != undefined)
+{
+ this.inUse = value;
+    this.hmProperty["inUse"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 修改日期(说明:;字段类型:varchar;字段长度:20;是否可空:True)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetUpdDate(value: string) {
-    if (value != undefined) {
-      this.updDate = value;
-      this.hmProperty['updDate'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * 用户Id(说明:;字段类型:varchar;字段长度:18;是否可空:True)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetUserId (value: string)
+{
+if (value  != undefined)
+{
+ this.userId = value;
+    this.hmProperty["userId"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 说明(说明:;字段类型:varchar;字段长度:1000;是否可空:True)
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
-   */
-  public SetMemo(value: string) {
-    if (value != undefined) {
-      this.memo = value;
-      this.hmProperty['memo'] = true;
-      this.sfUpdFldSetStr = this.updFldString;
-    }
-  }
+/**
+ * 修改日期(说明:;字段类型:varchar;字段长度:20;是否可空:True)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetUpdDate (value: string)
+{
+if (value  != undefined)
+{
+ this.updDate = value;
+    this.hmProperty["updDate"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 根据字段名获取对象中某字段的值.
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_GetFldValue)
-   * @param strFldName:字段名
-   * @returns 字段值
-   */
-  public GetFldValue(strFldName: string): any {
-    let strMsg = '';
-    switch (strFldName) {
-      case clsPrjDataBaseEN.con_PrjDataBaseId:
-        return this.prjDataBaseId;
-      case clsPrjDataBaseEN.con_PrjDataBaseName:
-        return this.prjDataBaseName;
-      case clsPrjDataBaseEN.con_DataBaseName:
-        return this.dataBaseName;
-      case clsPrjDataBaseEN.con_DatabaseOwner:
-        return this.databaseOwner;
-      case clsPrjDataBaseEN.con_DataBasePwd:
-        return this.dataBasePwd;
-      case clsPrjDataBaseEN.con_DataBaseTypeId:
-        return this.dataBaseTypeId;
-      case clsPrjDataBaseEN.con_DataBaseUserId:
-        return this.dataBaseUserId;
-      case clsPrjDataBaseEN.con_IpAddress:
-        return this.ipAddress;
-      case clsPrjDataBaseEN.con_Sid:
-        return this.sid;
-      case clsPrjDataBaseEN.con_TableSpace:
-        return this.tableSpace;
-      case clsPrjDataBaseEN.con_UseStateId:
-        return this.useStateId;
-      case clsPrjDataBaseEN.con_UserId:
-        return this.userId;
-      case clsPrjDataBaseEN.con_UpdDate:
-        return this.updDate;
-      case clsPrjDataBaseEN.con_Memo:
-        return this.memo;
-      case 'sfUpdFldSetStr':
-        return this.sfUpdFldSetStr;
-      case 'sfFldComparisonOp':
-        return this.sfFldComparisonOp;
-      default:
-        strMsg = `字段名:[${strFldName}]在表对象:[PrjDataBase]中不存在!`;
-        console.error(strMsg);
-        return '';
-    }
-  }
+/**
+ * 说明(说明:;字段类型:varchar;字段长度:1000;是否可空:True)
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+*/
+ public SetMemo (value: string)
+{
+if (value  != undefined)
+{
+ this.memo = value;
+    this.hmProperty["memo"] = true;
+   this.sfUpdFldSetStr = this.updFldString;
+}
+}
 
-  /**
-   * 设置对象中某字段名的值.
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_SetFldValue)
-   * @param strFldName:字段名
-   * @param strValue:字段值
-   * @returns 字段值
-   */
-  public SetFldValue(strFldName: string, strValue: string) {
-    const strThisFuncName = 'SetFldValue';
-    let strMsg = '';
-    switch (strFldName) {
-      case clsPrjDataBaseEN.con_PrjDataBaseId:
-        this.prjDataBaseId = strValue;
-        this.hmProperty['prjDataBaseId'] = true;
-        break;
-      case clsPrjDataBaseEN.con_PrjDataBaseName:
-        this.prjDataBaseName = strValue;
-        this.hmProperty['prjDataBaseName'] = true;
-        break;
-      case clsPrjDataBaseEN.con_DataBaseName:
-        this.dataBaseName = strValue;
-        this.hmProperty['dataBaseName'] = true;
-        break;
-      case clsPrjDataBaseEN.con_DatabaseOwner:
-        this.databaseOwner = strValue;
-        this.hmProperty['databaseOwner'] = true;
-        break;
-      case clsPrjDataBaseEN.con_DataBasePwd:
-        this.dataBasePwd = strValue;
-        this.hmProperty['dataBasePwd'] = true;
-        break;
-      case clsPrjDataBaseEN.con_DataBaseTypeId:
-        this.dataBaseTypeId = strValue;
-        this.hmProperty['dataBaseTypeId'] = true;
-        break;
-      case clsPrjDataBaseEN.con_DataBaseUserId:
-        this.dataBaseUserId = strValue;
-        this.hmProperty['dataBaseUserId'] = true;
-        break;
-      case clsPrjDataBaseEN.con_IpAddress:
-        this.ipAddress = strValue;
-        this.hmProperty['ipAddress'] = true;
-        break;
-      case clsPrjDataBaseEN.con_Sid:
-        this.sid = strValue;
-        this.hmProperty['sid'] = true;
-        break;
-      case clsPrjDataBaseEN.con_TableSpace:
-        this.tableSpace = strValue;
-        this.hmProperty['tableSpace'] = true;
-        break;
-      case clsPrjDataBaseEN.con_UseStateId:
-        this.useStateId = strValue;
-        this.hmProperty['useStateId'] = true;
-        break;
-      case clsPrjDataBaseEN.con_UserId:
-        this.userId = strValue;
-        this.hmProperty['userId'] = true;
-        break;
-      case clsPrjDataBaseEN.con_UpdDate:
-        this.updDate = strValue;
-        this.hmProperty['updDate'] = true;
-        break;
-      case clsPrjDataBaseEN.con_Memo:
-        this.memo = strValue;
-        this.hmProperty['memo'] = true;
-        break;
-      case 'sfUpdFldSetStr':
-        this.sfUpdFldSetStr = strValue;
-        break;
-      case 'sfFldComparisonOp':
-        this.sfFldComparisonOp = strValue;
-        break;
-      default:
-        strMsg = `字段名:[${strFldName}]在表对象:[PrjDataBase]中不存在!(in ${this.constructor.name}.${strThisFuncName})`;
-        console.error(strMsg);
-        break;
-    }
-  }
 
-  /**
-   * 设置对象中公共属性.
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsPublicVar)
-   */
-  public prjDataBaseId = ''; //项目数据库Id
-  public prjDataBaseName = ''; //项目数据库名
-  public dataBaseName = ''; //数据库名
-  public databaseOwner = ''; //数据库拥有者
-  public dataBasePwd = ''; //数据库的用户口令
-  public dataBaseTypeId = ''; //数据库类型ID
-  public dataBaseUserId = ''; //数据库的用户ID
-  public ipAddress = ''; //服务器
-  public sid = ''; //SID
-  public tableSpace = ''; //表空间
-  public useStateId = ''; //使用状态Id
-  public userId = ''; //用户Id
-  public updDate = ''; //修改日期
-  public memo = ''; //说明
+/**
+ * 根据字段名获取对象中某字段的值.
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_GetFldValue)
+ * @param strFldName:字段名
+ * @returns 字段值
+*/
+public GetFldValue(strFldName: string):any
+{
+let strMsg = "";
+switch (strFldName)
+{
+case clsPrjDataBaseEN.con_PrjDataBaseId:
+return this.prjDataBaseId;
+case clsPrjDataBaseEN.con_PrjDataBaseName:
+return this.prjDataBaseName;
+case clsPrjDataBaseEN.con_DataBaseName:
+return this.dataBaseName;
+case clsPrjDataBaseEN.con_DatabaseOwner:
+return this.databaseOwner;
+case clsPrjDataBaseEN.con_DataBasePwd:
+return this.dataBasePwd;
+case clsPrjDataBaseEN.con_DataBaseTypeId:
+return this.dataBaseTypeId;
+case clsPrjDataBaseEN.con_DataBaseUserId:
+return this.dataBaseUserId;
+case clsPrjDataBaseEN.con_IpAddress:
+return this.ipAddress;
+case clsPrjDataBaseEN.con_Sid:
+return this.sid;
+case clsPrjDataBaseEN.con_TableSpace:
+return this.tableSpace;
+case clsPrjDataBaseEN.con_UseStateId:
+return this.useStateId;
+case clsPrjDataBaseEN.con_InUse:
+return this.inUse;
+case clsPrjDataBaseEN.con_UserId:
+return this.userId;
+case clsPrjDataBaseEN.con_UpdDate:
+return this.updDate;
+case clsPrjDataBaseEN.con_Memo:
+return this.memo;
+case "sfUpdFldSetStr":
+return this.sfUpdFldSetStr;
+case "sfFldComparisonOp":
+return this.sfFldComparisonOp;
+default:
+strMsg = `字段名:[${strFldName}]在表对象:[PrjDataBase]中不存在!`;
+console.error(strMsg);
+return "";
+}
+}
 
-  /**
-   * 常量:"PrjDataBaseId"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_PrjDataBaseId = 'prjDataBaseId'; //项目数据库Id
+/**
+ * 设置对象中某字段名的值.
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_SetFldValue)
+ * @param strFldName:字段名
+ * @param strValue:字段值
+ * @returns 字段值
+*/
+public SetFldValue(strFldName: string, strValue:string)
+{
+const strThisFuncName = "SetFldValue";
+let strMsg = "";
+switch (strFldName)
+{
+case clsPrjDataBaseEN.con_PrjDataBaseId:
+this.prjDataBaseId = strValue;
+    this.hmProperty["prjDataBaseId"] = true;
+break;
+case clsPrjDataBaseEN.con_PrjDataBaseName:
+this.prjDataBaseName = strValue;
+    this.hmProperty["prjDataBaseName"] = true;
+break;
+case clsPrjDataBaseEN.con_DataBaseName:
+this.dataBaseName = strValue;
+    this.hmProperty["dataBaseName"] = true;
+break;
+case clsPrjDataBaseEN.con_DatabaseOwner:
+this.databaseOwner = strValue;
+    this.hmProperty["databaseOwner"] = true;
+break;
+case clsPrjDataBaseEN.con_DataBasePwd:
+this.dataBasePwd = strValue;
+    this.hmProperty["dataBasePwd"] = true;
+break;
+case clsPrjDataBaseEN.con_DataBaseTypeId:
+this.dataBaseTypeId = strValue;
+    this.hmProperty["dataBaseTypeId"] = true;
+break;
+case clsPrjDataBaseEN.con_DataBaseUserId:
+this.dataBaseUserId = strValue;
+    this.hmProperty["dataBaseUserId"] = true;
+break;
+case clsPrjDataBaseEN.con_IpAddress:
+this.ipAddress = strValue;
+    this.hmProperty["ipAddress"] = true;
+break;
+case clsPrjDataBaseEN.con_Sid:
+this.sid = strValue;
+    this.hmProperty["sid"] = true;
+break;
+case clsPrjDataBaseEN.con_TableSpace:
+this.tableSpace = strValue;
+    this.hmProperty["tableSpace"] = true;
+break;
+case clsPrjDataBaseEN.con_UseStateId:
+this.useStateId = strValue;
+    this.hmProperty["useStateId"] = true;
+break;
+case clsPrjDataBaseEN.con_InUse:
+this.inUse = Boolean(strValue);
+    this.hmProperty["inUse"] = true;
+break;
+case clsPrjDataBaseEN.con_UserId:
+this.userId = strValue;
+    this.hmProperty["userId"] = true;
+break;
+case clsPrjDataBaseEN.con_UpdDate:
+this.updDate = strValue;
+    this.hmProperty["updDate"] = true;
+break;
+case clsPrjDataBaseEN.con_Memo:
+this.memo = strValue;
+    this.hmProperty["memo"] = true;
+break;
+case "sfUpdFldSetStr":
+this.sfUpdFldSetStr = strValue;
+break;
+case "sfFldComparisonOp":
+this.sfFldComparisonOp = strValue;
+break;
+default:
+strMsg = `字段名:[${strFldName}]在表对象:[PrjDataBase]中不存在!(in ${this.constructor.name}.${strThisFuncName})`;
+console.error(strMsg);
+break;
+}
+}
 
-  /**
-   * 常量:"PrjDataBaseName"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_PrjDataBaseName = 'prjDataBaseName'; //项目数据库名
+/**
+ * 设置对象中公共属性.
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsPublicVar)
+*/
+public prjDataBaseId = "";    //项目数据库Id
+public prjDataBaseName = "";    //项目数据库名
+public dataBaseName = "";    //数据库名
+public databaseOwner = "";    //数据库拥有者
+public dataBasePwd = "";    //数据库的用户口令
+public dataBaseTypeId = "";    //数据库类型ID
+public dataBaseUserId = "";    //数据库的用户ID
+public ipAddress = "";    //服务器
+public sid = "";    //SID
+public tableSpace = "";    //表空间
+public useStateId = "";    //使用状态Id
+public inUse = false;    //是否在用
+public userId = "";    //用户Id
+public updDate = "";    //修改日期
+public memo = "";    //说明
 
-  /**
-   * 常量:"DataBaseName"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_DataBaseName = 'dataBaseName'; //数据库名
 
-  /**
-   * 常量:"DatabaseOwner"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_DatabaseOwner = 'databaseOwner'; //数据库拥有者
+ /**
+ * 常量:"PrjDataBaseId"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_PrjDataBaseId = "prjDataBaseId";    //项目数据库Id
 
-  /**
-   * 常量:"DataBasePwd"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_DataBasePwd = 'dataBasePwd'; //数据库的用户口令
+ /**
+ * 常量:"PrjDataBaseName"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_PrjDataBaseName = "prjDataBaseName";    //项目数据库名
 
-  /**
-   * 常量:"DataBaseTypeId"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_DataBaseTypeId = 'dataBaseTypeId'; //数据库类型ID
+ /**
+ * 常量:"DataBaseName"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_DataBaseName = "dataBaseName";    //数据库名
 
-  /**
-   * 常量:"DataBaseUserId"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_DataBaseUserId = 'dataBaseUserId'; //数据库的用户ID
+ /**
+ * 常量:"DatabaseOwner"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_DatabaseOwner = "databaseOwner";    //数据库拥有者
 
-  /**
-   * 常量:"IpAddress"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_IpAddress = 'ipAddress'; //服务器
+ /**
+ * 常量:"DataBasePwd"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_DataBasePwd = "dataBasePwd";    //数据库的用户口令
 
-  /**
-   * 常量:"Sid"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_Sid = 'sid'; //SID
+ /**
+ * 常量:"DataBaseTypeId"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_DataBaseTypeId = "dataBaseTypeId";    //数据库类型ID
 
-  /**
-   * 常量:"TableSpace"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_TableSpace = 'tableSpace'; //表空间
+ /**
+ * 常量:"DataBaseUserId"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_DataBaseUserId = "dataBaseUserId";    //数据库的用户ID
 
-  /**
-   * 常量:"UseStateId"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_UseStateId = 'useStateId'; //使用状态Id
+ /**
+ * 常量:"IpAddress"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_IpAddress = "ipAddress";    //服务器
 
-  /**
-   * 常量:"UserId"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_UserId = 'userId'; //用户Id
+ /**
+ * 常量:"Sid"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_Sid = "sid";    //SID
 
-  /**
-   * 常量:"UpdDate"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_UpdDate = 'updDate'; //修改日期
+ /**
+ * 常量:"TableSpace"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_TableSpace = "tableSpace";    //表空间
 
-  /**
-   * 常量:"Memo"
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
-   */
-  public static readonly con_Memo = 'memo'; //说明
+ /**
+ * 常量:"UseStateId"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_UseStateId = "useStateId";    //使用状态Id
 
-  /**
-   * 设置条件字段值.
-   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_SetCondFldValue)
-   * @param strFldName:字段名
-   * @param strFldValue:字段值
-   * @param strComparisonOp:比较操作条符
-   * @returns 根据关键字获取的名称
-   **/
-  public SetCondFldValue(strFldName: string, strFldValue: any, strComparisonOp: string): void {
-    this.SetFldValue(strFldName, strFldValue);
-    if (Object.prototype.hasOwnProperty.call(this.dicFldComparisonOp, strFldName) == false) {
-      this.dicFldComparisonOp[strFldName] = strComparisonOp;
-    } else {
-      this.dicFldComparisonOp[strFldName] = strComparisonOp;
-    }
-    this.sfFldComparisonOp = JSON.stringify(this.dicFldComparisonOp);
-  }
+ /**
+ * 常量:"InUse"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_InUse = "inUse";    //是否在用
 
-  /**
-   * 判断一个字符串是否是类的属性
-   * @param propName: 属性名
-   * @returns 是否是属性
-   */
-  public static hasProperty(propName: string): boolean {
-    //return propName in new clsPrjDataBaseEN();
-    const instance = new clsPrjDataBaseEN();
-    return Object.prototype.hasOwnProperty.call(instance, propName);
-  }
+ /**
+ * 常量:"UserId"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_UserId = "userId";    //用户Id
+
+ /**
+ * 常量:"UpdDate"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_UpdDate = "updDate";    //修改日期
+
+ /**
+ * 常量:"Memo"
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+ */
+ public static readonly con_Memo = "memo";    //说明
+
+ /**
+ * 设置条件字段值.
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_SetCondFldValue)
+ * @param strFldName:字段名
+ * @param strFldValue:字段值
+ * @param strComparisonOp:比较操作条符
+ * @returns 根据关键字获取的名称
+ **/
+public SetCondFldValue(strFldName: string, strFldValue: any, strComparisonOp: string): void {                
+this.SetFldValue(strFldName, strFldValue);
+if (Object.prototype.hasOwnProperty.call(this.dicFldComparisonOp, strFldName) == false)
+{
+this.dicFldComparisonOp[strFldName] = strComparisonOp;
+}
+else
+{
+this.dicFldComparisonOp[strFldName] = strComparisonOp;
+}
+this.sfFldComparisonOp = JSON.stringify(this.dicFldComparisonOp);
+}
+
+/**
+* 判断一个字符串是否是类的属性
+* @param propName: 属性名
+* @returns 是否是属性
+*/
+public static hasProperty(propName: string) : boolean {
+//return propName in new clsPrjDataBaseEN();
+const instance = new clsPrjDataBaseEN();
+return Object.prototype.hasOwnProperty.call(instance, propName);
+}
 }

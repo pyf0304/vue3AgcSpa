@@ -182,6 +182,7 @@
   import { clsRetrievalMethodEN } from '@/ts/L0Entity/SysPara/clsRetrievalMethodEN';
   import { GCVariable_GetObjLstCache } from '@/ts/L3ForWApi/GeneCode/clsGCVariableWApi';
   import { RetrievalMethod_GetObjLstCache } from '@/ts/L3ForWApi/SysPara/clsRetrievalMethodWApi';
+  import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
   export default defineComponent({
     name: 'ViewIdGCVariableRelaCRUD',
     components: {
@@ -196,7 +197,7 @@
       if (typeof route.query.TabId === 'string') {
         TabId_Static.value = route.query.TabId;
       }
-      ViewId_Main_Session.value = clsPrivateSessionStorage.viewId_Main;
+      ViewId_Main_Session.value = viewId_Main.value;
 
       const arrGCVariable = ref<clsGCVariableEN[]>([]);
       /**

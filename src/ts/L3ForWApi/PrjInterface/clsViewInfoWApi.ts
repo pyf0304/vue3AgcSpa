@@ -58,6 +58,11 @@ import { clsDateTime } from '@/ts/PubFun/clsDateTime';
 export const viewInfo_Controller = 'ViewInfoApi';
 export const viewInfo_ConstructorName = 'viewInfo';
 
+function getAuthorizationHeaderValue(token: string | null | undefined): string {
+  if (!token) return '';
+  return token.startsWith('Bearer ') ? token : `Bearer ${token}`;
+}
+
 /**
  * 根据关键字获取相应记录的对象
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdAsync)
@@ -89,7 +94,7 @@ export async function ViewInfo_GetObjByViewIdAsync(
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
     params: {
       strViewId,
@@ -1157,7 +1162,7 @@ export async function ViewInfo_GetFldValueAsync(
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
     params: {
       strFldName,
@@ -1218,7 +1223,7 @@ export async function ViewInfo_GetFirstIDAsync(strWhereCond: string): Promise<st
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
     params: {
       strWhereCond,
@@ -1277,7 +1282,7 @@ export async function ViewInfo_GetFirstID(strWhereCond: string) {
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
     params: {
       strWhereCond,
@@ -1338,7 +1343,7 @@ export async function ViewInfo_GetFirstObjAsync(
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
     params: {
       strWhereCond,
@@ -1527,7 +1532,7 @@ export async function ViewInfo_GetObjLstAsync(strWhereCond: string): Promise<Arr
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
     params: {
       strWhereCond,
@@ -1832,7 +1837,7 @@ export async function ViewInfo_GetObjLstByViewIdLstAsync(
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
   };
   try {
@@ -1932,7 +1937,7 @@ export async function ViewInfo_GetTopObjLstAsync(
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
   };
   try {
@@ -2002,7 +2007,7 @@ export async function ViewInfo_GetObjLstByRangeAsync(
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
   };
   try {
@@ -2193,7 +2198,7 @@ export async function ViewInfo_GetObjLstByPagerAsync(
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
   };
   try {
@@ -2262,7 +2267,7 @@ export async function ViewInfo_DelRecordAsync(strViewId: string): Promise<number
   //console.error('token:', token);
   const configDel = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
   };
   try {
@@ -2318,7 +2323,7 @@ export async function ViewInfo_DelViewInfosAsync(arrViewId: Array<string>): Prom
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
   };
   try {
@@ -2835,7 +2840,7 @@ export async function ViewInfo_DelViewInfosByCondAsync(strWhereCond: string): Pr
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
     params: {
       strWhereCond,
@@ -2899,7 +2904,7 @@ export async function ViewInfo_AddNewRecordAsync(objViewInfoEN: clsViewInfoEN): 
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
   };
   try {
@@ -2957,7 +2962,7 @@ export async function ViewInfo_AddNewRecordWithMaxIdAsync(
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
   };
   try {
@@ -3127,7 +3132,7 @@ export async function ViewInfo_AddNewRecordWithReturnKeyAsync(
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
   };
   try {
@@ -3191,7 +3196,7 @@ export async function ViewInfo_UpdateRecordAsync(objViewInfoEN: clsViewInfoEN): 
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
   };
   try {
@@ -3255,7 +3260,7 @@ export async function ViewInfo_EditRecordExAsync(objViewInfoEN: clsViewInfoEN): 
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
   };
   try {
@@ -3324,7 +3329,7 @@ export async function ViewInfo_UpdateWithConditionAsync(
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
   };
   try {
@@ -3476,7 +3481,7 @@ export async function ViewInfo_IsExistRecordAsync(strWhereCond: string): Promise
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
     params: {
       strWhereCond,
@@ -3566,7 +3571,7 @@ export async function ViewInfo_IsExistAsync(strViewId: string): Promise<boolean>
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
     params: {
       strViewId,
@@ -3625,7 +3630,7 @@ export async function ViewInfo_GetRecCountByCondAsync(strWhereCond: string): Pro
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
     params: {
       strWhereCond,
@@ -3784,7 +3789,7 @@ export async function ViewInfo_GetMaxStrIdByPrefixAsync(strPrefix: string): Prom
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
     params: {
       strPrefix,
@@ -3843,7 +3848,7 @@ export async function ViewInfo_GetMaxStrIdByPrefix(strPrefix: string) {
   //console.error('token:', token);
   const config = {
     headers: {
-      Authorization: `${token}`,
+      Authorization: getAuthorizationHeaderValue(token),
     },
     params: {
       strPrefix,

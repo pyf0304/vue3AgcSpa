@@ -74,6 +74,7 @@ import {
   UserId_Local,
   viewVarSet,
 } from '@/views/PrjInterface/ViewInfoVueShare';
+import { viewId_Main, viewName_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
 /** ViewInfoCRUDEx0 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -691,8 +692,8 @@ export class ViewInfoCRUDExBak20230626 extends ViewInfoCRUD implements IShowList
         outTabId: objvViewInfoEN.outRelaTabId,
         cmPrjId: clsPrivateSessionStorage.cmPrjId,
       };
-      clsPrivateSessionStorage.viewId_Main = objvViewInfoEN.viewId;
-      clsPrivateSessionStorage.viewName = objvViewInfoEN.viewName;
+      viewId_Main.value = objvViewInfoEN.viewId;
+      viewName_Main.value = objvViewInfoEN.viewName;
       clsPrivateSessionStorage.funcModuleNameSim = objFuncModule_Agc.funcModuleNameSim;
       clsPrivateSessionStorage.funcModuleEnName = objFuncModule_Agc.funcModuleEnName;
 
@@ -705,7 +706,7 @@ export class ViewInfoCRUDExBak20230626 extends ViewInfoCRUD implements IShowList
       //this.GetDataFromUserPrjGrantClass(objUserPrjGrantEN);
 
       //alert("完成SelectViewId!");
-      clsPrivateSessionStorage.viewId_Main = objvViewInfoEN.viewId;
+      viewId_Main.value = objvViewInfoEN.viewId;
       Redirect('/PrjInterface/ViewInfo_AllProp');
     } catch (e: any) {
       console.error(e);

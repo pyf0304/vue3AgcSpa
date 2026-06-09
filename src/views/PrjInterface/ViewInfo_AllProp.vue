@@ -40,6 +40,7 @@
   // import ViewInfoCRUD from '@/views/PrjInterface/ViewInfoCRUD.vue';
   import RefreshViewInfo from '@/views/PrjInterface/RefreshViewInfo.vue';
   import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
+
   import { enumRegionType } from '@/ts/L0Entity/RegionManage/clsRegionTypeEN';
   import { ViewInfo_AllPropEx } from '@/views/PrjInterface/ViewInfo_AllPropEx';
 
@@ -89,7 +90,7 @@
         // { label: '界面列表', component: ViewInfoCRUD },
         { label: '刷新', component: RefreshViewInfo, liId: 'liRefresh' },
       ];
-      // const strViewId = clsPrivateSessionStorage.viewId_Main;
+
       // const strCmPrjId = clsPrivateSessionStorage.cmPrjId;
       const arrViewRegionType = [
         // { label: '界面属性', component: ViewInfo_U },
@@ -126,10 +127,7 @@
 
         if (typeof route.query.viewId === 'string') {
           viewId.value = route.query.viewId;
-          clsPrivateSessionStorage.viewId_Main = viewId.value;
           viewId_Main.value = viewId.value;
-        } else if (clsPrivateSessionStorage.viewId_Main != '') {
-          viewId_Main.value = clsPrivateSessionStorage.viewId_Main;
         }
 
         // SetInputValueInDivObj(StudentInfoList.divLayout, 'hidCurrEduClsId', idCurrEduCls.value);

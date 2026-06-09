@@ -3,7 +3,7 @@
  * 类名:clsCTCodeTypeGroupRelaWApi
  * 表名:CTCodeTypeGroupRela(00050647)
  * 版本:2026.05.30(服务器:PYF-AI)
- * 日期:2026/06/06 13:31:20
+ * 日期:2026/06/07 14:10:06
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
@@ -21,7 +21,7 @@
 /**
  * CTCodeTypeGroupRela(CTCodeTypeGroupRela)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
-* Created by pyf on 2026年06月06日.
+* Created by pyf on 2026年06月07日.
 * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from "axios";
@@ -166,7 +166,7 @@ throw(error.statusText);
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-06-06
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -179,7 +179,7 @@ return a.ctGroupId.localeCompare(b.ctGroupId);
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2026-06-06
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -187,14 +187,14 @@ return a.ctGroupId.localeCompare(b.ctGroupId);
 */
 export  function CTCodeTypeGroupRela_SortFunDefa2Fld(a:clsCTCodeTypeGroupRelaEN , b:clsCTCodeTypeGroupRelaEN): number 
 {
-if (a.orderNum == b.orderNum) return a.updDate.localeCompare(b.updDate);
+if (a.orderNum == b.orderNum) return a.layerNo - b.layerNo;
 else return a.orderNum - b.orderNum;
 }
 
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-06-06
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -224,6 +224,55 @@ else return -1
 case clsCTCodeTypeGroupRelaEN.con_OrderNum:
 return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
 return a.orderNum-b.orderNum;
+}
+case clsCTCodeTypeGroupRelaEN.con_LayerNo:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return a.layerNo-b.layerNo;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosX:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return a.posX-b.posX;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosY:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return a.posY-b.posY;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosXSmall:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return a.posXSmall-b.posXSmall;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosYSmall:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return a.posYSmall-b.posYSmall;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosXLarge:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return a.posXLarge-b.posXLarge;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosYLarge:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return a.posYLarge-b.posYLarge;
+}
+case clsCTCodeTypeGroupRelaEN.con_LayoutVersion:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return a.layoutVersion-b.layoutVersion;
+}
+case clsCTCodeTypeGroupRelaEN.con_IsPinned:
+return (a: clsCTCodeTypeGroupRelaEN) => {
+if (a.isPinned == true) return 1;
+else return -1
+}
+case clsCTCodeTypeGroupRelaEN.con_LayoutUpdatedBy:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+if (a.layoutUpdatedBy == null) return -1;
+if (b.layoutUpdatedBy == null) return 1;
+return a.layoutUpdatedBy.localeCompare(b.layoutUpdatedBy);
+}
+case clsCTCodeTypeGroupRelaEN.con_LayoutUpdatedAt:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+if (a.layoutUpdatedAt == null) return -1;
+if (b.layoutUpdatedAt == null) return 1;
+return a.layoutUpdatedAt.localeCompare(b.layoutUpdatedAt);
 }
 case clsCTCodeTypeGroupRelaEN.con_UpdDate:
 return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
@@ -264,6 +313,55 @@ case clsCTCodeTypeGroupRelaEN.con_OrderNum:
 return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
 return b.orderNum-a.orderNum;
 }
+case clsCTCodeTypeGroupRelaEN.con_LayerNo:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return b.layerNo-a.layerNo;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosX:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return b.posX-a.posX;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosY:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return b.posY-a.posY;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosXSmall:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return b.posXSmall-a.posXSmall;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosYSmall:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return b.posYSmall-a.posYSmall;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosXLarge:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return b.posXLarge-a.posXLarge;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosYLarge:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return b.posYLarge-a.posYLarge;
+}
+case clsCTCodeTypeGroupRelaEN.con_LayoutVersion:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+return b.layoutVersion-a.layoutVersion;
+}
+case clsCTCodeTypeGroupRelaEN.con_IsPinned:
+return (b: clsCTCodeTypeGroupRelaEN) => {
+if (b.isPinned == true) return 1;
+else return -1
+}
+case clsCTCodeTypeGroupRelaEN.con_LayoutUpdatedBy:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+if (b.layoutUpdatedBy == null) return -1;
+if (a.layoutUpdatedBy == null) return 1;
+return b.layoutUpdatedBy.localeCompare(a.layoutUpdatedBy);
+}
+case clsCTCodeTypeGroupRelaEN.con_LayoutUpdatedAt:
+return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
+if (b.layoutUpdatedAt == null) return -1;
+if (a.layoutUpdatedAt == null) return 1;
+return b.layoutUpdatedAt.localeCompare(a.layoutUpdatedAt);
+}
 case clsCTCodeTypeGroupRelaEN.con_UpdDate:
 return (a: clsCTCodeTypeGroupRelaEN, b: clsCTCodeTypeGroupRelaEN) => {
 if (b.updDate == null) return -1;
@@ -288,7 +386,7 @@ strMsg = `字段名:[${strKey}]在表对象:[CTCodeTypeGroupRela]中不存在!(i
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2026-06-06
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -315,6 +413,50 @@ return obj.isMainGroup === value;
 case clsCTCodeTypeGroupRelaEN.con_OrderNum:
 return (obj: clsCTCodeTypeGroupRelaEN) => {
 return obj.orderNum === value;
+}
+case clsCTCodeTypeGroupRelaEN.con_LayerNo:
+return (obj: clsCTCodeTypeGroupRelaEN) => {
+return obj.layerNo === value;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosX:
+return (obj: clsCTCodeTypeGroupRelaEN) => {
+return obj.posX === value;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosY:
+return (obj: clsCTCodeTypeGroupRelaEN) => {
+return obj.posY === value;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosXSmall:
+return (obj: clsCTCodeTypeGroupRelaEN) => {
+return obj.posXSmall === value;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosYSmall:
+return (obj: clsCTCodeTypeGroupRelaEN) => {
+return obj.posYSmall === value;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosXLarge:
+return (obj: clsCTCodeTypeGroupRelaEN) => {
+return obj.posXLarge === value;
+}
+case clsCTCodeTypeGroupRelaEN.con_PosYLarge:
+return (obj: clsCTCodeTypeGroupRelaEN) => {
+return obj.posYLarge === value;
+}
+case clsCTCodeTypeGroupRelaEN.con_LayoutVersion:
+return (obj: clsCTCodeTypeGroupRelaEN) => {
+return obj.layoutVersion === value;
+}
+case clsCTCodeTypeGroupRelaEN.con_IsPinned:
+return (obj: clsCTCodeTypeGroupRelaEN) => {
+return obj.isPinned === value;
+}
+case clsCTCodeTypeGroupRelaEN.con_LayoutUpdatedBy:
+return (obj: clsCTCodeTypeGroupRelaEN) => {
+return obj.layoutUpdatedBy === value;
+}
+case clsCTCodeTypeGroupRelaEN.con_LayoutUpdatedAt:
+return (obj: clsCTCodeTypeGroupRelaEN) => {
+return obj.layoutUpdatedAt === value;
 }
 case clsCTCodeTypeGroupRelaEN.con_UpdDate:
 return (obj: clsCTCodeTypeGroupRelaEN) => {
@@ -1006,7 +1148,7 @@ alert(strMsg);
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2026-06-06
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -1037,7 +1179,7 @@ console.error(strMsg);
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-06-06
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -1933,6 +2075,16 @@ if (null === pobjCTCodeTypeGroupRelaEN.isMainGroup
 {
  throw new Error(`(errid:Watl000411)字段[IsMainGroup]不能为空(In CTCodeTypeGroupRela)!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
 }
+if (null === pobjCTCodeTypeGroupRelaEN.layoutVersion 
+ || pobjCTCodeTypeGroupRelaEN.layoutVersion != null && pobjCTCodeTypeGroupRelaEN.layoutVersion.toString()  ===  "")
+{
+ throw new Error(`(errid:Watl000411)字段[LayoutVersion]不能为空(In CTCodeTypeGroupRela)!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
+}
+if (null === pobjCTCodeTypeGroupRelaEN.isPinned 
+ || pobjCTCodeTypeGroupRelaEN.isPinned != null && pobjCTCodeTypeGroupRelaEN.isPinned.toString()  ===  "")
+{
+ throw new Error(`(errid:Watl000411)字段[IsPinned]不能为空(In CTCodeTypeGroupRela)!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
+}
 //检查字段长度, 若字符型字段长度超出规定的长度,即非法!
 if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.ctGroupId) == false && GetStrLen(pobjCTCodeTypeGroupRelaEN.ctGroupId) > 4)
 {
@@ -1941,6 +2093,14 @@ if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.ctGroupId) == false && GetStrLen(pob
 if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.codeTypeId) == false && GetStrLen(pobjCTCodeTypeGroupRelaEN.codeTypeId) > 4)
 {
  throw new Error(`(errid:Watl000413)字段[代码类型Id(codeTypeId)]的长度不能超过4(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!值:${pobjCTCodeTypeGroupRelaEN.codeTypeId}(clsCTCodeTypeGroupRelaBL:CheckPropertyNew)`);
+}
+if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy) == false && GetStrLen(pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy) > 100)
+{
+ throw new Error(`(errid:Watl000413)字段[LayoutUpdatedBy(layoutUpdatedBy)]的长度不能超过100(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!值:${pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy}(clsCTCodeTypeGroupRelaBL:CheckPropertyNew)`);
+}
+if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt) == false && GetStrLen(pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt) > 20)
+{
+ throw new Error(`(errid:Watl000413)字段[LayoutUpdatedAt(layoutUpdatedAt)]的长度不能超过20(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!值:${pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt}(clsCTCodeTypeGroupRelaBL:CheckPropertyNew)`);
 }
 if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.updDate) == false && GetStrLen(pobjCTCodeTypeGroupRelaEN.updDate) > 20)
 {
@@ -1966,6 +2126,50 @@ if (null != pobjCTCodeTypeGroupRelaEN.isMainGroup && undefined !== pobjCTCodeTyp
 if (null != pobjCTCodeTypeGroupRelaEN.orderNum && undefined !== pobjCTCodeTypeGroupRelaEN.orderNum && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.orderNum) === false)
 {
  throw new Error(`(errid:Watl000414)字段[序号(orderNum)]的值:[${pobjCTCodeTypeGroupRelaEN.orderNum}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.layerNo && undefined !== pobjCTCodeTypeGroupRelaEN.layerNo && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.layerNo) === false)
+{
+ throw new Error(`(errid:Watl000414)字段[LayerNo(layerNo)]的值:[${pobjCTCodeTypeGroupRelaEN.layerNo}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.posX && undefined !== pobjCTCodeTypeGroupRelaEN.posX && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.posX) === false)
+{
+ throw new Error(`(errid:Watl000414)字段[PosX(posX)]的值:[${pobjCTCodeTypeGroupRelaEN.posX}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.posY && undefined !== pobjCTCodeTypeGroupRelaEN.posY && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.posY) === false)
+{
+ throw new Error(`(errid:Watl000414)字段[PosY(posY)]的值:[${pobjCTCodeTypeGroupRelaEN.posY}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.posXSmall && undefined !== pobjCTCodeTypeGroupRelaEN.posXSmall && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.posXSmall) === false)
+{
+ throw new Error(`(errid:Watl000414)字段[PosXSmall(posXSmall)]的值:[${pobjCTCodeTypeGroupRelaEN.posXSmall}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.posYSmall && undefined !== pobjCTCodeTypeGroupRelaEN.posYSmall && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.posYSmall) === false)
+{
+ throw new Error(`(errid:Watl000414)字段[PosYSmall(posYSmall)]的值:[${pobjCTCodeTypeGroupRelaEN.posYSmall}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.posXLarge && undefined !== pobjCTCodeTypeGroupRelaEN.posXLarge && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.posXLarge) === false)
+{
+ throw new Error(`(errid:Watl000414)字段[PosXLarge(posXLarge)]的值:[${pobjCTCodeTypeGroupRelaEN.posXLarge}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.posYLarge && undefined !== pobjCTCodeTypeGroupRelaEN.posYLarge && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.posYLarge) === false)
+{
+ throw new Error(`(errid:Watl000414)字段[PosYLarge(posYLarge)]的值:[${pobjCTCodeTypeGroupRelaEN.posYLarge}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.layoutVersion && undefined !== pobjCTCodeTypeGroupRelaEN.layoutVersion && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.layoutVersion) === false)
+{
+ throw new Error(`(errid:Watl000414)字段[LayoutVersion(layoutVersion)]的值:[${pobjCTCodeTypeGroupRelaEN.layoutVersion}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.isPinned && undefined !== pobjCTCodeTypeGroupRelaEN.isPinned && tzDataType.isBoolean(pobjCTCodeTypeGroupRelaEN.isPinned) === false)
+{
+ throw new Error(`(errid:Watl000414)字段[IsPinned(isPinned)]的值:[${pobjCTCodeTypeGroupRelaEN.isPinned}], 非法,应该为布尔型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
+}
+if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy) == false && undefined !== pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy && tzDataType.isString(pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy) === false)
+{
+ throw new Error(`(errid:Watl000414)字段[LayoutUpdatedBy(layoutUpdatedBy)]的值:[${pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy}], 非法,应该为字符型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
+}
+if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt) == false && undefined !== pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt && tzDataType.isString(pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt) === false)
+{
+ throw new Error(`(errid:Watl000414)字段[LayoutUpdatedAt(layoutUpdatedAt)]的值:[${pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt}], 非法,应该为字符型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckPropertyNew0)`);
 }
 if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.updDate) == false && undefined !== pobjCTCodeTypeGroupRelaEN.updDate && tzDataType.isString(pobjCTCodeTypeGroupRelaEN.updDate) === false)
 {
@@ -1994,6 +2198,14 @@ if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.codeTypeId) == false && GetStrLen(po
 {
  throw new Error(`(errid:Watl000416)字段[代码类型Id(codeTypeId)]的长度不能超过4(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!值:${pobjCTCodeTypeGroupRelaEN.codeTypeId}(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
 }
+if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy) == false && GetStrLen(pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy) > 100)
+{
+ throw new Error(`(errid:Watl000416)字段[LayoutUpdatedBy(layoutUpdatedBy)]的长度不能超过100(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!值:${pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy}(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
+}
+if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt) == false && GetStrLen(pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt) > 20)
+{
+ throw new Error(`(errid:Watl000416)字段[LayoutUpdatedAt(layoutUpdatedAt)]的长度不能超过20(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!值:${pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt}(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
+}
 if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.updDate) == false && GetStrLen(pobjCTCodeTypeGroupRelaEN.updDate) > 20)
 {
  throw new Error(`(errid:Watl000416)字段[修改日期(updDate)]的长度不能超过20(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!值:${pobjCTCodeTypeGroupRelaEN.updDate}(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
@@ -2019,6 +2231,50 @@ if (null != pobjCTCodeTypeGroupRelaEN.orderNum && undefined !== pobjCTCodeTypeGr
 {
  throw new Error(`(errid:Watl000417)字段[序号(orderNum)]的值:[${pobjCTCodeTypeGroupRelaEN.orderNum}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
 }
+if (null != pobjCTCodeTypeGroupRelaEN.layerNo && undefined !== pobjCTCodeTypeGroupRelaEN.layerNo && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.layerNo) === false)
+{
+ throw new Error(`(errid:Watl000417)字段[LayerNo(layerNo)]的值:[${pobjCTCodeTypeGroupRelaEN.layerNo}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.posX && undefined !== pobjCTCodeTypeGroupRelaEN.posX && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.posX) === false)
+{
+ throw new Error(`(errid:Watl000417)字段[PosX(posX)]的值:[${pobjCTCodeTypeGroupRelaEN.posX}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.posY && undefined !== pobjCTCodeTypeGroupRelaEN.posY && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.posY) === false)
+{
+ throw new Error(`(errid:Watl000417)字段[PosY(posY)]的值:[${pobjCTCodeTypeGroupRelaEN.posY}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.posXSmall && undefined !== pobjCTCodeTypeGroupRelaEN.posXSmall && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.posXSmall) === false)
+{
+ throw new Error(`(errid:Watl000417)字段[PosXSmall(posXSmall)]的值:[${pobjCTCodeTypeGroupRelaEN.posXSmall}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.posYSmall && undefined !== pobjCTCodeTypeGroupRelaEN.posYSmall && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.posYSmall) === false)
+{
+ throw new Error(`(errid:Watl000417)字段[PosYSmall(posYSmall)]的值:[${pobjCTCodeTypeGroupRelaEN.posYSmall}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.posXLarge && undefined !== pobjCTCodeTypeGroupRelaEN.posXLarge && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.posXLarge) === false)
+{
+ throw new Error(`(errid:Watl000417)字段[PosXLarge(posXLarge)]的值:[${pobjCTCodeTypeGroupRelaEN.posXLarge}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.posYLarge && undefined !== pobjCTCodeTypeGroupRelaEN.posYLarge && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.posYLarge) === false)
+{
+ throw new Error(`(errid:Watl000417)字段[PosYLarge(posYLarge)]的值:[${pobjCTCodeTypeGroupRelaEN.posYLarge}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.layoutVersion && undefined !== pobjCTCodeTypeGroupRelaEN.layoutVersion && tzDataType.isNumber(pobjCTCodeTypeGroupRelaEN.layoutVersion) === false)
+{
+ throw new Error(`(errid:Watl000417)字段[LayoutVersion(layoutVersion)]的值:[${pobjCTCodeTypeGroupRelaEN.layoutVersion}], 非法,应该为数值型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
+}
+if (null != pobjCTCodeTypeGroupRelaEN.isPinned && undefined !== pobjCTCodeTypeGroupRelaEN.isPinned && tzDataType.isBoolean(pobjCTCodeTypeGroupRelaEN.isPinned) === false)
+{
+ throw new Error(`(errid:Watl000417)字段[IsPinned(isPinned)]的值:[${pobjCTCodeTypeGroupRelaEN.isPinned}], 非法,应该为布尔型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
+}
+if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy) == false && undefined !== pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy && tzDataType.isString(pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy) === false)
+{
+ throw new Error(`(errid:Watl000417)字段[LayoutUpdatedBy(layoutUpdatedBy)]的值:[${pobjCTCodeTypeGroupRelaEN.layoutUpdatedBy}], 非法,应该为字符型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
+}
+if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt) == false && undefined !== pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt && tzDataType.isString(pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt) === false)
+{
+ throw new Error(`(errid:Watl000417)字段[LayoutUpdatedAt(layoutUpdatedAt)]的值:[${pobjCTCodeTypeGroupRelaEN.layoutUpdatedAt}], 非法,应该为字符型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
+}
 if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.updDate) == false && undefined !== pobjCTCodeTypeGroupRelaEN.updDate && tzDataType.isString(pobjCTCodeTypeGroupRelaEN.updDate) === false)
 {
  throw new Error(`(errid:Watl000417)字段[修改日期(updDate)]的值:[${pobjCTCodeTypeGroupRelaEN.updDate}], 非法,应该为字符型(In CTCodeTypeGroupRela(CTCodeTypeGroupRela))!(clsCTCodeTypeGroupRelaBL:CheckProperty4Update)`);
@@ -2039,7 +2295,7 @@ if (IsNullOrEmpty(pobjCTCodeTypeGroupRelaEN.ctGroupId) === true )
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2026-06-06
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -2064,7 +2320,7 @@ else return strJson;
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2026-06-06
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -2090,7 +2346,7 @@ return arrCTCodeTypeGroupRelaObjLst;
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2026-06-06
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrCTCodeTypeGroupRelaObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -2109,7 +2365,7 @@ return arrCTCodeTypeGroupRelaObjLst;
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2026-06-06
+ * 日期:2026-06-07
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -2168,6 +2424,67 @@ if (Object.prototype.hasOwnProperty.call(objCTCodeTypeGroupRelaCond.dicFldCompar
 {
 const strComparisonOpOrderNum:string = objCTCodeTypeGroupRelaCond.dicFldComparisonOp[clsCTCodeTypeGroupRelaEN.con_OrderNum];
 strWhereCond += Format(" And {0} {2} {1}", clsCTCodeTypeGroupRelaEN.con_OrderNum, objCTCodeTypeGroupRelaCond.orderNum, strComparisonOpOrderNum);
+}
+if (Object.prototype.hasOwnProperty.call(objCTCodeTypeGroupRelaCond.dicFldComparisonOp, clsCTCodeTypeGroupRelaEN.con_LayerNo) == true)
+{
+const strComparisonOpLayerNo:string = objCTCodeTypeGroupRelaCond.dicFldComparisonOp[clsCTCodeTypeGroupRelaEN.con_LayerNo];
+strWhereCond += Format(" And {0} {2} {1}", clsCTCodeTypeGroupRelaEN.con_LayerNo, objCTCodeTypeGroupRelaCond.layerNo, strComparisonOpLayerNo);
+}
+if (Object.prototype.hasOwnProperty.call(objCTCodeTypeGroupRelaCond.dicFldComparisonOp, clsCTCodeTypeGroupRelaEN.con_PosX) == true)
+{
+const strComparisonOpPosX:string = objCTCodeTypeGroupRelaCond.dicFldComparisonOp[clsCTCodeTypeGroupRelaEN.con_PosX];
+strWhereCond += Format(" And {0} {2} {1}", clsCTCodeTypeGroupRelaEN.con_PosX, objCTCodeTypeGroupRelaCond.posX, strComparisonOpPosX);
+}
+if (Object.prototype.hasOwnProperty.call(objCTCodeTypeGroupRelaCond.dicFldComparisonOp, clsCTCodeTypeGroupRelaEN.con_PosY) == true)
+{
+const strComparisonOpPosY:string = objCTCodeTypeGroupRelaCond.dicFldComparisonOp[clsCTCodeTypeGroupRelaEN.con_PosY];
+strWhereCond += Format(" And {0} {2} {1}", clsCTCodeTypeGroupRelaEN.con_PosY, objCTCodeTypeGroupRelaCond.posY, strComparisonOpPosY);
+}
+if (Object.prototype.hasOwnProperty.call(objCTCodeTypeGroupRelaCond.dicFldComparisonOp, clsCTCodeTypeGroupRelaEN.con_PosXSmall) == true)
+{
+const strComparisonOpPosXSmall:string = objCTCodeTypeGroupRelaCond.dicFldComparisonOp[clsCTCodeTypeGroupRelaEN.con_PosXSmall];
+strWhereCond += Format(" And {0} {2} {1}", clsCTCodeTypeGroupRelaEN.con_PosXSmall, objCTCodeTypeGroupRelaCond.posXSmall, strComparisonOpPosXSmall);
+}
+if (Object.prototype.hasOwnProperty.call(objCTCodeTypeGroupRelaCond.dicFldComparisonOp, clsCTCodeTypeGroupRelaEN.con_PosYSmall) == true)
+{
+const strComparisonOpPosYSmall:string = objCTCodeTypeGroupRelaCond.dicFldComparisonOp[clsCTCodeTypeGroupRelaEN.con_PosYSmall];
+strWhereCond += Format(" And {0} {2} {1}", clsCTCodeTypeGroupRelaEN.con_PosYSmall, objCTCodeTypeGroupRelaCond.posYSmall, strComparisonOpPosYSmall);
+}
+if (Object.prototype.hasOwnProperty.call(objCTCodeTypeGroupRelaCond.dicFldComparisonOp, clsCTCodeTypeGroupRelaEN.con_PosXLarge) == true)
+{
+const strComparisonOpPosXLarge:string = objCTCodeTypeGroupRelaCond.dicFldComparisonOp[clsCTCodeTypeGroupRelaEN.con_PosXLarge];
+strWhereCond += Format(" And {0} {2} {1}", clsCTCodeTypeGroupRelaEN.con_PosXLarge, objCTCodeTypeGroupRelaCond.posXLarge, strComparisonOpPosXLarge);
+}
+if (Object.prototype.hasOwnProperty.call(objCTCodeTypeGroupRelaCond.dicFldComparisonOp, clsCTCodeTypeGroupRelaEN.con_PosYLarge) == true)
+{
+const strComparisonOpPosYLarge:string = objCTCodeTypeGroupRelaCond.dicFldComparisonOp[clsCTCodeTypeGroupRelaEN.con_PosYLarge];
+strWhereCond += Format(" And {0} {2} {1}", clsCTCodeTypeGroupRelaEN.con_PosYLarge, objCTCodeTypeGroupRelaCond.posYLarge, strComparisonOpPosYLarge);
+}
+if (Object.prototype.hasOwnProperty.call(objCTCodeTypeGroupRelaCond.dicFldComparisonOp, clsCTCodeTypeGroupRelaEN.con_LayoutVersion) == true)
+{
+const strComparisonOpLayoutVersion:string = objCTCodeTypeGroupRelaCond.dicFldComparisonOp[clsCTCodeTypeGroupRelaEN.con_LayoutVersion];
+strWhereCond += Format(" And {0} {2} {1}", clsCTCodeTypeGroupRelaEN.con_LayoutVersion, objCTCodeTypeGroupRelaCond.layoutVersion, strComparisonOpLayoutVersion);
+}
+if (Object.prototype.hasOwnProperty.call(objCTCodeTypeGroupRelaCond.dicFldComparisonOp, clsCTCodeTypeGroupRelaEN.con_IsPinned) == true)
+{
+if (objCTCodeTypeGroupRelaCond.isPinned == true)
+{
+strWhereCond += Format(" And {0} = '1'", clsCTCodeTypeGroupRelaEN.con_IsPinned);
+}
+else
+{
+strWhereCond += Format(" And {0} = '0'", clsCTCodeTypeGroupRelaEN.con_IsPinned);
+}
+}
+if (Object.prototype.hasOwnProperty.call(objCTCodeTypeGroupRelaCond.dicFldComparisonOp, clsCTCodeTypeGroupRelaEN.con_LayoutUpdatedBy) == true)
+{
+const strComparisonOpLayoutUpdatedBy:string = objCTCodeTypeGroupRelaCond.dicFldComparisonOp[clsCTCodeTypeGroupRelaEN.con_LayoutUpdatedBy];
+strWhereCond += Format(" And {0} {2} '{1}'", clsCTCodeTypeGroupRelaEN.con_LayoutUpdatedBy, objCTCodeTypeGroupRelaCond.layoutUpdatedBy, strComparisonOpLayoutUpdatedBy);
+}
+if (Object.prototype.hasOwnProperty.call(objCTCodeTypeGroupRelaCond.dicFldComparisonOp, clsCTCodeTypeGroupRelaEN.con_LayoutUpdatedAt) == true)
+{
+const strComparisonOpLayoutUpdatedAt:string = objCTCodeTypeGroupRelaCond.dicFldComparisonOp[clsCTCodeTypeGroupRelaEN.con_LayoutUpdatedAt];
+strWhereCond += Format(" And {0} {2} '{1}'", clsCTCodeTypeGroupRelaEN.con_LayoutUpdatedAt, objCTCodeTypeGroupRelaCond.layoutUpdatedAt, strComparisonOpLayoutUpdatedAt);
 }
 if (Object.prototype.hasOwnProperty.call(objCTCodeTypeGroupRelaCond.dicFldComparisonOp, clsCTCodeTypeGroupRelaEN.con_UpdDate) == true)
 {

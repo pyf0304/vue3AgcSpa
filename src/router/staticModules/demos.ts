@@ -15,19 +15,6 @@ const routes: Array<RouteRecordRaw> = [
       icon: 'icon-zhuomian',
     },
     children: [
-      // {
-      //   path: 'pyf-about',
-      //   name: `${moduleName}-pyf-about`,
-      //   meta: {
-      //     title: t('routes.demo.pyfabout'),
-      //     icon: 'icon-zhuomian',
-      //     keepAlive: true,
-      //   },
-      //   component: () =>
-      //     import(
-      //       /* webpackChunkName: "demos-custom-a-custom-modal" */ '@/views/test/testMyDropButton.vue'
-      //     ),
-      // },
       {
         path: 'custom-modal',
         name: `${moduleName}-custom-modal`,
@@ -51,18 +38,7 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () => import(/* webpackChunkName: "demos-button" */ '@/views/demos/button.vue'),
       },
-      // {
-      //   path: '/TestGraph4',
-      //   name: 'TestGraph4',
-      //   // redirect: '/dashboard/welcome',
-      //   component: () => import(/* webpackChunkName: "layout" */ '@/views/TestGraph/Test8.vue'),
-      //   meta: {
-      //     title: 'TestGraph4',
-      //     icon: 'icon-zhuomian',
-      //     keepAlive: true,
-      //   },
-      //   children: [],
-      // },
+
       {
         path: '/DropdownTabs',
         name: 'DropdownTabs',
@@ -75,30 +51,7 @@ const routes: Array<RouteRecordRaw> = [
         },
         children: [],
       },
-      // {
-      //   path: '/TestGraph2',
-      //   name: 'TestGraph2',
-      //   // redirect: '/dashboard/welcome',
-      //   component: () => import(/* webpackChunkName: "layout" */ '@/views/TestGraph/Test6.vue'),
-      //   meta: {
-      //     title: 'TestGraph2',
-      //     icon: 'icon-zhuomian',
-      //     keepAlive: true,
-      //   },
-      //   children: [],
-      // },
-      // {
-      //   path: '/TestGraph3',
-      //   name: 'TestGraph3',
-      //   // redirect: '/dashboard/welcome',
-      //   component: () => import(/* webpackChunkName: "layout" */ '@/views/TestGraph/Test7.vue'),
-      //   meta: {
-      //     title: 'TestGraph3',
-      //     icon: 'icon-zhuomian',
-      //     keepAlive: true,
-      //   },
-      //   children: [],
-      // },
+
       {
         path: '/ShowDnPath',
         name: 'ShowDnPath',
