@@ -255,6 +255,28 @@
             </div>
 
             <div>
+              <div class="mb-2">
+                <div>
+                  <span class="text-muted">应用类型:</span>
+                  <span id="lblCurrAppType_QryRegion">-</span>
+                </div>
+                <div>
+                  <span class="text-muted">前端工程:</span>
+                  <span id="lblCurrFrontend_QryRegion">-</span>
+                </div>
+                <div>
+                  <span class="text-muted">当前机器:</span>
+                  <span id="lblCurrMachine_QryRegion">-</span>
+                </div>
+                <div>
+                  <span class="text-muted">区域类型:</span>
+                  <span id="lblCurrRegionType_QryRegion">查询区(0001)</span>
+                </div>
+                <div>
+                  <span class="text-muted">生成进度:</span>
+                  <span id="lblGeneProgress_QryRegion">未开始</span>
+                </div>
+              </div>
               <div id="divCodeTypeLst"></div>
               <div>
                 <span id="lblResult" class="text-warning"></span><br />
@@ -394,6 +416,13 @@
         QryRegionFldsCRUDEx.ActiveTabName = enumActiveTabName.VisualEffects_01;
         const objPage = new QryRegionFldsCRUDEx();
         await objPage.PageLoadCache();
+        setTimeout(() => {
+          try {
+            objPage.btnCodeGene_Click();
+          } catch (e) {
+            console.error('QryRegionFldsCRUD.btnCodeGene_Click', e);
+          }
+        }, 200);
         console.log('refDivLayout0:', refDivLayout.value);
         console.log('divVarSet.refDivLayout1:', divVarSet.refDivLayout);
 

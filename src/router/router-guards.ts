@@ -2,7 +2,7 @@
 import NProgress from 'nprogress'; // progress bar
 import { LOGIN_NAME, REDIRECT_NAME } from './constant';
 import type { WhiteNameList } from './constant';
-import type { Router, RouteLocationNormalized } from 'vue-router';
+import type { Router, RouteLocationNormalized, LocationQuery, LocationQueryRaw } from 'vue-router';
 import { useUserStore } from '@/store/modulesShare/user';
 import { useKeepAliveStore } from '@/store/modules/keepAlive';
 import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
@@ -13,6 +13,12 @@ NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
 const defaultRoutePath = '/dashboard/welcome';
 let userInitPromise: Promise<unknown> | null = null;
+
+function stripGuardRetryQuery(query: LocationQuery): LocationQueryRaw {
+  const nextQuery: LocationQueryRaw = { ...query };
+  Reflect.deleteProperty(nextQuery, '__guard_retry');
+  return nextQuery;
+}
 
 async function ensureUserReady(userStore: ReturnType<typeof useUserStore>) {
   if (userStore.menus.length > 0) return null;
@@ -49,7 +55,7 @@ export function createRouterGuards(router: Router, whiteNameList: WhiteNameList)
         return next({ name: LOGIN_NAME });
       }
 
-      const hasNamedRoute = typeof to.name === 'string' && router.hasRoute(to.name);
+      const hasNamedRoute = to.name != null && router.hasRoute(to.name);
       const hasMatchedRoute = to.matched.length > 0;
       console.log('router guard route state', {
         toName: to.name,
@@ -62,6 +68,14 @@ export function createRouterGuards(router: Router, whiteNameList: WhiteNameList)
       });
 
       if (hasNamedRoute || hasMatchedRoute) {
+        if (to.query.__guard_retry === '1') {
+          return next({
+            path: to.path,
+            query: stripGuardRetryQuery(to.query),
+            hash: to.hash,
+            replace: true,
+          });
+        }
         return next();
       }
 

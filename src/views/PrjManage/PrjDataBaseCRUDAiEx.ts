@@ -122,7 +122,7 @@ export default class PrjDataBaseCRUDAiEx extends PrjDataBaseCRUDAi implements IS
    * 导出 Excel 操作
    */
   public async onExportAi(): Promise<ExportExcelData> {
-    return await this.ExportExcel_PrjDataBaseCacheAi();
+    return await this.ExportExcel_PrjDataBaseAi();
   }
 
   /**

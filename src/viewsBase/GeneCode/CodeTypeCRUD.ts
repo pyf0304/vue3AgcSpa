@@ -1016,6 +1016,21 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         },
       },
       {
+        fldName: clsCodeTypeENEx.con_RegionTypeName,
+        sortBy: 'regionTypeName',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '区域类型',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 6,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
         fldName: clsCodeTypeEN.con_CodeTypeENName,
         sortBy: 'codeTypeENName',
         sortFun: SortFun,
@@ -1024,7 +1039,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 6,
+        orderNum: 7,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1039,7 +1054,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 7,
+        orderNum: 8,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1054,7 +1069,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 8,
+        orderNum: 9,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1069,7 +1084,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 9,
+        orderNum: 10,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1084,7 +1099,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 10,
+        orderNum: 11,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1099,7 +1114,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 11,
+        orderNum: 12,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1114,7 +1129,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 12,
+        orderNum: 13,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1129,7 +1144,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 13,
+        orderNum: 14,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1144,7 +1159,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 14,
+        orderNum: 15,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1159,7 +1174,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 15,
+        orderNum: 16,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1174,7 +1189,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 16,
+        orderNum: 17,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1189,7 +1204,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 17,
+        orderNum: 18,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1204,7 +1219,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 18,
+        orderNum: 19,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1332,6 +1347,21 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         },
       },
       {
+        fldName: clsCodeTypeENEx.con_RegionTypeName,
+        sortBy: 'regionTypeName',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '区域类型',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 6,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
         fldName: clsCodeTypeEN.con_CodeTypeENName,
         sortBy: 'codeTypeENName',
         sortFun: SortFun,
@@ -1340,7 +1370,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 6,
+        orderNum: 7,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1355,7 +1385,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 7,
+        orderNum: 8,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1370,7 +1400,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 8,
+        orderNum: 9,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1385,7 +1415,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 9,
+        orderNum: 10,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1400,7 +1430,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 10,
+        orderNum: 11,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1415,7 +1445,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 11,
+        orderNum: 12,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1430,7 +1460,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 12,
+        orderNum: 13,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1445,7 +1475,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 13,
+        orderNum: 14,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1460,7 +1490,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 14,
+        orderNum: 15,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1475,7 +1505,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 15,
+        orderNum: 16,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1490,7 +1520,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 16,
+        orderNum: 17,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1505,7 +1535,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 17,
+        orderNum: 18,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();
@@ -1520,7 +1550,7 @@ export abstract class CodeTypeCRUD implements clsOperateList {
         text: '',
         tdClass: 'text-left',
         columnType: 'Label',
-        orderNum: 18,
+        orderNum: 19,
         funcName: (strKey: string, strText: string) => {
           console.log(strKey, strText);
           return new HTMLElement();

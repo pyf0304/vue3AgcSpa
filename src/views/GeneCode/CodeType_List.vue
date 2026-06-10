@@ -68,6 +68,21 @@
               </span>
             </th>
 
+            <th @click="sortColumn('regionTypeName|Ex')">
+              区域类型
+              <span>
+                <i
+                  :class="
+                    sortColumnKey === 'regionTypeName|Ex'
+                      ? sortDirection === 'Asc'
+                        ? 'arrow-up'
+                        : 'arrow-down'
+                      : 'arrow-neutral'
+                  "
+                ></i>
+              </span>
+            </th>
+
             <th @click="sortColumn('codeTypeENName')">
               英文名
               <span>
@@ -232,6 +247,8 @@
 
             <td v-html="item.groupName"></td>
 
+            <td v-html="item.regionTypeName"></td>
+
             <td v-html="item.codeTypeENName"></td>
 
             <td v-html="item.dependsOn"></td>
@@ -313,6 +330,7 @@
         'codeTypeId',
         'codeTypeName',
         'groupName',
+        'regionTypeName',
         'codeTypeENName',
         'dependsOn',
         'frontOrBack',

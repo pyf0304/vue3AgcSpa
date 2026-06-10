@@ -1,11 +1,13 @@
 ﻿import { clsCodeTypeEN } from '@/ts/L0Entity/GeneCode/clsCodeTypeEN';
 import { clsCodeTypeENEx } from '@/ts/L0Entity/GeneCode/clsCodeTypeENEx';
 import { clsSQLDSTypeEN } from '@/ts/L0Entity/PrjInterface/clsSQLDSTypeEN';
+import { clsRegionTypeEN } from '@/ts/L0Entity/RegionManage/clsRegionTypeEN';
 import {
   CodeType_GetObjLstByPagerAsync,
   CodeType_SortFunByKey,
 } from '@/ts/L3ForWApi/GeneCode/clsCodeTypeWApi';
 import { SQLDSType_func } from '@/ts/L3ForWApi/PrjInterface/clsSQLDSTypeWApi';
+import { RegionType_func } from '@/ts/L3ForWApi/RegionManage/clsRegionTypeWApi';
 import { GetSortExpressInfo, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
@@ -32,6 +34,10 @@ export function CodeTypeEx_FuncMapByFldName(strFldName: string, objCodeTypeEx: c
   switch (strFldName) {
     case clsCodeTypeENEx.con_SqlDsTypeName:
       return CodeTypeEx_FuncMap_SqlDsTypeName(objCodeTypeEx);
+    case clsCodeTypeENEx.con_RegionTypeName:
+      return CodeTypeEx_FuncMapRegionTypeName(objCodeTypeEx);
+    case clsCodeTypeENEx.con_RegionTypeSimName:
+      return CodeTypeEx_FuncMapRegionTypeSimName(objCodeTypeEx);
     default:
       strMsg = Format(
         '扩展字段:[{0}]在字段值函数映射中不存在！(in {1})',
@@ -200,4 +206,60 @@ export async function CodeTypeEx_GetObjExLstByPagerAsync(
     throw new Error(strMsg);
   }
   return new Array<clsCodeTypeENEx>();
+}
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objCodeTypeS:源对象
+ **/
+export async function CodeTypeEx_FuncMapRegionTypeName(objCodeType: clsCodeTypeENEx) {
+  const strThisFuncName = CodeTypeEx_FuncMapRegionTypeName.name;
+  try {
+    if (IsNullOrEmpty(objCodeType.regionTypeName) == true) {
+      const RegionTypeRegionTypeId = objCodeType.regionTypeId;
+      const RegionTypeRegionTypeName = await RegionType_func(
+        clsRegionTypeEN.con_RegionTypeId,
+        clsRegionTypeEN.con_RegionTypeName,
+        RegionTypeRegionTypeId,
+      );
+      objCodeType.regionTypeName = RegionTypeRegionTypeName;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001250)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      codeTypeEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
+}
+/**
+ * 把一个扩展类的部分属性进行函数转换
+ * (AutoGCLib.WA_AccessEx4TypeScript:Gen_4WAEx_Ts_FuncMap)
+ * @param objCodeTypeS:源对象
+ **/
+export async function CodeTypeEx_FuncMapRegionTypeSimName(objCodeType: clsCodeTypeENEx) {
+  const strThisFuncName = CodeTypeEx_FuncMapRegionTypeSimName.name;
+  try {
+    if (IsNullOrEmpty(objCodeType.regionTypeSimName) == true) {
+      const RegionTypeRegionTypeId = objCodeType.regionTypeId;
+      const RegionTypeRegionTypeSimName = await RegionType_func(
+        clsRegionTypeEN.con_RegionTypeId,
+        clsRegionTypeEN.con_RegionTypeSimName,
+        RegionTypeRegionTypeId,
+      );
+      objCodeType.regionTypeSimName = RegionTypeRegionTypeSimName;
+    }
+  } catch (e) {
+    const strMsg = Format(
+      '(errid:Watl001189)函数映射表对象数据出错,{0}.(in {1}.{2})',
+      e,
+      codeTypeEx_ConstructorName,
+      strThisFuncName,
+    );
+    console.error(strMsg);
+    alert(strMsg);
+  }
 }

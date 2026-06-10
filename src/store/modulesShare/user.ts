@@ -9,11 +9,18 @@ import { logout, getInfo, permmenu } from '@/api/account';
 import { generatorDynamicRouter } from '@/router/generator-router';
 import { resetRouter } from '@/router';
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
+import {
+  getMachineNameFromLocalAgent,
+  refreshMachineNameFromLocalAgent,
+} from '@/ts/LocalFileAccess/LocalFileAccess';
+
+const MACHINE_NAME_CACHE_KEY = 'agcMachineName';
 
 interface UserState {
   token: string;
   name: string;
   avatar: string;
+  machineName: string;
   // like [ 'sys:user:add', 'sys:user:update' ]
   perms: string[];
   menus: RouteRecordRaw[];
@@ -26,6 +33,7 @@ export const useUserStore = defineStore({
     token: Storage.get(ACCESS_TOKEN_KEY, null),
     name: 'amdin',
     avatar: '',
+    machineName: localStorage.getItem(MACHINE_NAME_CACHE_KEY) ?? '',
     perms: [],
     menus: [],
     userInfo: {},
@@ -40,6 +48,9 @@ export const useUserStore = defineStore({
     getName(): string {
       return this.name;
     },
+    getMachineName(): string {
+      return this.machineName;
+    },
     getUserId(): string {
       const strUserId = clsPrivateSessionStorage.userId;
       if (strUserId != '') return strUserId;
@@ -52,11 +63,45 @@ export const useUserStore = defineStore({
   actions: {
     /** 清空token及用户信息 */
     resetToken() {
-      this.avatar = this.token = this.name = '';
+      this.avatar = this.token = this.name = this.machineName = '';
       this.perms = [];
       this.menus = [];
       this.userInfo = {};
+      localStorage.removeItem(MACHINE_NAME_CACHE_KEY);
       Storage.clear();
+    },
+    setMachineName(strMachineName: string) {
+      this.machineName = strMachineName ?? '';
+      if (this.machineName == '') {
+        localStorage.removeItem(MACHINE_NAME_CACHE_KEY);
+      } else {
+        localStorage.setItem(MACHINE_NAME_CACHE_KEY, this.machineName);
+      }
+    },
+    async initMachineName() {
+      const strCached = this.machineName || (localStorage.getItem(MACHINE_NAME_CACHE_KEY) ?? '');
+      if (strCached != '') {
+        this.machineName = strCached;
+        return strCached;
+      }
+      try {
+        const strMachineName = await getMachineNameFromLocalAgent();
+        this.setMachineName(strMachineName);
+        return strMachineName;
+      } catch (e) {
+        console.warn('initMachineName warning:', e);
+        return '';
+      }
+    },
+    async refreshMachineName() {
+      try {
+        const strMachineName = await refreshMachineNameFromLocalAgent();
+        this.setMachineName(strMachineName);
+        return strMachineName;
+      } catch (e) {
+        console.warn('refreshMachineName warning:', e);
+        return '';
+      }
     },
     /** 登录成功保存token */
     setToken(token: string) {
@@ -94,6 +139,7 @@ export const useUserStore = defineStore({
         // 生成路由
         const generatorResult = await generatorDynamicRouter(menus);
         this.menus = generatorResult.menus.filter((item) => !item.meta?.hideInMenu);
+        await this.initMachineName();
         // !wsStore.client && wsStore.initSocket();
 
         return { menus, perms, userInfo };

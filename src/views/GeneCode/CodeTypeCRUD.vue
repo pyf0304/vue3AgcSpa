@@ -366,6 +366,31 @@
         </li>
         <li class="nav-item ml-3">
           <div class="btn-group" role="group" aria-label="Basic example">
+            <select
+              id="ddlRegionTypeId_SetFldValue"
+              v-model="regionTypeId_f"
+              class="form-control form-control-sm"
+              style="width: 80px"
+            >
+              <option
+                v-for="(item, index) in arrRegionType"
+                :key="index"
+                :value="item.regionTypeId"
+              >
+                {{ item.regionTypeName }}
+              </option></select
+            >
+            <button
+              id="btnSetRegionTypeId"
+              name="btnSetRegionTypeId"
+              class="btn btn-outline-info btn-sm text-nowrap"
+              @click="btnSetRegionTypeId_Click"
+              >设置区域类型</button
+            >
+          </div>
+        </li>
+        <li class="nav-item ml-3">
+          <div class="btn-group" role="group" aria-label="Basic example">
             <button
               id="btnGoTop"
               name="btnGoTop"
@@ -509,6 +534,7 @@
       const arrSQLDSType = ref<clsSQLDSTypeEN[] | null>([]);
 
       const arrFieldType = ref<clsFieldTypeEN[] | null>([]);
+      const regionTypeId_f = ref('0');
 
       /** 根据条件获取相应的对象列表
        * (AutoGCLib.Vue_ViewScript_TS4Html:Gen_Vue_setup_ts_btnQuery_Click)
@@ -729,6 +755,43 @@
           //console.log('arrKeyIds=');
           //console.log(arrKeyIds);
           await objPage.value.SetSqlDsTypeId(arrKeyIds, strSqlDsTypeId);
+          await objPage.value.BindGv_CodeType4Func(divVarSet.refDivList);
+        } catch (e) {
+          const strMsg = `设置记录不成功,${e}.(in ${thisConstructorName}.${strThisFuncName}`;
+          console.error(strMsg);
+          alert(strMsg);
+        }
+      };
+      /** 设置字段值-RegionTypeId
+       * (AutoGCLib.Vue_ViewScript_TS4Html:Gen_Vue_setup_ts_btnSetFldValue_Click)
+       **/
+      const btnSetRegionTypeId_Click = async () => {
+        const strThisFuncName = btnSetRegionTypeId_Click.name;
+        if (objPage.value == null) {
+          alert('页面初始化不成功,请联系管理员!');
+          return;
+        }
+        try {
+          const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+          if (arrKeyIds.length == 0) {
+            alert(`请选择需要设置区域类型Id的${thisTabName}记录!`);
+            return '';
+          }
+          const strRegionTypeId = GetSelectValueInDivObj(
+            divVarSet.refDivFunction,
+            'ddlRegionTypeId_SetFldValue',
+          );
+          if (strRegionTypeId == '') {
+            const strMsg = '请输入区域类型Id(RegionTypeId)!';
+            console.error('Error: ', strMsg);
+            alert(strMsg);
+            return;
+          }
+          const setRegionTypeId =
+            typeof objPage.value.SetRegionTypeId === 'function'
+              ? objPage.value.SetRegionTypeId.bind(objPage.value)
+              : CodeTypeCRUDEx.prototype.SetRegionTypeId.bind(objPage.value);
+          await setRegionTypeId(arrKeyIds, strRegionTypeId);
           await objPage.value.BindGv_CodeType4Func(divVarSet.refDivList);
         } catch (e) {
           const strMsg = `设置记录不成功,${e}.(in ${thisConstructorName}.${strThisFuncName}`;
@@ -986,6 +1049,8 @@
         arrSQLDSType.value = await SQLDSType_GetArrSQLDSType(); //功能区域
         sqlDsTypeId_f.value = '0';
 
+        regionTypeId_f.value = '0';
+
         // BindDdl_TrueAndFalseInDivObj(divVarSet.refDivFunction, '0');
         inUse_f.value = '0';
 
@@ -1050,6 +1115,7 @@
         dependsOn_q,
         inUse_q,
         sqlDsTypeId_f,
+        regionTypeId_f,
         inUse_f,
         groupName_f,
         arrRegionType,
@@ -1063,6 +1129,7 @@
         btnExportExcel_Click,
         btnClone_Click,
         btnSetSqlDsTypeId_Click,
+        btnSetRegionTypeId_Click,
         btnSetInUse_Click,
         btnSetGroupName_Click,
         btnGoTop_Click,

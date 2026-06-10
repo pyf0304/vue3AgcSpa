@@ -133,7 +133,7 @@
               name="lblRegionTypeId"
               class="col-form-label text-right"
               style="width: 90px"
-              >区域类型Id
+              >区域类型
             </label>
           </td>
           <td class="text-left">

@@ -1,8 +1,8 @@
 ﻿/**
  * 类名:clsCodeTypeEN
  * 表名:CodeType(00050203)
- * 版本:2026.04.19(服务器:WIN-SRV103-116)
- * 日期:2026/04/28 23:40:18
+ * 版本:2026.05.30(服务器:PYF-AI)
+ * 日期:2026/06/09 23:22:45
  * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
@@ -18,6 +18,13 @@
  **/
 import { clsGeneralTab } from '@/ts/PubFun/clsGeneralTab';
 
+/**
+ * 代码类型主键类型定义
+ * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_KeyType)
+ **/
+export type CodeTypeKey = {
+  codeTypeId: string;
+};
 export class clsCodeTypeEN extends clsGeneralTab {
   public static _RefreshTimeLst = new Array<string>();
   public static _CacheAddiCondition = ''; //缓存附加条件,作为向后台调取数据的附加条件
@@ -2067,49 +2074,49 @@ export class enumCodeType {
    **/
   static readonly WA_ViewScript_DetailCSEx_TS_0252 = '0252';
   /**
-   * Vue_界面脚本_TS(Html)
+   * Vue_界面脚本H
    **/
-  static readonly Vue_ViewScript_TS_0253 = '0253';
+  static readonly Vue_ViewScript_0253 = '0253';
   /**
    * Vue_界面后台_TS(TS)
    **/
   static readonly Vue_ViewScriptCS_TS_0254 = '0254';
   /**
-   * Vue_界面后台Ex_TS(TS)
+   * Vue_界面后台Ex_TS
    **/
   static readonly Vue_ViewScriptCSEx_TS_0255 = '0255';
   /**
-   * Vue_编辑区_TS(Html)
+   * Vue_编辑区H
    **/
-  static readonly Vue_ViewScript_Edit_TS_0256 = '0256';
+  static readonly Vue_ViewScript_Edit_0256 = '0256';
   /**
    * Vue_编辑区后台_TS(TS)
    **/
-  static readonly Vue_ViewScript_EditCS_TS_0257 = '0257';
+  static readonly Vue_ViewScript_Edit_TS_0257 = '0257';
   /**
-   * Vue_编辑区后台Ex_TS(TS)
+   * Vue_编辑区Ex_TS
    **/
-  static readonly Vue_ViewScript_EditCSEx_TS_0258 = '0258';
+  static readonly Vue_ViewScript_EditEx_TS_0258 = '0258';
   /**
-   * Vue_详细信息_TS(Html)
+   * Vue_详细信息H
    **/
-  static readonly Vue_ViewScript_Detail_TS_0259 = '0259';
+  static readonly Vue_ViewScript_Detail_0259 = '0259';
   /**
-   * Vue_详细信息后台_TS(TS)
+   * Vue_详细信息_TS
    **/
-  static readonly Vue_ViewScript_DetailCS_TS_0260 = '0260';
+  static readonly Vue_ViewScript_Detail_TS_0260 = '0260';
   /**
-   * Vue_详细信息后台Ex_TS(TS)
+   * Vue_详细信息Ex_TS
    **/
-  static readonly Vue_ViewScript_DetailCSEx_TS_0261 = '0261';
+  static readonly Vue_ViewScript_DetailEx_TS_0261 = '0261';
   /**
    * 实体层Store(TS)
    **/
   static readonly StoreEntityLayer_0262 = '0262';
   /**
-   * Vue_列表区_TS(Html)
+   * Vue_列表区H
    **/
-  static readonly Vue_ViewScript_List_TS_0263 = '0263';
+  static readonly Vue_ViewScript_List_0263 = '0263';
   /**
    * Vue共享(TS)
    **/
@@ -2133,5 +2140,37 @@ export class enumCodeType {
   /**
    * Vue_编辑区后台Ai_TS
    **/
-  static readonly Vue_ViewScript_EditAiCS_TS_0269 = '0269';
+  static readonly Vue_ViewScript_EditAi_TS_0269 = '0269';
+  /**
+   * Vue_编辑区AiEx_TS
+   **/
+  static readonly Vue_ViewScript_EditAiEx_TS_0270 = '0270';
+  /**
+   * Vue_界面脚本Ai
+   **/
+  static readonly Vue_ViewScriptAi_0271 = '0271';
+  /**
+   * Vue_界面后台AiEx_TS
+   **/
+  static readonly Vue_ViewScriptAiEx_TS_0272 = '0272';
+  /**
+   * Vue_列表区HAi
+   **/
+  static readonly Vue_ViewScript_ListAi_0273 = '0273';
+  /**
+   * Vue_编辑区HAi
+   **/
+  static readonly Vue_ViewScript_EditAi_0274 = '0274';
+  /**
+   * Vue_详细信息AiEx_TS
+   **/
+  static readonly Vue_ViewScript_DetailAiEx_TS_0275 = '0275';
+  /**
+   * Vue_详细信息Ai_TS
+   **/
+  static readonly Vue_ViewScript_DetailAi_TS_0276 = '0276';
+  /**
+   * Vue_详细信息HAi
+   **/
+  static readonly Vue_ViewScript_DetailAi_0277 = '0277';
 }

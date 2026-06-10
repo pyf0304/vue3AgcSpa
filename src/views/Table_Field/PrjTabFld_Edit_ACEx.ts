@@ -393,20 +393,36 @@ export class PrjTabFld_Edit_ACEx extends PrjTabFld_Edit {
     const strThisFuncName = this.SetEventFunc.name;
     // 在此处放置用户代码以初始化页面
     try {
-      const ddlFieldTypeId: HTMLInputElement = <HTMLInputElement>(
-        document.getElementById('ddlFieldTypeId')
-      );
-      ddlFieldTypeId.addEventListener('change', (e) => {
-        console.log(e);
-        this.ddlFieldTypeId_OnChange();
-      });
-      const ddlDataTypeId: HTMLInputElement = <HTMLInputElement>(
-        document.getElementById('ddlDataTypeId')
-      );
-      ddlDataTypeId.addEventListener('change', (e) => {
-        console.log(e);
-        this.ddlDataTypeId_OnChange();
-      });
+      type TInputWithHandlers = HTMLInputElement & {
+        __onPrjTabFldFieldTypeChange?: EventListener;
+        __onPrjTabFldDataTypeChange?: EventListener;
+      };
+
+      const ddlFieldTypeId = document.getElementById('ddlFieldTypeId') as TInputWithHandlers | null;
+      if (ddlFieldTypeId != null) {
+        if (ddlFieldTypeId.__onPrjTabFldFieldTypeChange != undefined) {
+          ddlFieldTypeId.removeEventListener('change', ddlFieldTypeId.__onPrjTabFldFieldTypeChange);
+        }
+        const onFieldTypeChange: EventListener = (e: Event) => {
+          console.log(e);
+          this.ddlFieldTypeId_OnChange();
+        };
+        ddlFieldTypeId.__onPrjTabFldFieldTypeChange = onFieldTypeChange;
+        ddlFieldTypeId.addEventListener('change', onFieldTypeChange);
+      }
+
+      const ddlDataTypeId = document.getElementById('ddlDataTypeId') as TInputWithHandlers | null;
+      if (ddlDataTypeId != null) {
+        if (ddlDataTypeId.__onPrjTabFldDataTypeChange != undefined) {
+          ddlDataTypeId.removeEventListener('change', ddlDataTypeId.__onPrjTabFldDataTypeChange);
+        }
+        const onDataTypeChange: EventListener = (e: Event) => {
+          console.log(e);
+          this.ddlDataTypeId_OnChange();
+        };
+        ddlDataTypeId.__onPrjTabFldDataTypeChange = onDataTypeChange;
+        ddlDataTypeId.addEventListener('change', onDataTypeChange);
+      }
     } catch (e: any) {
       const strMsg = Format(
         '页面启动不成功,{0}.(in {1}.{2})',
@@ -432,12 +448,21 @@ export class PrjTabFld_Edit_ACEx extends PrjTabFld_Edit {
    * 字段类型Id (Used In Clear())
    **/
   public set fieldTypeId(value: string) {
+    if (refPrjTabFld_Edit.value != null) {
+      refPrjTabFld_Edit.value.fieldTypeId = value;
+      return;
+    }
     SetSelectValueByIdInDivObj(divVarSet.refDivEdit, 'ddlFieldTypeId', value);
   }
   /**
    * 字段类型Id (Used In PutDataToClass())
    **/
   public get fieldTypeId(): string {
+    if (refPrjTabFld_Edit.value != null) {
+      const strVmValue = refPrjTabFld_Edit.value.fieldTypeId;
+      if (strVmValue == undefined || strVmValue == '0') return '';
+      return strVmValue;
+    }
     const strValue = GetSelectValueInDivObj(divVarSet.refDivEdit, 'ddlFieldTypeId');
     if (strValue == undefined) return '';
     else if (strValue == '0') return '';
@@ -479,12 +504,21 @@ export class PrjTabFld_Edit_ACEx extends PrjTabFld_Edit {
    * 字段操作类型Id (Used In Clear())
    **/
   public set fldOpTypeId(value: string) {
+    if (refPrjTabFld_Edit.value != null) {
+      refPrjTabFld_Edit.value.fldOpTypeId = value;
+      return;
+    }
     SetSelectValueByIdInDivObj(divVarSet.refDivEdit, 'ddlFldOpTypeId', value);
   }
   /**
    * 字段操作类型Id (Used In PutDataToClass())
    **/
   public get fldOpTypeId(): string {
+    if (refPrjTabFld_Edit.value != null) {
+      const strVmValue = refPrjTabFld_Edit.value.fldOpTypeId;
+      if (strVmValue == undefined || strVmValue == '0') return '';
+      return strVmValue;
+    }
     const strValue = GetSelectValueInDivObj(divVarSet.refDivEdit, 'ddlFldOpTypeId');
     if (strValue == undefined) return '';
     else if (strValue == '0') return '';
@@ -626,17 +660,24 @@ export class PrjTabFld_Edit_ACEx extends PrjTabFld_Edit {
    **/
   public Clear() {
     // ClearSelectValueByIdInDivObj(divVarSet.refDivEdit, 'ddlFldId');
-    ClearSelectValueByIdInDivObj(divVarSet.refDivEdit, 'ddlFieldTypeId');
-    ClearSelectValueByIdInDivObj(divVarSet.refDivEdit, 'ddlPrimaryTypeId');
-    refPrjTabFld_Edit.value.isTabNullable = false;
-    refPrjTabFld_Edit.value.isTabForeignKey = false;
-    refPrjTabFld_Edit.value.isGeneProp = false;
-    ClearSelectValueByIdInDivObj(divVarSet.refDivEdit, 'ddlForeignKeyTabId');
-    ClearSelectValueByIdInDivObj(divVarSet.refDivEdit, 'ddlFldOpTypeId');
-    refPrjTabFld_Edit.value.sequenceNumber = 0;
-    refPrjTabFld_Edit.value.isParentObj = false;
-    // this.memoInTab = '';
-    refPrjTabFld_Edit.value.memo = '';
+    if (refPrjTabFld_Edit.value != null) {
+      refPrjTabFld_Edit.value.fieldTypeId = '0';
+      refPrjTabFld_Edit.value.primaryTypeId = '0';
+      refPrjTabFld_Edit.value.isTabNullable = false;
+      refPrjTabFld_Edit.value.isTabForeignKey = false;
+      refPrjTabFld_Edit.value.isGeneProp = false;
+      refPrjTabFld_Edit.value.foreignKeyTabId = '0';
+      refPrjTabFld_Edit.value.fldOpTypeId = '0';
+      refPrjTabFld_Edit.value.sequenceNumber = 0;
+      refPrjTabFld_Edit.value.isParentObj = false;
+      // this.memoInTab = '';
+      refPrjTabFld_Edit.value.memo = '';
+    } else {
+      ClearSelectValueByIdInDivObj(divVarSet.refDivEdit, 'ddlFieldTypeId');
+      ClearSelectValueByIdInDivObj(divVarSet.refDivEdit, 'ddlPrimaryTypeId');
+      ClearSelectValueByIdInDivObj(divVarSet.refDivEdit, 'ddlForeignKeyTabId');
+      ClearSelectValueByIdInDivObj(divVarSet.refDivEdit, 'ddlFldOpTypeId');
+    }
     // ClearSelectValueByIdInDivObj(divVarSet.refDivEdit, 'ddlCtlTypeIdDu');
     // ClearSelectValueByIdInDivObj(divVarSet.refDivEdit, 'ddlFldDispUnitStyleId');
   }

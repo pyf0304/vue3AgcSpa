@@ -307,12 +307,7 @@
     vFieldTab_Sim_GetObjLstCache,
   } from '@/ts/L3ForWApi/Table_Field/clsvFieldTab_SimWApi';
   import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
-  import {
-    HideTrInDivObj,
-    SetCheckBoxValueByIdInDivObj,
-    SetSelectValueByIdInDivObj,
-    ShowTrInDivObj,
-  } from '@/ts/PubFun/clsCommFunc4Ctrl';
+  import { HideTrInDivObj, ShowTrInDivObj } from '@/ts/PubFun/clsCommFunc4Ctrl';
 
   import { DataTypeAbbr_BindDdl_DataTypeIdInDivCache } from '@/ts/L3ForWApi/SysPara/clsDataTypeAbbrWApi';
   import { PrjTabFld_Edit_ACEx } from '@/views/Table_Field/PrjTabFld_Edit_ACEx';
@@ -550,7 +545,7 @@
             case '确认添加':
               //这是一个单表的插入的代码,由于逻辑层太简单,
               //就把逻辑层合并到控制层,
-              if (['02', '03', '06'].indexOf(clsPrjTabFldEN.PrimaryTypeId) > -1) {
+              if (['02', '03', '06'].indexOf(clsPrjTabFldEN._PrimaryTypeId) > -1) {
                 const returnKeyId = await objPage_Edit.value.AddNewRecordWithReturnKeySave();
                 if (returnKeyId != 0) {
                   hideDialog();
@@ -785,34 +780,26 @@
         if (data.fldId == '') {
           PrjTabFld_Edit_ACEx.IsNewFieldTab = true;
           PrjTabFld_Edit_ACEx.FldName = data.fldName;
+          this.fieldTypeId = enumFieldType.NormalField_01;
+          this.isGeneProp = true;
+          this.fldOpTypeId = enumFldOperationType.ReadWrite_0001;
           //说明是新字段
           // HideTrInDivObj(divEdit, '');
           ShowTrInDivObj(divEdit, 'trCaption');
           ShowTrInDivObj(divEdit, 'trDataTypeId');
           ShowTrInDivObj(divEdit, 'trFldLength');
           ShowTrInDivObj(divEdit, 'trFldPrecision');
-          SetSelectValueByIdInDivObj(divEdit, 'ddlFieldTypeId', enumFieldType.NormalField_01);
-          SetCheckBoxValueByIdInDivObj(divEdit, 'chkIsGeneProp', true);
-          SetSelectValueByIdInDivObj(
-            divEdit,
-            'ddlFldOpTypeId',
-            enumFldOperationType.ReadWrite_0001,
-          );
           await DataTypeAbbr_BindDdl_DataTypeIdInDivCache(divEdit, 'ddlDataTypeId'); //
         } else {
           PrjTabFld_Edit_ACEx.FldId = data.fldId;
           PrjTabFld_Edit_ACEx.IsNewFieldTab = false;
+          this.fieldTypeId = enumFieldType.NormalField_01;
+          this.isGeneProp = true;
+          this.fldOpTypeId = enumFldOperationType.ReadWrite_0001;
           HideTrInDivObj(divEdit, 'trCaption');
           HideTrInDivObj(divEdit, 'trDataTypeId');
           HideTrInDivObj(divEdit, 'trFldLength');
           HideTrInDivObj(divEdit, 'trFldPrecision');
-          SetSelectValueByIdInDivObj(divEdit, 'ddlFieldTypeId', enumFieldType.NormalField_01);
-          SetCheckBoxValueByIdInDivObj(divEdit, 'chkIsGeneProp', true);
-          SetSelectValueByIdInDivObj(
-            divEdit,
-            'ddlFldOpTypeId',
-            enumFldOperationType.ReadWrite_0001,
-          );
         }
       },
     },

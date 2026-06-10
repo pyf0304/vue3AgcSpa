@@ -667,7 +667,7 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
       let strCode_VueView = '';
       let strCode_VueBack = '';
       if (IsNullOrEmpty(strViewId) == false) {
-        strCodeTypeId = enumCodeType.Vue_ViewScript_TS_0253;
+        strCodeTypeId = enumCodeType.Vue_ViewScript_0253;
         intAppId = enumApplicationType.VueAppInCore_TS_30;
         strCode_VueView = await TabFeatureCRUD_EditEx_AdjustOrderNum.GeneCode4Feature(
           strTabId,
@@ -705,7 +705,7 @@ export class TabFeatureCRUD_EditEx_AdjustOrderNum extends TabFeatureCRUD impleme
         },
         {
           title: '前端功能区(Vue)',
-          codeTypeId: enumCodeType.Vue_ViewScript_TS_0253,
+          codeTypeId: enumCodeType.Vue_ViewScript_0253,
           applicationTypeId: enumApplicationType.VueAppInCore_TS_30,
           codeText: strCode_VueView,
         },

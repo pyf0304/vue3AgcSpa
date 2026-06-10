@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { vCodeType_Sim_GetObjByCodeTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
 import { UserCodePath_GetObjLstCache } from '@/ts/L3ForWApi/SystemSet/clsUserCodePathWApi';
-import { UserCodePathEx_GetUserGCCodePathWithBackup } from '@/ts/L3ForWApiEx/SystemSet/clsUserCodePathExWApi';
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
 import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
+import { useUserCodeRootPathStore } from '@/store/modules/userCodeRootPath';
 
 const LOCAL_AGENT_BASE_URL = import.meta.env.DEV ? '/agent-local' : 'http://127.0.0.1:9527';
 const MACHINE_NAME_API_URL = `${LOCAL_AGENT_BASE_URL}/api/agent/machine-name`;
@@ -14,6 +14,7 @@ const AGENT_LOCAL_TOKEN_ENV = ((import.meta as any)?.env?.VITE_AGENT_LOCAL_TOKEN
 const AGENT_LOCAL_TOKEN =
   IsNullOrEmpty(AGENT_LOCAL_TOKEN_ENV) == true ? 'change-me' : AGENT_LOCAL_TOKEN_ENV.trim();
 const MACHINE_NAME_API_HEADERS = { 'X-AGENT-TOKEN': AGENT_LOCAL_TOKEN };
+const MACHINE_NAME_CACHE_KEY = 'agcMachineName';
 const LOCAL_ACCESS_LOG_KEY = 'agcLocalFileAccessLogs';
 const LOCAL_ACCESS_LOG_MAX_COUNT = 200;
 const LOCAL_ACCESS_LOG_FILE_PATH = 'log/agc-local-access.log';
@@ -324,7 +325,16 @@ function pickMachineNameFromUnknown(value: unknown): string {
 }
 
 // 调用本地 agent 获取机器名。
-export async function getMachineNameFromLocalAgent(): Promise<string> {
+export async function getMachineNameFromLocalAgent(bolForceRefresh = false): Promise<string> {
+  const strCachedMachineName = (localStorage.getItem(MACHINE_NAME_CACHE_KEY) ?? '').trim();
+  if (bolForceRefresh == false && IsNullOrEmpty(strCachedMachineName) == false) {
+    logLocalAccess('info', 'getMachineNameFromLocalAgent', 'result', {
+      machineName: strCachedMachineName,
+      fromCache: true,
+    });
+    return strCachedMachineName;
+  }
+
   logLocalAccess('info', 'getMachineNameFromLocalAgent', 'call', {
     url: MACHINE_NAME_API_URL,
   });
@@ -332,10 +342,25 @@ export async function getMachineNameFromLocalAgent(): Promise<string> {
     headers: MACHINE_NAME_API_HEADERS,
   });
   const strMachineName = pickMachineNameFromUnknown(response.data);
+  if (IsNullOrEmpty(strMachineName) == false) {
+    localStorage.setItem(MACHINE_NAME_CACHE_KEY, strMachineName);
+  }
   logLocalAccess('info', 'getMachineNameFromLocalAgent', 'result', {
     machineName: strMachineName,
+    fromCache: false,
   });
   return strMachineName;
+}
+
+// 清理机器名缓存。
+export function clearMachineNameCache(): void {
+  localStorage.removeItem(MACHINE_NAME_CACHE_KEY);
+}
+
+// 强制刷新机器名（跳过缓存，重新请求本地 agent）。
+export async function refreshMachineNameFromLocalAgent(): Promise<string> {
+  clearMachineNameCache();
+  return await getMachineNameFromLocalAgent(true);
 }
 
 // 兼容旧调用方式的机器名接口。
@@ -792,7 +817,7 @@ async function getLocalCodeRootPath(
       IsNullOrEmpty(strPrjId) == false &&
       IsNullOrEmpty(strCmPrjId) == false
     ) {
-      const objCodePath = await UserCodePathEx_GetUserGCCodePathWithBackup(
+      const objCodePath = await useUserCodeRootPathStore().getOrFetchCodePath(
         strUserId,
         strMachineName,
         strPrjId,

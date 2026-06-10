@@ -29,7 +29,7 @@ import {
 import { Format } from '@/ts/PubFun/clsString';
 import Projects_EditEx from '@/views/PrjManage/Projects_EditEx';
 import { ProjectDatabaseRel_GetObjLstCache } from '@/ts/L3ForWApi/PrjManage/clsProjectDatabaseRelWApi';
-import { PrjDataBase_GetObjLstCache } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
+import { PrjDataBase_GetObjLstAsync } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
 
 /** ProjectsCRUDEx 的摘要说明。其中Q代表查询,U代表修改
  * (AutoGCLib.Vue_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -151,7 +151,8 @@ export default class ProjectsCRUDEx extends ProjectsCRUD implements IShowList {
 
     // 批量预取，避免逐行请求
     const relLst = await ProjectDatabaseRel_GetObjLstCache();
-    const dbLst = await PrjDataBase_GetObjLstCache();
+
+    const dbLst = await PrjDataBase_GetObjLstAsync('1=1');
 
     // prjDataBaseId -> prjDataBaseName
     const dbNameMap = new Map<string, string>();

@@ -25,11 +25,9 @@
     UserDefaPrjDataBaseEx_SetPrjDataBaseIdByPrjIdAndUserId,
   } from '@/ts/L3ForWApiEx/SystemSet/clsUserDefaPrjDataBaseExWApi';
   import { clsPubSessionStorage } from '@/ts/PubFun/clsPubSessionStorage';
-  import {
-    PrjDataBase_GetNameByKeyCache,
-    PrjDataBase_GetObjByKeyCache,
-  } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
+
   import { Projects_GetObjByPrjIdCache } from '@/ts/L3ForWApi/PrjManage/clsProjectsWApi';
+  import { usePrjDataBaseStore } from '@/store/modules/PrjDataBase';
 
   interface Option {
     value: any;
@@ -111,13 +109,14 @@
   async function GetDefaPrjDataBaseId() {
     const objProject = await Projects_GetObjByPrjIdCache(clsPrivateSessionStorage.currSelPrjId);
     if (objProject == null) return;
+    const PrjDataBaseStore = usePrjDataBaseStore();
     const objUserDefaPrjDataBaseEN = await UserDefaPrjDataBaseEx_GetObjByPrjIdAndUserId(
       clsPrivateSessionStorage.currSelPrjId,
       clsPrivateSessionStorage.userId,
     );
 
     if (objUserDefaPrjDataBaseEN != null) {
-      const strPrjDataBaseName = await PrjDataBase_GetNameByKeyCache({
+      const strPrjDataBaseName = await PrjDataBaseStore.getNameByKey({
         prjDataBaseId: objUserDefaPrjDataBaseEN.prjDataBaseId,
       });
       clsPrivateSessionStorage.currPrjDataBaseId = objUserDefaPrjDataBaseEN.prjDataBaseId;
@@ -126,7 +125,7 @@
       clsPrivateSessionStorage.currPrjDataBaseId = options.value[0].value;
       clsPrivateSessionStorage.prjDataBaseName = options.value[0].label;
     }
-    const objPrjDataBase = await PrjDataBase_GetObjByKeyCache({
+    const objPrjDataBase = await PrjDataBaseStore.getObjByKey({
       prjDataBaseId: clsPrivateSessionStorage.currPrjDataBaseId,
     });
     if (objPrjDataBase == null) return;

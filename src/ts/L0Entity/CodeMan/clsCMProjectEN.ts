@@ -2,8 +2,8 @@
  * 类名:clsCMProjectEN
  * 表名:CMProject(00050512)
  * 版本:2026.05.30(服务器:WIN-SRV103-116)
- * 日期:2026/06/01 17:04:21
- * 生成者:pyf2
+ * 日期:2026/06/10 23:46:59
+ * 生成者:pyf
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
  * 相关数据库:109.244.40.104,8433AGC_CS12
@@ -34,12 +34,13 @@ export class clsCMProjectEN extends clsGeneralTab {
   public static readonly _WhereFormat = ''; //条件格式串
   public static readonly _CurrTabName: string = 'CMProject'; //当前表名,与该类相关的表名
   public static readonly _KeyFldName: string = 'CmPrjId'; //当前表中的关键字名称,与该类相关的表中关键字名
-  public static readonly _AttributeCount = 14;
+  public static readonly _AttributeCount = 15;
   public static readonly _AttributeName = [
     'cmPrjId',
     'cmPrjName',
     'prjId',
     'applicationTypeId',
+    'userCodeRoot',
     'functionTemplateId',
     'vueDesignSysId',
     'isFstLcase',
@@ -69,6 +70,7 @@ export class clsCMProjectEN extends clsGeneralTab {
   private mstrCmPrjName = ''; //CM工程名
   private mstrPrjId = ''; //工程Id
   private mintApplicationTypeId = 0; //应用程序类型ID
+  private mstrUserCodeRoot = ''; //用户代码根
   private mstrFunctionTemplateId = ''; //函数模板Id
   private mstrVueDesignSysId = ''; //Vue控件设计体系Id
   private mbolIsFstLcase = false; //是否首字母小写
@@ -124,6 +126,18 @@ export class clsCMProjectEN extends clsGeneralTab {
     if (value != undefined) {
       this.applicationTypeId = value;
       this.hmProperty['applicationTypeId'] = true;
+      this.sfUpdFldSetStr = this.updFldString;
+    }
+  }
+
+  /**
+   * 用户代码根(说明:;字段类型:varchar;字段长度:50;是否可空:False)
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_ClsProperty)
+   */
+  public SetUserCodeRoot(value: string) {
+    if (value != undefined) {
+      this.userCodeRoot = value;
+      this.hmProperty['userCodeRoot'] = true;
       this.sfUpdFldSetStr = this.updFldString;
     }
   }
@@ -265,6 +279,8 @@ export class clsCMProjectEN extends clsGeneralTab {
         return this.prjId;
       case clsCMProjectEN.con_ApplicationTypeId:
         return this.applicationTypeId;
+      case clsCMProjectEN.con_UserCodeRoot:
+        return this.userCodeRoot;
       case clsCMProjectEN.con_FunctionTemplateId:
         return this.functionTemplateId;
       case clsCMProjectEN.con_VueDesignSysId:
@@ -322,6 +338,10 @@ export class clsCMProjectEN extends clsGeneralTab {
       case clsCMProjectEN.con_ApplicationTypeId:
         this.applicationTypeId = Number(strValue);
         this.hmProperty['applicationTypeId'] = true;
+        break;
+      case clsCMProjectEN.con_UserCodeRoot:
+        this.userCodeRoot = strValue;
+        this.hmProperty['userCodeRoot'] = true;
         break;
       case clsCMProjectEN.con_FunctionTemplateId:
         this.functionTemplateId = strValue;
@@ -384,6 +404,7 @@ export class clsCMProjectEN extends clsGeneralTab {
   public cmPrjName = ''; //CM工程名
   public prjId = ''; //工程Id
   public applicationTypeId = 0; //应用程序类型ID
+  public userCodeRoot = ''; //用户代码根
   public functionTemplateId = ''; //函数模板Id
   public vueDesignSysId = ''; //Vue控件设计体系Id
   public isFstLcase = false; //是否首字母小写
@@ -418,6 +439,12 @@ export class clsCMProjectEN extends clsGeneralTab {
    * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
    */
   public static readonly con_ApplicationTypeId = 'applicationTypeId'; //应用程序类型ID
+
+  /**
+   * 常量:"UserCodeRoot"
+   * (AutoGCLib.EntityLayer4TypeScript:Gen_EN_PropertyNameConst)
+   */
+  public static readonly con_UserCodeRoot = 'userCodeRoot'; //用户代码根
 
   /**
    * 常量:"FunctionTemplateId"

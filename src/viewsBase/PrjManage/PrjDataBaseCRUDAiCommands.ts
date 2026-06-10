@@ -1,4 +1,5 @@
 ﻿import { TableCommandSpec } from '@/viewsBase/common/TableSpecCommand';
+import { UseState_GetArrUseState } from '@/ts/L3ForWApi/SysPara/clsUseStateWApi';
 
 /** Ai 场景下可用的命令标识。 */
 export type PrjDataBaseCommandIdAi =
@@ -6,9 +7,11 @@ export type PrjDataBaseCommandIdAi =
   | 'create'
   | 'update'
   | 'delete'
+  | 'export'
   | 'detail'
   | 'export'
-  | 'setUseState';
+  | 'setUseState'
+;
 
 /** Ai 命令配置：复用通用表命令结构并扩展辅助控件信息。 */
 export type PrjDataBaseCommandSpecAi = TableCommandSpec<PrjDataBaseCommandIdAi> & {
@@ -55,6 +58,13 @@ export const PRJ_DATA_BASE_COMMAND_SPECS_AI: Array<PrjDataBaseCommandSpecAi> = [
     btnClass: 'btn btn-outline-info btn-sm text-nowrap',
   },
   {
+    id: 'export',
+    region: 'feature',
+    text: '导出Excel',
+    elementId: 'btnExportExcel_Ai',
+    btnClass: 'btn btn-outline-info btn-sm text-nowrap',
+  },
+  {
     id: 'detail',
     region: 'feature',
     text: '详细信息',
@@ -75,12 +85,12 @@ export const PRJ_DATA_BASE_COMMAND_SPECS_AI: Array<PrjDataBaseCommandSpecAi> = [
     elementId: 'btnSetUseState_Ai',
     btnClass: 'btn btn-outline-info btn-sm text-nowrap',
     needAuxControl: true,
-    auxControlId: 'ddlUseStateId_SetFldValue',
+    auxControlId: 'ddlUseState_SetFldValue',
     auxControlType: 'select',
-    auxControlOptionsKey: 'UseState_Static',
+    auxControlOptionsKey: 'useState',
     fieldName: 'UseStateId',
     fieldNameCamel: 'useStateId',
-  },
+  }
 ];
 
 /** 获取查询区命令。 */
@@ -93,4 +103,11 @@ export function getFeatureCommandsAi(): Array<PrjDataBaseCommandSpecAi> {
   return PRJ_DATA_BASE_COMMAND_SPECS_AI.filter(
     (x) => x.region === 'feature' && x.visible !== false,
   );
+}
+
+export async function loadFeatureOptionsAi() {
+    const [arrUseState] = await Promise.all([
+        UseState_GetArrUseState()
+    ]);
+    return {arrUseState};
 }

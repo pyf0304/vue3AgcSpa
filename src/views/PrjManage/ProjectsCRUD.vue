@@ -266,13 +266,12 @@
     ProjectDatabaseRel_DelRecordAsync,
     ProjectDatabaseRel_ReFreshCache,
   } from '@/ts/L3ForWApi/PrjManage/clsProjectDatabaseRelWApi';
-  import {
-    PrjDataBase_GetObjLstCache,
-    PrjDataBase_GetNameByKeyCache,
-  } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
+
   import { UseState_BindDdl_UseStateIdInDivCache } from '@/ts/L3ForWApi/SysPara/clsUseStateWApi';
   import { clsProjectDatabaseRelEN } from '@/ts/L0Entity/PrjManage/clsProjectDatabaseRelEN';
   import { Format } from '@/ts/PubFun/clsString';
+  import { usePrjDataBaseStore } from '@/store/modules/PrjDataBase';
+  import { PrjDataBase_GetObjLstAsync } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
 
   export default defineComponent({
     name: 'ProjectsCRUD',
@@ -333,6 +332,7 @@
 
       async function loadRelatedDbs(prjId: string) {
         prjDbLoading.value = true;
+        const PrjDataBaseStore = usePrjDataBaseStore();
         try {
           const strWhere = Format(" PrjId = '{0}'", prjId);
           const lst = await ProjectDatabaseRel_GetObjLstAsync(strWhere);
@@ -343,7 +343,7 @@
             memo: string;
           }> = [];
           for (const item of lst) {
-            const dbName = await PrjDataBase_GetNameByKeyCache({
+            const dbName = await PrjDataBaseStore.getNameByKey({
               prjDataBaseId: item.prjDataBaseId,
             });
             result.push({
@@ -363,7 +363,7 @@
 
       async function loadAllDbs() {
         try {
-          const lst = await PrjDataBase_GetObjLstCache();
+          const lst = await PrjDataBase_GetObjLstAsync('1=1');
           allDbs.value = lst.map((db) => ({
             prjDataBaseId: db.prjDataBaseId,
             prjDataBaseName: db.prjDataBaseName || db.prjDataBaseId,

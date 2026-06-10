@@ -97,6 +97,16 @@
               </tr>
               <tr>
                 <td class="text-right">
+                  <span id="spnIsShare_d" CssClass="col-form-label text-right">是否共享</span>
+                </td>
+                <td class="text-left">
+                  <label id="lblIsShare_d" class="text-primary" style="width: 350px">
+                    {{ isShare }}
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-right">
                   <span id="spnIsNeedSetExportFld_d" CssClass="col-form-label text-right"
                     >设置导出字段</span
                   >
@@ -254,6 +264,16 @@
             </tr>
             <tr>
               <td class="text-right">
+                <span id="spnIsShare_d" CssClass="col-form-label text-right">是否共享</span>
+              </td>
+              <td class="text-left">
+                <label id="lblIsShare_d" class="text-primary" style="width: 350px">
+                  {{ isShare }}
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td class="text-right">
                 <span id="spnIsNeedSetExportFld_d" CssClass="col-form-label text-right"
                   >设置导出字段</span
                 >
@@ -344,6 +364,7 @@
       const filePath = ref('');
       const defaMenuName = ref('');
       const dataBaseName = ref('');
+      const isShare = ref('否');
       const isNeedSetExportFld = ref('0');
       const userId = ref('');
       const viewDetail = ref('');
@@ -365,6 +386,7 @@
         filePath.value = pobjViewInfoENEx.filePath; // 文件路径
         defaMenuName.value = pobjViewInfoENEx.defaMenuName; // 缺省菜单名
         dataBaseName.value = pobjViewInfoENEx.dataBaseName; // 数据库名
+        isShare.value = pobjViewInfoENEx.isShare ? '是' : '否'; // 是否共享
         isNeedSetExportFld.value =
           pobjViewInfoENEx.isNeedSetExportFld !== null
             ? pobjViewInfoENEx.isNeedSetExportFld.toString()
@@ -436,6 +458,7 @@
         filePath,
         defaMenuName,
         dataBaseName,
+        isShare,
         isNeedSetExportFld,
         userId,
         viewDetail,

@@ -272,6 +272,28 @@
             </div>
 
             <div>
+              <div class="mb-2">
+                <div>
+                  <span class="text-muted">应用类型:</span>
+                  <span id="lblCurrAppType_DetailRegion">-</span>
+                </div>
+                <div>
+                  <span class="text-muted">前端工程:</span>
+                  <span id="lblCurrFrontend_DetailRegion">-</span>
+                </div>
+                <div>
+                  <span class="text-muted">当前机器:</span>
+                  <span id="lblCurrMachine_DetailRegion">-</span>
+                </div>
+                <div>
+                  <span class="text-muted">区域类型:</span>
+                  <span id="lblCurrRegionType_DetailRegion">详细区(0006)</span>
+                </div>
+                <div>
+                  <span class="text-muted">生成进度:</span>
+                  <span id="lblGeneProgress_DetailRegion">未开始</span>
+                </div>
+              </div>
               <div id="divCodeTypeLst"></div>
               <div>
                 <span id="lblResult" class="text-warning"></span><br />
@@ -410,6 +432,13 @@
         const objPage = new DetailRegionFldsCRUDEx();
 
         objPage.PageLoadCache();
+        setTimeout(() => {
+          try {
+            objPage.btnCodeGene_Click();
+          } catch (e) {
+            console.error('DetailRegionFldsCRUD.btnCodeGene_Click', e);
+          }
+        }, 200);
         //this.myonload();
       });
       function GetPropValue(strPropName: string): any {

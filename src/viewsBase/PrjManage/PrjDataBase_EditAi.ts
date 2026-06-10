@@ -1,7 +1,7 @@
 ﻿/**
  * 类名:PrjDataBase_EditAi(界面:PrjDataBaseCRUD,00050346)
  * 表名:PrjDataBase
- * 版本:2026.05.27
+ * 版本:2026.06.10
  * 生成者:
  * 模块中文名:PrjManage
  * 编程语言:TypeScript
@@ -12,7 +12,6 @@ import {
   PrjDataBase_GetMaxStrIdAsync,
   PrjDataBase_AddNewRecordWithMaxIdAsync,
   PrjDataBase_CheckPropertyNew,
-  PrjDataBase_ReFreshCache,
   PrjDataBase_IsExistAsync,
   PrjDataBase_GetObjByKeyAsync,
   PrjDataBase_CheckProperty4Update,
@@ -20,9 +19,8 @@ import {
   PrjDataBase_EditRecordExAsync,
 } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
 
-import { clsPrjDataBaseEN, PrjDataBaseKey } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
-import {
-  PrjDataBase_DeleteKeyIdCache,
+import { clsPrjDataBaseEN,  PrjDataBaseKey, } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
+import {  
   divVarSet,
   refPrjDataBase_Edit,
 } from '@/views/PrjManage/PrjDataBaseVueShare';
@@ -42,7 +40,7 @@ export abstract class PrjDataBase_EditAi {
   public static times4TestShowDialog = 0;
   public opType = '';
   // 🔥 单关键字段
-  public keyId = { prjDataBaseId: '' }; // 🔥 字符串型关键字
+  public keyId = { prjDataBaseId: '' };  // 🔥 字符串型关键字
   public isShowMsg = true;
   public tag = '';
   public static strPageDispModeId = '01';
@@ -184,13 +182,13 @@ export abstract class PrjDataBase_EditAi {
     }
   }
 
-  /** 确认提交按钮点击事件 */
+    /** 确认提交按钮点击事件 */
   public async btnSubmit_Click() {
     const strThisFuncName = this.btnSubmit_Click.name;
     const strCommandText: string = this.btnSubmitPrjDataBase;
     try {
       let returnBool = false;
-      let returnKeyId = '';
+      let returnKeyId: string = '';
       let strInfo = '';
       let strMsg = '';
       switch (strCommandText) {
@@ -276,7 +274,7 @@ export abstract class PrjDataBase_EditAi {
       alert(strMsg);
     }
   }
-
+  
   /** 为插入记录做准备工作（使用最大值ID） */
   public async AddNewRecordWithMaxId() {
     const strThisFuncName = this.AddNewRecordWithMaxId.name;
@@ -301,6 +299,8 @@ export abstract class PrjDataBase_EditAi {
       alert(strMsg);
     }
   }
+
+
 
   /** 添加新记录,保存函数
    * (AutoGCLib.Vue_ViewScript_EditAi_TS4TypeScript:Gen_Vue_Ts_AddNewRecordSave)
@@ -344,7 +344,8 @@ export abstract class PrjDataBase_EditAi {
         returnBool = true;
       }
       if (returnBool == true) {
-        PrjDataBase_ReFreshCache();
+        // PrjDataBase_ReFreshCache(); // 🔥 当前表未使用 localStorage/sessionStorage 缓存，无需刷新
+
         const strInfo = `添加[数据库对象(PrjDataBase)]记录成功!`;
         if (this.isShowMsg == true) alert(strInfo);
       } else {
@@ -364,8 +365,11 @@ export abstract class PrjDataBase_EditAi {
       return false;
     }
   }
+    
 
-  /** 添加新记录,由后台自动获取最大值的关键字。保存函数
+
+
+  /** 添加新记录,由后台自动获取最大值的关键字。保存函数 
    * (AutoGCLib.Vue_ViewScript_EditAi_TS4TypeScript:Gen_Vue_Ts_AddNewRecordWithReturnKeySave)
    **/
   public async AddNewRecordWithReturnKeySave(): Promise<string> {
@@ -401,7 +405,7 @@ export abstract class PrjDataBase_EditAi {
       const responseKeyId = await PrjDataBase_AddNewRecordWithMaxIdAsync(objPrjDataBaseEN);
       const returnKeyId: string = responseKeyId;
       if (IsNullOrEmpty(returnKeyId) == false) {
-        PrjDataBase_ReFreshCache();
+        // PrjDataBase_ReFreshCache(); // 🔥 当前表未使用 localStorage/sessionStorage 缓存，无需刷新
         const strInfo = `添加[数据库对象(PrjDataBase)]记录成功!`;
         //显示信息框
         if (this.isShowMsg == true) alert(strInfo);
@@ -424,7 +428,8 @@ export abstract class PrjDataBase_EditAi {
     }
   }
 
-  /** 添加新记录,由后台自动获取最大值的关键字。保存函数
+
+  /** 添加新记录,由后台自动获取最大值的关键字。保存函数 
    * (AutoGCLib.Vue_ViewScript_EditAi_TS4TypeScript:Gen_Vue_Ts_AddNewRecordWithMaxIdSave)
    **/
   public async AddNewRecordWithMaxIdSave(): Promise<string> {
@@ -460,7 +465,8 @@ export abstract class PrjDataBase_EditAi {
       const responseKeyId = await PrjDataBase_AddNewRecordWithMaxIdAsync(objPrjDataBaseEN);
       const returnKeyId: string = responseKeyId;
       if (IsNullOrEmpty(returnKeyId) == false) {
-        PrjDataBase_ReFreshCache();
+        // PrjDataBase_ReFreshCache(); // 🔥 当前表未使用 localStorage/sessionStorage 缓存，无需刷新
+
         const strInfo = `添加[数据库对象(PrjDataBase)]记录成功!`;
         if (this.isShowMsg == true) alert(strInfo);
       } else {
@@ -481,13 +487,14 @@ export abstract class PrjDataBase_EditAi {
     }
   }
 
+
   /** 显示指定记录的数据 */
   public async ShowData(key: PrjDataBaseKey) {
     const strThisFuncName = this.ShowData.name;
     let objPrjDataBaseEN = new clsPrjDataBaseEN();
     try {
       const returnBool = await PrjDataBase_IsExistAsync(key);
-      if (returnBool == false) {
+       if (returnBool == false) {
         const strInfo = Format('关键字:[{0}] 的记录不存在!', key.prjDataBaseId);
         alert(strInfo);
         return;
@@ -559,6 +566,7 @@ export abstract class PrjDataBase_EditAi {
     }
   }
 
+  
   /** 修改记录保存 */
   public async UpdateRecordSave(): Promise<boolean> {
     const strThisFuncName = this.UpdateRecordSave.name;
@@ -586,8 +594,9 @@ export abstract class PrjDataBase_EditAi {
     try {
       const returnBool = await PrjDataBase_UpdateRecordAsync(objPrjDataBaseEN);
       if (returnBool == true) {
-        PrjDataBase_ReFreshCache();
-        PrjDataBase_DeleteKeyIdCache(this.keyId);
+        // PrjDataBase_ReFreshCache(); // 🔥 当前表未使用 localStorage/sessionStorage 缓存，无需刷新
+
+
       }
       return returnBool;
     } catch (e) {
@@ -602,7 +611,7 @@ export abstract class PrjDataBase_EditAi {
       return false;
     }
   }
-
+  
   /** 编辑记录，存在就修改，不存在就添加 */
   public async EditRecordExSave(): Promise<boolean> {
     const strThisFuncName = this.EditRecordExSave.name;
@@ -631,7 +640,7 @@ export abstract class PrjDataBase_EditAi {
     try {
       const returnBool = await PrjDataBase_EditRecordExAsync(objPrjDataBaseEN);
       if (returnBool == true) {
-        PrjDataBase_ReFreshCache();
+        // PrjDataBase_ReFreshCache(); // 🔥 当前表未使用 localStorage/sessionStorage 缓存，无需刷新
       }
       return returnBool;
     } catch (e) {
@@ -662,4 +671,6 @@ export abstract class PrjDataBase_EditAi {
   public set btnSubmitPrjDataBase(value: string) {
     refPrjDataBase_Edit.value.strSubmitButtonText = value;
   }
+
+ 
 }

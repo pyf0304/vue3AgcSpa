@@ -39,7 +39,7 @@ import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
 import { clsPubSessionStorage } from '@/ts/PubFun/clsPubSessionStorage';
 import { Format } from '@/ts/PubFun/clsString';
 import { UserDefaPrjDataBaseEx_GetObjByPrjIdAndUserId } from '@/ts/L3ForWApiEx/SystemSet/clsUserDefaPrjDataBaseExWApi';
-import { PrjDataBase_GetNameByKeyCache } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
+import { usePrjDataBaseStore } from '@/store/modules/PrjDataBase';
 
 /// <summary>
 /// WApiCollege_UT_TS 的摘要说明。其中Q代表查询,U代表修改
@@ -158,7 +158,7 @@ export class TabMainIndex {
     try {
       //const objUserLoginInfo = clsPubSessionStorage.UserLoginInfo;
       // const strUserId = clsPubLocalStorage.userId;
-
+      const PrjDataBaseStore = usePrjDataBaseStore();
       $('#lblUserName').html(clsPubLocalStorage.userName);
       $('#lblRoleName').html(clsPubLocalStorage.roleName);
       const objUserDefaPrjDataBaseEN = await UserDefaPrjDataBaseEx_GetObjByPrjIdAndUserId(
@@ -166,7 +166,7 @@ export class TabMainIndex {
         clsPubLocalStorage.userId,
       );
       if (objUserDefaPrjDataBaseEN != null) {
-        const strPrjDataBaseName = await PrjDataBase_GetNameByKeyCache({
+        const strPrjDataBaseName = await PrjDataBaseStore.getNameByKey({
           prjDataBaseId: objUserDefaPrjDataBaseEN.prjDataBaseId,
         });
         $('#lblCurrProject').html(

@@ -117,6 +117,19 @@
       }
       const activeViewIndex = ref(0);
 
+      const getEditRegionTabIndex = () => {
+        return tabs.findIndex((tab) => tab.liId === 'liEditRegion');
+      };
+
+      const shouldAutoSwitchToEditRegion = () => {
+        const strRouteName = String(route.name ?? '');
+        const strRoutePath = String(route.path ?? '');
+        return (
+          strRouteName === 'account-editViewRegion' ||
+          strRoutePath.indexOf('/account/editViewRegion') > -1
+        );
+      };
+
       const currentTabComponent = computed(() => {
         return tabs[activeViewIndex.value].component;
       });
@@ -137,9 +150,17 @@
         }
       }
       onMounted(() => {
-        const intActiveView = clsPrivateSessionStorage.activeViewIndex;
-        if (intActiveView > 0) {
-          activeViewIndex.value = intActiveView;
+        if (shouldAutoSwitchToEditRegion()) {
+          const intEditRegionTabIndex = getEditRegionTabIndex();
+          if (intEditRegionTabIndex > -1) {
+            activeViewIndex.value = intEditRegionTabIndex;
+            clsPrivateSessionStorage.activeViewIndex = intEditRegionTabIndex;
+          }
+        } else {
+          const intActiveView = clsPrivateSessionStorage.activeViewIndex;
+          if (intActiveView > 0) {
+            activeViewIndex.value = intActiveView;
+          }
         }
         ViewInfo_AllPropEx.divLayout = refDivLayout.value;
         PageLoad();

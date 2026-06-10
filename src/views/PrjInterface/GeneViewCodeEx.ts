@@ -39,14 +39,7 @@ import { clsPubVar4Web } from '@/ts/FunClass/clsPubVar4Web';
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
 import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
 import { vCodeType_Sim_GetObjByCodeTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
-import {
-  UserCodePrjMainPath_MachineNameEx_GetUserGCRootPathWithBackup,
-  UserCodePrjMainPath_MachineNameEx_SetUserGCRootPathWithBackup,
-} from '@/ts/L3ForWApiEx/SystemSet/clsUserCodePrjMainPath_MachineNameExWApi';
-import {
-  UserCodePathEx_GetUserGCCodePathWithBackup,
-  UserCodePathEx_SetUserGCCodePathWithBackup,
-} from '@/ts/L3ForWApiEx/SystemSet/clsUserCodePathExWApi';
+
 import { UserCodePath_GetObjLstCache } from '@/ts/L3ForWApi/SystemSet/clsUserCodePathWApi';
 import { AccessBindGvDefault, AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
 import {
@@ -59,6 +52,7 @@ import {
   tryWriteCodeToLocalFile,
 } from '@/ts/LocalFileAccess/LocalFileAccess';
 import { useviewInfoStore } from '@/store/modules/viewInfo';
+import { useUserCodeRootPathStore } from '@/store/modules/userCodeRootPath';
 import { viewInfo4GC } from '@/views/PrjInterface/GeneViewCodeVueShare';
 import { tabComponentRef, viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
 
@@ -257,7 +251,8 @@ export class GeneViewCodeEx implements IShowList {
         IsNullOrEmpty(strCmPrjId) == false &&
         intApplicationTypeId > 0
       ) {
-        const objCodePath = await UserCodePrjMainPath_MachineNameEx_GetUserGCRootPathWithBackup(
+        // 先查 store 缓存，命中直接返回；未命中则由 store 调接口并写入缓存
+        const objCodePath = await useUserCodeRootPathStore().getOrFetch(
           strUserId,
           strMachineName,
           strPrjId,
@@ -359,7 +354,8 @@ export class GeneViewCodeEx implements IShowList {
 
       const strCodePathBackup2 = strCodePathBackup.trim();
 
-      const objResult = await UserCodePrjMainPath_MachineNameEx_SetUserGCRootPathWithBackup({
+      // 通过 store 设置路径，成功后自动更新缓存，下次 Get 直接命中缓存
+      const objResult = await useUserCodeRootPathStore().setAndCache({
         strUserId,
         strMachineName,
         strPrjId,
@@ -398,7 +394,7 @@ export class GeneViewCodeEx implements IShowList {
     }
 
     try {
-      const objCodePath = await UserCodePathEx_GetUserGCCodePathWithBackup(
+      const objCodePath = await useUserCodeRootPathStore().getOrFetchCodePath(
         strUserId,
         strMachineName,
         strPrjId,
@@ -519,7 +515,7 @@ export class GeneViewCodeEx implements IShowList {
         codePathBackup: '',
       };
       try {
-        objCodePath = await UserCodePathEx_GetUserGCCodePathWithBackup(
+        objCodePath = await useUserCodeRootPathStore().getOrFetchCodePath(
           strUserId,
           strMachineName,
           strPrjId,
@@ -573,7 +569,8 @@ export class GeneViewCodeEx implements IShowList {
       });
       if (objDialogResult == null) return;
 
-      const objResult = await UserCodePathEx_SetUserGCCodePathWithBackup({
+      // 通过 store 设置代码类型路径，成功后自动更新缓存
+      const objResult = await useUserCodeRootPathStore().setAndCacheCodePath({
         strUserId,
         strMachineName,
         strPrjId,

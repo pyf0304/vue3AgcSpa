@@ -1,9 +1,9 @@
 ﻿/**
  * 类名:clsCodeTypeENEx
  * 表名:CodeType(00050203)
- * 版本:2026.04.19(服务器:WIN-SRV103-116)
- * 日期:2026/04/28 23:40:22
- * 生成者:pyf
+ * 版本:2026.05.30(服务器:WIN-SRV103-116)
+ * 日期:2026/06/10 00:04:56
+ * 生成者:pyf2
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
  * 相关数据库:109.244.40.104,8433AGC_CS12
@@ -48,6 +48,10 @@ export class clsCodeTypeENEx extends clsCodeTypeEN {
         return this.funcCount;
       case clsCodeTypeENEx.con_AppCount:
         return this.appCount;
+      case clsCodeTypeENEx.con_RegionTypeName:
+        return this.regionTypeName;
+      case clsCodeTypeENEx.con_RegionTypeSimName:
+        return this.regionTypeSimName;
       default:
         strValue = super.GetFldValue(strFldName);
         return strValue;
@@ -78,10 +82,24 @@ export class clsCodeTypeENEx extends clsCodeTypeEN {
    */
   public static readonly con_AppCount = 'appCount'; //应用数
 
+  /**
+   * 常量:"RegionTypeName"
+   * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
+   */
+  public static readonly con_RegionTypeName = 'regionTypeName'; //区域类型名称
+
+  /**
+   * 常量:"RegionTypeSimName"
+   * (AutoGCLib.EntityLayerEx4TypeScript:Gen_ENEx_PropertyNameConst)
+   */
+  public static readonly con_RegionTypeSimName = 'regionTypeSimName'; //区域类型简名
+
   public classNameFormatEx = ''; //类名格式
   public sqlDsTypeName = ''; //Sql数据源名
   public funcCount = 0; //函数数目
   public appCount = 0; //应用数
+  public regionTypeName = ''; //区域类型名称
+  public regionTypeSimName = ''; //区域类型简名
 
   /**
    * 判断一个字符串是否是类的属性

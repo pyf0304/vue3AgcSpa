@@ -1,5 +1,6 @@
 ﻿//import $ from "jquery";
 
+import { usePrjDataBaseStore } from '@/store/modules/PrjDataBase';
 import { clsUserPrjGrantEN } from '@/ts/L0Entity/AuthorityManage/clsUserPrjGrantEN';
 import { clsUserPrjGrantENEx } from '@/ts/L0Entity/AuthorityManage/clsUserPrjGrantENEx';
 import { clsQxRoleMenusENEx } from '@/ts/L0Entity/MenuManage_GP/clsQxRoleMenusENEx';
@@ -7,7 +8,7 @@ import { clsQxRoleMenusENEx } from '@/ts/L0Entity/MenuManage_GP/clsQxRoleMenusEN
 import { UserPrjGrant_GetObjLstAsync } from '@/ts/L3ForWApi/AuthorityManage/clsUserPrjGrantWApi';
 
 import { CMProject_GetNameByKeyCache } from '@/ts/L3ForWApi/CodeMan/clsCMProjectWApi';
-import { PrjDataBase_GetNameByKeyCache } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
+
 import {
   UserPrjGrantEx_CopyToEx,
   UserPrjGrantEx_FuncMapByFldName,
@@ -251,7 +252,7 @@ export class MainIndex {
     try {
       //const objUserLoginInfo = clsPubSessionStorage.UserLoginInfo;
       // const strUserId = clsPubLocalStorage.userId;
-
+      const PrjDataBaseStore = usePrjDataBaseStore();
       $('#lblUserName').html(clsPubLocalStorage.userName);
       $('#lblRoleName').html(clsPubLocalStorage.roleName);
       const objUserDefaPrjDataBaseEN = await UserDefaPrjDataBaseEx_GetObjByPrjIdAndUserId(
@@ -259,7 +260,7 @@ export class MainIndex {
         clsPubLocalStorage.userId,
       );
       if (objUserDefaPrjDataBaseEN != null) {
-        const strPrjDataBaseName = await PrjDataBase_GetNameByKeyCache({
+        const strPrjDataBaseName = await PrjDataBaseStore.getNameByKey({
           prjDataBaseId: objUserDefaPrjDataBaseEN.prjDataBaseId,
         });
         $('#lblCurrProject').html(

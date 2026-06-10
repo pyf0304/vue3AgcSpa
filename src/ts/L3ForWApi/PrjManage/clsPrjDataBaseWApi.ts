@@ -1,8 +1,8 @@
 ﻿/**
  * 类名:clsPrjDataBaseWApi
  * 表名:PrjDataBase(00050176)
- * 版本:2026.05.30(服务器:PYF-AI)
- * 日期:2026/06/07 18:04:41
+ * 版本:2026.05.30(服务器:WIN-SRV103-116)
+ * 日期:2026/06/10 23:57:12
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
@@ -20,36 +20,32 @@
 /**
  * 数据库对象(PrjDataBase)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2026年06月07日.
+ * Created by pyf on 2026年06月10日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
 import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
 import { Storage } from '@/utils/Storage';
-import { IsNullOrEmpty, Format, GetStrLen, tzDataType } from '@/ts/PubFun/clsString';
-import { enumComparisonOp } from '@/ts/PubFun/enumComparisonOp';
 import { CacheHelper } from '@/ts/PubFun/CacheHelper';
-import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
 import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 import {
-  GetSortExpressInfo,
   ObjectAssign,
   BindDdl_ObjLstInDivObj,
   GetExceptionStr,
   myShowErrorMsg,
 } from '@/ts/PubFun/clsCommFunc4Web';
-import { prjDataBaseCache, isFuncMapCache } from '@/views/PrjManage/PrjDataBaseVueShare';
 import { clsPrjDataBaseENEx } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseENEx';
 import { clsPrjDataBaseEN, PrjDataBaseKey } from '@/ts/L0Entity/PrjManage/clsPrjDataBaseEN';
+import { Format, GetStrLen, tzDataType, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { DataBaseType_func } from '@/ts/L3ForWApi/SysPara/clsDataBaseTypeWApi';
 import { clsDataBaseTypeEN } from '@/ts/L0Entity/SysPara/clsDataBaseTypeEN';
 import { UseState_func } from '@/ts/L3ForWApi/SysPara/clsUseStateWApi';
 import { clsUseStateEN } from '@/ts/L0Entity/SysPara/clsUseStateEN';
 import { AddRecordResult } from '@/ts/PubFun/AddRecordResult';
+import { usePrjDataBaseStore } from '@/store/modules/PrjDataBase';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
 import { stuRangePara } from '@/ts/PubFun/stuRangePara';
-import { clsDateTime } from '@/ts/PubFun/clsDateTime';
 
 export const prjDataBase_Controller = 'PrjDataBaseApi';
 export const prjDataBase_ConstructorName = 'prjDataBase';
@@ -129,156 +125,14 @@ export async function PrjDataBase_GetObjByKeyAsync(
     }
   }
 }
-
-/**
- * 根据关键字获取特定对象, 从 localStorage 中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
- * @param key:关键字对象
- * @returns 对象
- */
-export async function PrjDataBase_GetObjByKeylocalStorage(key: PrjDataBaseKey) {
-  const strThisFuncName = 'GetObjByPrjDataBaseIdlocalStorage';
-
-  if (IsNullOrEmpty(key.prjDataBaseId) == true) {
-    const strMsg = Format(
-      '参数:[key.prjDataBaseId]不能为空!(In clsPrjDataBaseWApi.GetObjByPrjDataBaseIdlocalStorage)',
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  if (key.prjDataBaseId.length != 4) {
-    const strMsg = Format(
-      '缓存分类变量:[key.prjDataBaseId]的长度:[{0}]不正确!(clsPrjDataBaseWApi.GetObjByPrjDataBaseIdlocalStorage)',
-      key.prjDataBaseId.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  const strKey = Format('{0}_{1}', clsPrjDataBaseEN._CurrTabName, key.prjDataBaseId);
-  if (strKey == '') {
-    console.error('关键字为空!不正确');
-    throw new Error('关键字为空!不正确');
-  }
-  if (Object.prototype.hasOwnProperty.call(localStorage, strKey)) {
-    //缓存存在,直接返回
-    const strTempObj = localStorage.getItem(strKey) as string;
-    const objPrjDataBaseCache: clsPrjDataBaseEN = JSON.parse(strTempObj);
-    return objPrjDataBaseCache;
-  }
-  try {
-    const objPrjDataBase = await PrjDataBase_GetObjByKeyAsync(key);
-    if (objPrjDataBase != null) {
-      localStorage.setItem(strKey, JSON.stringify(objPrjDataBase));
-      const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
-      console.log(strInfo);
-      return objPrjDataBase;
-    }
-    return objPrjDataBase;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
-      e,
-      key.prjDataBaseId,
-      prjDataBase_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-    return;
-  }
-}
-
-/**
- * 根据关键字获取特定对象, 从缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
- * @param key:关键字对象
- * @returns 对象
- */
-export async function PrjDataBase_GetObjByKeyCache(key: PrjDataBaseKey, bolTryAsyncOnce = true) {
-  const strThisFuncName = 'GetObjByPrjDataBaseIdCache';
-
-  if (IsNullOrEmpty(key.prjDataBaseId) == true) {
-    const strMsg = Format(
-      '参数:[key.prjDataBaseId]不能为空!(In clsPrjDataBaseWApi.GetObjByPrjDataBaseIdCache)',
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  if (key.prjDataBaseId.length != 4) {
-    const strMsg = Format(
-      '缓存分类变量:[key.prjDataBaseId]的长度:[{0}]不正确!(clsPrjDataBaseWApi.GetObjByPrjDataBaseIdCache)',
-      key.prjDataBaseId.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  const arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstCache();
-  try {
-    const arrPrjDataBaseSel = arrPrjDataBaseObjLstCache.filter(
-      (x) => x.prjDataBaseId == key.prjDataBaseId,
-    );
-    let objPrjDataBase: clsPrjDataBaseEN;
-    if (arrPrjDataBaseSel.length > 0) {
-      objPrjDataBase = arrPrjDataBaseSel[0];
-      return objPrjDataBase;
-    } else {
-      if (bolTryAsyncOnce == true) {
-        const objPrjDataBaseConst = await PrjDataBase_GetObjByKeyAsync(key);
-        if (objPrjDataBaseConst != null) {
-          PrjDataBase_ReFreshThisCache();
-          return objPrjDataBaseConst;
-        }
-      }
-      return null;
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
-      e,
-      key.prjDataBaseId,
-      prjDataBase_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-  }
-  return null;
-}
-
-/**
- * 修改在缓存对象列表中的对象, 与后台数据库无关.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_UpdateObjInLstCache)
- * @param objPrjDataBase:所给的对象
- * @returns 对象
- */
-export async function PrjDataBase_UpdateObjInLstCache(objPrjDataBase: clsPrjDataBaseEN) {
-  const strThisFuncName = 'UpdateObjInLstCache';
-  try {
-    const arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstCache();
-    const obj = arrPrjDataBaseObjLstCache.find(
-      (x) => x.prjDataBaseName == objPrjDataBase.prjDataBaseName,
-    );
-    if (obj != null) {
-      objPrjDataBase.prjDataBaseId = obj.prjDataBaseId;
-      ObjectAssign(obj, objPrjDataBase);
-    } else {
-      arrPrjDataBaseObjLstCache.push(objPrjDataBase);
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n在列表中修改对象不成功!(in {1}.{2})',
-      e,
-      prjDataBase_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-  }
-}
+//该表没有使用localStorage,不需要生成[GetObjByKeylocalStorage]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage )
+//该表没有使用Cache,不需要生成[GetObjByKeyCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache )
+//该表没有使用Cache,不需要生成[UpdateObjInLstCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_UpdateObjInLstCache
 
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-06-07
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -290,7 +144,7 @@ export function PrjDataBase_SortFunDefa(a: clsPrjDataBaseEN, b: clsPrjDataBaseEN
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2026-06-07
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -304,7 +158,7 @@ export function PrjDataBase_SortFunDefa2Fld(a: clsPrjDataBaseEN, b: clsPrjDataBa
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-06-07
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -491,58 +345,12 @@ export function PrjDataBase_SortFunByKey(strKey: string, AscOrDesc: string) {
     }
   }
 }
-
-/**
- * 根据关键字获取相关对象的名称属性, 从缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
- * @param key:关键字对象
- * @returns 名称属性值
- */
-export async function PrjDataBase_GetNameByKeyCache(key: PrjDataBaseKey) {
-  if (IsNullOrEmpty(key.prjDataBaseId) == true) {
-    const strMsg = Format(
-      '参数:[key.prjDataBaseId]不能为空!(In clsPrjDataBaseWApi.GetNameByKeyCache)',
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  if (key.prjDataBaseId.length != 4) {
-    const strMsg = Format(
-      '缓存分类变量:[key.prjDataBaseId]的长度:[{0}]不正确!(clsPrjDataBaseWApi.GetNameByKeyCache)',
-      key.prjDataBaseId.length,
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  const arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstCache();
-  if (arrPrjDataBaseObjLstCache == null) return '';
-  try {
-    const arrPrjDataBaseSel = arrPrjDataBaseObjLstCache.filter(
-      (x) => x.prjDataBaseId == key.prjDataBaseId,
-    );
-    let objPrjDataBase: clsPrjDataBaseEN;
-    if (arrPrjDataBaseSel.length > 0) {
-      objPrjDataBase = arrPrjDataBaseSel[0];
-      return objPrjDataBase.prjDataBaseName;
-    } else {
-      return '';
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象名称属性不成功!',
-      e,
-      key.prjDataBaseId,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-  }
-  return '';
-}
+//该表没有使用Cache,不需要生成[GetNameByKeyCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
 
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2026-06-07
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -618,146 +426,8 @@ export async function PrjDataBase_FilterFunByKey(strKey: string, value: any) {
       break;
   }
 }
-
-/**
- * 映射函数。根据表映射把输入字段值,映射成输出字段值
- * 作者:pyf
- * 日期:2026-06-07
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
- * @param strInFldName:输入字段名
- * @param strOutFldName:输出字段名
- * @param strInValue:输入字段值
- * @returns 返回一个输出字段值
- */
-export async function PrjDataBase_func(
-  strInFldName: string,
-  strOutFldName: string,
-  strInValue: string,
-) {
-  //const strThisFuncName = "func";
-
-  if (strInFldName != clsPrjDataBaseEN.con_PrjDataBaseId) {
-    const strMsg = Format('输入字段名:[{0}]不正确!', strInFldName);
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  if (clsPrjDataBaseEN._AttributeName.indexOf(strOutFldName) == -1) {
-    const strMsg = Format(
-      '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
-      strOutFldName,
-      clsPrjDataBaseEN._AttributeName.join(','),
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  const strPrjDataBaseId = strInValue;
-  if (IsNullOrEmpty(strPrjDataBaseId) == true) {
-    return '';
-  }
-  const objPrjDataBase = await PrjDataBase_GetObjByKeyCache({ prjDataBaseId: strPrjDataBaseId });
-  if (objPrjDataBase == null) return '';
-  if (objPrjDataBase.GetFldValue(strOutFldName) == null) return '';
-  return objPrjDataBase.GetFldValue(strOutFldName).toString();
-}
-
-/**
- * 映射函数。根据表映射把输入字段值,映射成输出字段值
- * 作者:pyf
- * 日期:2026-06-07
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
- * @param strInFldName:输入字段名
- * @param strInValue:输入字段值
- * @param strComparisonOp:比较操作符
- * @returns 返回一个关键字值列表
- */
-export async function PrjDataBase_funcKey(
-  strInFldName: string,
-  strInValue: any,
-  strComparisonOp: string,
-): Promise<Array<string>> {
-  //const strThisFuncName = "funcKey";
-
-  if (strInFldName == clsPrjDataBaseEN.con_PrjDataBaseId) {
-    const strMsg = Format('输入字段名:[{0}]不正确, 不能为关键字段!', strInFldName);
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  if (IsNullOrEmpty(strInValue) == true) {
-    return [];
-  }
-  const arrPrjDataBase = await PrjDataBase_GetObjLstCache();
-  if (arrPrjDataBase == null) return [];
-  let arrPrjDataBaseSel = arrPrjDataBase;
-  const strType = typeof strInValue;
-  let arrValues: string[];
-  switch (strType) {
-    case 'string':
-      switch (strComparisonOp) {
-        case enumComparisonOp.Equal_01: // " = "
-          arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-            (x) => x.GetFldValue(strInFldName).toString() == strInValue.toString(),
-          );
-          break;
-        case enumComparisonOp.Like_03:
-          arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-            (x) => x.GetFldValue(strInFldName).toString().indexOf(strInValue.toString()) != -1,
-          );
-          break;
-        case enumComparisonOp.In_04:
-          arrValues = strInValue.split(',');
-          arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-            (x) => arrValues.indexOf(x.GetFldValue(strInFldName).toString()) != -1,
-          );
-          break;
-      }
-      break;
-    case 'boolean':
-      if (strInValue == null) return [];
-      if (strComparisonOp == enumComparisonOp.Equal_01) {
-        arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-          (x) => x.GetFldValue(strInFldName) == strInValue,
-        );
-      }
-      break;
-    case 'number':
-      if (Number(strInValue) == 0) return [];
-      switch (strComparisonOp) {
-        case enumComparisonOp.Equal_01:
-          arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-            (x) => x.GetFldValue(strInFldName) == strInValue,
-          );
-          break;
-        case enumComparisonOp.NotEqual_02:
-          arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-            (x) => x.GetFldValue(strInFldName) != strInValue,
-          );
-          break;
-        case enumComparisonOp.NotLessThan_05: //" >= ":
-          arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-            (x) => x.GetFldValue(strInFldName) >= strInValue,
-          );
-          break;
-        case enumComparisonOp.NotGreaterThan_06: //" <= ":
-          arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-            (x) => x.GetFldValue(strInFldName) <= strInValue,
-          );
-          break;
-        case enumComparisonOp.GreaterThan_07: //" > ":
-          arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-            (x) => x.GetFldValue(strInFldName) > strInValue,
-          );
-          break;
-        case enumComparisonOp.LessThan_08: //" < ":
-          arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-            (x) => x.GetFldValue(strInFldName) <= strInValue,
-          );
-          break;
-      }
-      break;
-  }
-  if (arrPrjDataBaseSel.length == 0) return [];
-  return arrPrjDataBaseSel.map((x) => x.prjDataBaseId);
-}
+//该表没有使用Cache,不需要生成[func]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func )
+//该表没有使用Cache,不需要生成[PrjDataBase__funcKey]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
 
 /**
  * 根据条件获取满足条件的第一条记录
@@ -1266,32 +936,7 @@ export async function PrjDataBase_GetObjLstsessionStoragePureCache() {
     return arrPrjDataBaseObjLstCache;
   } else return null;
 }
-
-/**
- * 获取本地缓存中的对象列表,是整个表中的全部记录,也可是表中某缓存分类的全部记录.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstCacheAsync)
- * @returns 从本地缓存中获取的对象列表
- **/
-export async function PrjDataBase_GetObjLstCache(): Promise<Array<clsPrjDataBaseEN>> {
-  //const strThisFuncName = "GetObjLst_Cache";
-
-  let arrPrjDataBaseObjLstCache;
-  switch (clsPrjDataBaseEN._CacheModeId) {
-    case '04': //sessionStorage
-      arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstsessionStorage();
-      break;
-    case '03': //localStorage
-      arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstlocalStorage();
-      break;
-    case '02': //ClientCache
-      arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstClientCache();
-      break;
-    default:
-      arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstClientCache();
-      break;
-  }
-  return arrPrjDataBaseObjLstCache;
-}
+//该表没有使用Cache,不需要生成[GetObjLst_Cache]函数;
 
 /**
  * 获取本地缓存中的对象列表,是整个表中的全部记录,也可是表中某缓存分类的全部记录.
@@ -1317,97 +962,7 @@ export async function PrjDataBase_GetObjLstPureCache() {
   }
   return arrPrjDataBaseObjLstCache;
 }
-
-/**
- * 根据条件对象, 从缓存的对象列表中获取子集.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetSubObjLstCache)
- * @param objstrPrjDataBaseIdCond:条件对象
- * @returns 对象列表子集
- */
-export async function PrjDataBase_GetSubObjLstCache(objPrjDataBaseCond: ConditionCollection) {
-  const strThisFuncName = 'GetSubObjLstCache';
-  const arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstCache();
-  let arrPrjDataBaseSel = arrPrjDataBaseObjLstCache;
-  if (objPrjDataBaseCond.GetConditions().length == 0) return arrPrjDataBaseSel;
-  try {
-    //console.log(sstrKeys);
-    for (const objCondition of objPrjDataBaseCond.GetConditions()) {
-      if (objCondition == null) continue;
-      const strKey = objCondition.fldName;
-      const strComparisonOp = objCondition.comparison;
-      const strValue = objCondition.fldValue;
-      arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) != null);
-      const strType = typeof strValue;
-      switch (strType) {
-        case 'string':
-          if (strValue == null) continue;
-          if (strValue == '') continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
-            );
-          } else if (strComparisonOp == 'like') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
-            );
-          } else if (strComparisonOp == 'length greater') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not greater') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not less') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length less') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length equal') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
-            );
-          }
-          break;
-        case 'boolean':
-          if (strValue == null) continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          }
-          break;
-        case 'number':
-          if (Number(strValue) == 0) continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          } else if (strComparisonOp == '>=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) >= strValue);
-          } else if (strComparisonOp == '<=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          } else if (strComparisonOp == '>') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) > strValue);
-          } else if (strComparisonOp == '<') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          }
-          break;
-      }
-    }
-    return arrPrjDataBaseSel;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据条件:[{1}]缓存对象列表中获取子集对象不成功!(in {2}.{3})',
-      e,
-      JSON.stringify(objPrjDataBaseCond),
-      prjDataBase_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return new Array<clsPrjDataBaseEN>();
-}
+//该表没有使用Cache,不需要生成[GetSubObjLstCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetSubObjLstCache)
 
 /**
  * 根据关键字列表获取相关对象列表
@@ -1478,35 +1033,7 @@ export async function PrjDataBase_GetObjLstByPrjDataBaseIdLstAsync(
     }
   }
 }
-
-/**
- * 根据关键字列表获取相关对象列表, 从缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByKeyLstCache)
- * @param arrstrPrjDataBaseIdLst:关键字列表
- * @returns 对象列表
- */
-export async function PrjDataBase_GetObjLstByPrjDataBaseIdLstCache(
-  arrPrjDataBaseIdLst: Array<string>,
-) {
-  const strThisFuncName = 'GetObjLstByPrjDataBaseIdLstCache';
-  try {
-    const arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstCache();
-    const arrPrjDataBaseSel = arrPrjDataBaseObjLstCache.filter(
-      (x) => arrPrjDataBaseIdLst.indexOf(x.prjDataBaseId) > -1,
-    );
-    return arrPrjDataBaseSel;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取对象列表不成功!(in {2}.{3})',
-      e,
-      arrPrjDataBaseIdLst.join(','),
-      prjDataBase_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-}
+//该表没有使用Cache,不需要生成[GetObjLstByPrjDataBaseIdLstCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByKeyLstCache)
 
 /**
  * 根据顶部条件获取相应的记录对象列表
@@ -1647,126 +1174,7 @@ export async function PrjDataBase_GetObjLstByRangeAsync(
     }
   }
 }
-
-/**
- * 根据分页条件从缓存中获取分页对象列表,只获取一页.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerCache)
- * @param objPagerPara:分页参数结构
- * @returns 对象列表
- */
-export async function PrjDataBase_GetObjLstByPagerCache(objPagerPara: stuPagerPara) {
-  const strThisFuncName = 'GetObjLstByPagerCache';
-  if (objPagerPara.pageIndex == 0) return new Array<clsPrjDataBaseEN>();
-  const arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstCache();
-  if (arrPrjDataBaseObjLstCache.length == 0) return arrPrjDataBaseObjLstCache;
-  let arrPrjDataBaseSel = arrPrjDataBaseObjLstCache;
-  const objPrjDataBaseCond = objPagerPara.conditionCollection;
-  if (objPrjDataBaseCond == null) {
-    const strMsg = `根据分布条件从缓存中获取分页对象列表时，objPagerPara.conditionCollection为null,请检查！(in ${strThisFuncName})`;
-    alert(strMsg);
-    console.error(strMsg);
-    return new Array<clsPrjDataBaseEN>();
-  }
-  //console.log("clsPrjDataBaseWApi->GetObjLstByPagerCache->dicFldComparisonOp:");
-  //console.log(dicFldComparisonOp);
-  try {
-    for (const objCondition of objPrjDataBaseCond.GetConditions()) {
-      if (objCondition == null) continue;
-      const strKey = objCondition.fldName;
-      const strComparisonOp = objCondition.comparison;
-      const strValue = objCondition.fldValue;
-      arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) != null);
-      const strType = typeof strValue;
-      switch (strType) {
-        case 'string':
-          if (strValue == null) continue;
-          if (strValue == '') continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
-            );
-          } else if (strComparisonOp == 'like') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
-            );
-          } else if (strComparisonOp == 'length greater') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not greater') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not less') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length less') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length equal') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'in') {
-            const arrValues = strValue.toString().split(',');
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => arrValues.indexOf(x.GetFldValue(strKey).toString()) != -1,
-            );
-          }
-          break;
-        case 'boolean':
-          if (strValue == null) continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          }
-          break;
-        case 'number':
-          if (Number(strValue) == 0) continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          } else if (strComparisonOp == '>=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) >= strValue);
-          } else if (strComparisonOp == '<=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          } else if (strComparisonOp == '>') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) > strValue);
-          } else if (strComparisonOp == '<') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          }
-          break;
-      }
-    }
-    if (arrPrjDataBaseSel.length == 0) return arrPrjDataBaseSel;
-    let intStart: number = objPagerPara.pageSize * (objPagerPara.pageIndex - 1);
-    if (intStart <= 0) intStart = 0;
-    const intEnd = intStart + objPagerPara.pageSize;
-    if (objPagerPara.orderBy != null && objPagerPara.orderBy.length > 0) {
-      const sstrSplit: string[] = objPagerPara.orderBy.split(' ');
-      let strSortType = 'asc';
-      const strSortFld = sstrSplit[0];
-      if (sstrSplit.length > 1) strSortType = sstrSplit[1];
-      arrPrjDataBaseSel = arrPrjDataBaseSel.sort(PrjDataBase_SortFunByKey(strSortFld, strSortType));
-    } else {
-      //如果排序字段名[OrderBy]为空,就调用排序函数
-      arrPrjDataBaseSel = arrPrjDataBaseSel.sort(objPagerPara.sortFun);
-    }
-    arrPrjDataBaseSel = arrPrjDataBaseSel.slice(intStart, intEnd);
-    return arrPrjDataBaseSel;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据条件:[{1}]获取分页对象列表不成功!(In {2}.{3})',
-      e,
-      objPagerPara.whereCond,
-      prjDataBase_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return new Array<clsPrjDataBaseEN>();
-}
+//该表没有使用Cache,不需要生成[GetObjLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjLstByPagerCache)
 
 /**
  * 根据分页条件获取相应的记录对象列表,只获取一页
@@ -1951,158 +1359,7 @@ export async function PrjDataBase_DelKeysAsync(arrPrjDataBaseId: Array<string>):
     }
   }
 }
-
-/**
- * 根据分页条件从缓存中获取分页对象列表,只获取一页.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjExLstByPagerCache)
- * @param objPagerPara:分页参数结构
- * @returns 对象列表
- */
-export async function PrjDataBase_GetObjExLstByPagerCache(
-  objPagerPara: stuPagerPara,
-): Promise<Array<clsPrjDataBaseENEx>> {
-  const strThisFuncName = 'GetObjLstByPagerCache';
-  const objSortInfo = GetSortExpressInfo(objPagerPara);
-  const isFuncMapKey = `${objSortInfo.SortFld}`;
-  const arrPrjDataBaseObjLst = await PrjDataBase_GetObjLstCache();
-  //从缓存中获取对象，如果缓存中不存在就扩展复制
-  const arrNewObj = new Array<clsPrjDataBaseENEx>();
-  const arrPrjDataBaseExObjLst = arrPrjDataBaseObjLst.map((obj) => {
-    const cacheKey = `${obj.prjDataBaseId}`;
-    if (prjDataBaseCache[cacheKey]) {
-      const oldObj = prjDataBaseCache[cacheKey];
-      return oldObj;
-    } else {
-      const newObj = PrjDataBase_CopyToEx(obj);
-      arrNewObj.push(newObj);
-      prjDataBaseCache[cacheKey] = newObj;
-      return newObj;
-    }
-  });
-  for (const newObj of arrNewObj) {
-    for (const strFldName of Object.keys(isFuncMapCache)) {
-      await PrjDataBase_FuncMapByFldName(strFldName, newObj);
-    }
-  }
-  //检查关于当前扩展排序字段是否获取得值，如果没有获取过，就获取，并存缓存
-  const bolIsFuncMap = isFuncMapCache[isFuncMapKey];
-  if (
-    IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsPrjDataBaseEN._AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
-    (bolIsFuncMap == false || bolIsFuncMap == undefined)
-  ) {
-    for (const newObj of arrPrjDataBaseExObjLst) {
-      await PrjDataBase_FuncMapByFldName(objSortInfo.SortFld, newObj);
-      const cacheKey = `${newObj.prjDataBaseId}`;
-      prjDataBaseCache[cacheKey] = newObj;
-    }
-    isFuncMapCache[isFuncMapKey] = true;
-  }
-  if (arrPrjDataBaseExObjLst.length == 0) return arrPrjDataBaseExObjLst;
-  let arrPrjDataBaseSel: Array<clsPrjDataBaseENEx> = arrPrjDataBaseExObjLst;
-  const objPrjDataBaseCond = objPagerPara.conditionCollection;
-  if (objPrjDataBaseCond == null) {
-    const strMsg = `根据分布条件从缓存中获取分页对象列表时，objPagerPara.conditionCollection为null,请检查！(in ${strThisFuncName})`;
-    alert(strMsg);
-    console.error(strMsg);
-    return arrPrjDataBaseExObjLst;
-  }
-  try {
-    for (const objCondition of objPrjDataBaseCond.GetConditions()) {
-      if (objCondition == null) continue;
-      const strKey = objCondition.fldName;
-      const strComparisonOp = objCondition.comparison;
-      const strValue = objCondition.fldValue;
-      arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) != null);
-      const strType = typeof strValue;
-      switch (strType) {
-        case 'string':
-          if (strValue == null) continue;
-          if (strValue == '') continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
-            );
-          } else if (strComparisonOp == 'like') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
-            );
-          } else if (strComparisonOp == 'length greater') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not greater') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not less') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length less') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length equal') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'in') {
-            const arrValues = strValue.split(',');
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => arrValues.indexOf(x.GetFldValue(strKey).toString()) != -1,
-            );
-          }
-          break;
-        case 'boolean':
-          if (strValue == null) continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          }
-          break;
-        case 'number':
-          if (Number(strValue) == 0) continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          } else if (strComparisonOp == '>=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) >= strValue);
-          } else if (strComparisonOp == '<=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          } else if (strComparisonOp == '>') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) > strValue);
-          } else if (strComparisonOp == '<') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          }
-          break;
-      }
-    }
-    if (arrPrjDataBaseSel.length == 0) return arrPrjDataBaseSel;
-    let intStart: number = objPagerPara.pageSize * (objPagerPara.pageIndex - 1);
-    if (intStart <= 0) intStart = 0;
-    const intEnd = intStart + objPagerPara.pageSize;
-    if (objPagerPara.orderBy != null && objPagerPara.orderBy.length > 0) {
-      arrPrjDataBaseSel = arrPrjDataBaseSel.sort(
-        PrjDataBase_SortFunByExKey(objSortInfo.SortFld, objSortInfo.SortType),
-      );
-    } else {
-      //如果排序字段名[OrderBy]为空,就调用排序函数
-      arrPrjDataBaseSel = arrPrjDataBaseSel.sort(objPagerPara.sortFun);
-    }
-    arrPrjDataBaseSel = arrPrjDataBaseSel.slice(intStart, intEnd);
-    return arrPrjDataBaseSel;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据条件:[{1}]获取分页对象列表不成功!(In {2}.{3})',
-      e,
-      objPagerPara.whereCond,
-      prjDataBase_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return new Array<clsPrjDataBaseENEx>();
-}
+//该表没有使用Cache,不需要生成[GetObjExLstByPagerCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjExLstByPagerCache)
 
 /**
  * 把同一个类的对象,复制到另一个对象
@@ -2132,7 +1389,7 @@ export function PrjDataBase_CopyToEx(objPrjDataBaseENS: clsPrjDataBaseEN): clsPr
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2026-06-07
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -2167,7 +1424,7 @@ export function PrjDataBase_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-06-07
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -2464,9 +1721,7 @@ export async function PrjDataBase_AddNewObjSave(
     if (IsNullOrEmpty(returnKeyId) == false) {
       returnBool = true;
     }
-    if (returnBool == true) {
-      PrjDataBase_ReFreshCache();
-    } else {
+    if (returnBool == false) {
       const strInfo = `添加[数据库对象(PrjDataBase)]记录不成功!`;
       //显示信息框
       throw strInfo;
@@ -2546,7 +1801,8 @@ export async function PrjDataBase_UpdateObjSave(
     }
     const returnBool = await PrjDataBase_UpdateRecordAsync(objPrjDataBaseEN);
     if (returnBool == true) {
-      PrjDataBase_ReFreshCache();
+      const prjDataBaseStore = usePrjDataBaseStore();
+      await prjDataBaseStore.delObj(objPrjDataBaseEN.prjDataBaseId);
     }
     return returnBool;
   } catch (e) {
@@ -2823,100 +2079,7 @@ export async function PrjDataBase_UpdateWithConditionAsync(
     }
   }
 }
-
-/**
- * 根据条件对象, 从缓存的对象列表中获取子集.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistRecordCache)
- * @param objstrPrjDataBaseIdCond:条件对象
- * @returns 对象列表子集
- */
-export async function PrjDataBase_IsExistRecordCache(objPrjDataBaseCond: ConditionCollection) {
-  const strThisFuncName = 'IsExistRecordCache';
-  const arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstCache();
-  if (arrPrjDataBaseObjLstCache == null) return false;
-  let arrPrjDataBaseSel = arrPrjDataBaseObjLstCache;
-  if (objPrjDataBaseCond.GetConditions().length == 0)
-    return arrPrjDataBaseSel.length > 0 ? true : false;
-  try {
-    for (const objCondition of objPrjDataBaseCond.GetConditions()) {
-      if (objCondition == null) continue;
-      const strKey = objCondition.fldName;
-      const strComparisonOp = objCondition.comparison;
-      const strValue = objCondition.fldValue;
-      const strType = typeof strValue;
-      switch (strType) {
-        case 'string':
-          if (strValue == null) continue;
-          if (strValue == '') continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
-            );
-          } else if (strComparisonOp == 'like') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
-            );
-          } else if (strComparisonOp == 'length greater') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not greater') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not less') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length less') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length equal') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
-            );
-          }
-          break;
-        case 'boolean':
-          if (strValue == null) continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          }
-          break;
-        case 'number':
-          if (Number(strValue) == 0) continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          } else if (strComparisonOp == '>=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) >= strValue);
-          } else if (strComparisonOp == '<=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          } else if (strComparisonOp == '>') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) > strValue);
-          } else if (strComparisonOp == '<') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          }
-          break;
-      }
-    }
-    if (arrPrjDataBaseSel.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '根据条件:[{0}]判断是否存在不成功!(in {1}.{2})',
-      JSON.stringify(objPrjDataBaseCond),
-      prjDataBase_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return false;
-}
+//该表没有使用Cache,不需要生成[IsExistRecordCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistRecordCache)
 
 /**
  * 根据条件获取是否存在相应的记录？
@@ -2976,38 +2139,7 @@ export async function PrjDataBase_IsExistRecordAsync(strWhereCond: string): Prom
     }
   }
 }
-
-/**
- * 根据关键字判断是否存在记录, 从本地缓存中判断.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistCache)
- * @param key:关键字对象
- * @returns 是否存在
- */
-export async function PrjDataBase_IsExistCache(key: PrjDataBaseKey): Promise<boolean> {
-  const strThisFuncName = 'IsExistCache';
-  const arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstCache();
-  if (arrPrjDataBaseObjLstCache == null) return false;
-  try {
-    const arrPrjDataBaseSel = arrPrjDataBaseObjLstCache.filter(
-      (x) => x.prjDataBaseId == key.prjDataBaseId,
-    );
-    if (arrPrjDataBaseSel.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (e) {
-    const strMsg = Format(
-      '根据关键字:[{0}]判断是否存在不成功!(in {1}.{2})',
-      key.prjDataBaseId,
-      prjDataBase_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-  }
-  return false;
-}
+//该表没有使用Cache,不需要生成[IsExistCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistCache)
 
 /**
  * 根据关键字判断是否存在记录
@@ -3127,102 +2259,7 @@ export async function PrjDataBase_GetRecCountByCondAsync(strWhereCond: string): 
     }
   }
 }
-
-/**
- * 根据条件对象, 从缓存的对象列表中获取记录数.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetRecCountByCondCache)
- * @param objPrjDataBaseCond:条件对象
- * @returns 对象列表记录数
- */
-export async function PrjDataBase_GetRecCountByCondCache(objPrjDataBaseCond: ConditionCollection) {
-  const strThisFuncName = 'GetRecCountByCondCache';
-  const arrPrjDataBaseObjLstCache = await PrjDataBase_GetObjLstCache();
-  if (arrPrjDataBaseObjLstCache == null) return 0;
-  let arrPrjDataBaseSel = arrPrjDataBaseObjLstCache;
-  if (objPrjDataBaseCond.GetConditions().length == 0) return arrPrjDataBaseSel.length;
-  try {
-    for (const objCondition of objPrjDataBaseCond.GetConditions()) {
-      if (objCondition == null) continue;
-      const strKey = objCondition.fldName;
-      const strComparisonOp = objCondition.comparison;
-      const strValue = objCondition.fldValue;
-      arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) != null);
-      const strType = typeof strValue;
-      switch (strType) {
-        case 'string':
-          if (strValue == null) continue;
-          if (strValue == '') continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString() == strValue.toString(),
-            );
-          } else if (strComparisonOp == 'like') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().indexOf(strValue.toString()) != -1,
-            );
-          } else if (strComparisonOp == 'length greater') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length > Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not greater') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length <= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length not less') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length >= Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length less') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length < Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'length equal') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => x.GetFldValue(strKey).toString().length == Number(strValue.toString()),
-            );
-          } else if (strComparisonOp == 'in') {
-            const arrValues = strValue.toString().split(',');
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter(
-              (x) => arrValues.indexOf(x.GetFldValue(strKey).toString()) != -1,
-            );
-          }
-          break;
-        case 'boolean':
-          if (strValue == null) continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          }
-          break;
-        case 'number':
-          if (Number(strValue) == 0) continue;
-          if (strComparisonOp == '=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) == strValue);
-          } else if (strComparisonOp == '>=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) >= strValue);
-          } else if (strComparisonOp == '<=') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          } else if (strComparisonOp == '>') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) > strValue);
-          } else if (strComparisonOp == '<') {
-            arrPrjDataBaseSel = arrPrjDataBaseSel.filter((x) => x.GetFldValue(strKey) <= strValue);
-          }
-          break;
-      }
-    }
-    return arrPrjDataBaseSel.length;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据条件:[{1}]从缓存对象列表中获取记录数不成功!(in {2}.{3})',
-      e,
-      JSON.stringify(objPrjDataBaseCond),
-      prjDataBase_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw new Error(strMsg);
-  }
-  return 0;
-}
+//该表没有使用Cache,不需要生成[GetRecCountByCondCache]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetRecCountByCondCache)
 
 /**
  * 获取表的最大关键字
@@ -3365,70 +2402,8 @@ export function PrjDataBase_GetWebApiUrl(strController: string, strAction: strin
   }
   return strServiceUrl;
 }
-
-/**
- * 刷新缓存.把当前表的缓存以及该表相关视图的缓存清空.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_ReFreshCache)
- **/
-export function PrjDataBase_ReFreshCache(): void {
-  const strMsg: string = Format('刷新缓存成功!');
-  console.trace(strMsg);
-  // 静态的对象列表,用于清空相关缓存,针对记录较少,作为参数表可以使用
-  const strKey = clsPrjDataBaseEN._CurrTabName;
-  switch (clsPrjDataBaseEN._CacheModeId) {
-    case '04': //sessionStorage
-      sessionStorage.removeItem(strKey);
-      break;
-    case '03': //localStorage
-      localStorage.removeItem(strKey);
-      break;
-    case '02': //ClientCache
-      CacheHelper.Remove(strKey);
-      break;
-    default:
-      CacheHelper.Remove(strKey);
-      break;
-  }
-  clsPrjDataBaseEN._RefreshTimeLst.push(clsDateTime.getTodayDateTimeStr(0));
-}
-
-/**
- * 刷新本类中的缓存.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_ReFreshThisCache)
- **/
-export function PrjDataBase_ReFreshThisCache(): void {
-  if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
-    const strKey = clsPrjDataBaseEN._CurrTabName;
-    switch (clsPrjDataBaseEN._CacheModeId) {
-      case '04': //sessionStorage
-        sessionStorage.removeItem(strKey);
-        break;
-      case '03': //localStorage
-        localStorage.removeItem(strKey);
-        break;
-      case '02': //ClientCache
-        CacheHelper.Remove(strKey);
-        break;
-      default:
-        CacheHelper.Remove(strKey);
-        break;
-    }
-    clsPrjDataBaseEN._RefreshTimeLst.push(clsDateTime.getTodayDateTimeStr(0));
-    const strMsg = Format('刷新缓存成功!');
-    console.trace(strMsg);
-  } else {
-    const strMsg = Format('刷新缓存已经关闭。');
-    console.trace(strMsg);
-  }
-}
-/**
- * 获取最新的缓存刷新时间
- * @returns 最新的缓存刷新时间，字符串型
- **/
-export function PrjDataBase_GetLastRefreshTime(): string {
-  if (clsPrjDataBaseEN._RefreshTimeLst.length == 0) return '';
-  return clsPrjDataBaseEN._RefreshTimeLst[clsPrjDataBaseEN._RefreshTimeLst.length - 1];
-}
+//该表没有使用Cache,不需要生成[ReFreshCache]函数;
+//该表没有使用Cache,不需要生成[ReFreshThisCache]函数;
 
 /**
  * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050067)
@@ -3436,7 +2411,7 @@ export function PrjDataBase_GetLastRefreshTime(): string {
  * @param objDDL:需要绑定当前表的下拉框
 
 */
-export async function PrjDataBase_BindDdl_PrjDataBaseIdInDivCache(
+export async function PrjDataBase_BindDdl_PrjDataBaseIdInDiv(
   objDiv: HTMLDivElement,
   strDdlName: string,
 ) {
@@ -3449,7 +2424,8 @@ export async function PrjDataBase_BindDdl_PrjDataBaseIdInDivCache(
   }
   //为数据源于表的下拉框设置内容
   //console.log("开始：BindDdl_PrjDataBaseIdInDivCache");
-  const arrObjLstSel = await PrjDataBase_GetObjLstCache();
+  const strCondition = `1=1`;
+  const arrObjLstSel = await PrjDataBase_GetObjLstAsync(strCondition);
   if (arrObjLstSel == null) return;
   BindDdl_ObjLstInDivObj(
     objDiv,
@@ -3471,7 +2447,8 @@ export async function PrjDataBase_GetArrPrjDataBase() {
   //为数据源于表的下拉框设置内容
   //console.log("开始：BindDdl_PrjDataBaseIdInDivCache");
   const arrPrjDataBase = new Array<clsPrjDataBaseEN>();
-  const arrObjLstSel = await PrjDataBase_GetObjLstCache();
+  const strCondition = `1=1`;
+  const arrObjLstSel = await PrjDataBase_GetObjLstAsync(strCondition);
   if (arrObjLstSel == null) return null;
   const obj0 = new clsPrjDataBaseEN();
   obj0.prjDataBaseId = '0';
@@ -4043,7 +3020,7 @@ export function PrjDataBase_CheckProperty4Update(pobjPrjDataBaseEN: clsPrjDataBa
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2026-06-07
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -4064,7 +3041,7 @@ export function PrjDataBase_GetJSONStrByObj(pobjPrjDataBaseEN: clsPrjDataBaseEN)
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2026-06-07
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -4085,7 +3062,7 @@ export function PrjDataBase_GetObjLstByJSONStr(strJSON: string): Array<clsPrjDat
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2026-06-07
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrPrjDataBaseObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -4105,7 +3082,7 @@ export function PrjDataBase_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2026-06-07
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

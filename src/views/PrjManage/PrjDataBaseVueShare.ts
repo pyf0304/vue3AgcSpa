@@ -2,8 +2,8 @@
  /**
  * 类名:PrjDataBaseVueShare(界面:PrjDataBaseCRUD,00050346)
  * 表名:PrjDataBase(00050176)
- * 版本:2026.05.30(服务器:PYF-AI)
- * 日期:2026/06/01 00:35:24
+ * 版本:2026.05.30(服务器:WIN-SRV103-116)
+ * 日期:2026/06/10 23:57:14
  * 生成者:
  工程名称:AGC(0005)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
@@ -242,6 +242,7 @@ showErrorMessage.value = bolIsShowErrMsg;
 if (refPrjDataBase_List.value != null) refPrjDataBase_List.value.selectAllChecked = false;
 };
 
+export  function PrjDataBase_DeleteKeyIdCache(key:PrjDataBaseKey):void
 export function PrjDataBase_DeleteKeyIdCache(key: PrjDataBaseKey): void
 {
 

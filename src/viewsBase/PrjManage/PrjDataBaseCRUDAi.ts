@@ -1,8 +1,6 @@
 ﻿import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
 import {
-  CombinePrjDataBaseConditionObj4ExportExcel,
-  CombinePrjDataBaseConditionObj,
-  PrjDataBase_DeleteKeyIdCache,
+  CombinePrjDataBaseCondition,
   divVarSet,
   viewVarSet,
   dataColumn,
@@ -10,16 +8,17 @@ import {
   refPrjDataBase_List,
 } from '@/views/PrjManage/PrjDataBaseVueShare';
 import {
-  PrjDataBase_GetRecCountByCondCache,
-  PrjDataBase_GetSubObjLstCache,
-  PrjDataBase_ReFreshCache,
-  PrjDataBase_GetObjExLstByPagerCache,
+  PrjDataBase_GetRecCountByCondAsync,
+  PrjDataBase_GetObjLstAsync,
+  PrjDataBase_FuncMapByFldName,
   PrjDataBase_GetObjLstByPrjDataBaseIdLstAsync,
   PrjDataBase_UpdateRecordAsync,
   PrjDataBase_DelKeysAsync,
 } from '@/ts/L3ForWApi/PrjManage/clsPrjDataBaseWApi';
-import { PrjDataBaseEx_FuncMapByFldName } from '@/ts/L3ForWApiEx/PrjManage/clsPrjDataBaseExWApi';
-import { UseState_BindDdl_UseStateIdInDivCache } from '@/ts/L3ForWApi/SysPara/clsUseStateWApi';
+import {
+  PrjDataBaseEx_FuncMapByFldName,
+  PrjDataBaseEx_GetObjExLstByPagerAsync,
+} from '@/ts/L3ForWApiEx/PrjManage/clsPrjDataBaseExWApi';
 
 import {
   GetCheckedKeyIdsInDivObj,
@@ -87,6 +86,7 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
       if (viewVarSet.sortPrjDataBaseBy == '') {
         viewVarSet.sortPrjDataBaseBy = `${clsPrjDataBaseEN.con_PrjDataBaseId} Asc`;
       }
+
       await this.BindGv_PrjDataBase4Func(divVarSet.refDivList);
     } catch (e) {
       const strMsg = `页面启动不成功,${e}.(in ${this.constructor.name}.${this.PageLoadCache.name}`;
@@ -110,17 +110,12 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
     });
   }
 
-  public async SetDdl_UseStateIdInDivInFeature() {
-    await UseState_BindDdl_UseStateIdInDivCache(divVarSet.refDivFunction, 'ddlUseStateId');
-  }
-
   /**
    * 设置使用状态Id按钮点击事件处理
    *
    * 流程：
    * 1. 验证是否选中了记录
-   * 2. 验证是否选择了有效的使用状态Id
-   * 3. 执行批量设置操作
+   * 2.验证是否选择了有效的使用状态Id   * 3. 执行批量设置操作
    * 4. 操作完成后刷新数据列表
    *
    * 使用场景：用户选择多条记录后，点击"设置使用状态Id"按钮
@@ -193,7 +188,6 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
     try {
       const returnInt = await PrjDataBase_DelKeysAsync(arrPrjDataBaseId);
       if (returnInt > 0) {
-        PrjDataBase_ReFreshCache();
         alert(`删除${this.thisTabName}记录成功,共删除${returnInt}条记录!`);
       } else {
         alert(`删除${this.thisTabName}记录不成功!`);
@@ -239,7 +233,6 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
         }
 
         if (returnBool == true) {
-          PrjDataBase_DeleteKeyIdCache({ prjDataBaseId: objInFor.prjDataBaseId });
           intCount++;
         } else {
           alert('设置记录不成功!');
@@ -248,7 +241,7 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
 
       alert(`共设置了${intCount}条记录!`);
       if (intCount > 0) {
-        PrjDataBase_ReFreshCache();
+        //PrjDataBase_ReFreshCache();
       }
     } catch (e) {
       const strMsg = `设置记录不成功,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
@@ -258,8 +251,8 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
   }
 
   /** 按当前查询条件导出原始列表数据。 */
-  public async ExportExcel_PrjDataBaseCache(): Promise<ExportExcelData> {
-    const strThisFuncName = this.ExportExcel_PrjDataBaseCache.name;
+  public async ExportExcel_PrjDataBase(): Promise<ExportExcelData> {
+    const strThisFuncName = this.ExportExcel_PrjDataBase.name;
     if (viewVarSet.sortPrjDataBaseBy == null) {
       const strMsg = Format(
         '在显示列表时,排序字段(sortPrjDataBaseBy)为空,请检查!(In BindGv_PrjDataBaseCache)',
@@ -269,20 +262,21 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
       return { arrObjLst: [], sheetName: '', fileName: '' };
     }
 
-    const objPrjDataBaseCond = await CombinePrjDataBaseConditionObj4ExportExcel();
+    const strWhereCond = await CombinePrjDataBaseCondition();
     let arrPrjDataBaseObjLst: Array<clsPrjDataBaseEN> = [];
     try {
-      this.recCount = await PrjDataBase_GetRecCountByCondCache(objPrjDataBaseCond);
+      this.recCount = await PrjDataBase_GetRecCountByCondAsync(strWhereCond);
       if (this.recCount == 0) {
-        const strMsg = Format(
-          '在绑定GvCache过程中,根据条件:[{0}]获取的对象列表数为0!',
-          objPrjDataBaseCond.whereCond,
-        );
-        console.error(strMsg);
+        const lblMsg: HTMLSpanElement = <HTMLSpanElement>document.createElement('span');
+        lblMsg.innerHTML = Format('根据条件:[{0}]获取的对象列表数为0!', strWhereCond);
+        const strMsg = Format('在绑定Gv过程中,根据条件:[{0}]获取的对象列表数为0!', strWhereCond);
+        console.error('Error: ', strMsg);
+        //console.trace();
         alert(strMsg);
         return { arrObjLst: [], sheetName: '', fileName: '' };
       }
-      arrPrjDataBaseObjLst = await PrjDataBase_GetSubObjLstCache(objPrjDataBaseCond);
+
+      arrPrjDataBaseObjLst = await PrjDataBase_GetObjLstAsync(strWhereCond);
     } catch (e) {
       const strMsg = `绑定GridView不成功,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
       console.error(strMsg);
@@ -291,6 +285,10 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
     }
 
     if (arrPrjDataBaseObjLst.length == 0) {
+      const strMsg = `在ExportExcel过程中,根据条件获取的${this.thisTabName}记录数为0!`;
+      console.error('Error: ', strMsg);
+      //console.trace();
+      alert(strMsg);
       return { arrObjLst: [], sheetName: '', fileName: '' };
     }
 
@@ -307,8 +305,8 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
   }
 
   /** 按导出列规格整理导出结果。 */
-  public async ExportExcel_PrjDataBaseCacheAi(): Promise<ExportExcelData> {
-    const raw = await this.ExportExcel_PrjDataBaseCache();
+  public async ExportExcel_PrjDataBaseAi(): Promise<ExportExcelData> {
+    const raw = await this.ExportExcel_PrjDataBase();
     if (raw.arrObjLst.length === 0) return raw;
     const normalizedRows = this.NormalizeExportRowsBySpecs(
       raw.arrObjLst as Array<Record<string, any>>,
@@ -324,7 +322,7 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
 
   /** 导出按钮入口。 */
   public async btnExportExcel_Click() {
-    await this.ExportExcel_PrjDataBaseCache();
+    await this.ExportExcel_PrjDataBase();
   }
 
   /** 把实体列表组装成导出文件数据。 */
@@ -395,8 +393,21 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
   }
 
   /** 按当前条件获取并绑定分页列表。 */
+
   public async BindGv_PrjDataBase4Func(divList: HTMLDivElement) {
     const strThisFuncName = this.BindGv_PrjDataBase4Func.name;
+
+    if (divList == null) {
+      const strMsg = Format(
+        '用于显示列表的div为空,请检查!(in {0}.{1})',
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+      return;
+    }
+    this.listPara.listDiv = divList;
     if (viewVarSet.sortPrjDataBaseBy == null) {
       const strMsg = Format(
         '在显示列表时,排序字段(sortPrjDataBaseBy)为空,请检查!(In BindGv_PrjDataBaseCache)',
@@ -406,41 +417,34 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
       return;
     }
 
-    const objPrjDataBaseCond = await CombinePrjDataBaseConditionObj();
-    const strWhereCond = JSON.stringify(objPrjDataBaseCond);
+    const strWhereCond = await CombinePrjDataBaseCondition();
     const intCurrPageIndex = GetCurrPageIndex(this.objPager.currPageIndex);
     let arrPrjDataBaseExObjLst: Array<clsPrjDataBaseENEx> = [];
 
     try {
-      this.recCount = await PrjDataBase_GetRecCountByCondCache(objPrjDataBaseCond);
+      this.recCount = await PrjDataBase_GetRecCountByCondAsync(strWhereCond);
       if (this.recCount == 0) {
-        const strMsg = Format(
-          '在绑定GvCache过程中,根据条件:[{0}]获取的对象列表数为0!',
-          objPrjDataBaseCond.whereCond,
-        );
-        console.error(strMsg);
+        const lblMsg: HTMLSpanElement = <HTMLSpanElement>document.createElement('span');
+        lblMsg.innerHTML = Format('根据条件:[{0}]获取的对象列表数为0!', strWhereCond);
+        const strMsg = Format('在绑定Gv过程中,根据条件:[{0}]获取的对象列表数为0!', strWhereCond);
+        console.error('Error: ', strMsg);
         alert(strMsg);
         BindTabByList(arrPrjDataBaseExObjLst, true);
         return;
       }
 
-      let strSortFun = (x: any, y: any) => {
-        console.log(x, y);
-        return 0;
-      };
-      const currentCtor = this.constructor as typeof PrjDataBaseCRUDAi;
-      if (currentCtor.sortFunStatic != undefined) {
-        strSortFun = currentCtor.sortFunStatic(viewVarSet.ascOrDesc4SortFun);
-      }
       const objPagerPara: stuPagerPara = {
         pageIndex: intCurrPageIndex,
         pageSize: this.pageSize,
         whereCond: strWhereCond,
-        conditionCollection: objPrjDataBaseCond,
         orderBy: viewVarSet.sortPrjDataBaseBy,
-        sortFun: strSortFun,
+        sortFun: (x, y) => {
+          console.log(x, y);
+          return 0;
+        },
       };
-      arrPrjDataBaseExObjLst = await PrjDataBase_GetObjExLstByPagerCache(objPagerPara);
+
+      arrPrjDataBaseExObjLst = await PrjDataBaseEx_GetObjExLstByPagerAsync(objPagerPara);
     } catch (e) {
       const strMsg = `绑定GridView不成功,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
       console.error(strMsg);
@@ -449,6 +453,9 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
     }
 
     if (arrPrjDataBaseExObjLst.length == 0) {
+      const strKey = Format('{0}', clsPrjDataBaseEN._CurrTabName);
+      const strMsg = `根据条件获取的${this.thisTabName}记录数为0!(Key=${strKey})`;
+      console.error('Error: ', strMsg);
       this.objPager.Hide(divList, this.divName4Pager);
       return;
     }
@@ -490,7 +497,6 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
 
     for (const normalizedFldName of tdFieldNames) {
       if (arrFldName.indexOf(normalizedFldName) > -1) continue;
-
       for (const objInFor of arrPrjDataBaseExObjLst) {
         await PrjDataBaseEx_FuncMapByFldName(normalizedFldName, objInFor);
       }
@@ -511,7 +517,7 @@ export abstract class PrjDataBaseCRUDAi extends AIOperateListBase implements cls
    * - userId (string)
    *
    * 作者: AutoGCLib
-   * 日期: 2026-05-27
+   * 日期: 2026-06-10
    */
   public SortFunExportExcel(a: clsPrjDataBaseEN, b: clsPrjDataBaseEN): number {
     // 第一级排序：userId

@@ -30,7 +30,6 @@ import {
   UserCodePathEx_GetUserGCCodePathWithBackup,
   UserCodePathEx_SetUserGCCodePathWithBackup,
 } from '@/ts/L3ForWApiEx/SystemSet/clsUserCodePathExWApi';
-import { UserCodePrjMainPath_MachineNameEx_GetUserGCRootPathWithBackup } from '@/ts/L3ForWApiEx/SystemSet/clsUserCodePrjMainPath_MachineNameExWApi';
 import { UserCodePath_GetObjLstCache } from '@/ts/L3ForWApi/SystemSet/clsUserCodePathWApi';
 import {
   vFunction4GeneCode_SimEx_CopyToEx,
@@ -66,6 +65,7 @@ import {
 } from '@/ts/LocalFileAccess/LocalFileAccess';
 import { codeTypeId } from '@/views/Table_Field/GeneTabCodeVueShare';
 import { useCMProjectAppRelaStore } from '@/store/modules/CMProjectAppRela';
+import { useUserCodeRootPathStore } from '@/store/modules/userCodeRootPath';
 import { vFunction4Code_SimEx_GetObjByFuncId4CodeCacheEx } from '@/ts/L3ForWApiEx/PrjFunction/clsvFunction4Code_SimExWApi';
 import { Function4GeneCodeEx_GetObjLstByFunctionTemplateIdCache } from '@/ts/L3ForWApiEx/PrjFunction/clsFunction4GeneCodeExWApi';
 import { GC_CodeTypeRelation_GetObjLstAsync } from '@/ts/L3ForWApi/GeneCode/clsGC_CodeTypeRelationWApi';
@@ -190,7 +190,8 @@ export class GeneTabCodeEx implements IShowList {
         IsNullOrEmpty(strMachineName) == false &&
         intApplicationTypeId > 0
       ) {
-        const objCodePath = await UserCodePrjMainPath_MachineNameEx_GetUserGCRootPathWithBackup(
+        // 先查 store 缓存，命中直接返回；未命中由 store 调接口并写入缓存
+        const objCodePath = await useUserCodeRootPathStore().getOrFetch(
           strUserId,
           strMachineName,
           strPrjId,
@@ -270,7 +271,7 @@ export class GeneTabCodeEx implements IShowList {
     }
 
     try {
-      const objCodePath = await UserCodePathEx_GetUserGCCodePathWithBackup(
+      const objCodePath = await useUserCodeRootPathStore().getOrFetchCodePath(
         strUserId,
         strMachineName,
         strPrjId,
@@ -412,7 +413,7 @@ export class GeneTabCodeEx implements IShowList {
         codePathBackup: '',
       };
       try {
-        objCodePath = await UserCodePathEx_GetUserGCCodePathWithBackup(
+        objCodePath = await useUserCodeRootPathStore().getOrFetchCodePath(
           strUserId,
           strMachineName,
           strPrjId,
@@ -464,7 +465,8 @@ export class GeneTabCodeEx implements IShowList {
       });
       if (objDialogResult == null) return;
 
-      const objResult = await UserCodePathEx_SetUserGCCodePathWithBackup({
+      // 通过 store 设置代码类型路径，成功后自动更新缓存
+      const objResult = await useUserCodeRootPathStore().setAndCacheCodePath({
         strUserId,
         strMachineName,
         strPrjId,

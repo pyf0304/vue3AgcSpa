@@ -441,7 +441,7 @@
         <a-modal
           v-model:visible="childDialogVisible"
           :title="childDialogTitle"
-          width="900px"
+          width="600px"
           :destroy-on-close="false"
           @cancel="closeChildDialog"
         >
@@ -485,6 +485,28 @@
             <!-- <keep-alive> -->
 
             <div>
+              <div class="mb-2">
+                <div>
+                  <span class="text-muted">应用类型:</span>
+                  <span id="lblCurrAppType_FeatureRegion">-</span>
+                </div>
+                <div>
+                  <span class="text-muted">前端工程:</span>
+                  <span id="lblCurrFrontend_FeatureRegion">-</span>
+                </div>
+                <div>
+                  <span class="text-muted">当前机器:</span>
+                  <span id="lblCurrMachine_FeatureRegion">-</span>
+                </div>
+                <div>
+                  <span class="text-muted">区域类型:</span>
+                  <span id="lblCurrRegionType_FeatureRegion">功能区域(0008)</span>
+                </div>
+                <div>
+                  <span class="text-muted">生成进度:</span>
+                  <span id="lblGeneProgress_FeatureRegion">未开始</span>
+                </div>
+              </div>
               <div id="divCodeTypeLst"></div>
 
               <div>
@@ -1107,6 +1129,14 @@
         objPage.PageLoadCache();
 
         loadFieldTypeOptions();
+
+        setTimeout(() => {
+          try {
+            objPage.btnCodeGene_Click();
+          } catch (e) {
+            console.error('FeatureRegionFldsCRUD.btnCodeGene_Click', e);
+          }
+        }, 200);
 
         setTimeout(() => {
           reloadChildFieldList();

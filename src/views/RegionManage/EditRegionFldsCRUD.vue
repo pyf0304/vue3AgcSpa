@@ -301,6 +301,28 @@
             </div>
 
             <div>
+              <div class="mb-2">
+                <div>
+                  <span class="text-muted">应用类型:</span>
+                  <span id="lblCurrAppType_EditRegion">-</span>
+                </div>
+                <div>
+                  <span class="text-muted">前端工程:</span>
+                  <span id="lblCurrFrontend_EditRegion">-</span>
+                </div>
+                <div>
+                  <span class="text-muted">当前机器:</span>
+                  <span id="lblCurrMachine_EditRegion">-</span>
+                </div>
+                <div>
+                  <span class="text-muted">区域类型:</span>
+                  <span id="lblCurrRegionType_EditRegion">编辑区(0003)</span>
+                </div>
+                <div>
+                  <span class="text-muted">生成进度:</span>
+                  <span id="lblGeneProgress_EditRegion">未开始</span>
+                </div>
+              </div>
               <div id="divCodeTypeLst"></div>
               <div>
                 <span id="lblResult" class="text-warning"></span><br />
@@ -434,6 +456,13 @@
         const objPage = new EditRegionFldsCRUDEx();
 
         objPage.PageLoadCache();
+        setTimeout(() => {
+          try {
+            objPage.btnCodeGene_Click();
+          } catch (e) {
+            console.error('EditRegionFldsCRUD.btnCodeGene_Click', e);
+          }
+        }, 200);
       });
       function GetPropValue(strPropName: string): any {
         switch (strPropName) {

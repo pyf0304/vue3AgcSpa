@@ -1,8 +1,8 @@
 ﻿/**
  * 类名:clsCMProjectWApi
  * 表名:CMProject(00050512)
- * 版本:2026.05.30(服务器:PYF-AI)
- * 日期:2026/06/01 22:18:59
+ * 版本:2026.05.30(服务器:WIN-SRV103-116)
+ * 日期:2026/06/10 23:47:00
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
@@ -20,7 +20,7 @@
 /**
  * CM项目(CMProject)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2026年06月01日.
+ * Created by pyf on 2026年06月10日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -144,16 +144,16 @@ export async function CMProject_GetObjByKeyAsync(
  * @returns 对象
  */
 export async function CMProject_GetObjByKeyCache(key: CMProjectKey, bolTryAsyncOnce = true) {
-  const strThisFuncName = 'GetObjByKeyCache';
+  const strThisFuncName = 'GetObjByCmPrjIdCache';
 
   if (IsNullOrEmpty(key.cmPrjId) == true) {
-    const strMsg = Format('参数:[key.cmPrjId]不能为空!(In clsCMProjectWApi.GetObjByKeyCache)');
+    const strMsg = Format('参数:[key.cmPrjId]不能为空!(In clsCMProjectWApi.GetObjByCmPrjIdCache)');
     console.error(strMsg);
     throw strMsg;
   }
   if (key.cmPrjId.length != 6) {
     const strMsg = Format(
-      '缓存分类变量:[key.cmPrjId]的长度:[{0}]不正确!(clsCMProjectWApi.GetObjByKeyCache)',
+      '缓存分类变量:[key.cmPrjId]的长度:[{0}]不正确!(clsCMProjectWApi.GetObjByCmPrjIdCache)',
       key.cmPrjId.length,
     );
     console.error(strMsg);
@@ -223,7 +223,7 @@ export async function CMProject_UpdateObjInLstCache(objCMProject: clsCMProjectEN
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-06-01
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -235,7 +235,7 @@ export function CMProject_SortFunDefa(a: clsCMProjectEN, b: clsCMProjectEN): num
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2026-06-01
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -249,7 +249,7 @@ export function CMProject_SortFunDefa2Fld(a: clsCMProjectEN, b: clsCMProjectEN):
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-06-01
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -275,6 +275,12 @@ export function CMProject_SortFunByKey(strKey: string, AscOrDesc: string) {
       case clsCMProjectEN.con_ApplicationTypeId:
         return (a: clsCMProjectEN, b: clsCMProjectEN) => {
           return a.applicationTypeId - b.applicationTypeId;
+        };
+      case clsCMProjectEN.con_UserCodeRoot:
+        return (a: clsCMProjectEN, b: clsCMProjectEN) => {
+          if (a.userCodeRoot == null) return -1;
+          if (b.userCodeRoot == null) return 1;
+          return a.userCodeRoot.localeCompare(b.userCodeRoot);
         };
       case clsCMProjectEN.con_FunctionTemplateId:
         return (a: clsCMProjectEN, b: clsCMProjectEN) => {
@@ -355,6 +361,12 @@ export function CMProject_SortFunByKey(strKey: string, AscOrDesc: string) {
       case clsCMProjectEN.con_ApplicationTypeId:
         return (a: clsCMProjectEN, b: clsCMProjectEN) => {
           return b.applicationTypeId - a.applicationTypeId;
+        };
+      case clsCMProjectEN.con_UserCodeRoot:
+        return (a: clsCMProjectEN, b: clsCMProjectEN) => {
+          if (b.userCodeRoot == null) return -1;
+          if (a.userCodeRoot == null) return 1;
+          return b.userCodeRoot.localeCompare(a.userCodeRoot);
         };
       case clsCMProjectEN.con_FunctionTemplateId:
         return (a: clsCMProjectEN, b: clsCMProjectEN) => {
@@ -467,7 +479,7 @@ export async function CMProject_GetNameByKeyCache(key: CMProjectKey) {
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2026-06-01
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -492,6 +504,10 @@ export async function CMProject_FilterFunByKey(strKey: string, value: any) {
     case clsCMProjectEN.con_ApplicationTypeId:
       return (obj: clsCMProjectEN) => {
         return obj.applicationTypeId === value;
+      };
+    case clsCMProjectEN.con_UserCodeRoot:
+      return (obj: clsCMProjectEN) => {
+        return obj.userCodeRoot === value;
       };
     case clsCMProjectEN.con_FunctionTemplateId:
       return (obj: clsCMProjectEN) => {
@@ -543,7 +559,7 @@ export async function CMProject_FilterFunByKey(strKey: string, value: any) {
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2026-06-01
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -584,7 +600,7 @@ export async function CMProject_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2026-06-01
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -2047,7 +2063,7 @@ export function CMProject_CopyToEx(objCMProjectENS: clsCMProjectEN): clsCMProjec
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2026-06-01
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -2087,7 +2103,7 @@ export function CMProject_FuncMapByFldName(strFldName: string, objCMProjectEx: c
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2026-06-01
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -3640,6 +3656,14 @@ export function CMProject_CheckPropertyNew(pobjCMProjectEN: clsCMProjectEN) {
     );
   }
   if (
+    IsNullOrEmpty(pobjCMProjectEN.userCodeRoot) == false &&
+    GetStrLen(pobjCMProjectEN.userCodeRoot) > 50
+  ) {
+    throw new Error(
+      `(errid:Watl000413)字段[用户代码根(userCodeRoot)]的长度不能超过50(In CM项目(CMProject))!值:${pobjCMProjectEN.userCodeRoot}(clsCMProjectBL:CheckPropertyNew)`,
+    );
+  }
+  if (
     IsNullOrEmpty(pobjCMProjectEN.functionTemplateId) == false &&
     GetStrLen(pobjCMProjectEN.functionTemplateId) > 4
   ) {
@@ -3724,6 +3748,15 @@ export function CMProject_CheckPropertyNew(pobjCMProjectEN: clsCMProjectEN) {
   ) {
     throw new Error(
       `(errid:Watl000414)字段[应用程序类型ID(applicationTypeId)]的值:[${pobjCMProjectEN.applicationTypeId}], 非法,应该为数值型(In CM项目(CMProject))!(clsCMProjectBL:CheckPropertyNew0)`,
+    );
+  }
+  if (
+    IsNullOrEmpty(pobjCMProjectEN.userCodeRoot) == false &&
+    undefined !== pobjCMProjectEN.userCodeRoot &&
+    tzDataType.isString(pobjCMProjectEN.userCodeRoot) === false
+  ) {
+    throw new Error(
+      `(errid:Watl000414)字段[用户代码根(userCodeRoot)]的值:[${pobjCMProjectEN.userCodeRoot}], 非法,应该为字符型(In CM项目(CMProject))!(clsCMProjectBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -3845,6 +3878,14 @@ export function CMProject_CheckProperty4Update(pobjCMProjectEN: clsCMProjectEN) 
     );
   }
   if (
+    IsNullOrEmpty(pobjCMProjectEN.userCodeRoot) == false &&
+    GetStrLen(pobjCMProjectEN.userCodeRoot) > 50
+  ) {
+    throw new Error(
+      `(errid:Watl000416)字段[用户代码根(userCodeRoot)]的长度不能超过50(In CM项目(CMProject))!值:${pobjCMProjectEN.userCodeRoot}(clsCMProjectBL:CheckProperty4Update)`,
+    );
+  }
+  if (
     IsNullOrEmpty(pobjCMProjectEN.functionTemplateId) == false &&
     GetStrLen(pobjCMProjectEN.functionTemplateId) > 4
   ) {
@@ -3929,6 +3970,15 @@ export function CMProject_CheckProperty4Update(pobjCMProjectEN: clsCMProjectEN) 
   ) {
     throw new Error(
       `(errid:Watl000417)字段[应用程序类型ID(applicationTypeId)]的值:[${pobjCMProjectEN.applicationTypeId}], 非法,应该为数值型(In CM项目(CMProject))!(clsCMProjectBL:CheckProperty4Update)`,
+    );
+  }
+  if (
+    IsNullOrEmpty(pobjCMProjectEN.userCodeRoot) == false &&
+    undefined !== pobjCMProjectEN.userCodeRoot &&
+    tzDataType.isString(pobjCMProjectEN.userCodeRoot) === false
+  ) {
+    throw new Error(
+      `(errid:Watl000417)字段[用户代码根(userCodeRoot)]的值:[${pobjCMProjectEN.userCodeRoot}], 非法,应该为字符型(In CM项目(CMProject))!(clsCMProjectBL:CheckProperty4Update)`,
     );
   }
   if (
@@ -4028,7 +4078,7 @@ export function CMProject_CheckProperty4Update(pobjCMProjectEN: clsCMProjectEN) 
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2026-06-01
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -4049,7 +4099,7 @@ export function CMProject_GetJSONStrByObj(pobjCMProjectEN: clsCMProjectEN): stri
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2026-06-01
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -4070,7 +4120,7 @@ export function CMProject_GetObjLstByJSONStr(strJSON: string): Array<clsCMProjec
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2026-06-01
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrCMProjectObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -4090,7 +4140,7 @@ export function CMProject_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2026-06-01
+ * 日期:2026-06-10
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -4176,6 +4226,21 @@ export function CMProject_GetCombineCondition(objCMProjectCond: clsCMProjectEN):
       clsCMProjectEN.con_ApplicationTypeId,
       objCMProjectCond.applicationTypeId,
       strComparisonOpApplicationTypeId,
+    );
+  }
+  if (
+    Object.prototype.hasOwnProperty.call(
+      objCMProjectCond.dicFldComparisonOp,
+      clsCMProjectEN.con_UserCodeRoot,
+    ) == true
+  ) {
+    const strComparisonOpUserCodeRoot: string =
+      objCMProjectCond.dicFldComparisonOp[clsCMProjectEN.con_UserCodeRoot];
+    strWhereCond += Format(
+      " And {0} {2} '{1}'",
+      clsCMProjectEN.con_UserCodeRoot,
+      objCMProjectCond.userCodeRoot,
+      strComparisonOpUserCodeRoot,
     );
   }
   if (

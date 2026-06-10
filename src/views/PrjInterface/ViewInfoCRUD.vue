@@ -652,6 +652,8 @@
         await BindDdl4FeatureRegion();
         ViewInfoCRUDEx.vuebtn_Click = btn_Click;
         ViewInfoCRUDEx.GetPropValue = GetPropValue;
+        ViewInfoCRUDEx.ShowLst = ShowLst;
+        ViewInfoCRUDEx.ShowEmptyRecNumInfo = ShowEmptyRecNumInfo;
         objPage.value = new ViewInfoCRUDEx();
         await objPage.value.PageLoadCache();
       });
@@ -696,17 +698,6 @@
       const dataList = ref<Array<clsViewInfoENEx>>([]);
 
       const refDivDataLst = ref();
-
-      onMounted(() => {
-        // ViewInfoCRUDEx.GetPropValue = GetPropValue;
-        ViewInfoCRUDEx.vuebtn_Click = btn_Click;
-        ViewInfoCRUDEx.ShowLst = ShowLst;
-        ViewInfoCRUDEx.ShowEmptyRecNumInfo = ShowEmptyRecNumInfo;
-        const objPage = new ViewInfoCRUDEx();
-
-        objPage.PageLoadCache();
-        //this.myonload();
-      });
 
       const ShowLst = async (arrObjLst: Array<clsViewInfoENEx>): Promise<void> => {
         // console.log(arrObjLst);

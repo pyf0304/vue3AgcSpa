@@ -44,7 +44,10 @@ import {
 import { clsQryRegionFldsEN } from '@/ts/L0Entity/RegionManage/clsQryRegionFldsEN';
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
 import { PrjTabFldEx_GetFldIdLstByTabIdCache } from '@/ts/L3ForWApiEx/Table_Field/clsPrjTabFldExWApi';
-import { ViewRegionEx_GetRegionIdByTypeCache } from '@/ts/L3ForWApiEx/RegionManage/clsViewRegionExWApi';
+import {
+  ViewRegionEx_GetObjLstByViewIdCache,
+  ViewRegionEx_GetRegionIdByTypeCache,
+} from '@/ts/L3ForWApiEx/RegionManage/clsViewRegionExWApi';
 import GCVariable_EditEx from '@/views/GeneCode/GCVariable_EditEx';
 
 import { Position_SetDiv_Bottom } from '@/ts/PubFun/clsPosition';
@@ -55,9 +58,19 @@ import { ASPHtmlTableEx } from '@/ts/L0Entity/GeneCSharpEx/clsASPHtmlTableENEx';
 import { ASPDivEx } from '@/ts/L0Entity/GeneCSharpEx/clsASPDivENEx';
 import { ASPUlEx } from '@/ts/L0Entity/GeneCSharpEx/clsASPUlENEx';
 import { enumGCContainerType } from '@/ts/L0Entity/GeneCode/clsGCContainerTypeEN';
+import { clsAppCodeTypeRelaENEx } from '@/ts/L0Entity/GeneCode/clsAppCodeTypeRelaENEx';
+import { enumCodeType } from '@/ts/L0Entity/GeneCode/clsCodeTypeEN';
 import { clsASPHtmlTableBLEx } from '@/ts/L2BLL/GeneCSharp/clsASPHtmlTableBLEx';
 import { clsASPDivBLEx } from '@/ts/L2BLL/GeneCSharp/clsASPDivBLEx';
 import { clsASPUlBLEx } from '@/ts/L2BLL/GeneCSharp/clsASPUlBLEx';
+import { ApplicationType_GetObjByKeyCache } from '@/ts/L3ForWApi/GeneCode/clsApplicationTypeWApi';
+import { vCodeType_Sim_GetObjByCodeTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
+import {
+  AppCodeTypeRelaEx_CopyToEx,
+  AppCodeTypeRelaEx_FuncMapByFldName,
+  AppCodeTypeRelaEx_GetObjExLstByApplicationTypeIdExCache,
+  AppCodeTypeRelaEx_SortFunByGroupNameAndOrderNum,
+} from '@/ts/L3ForWApiEx/GeneCode/clsAppCodeTypeRelaExWApi';
 import {
   QryRegionFldsEx_GetControlGroup,
   QryRegionFldsEx_GetObjEx4GCLstByRegionIdCacheEx,
@@ -86,6 +99,11 @@ import { RegionId_Static as RegionId_Static_Sim } from '@/views/RegionManage/Vie
 
 import { ConditionCollection } from '@/ts/PubFun/ConditionCollection';
 import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
+import { clsGCPara } from '@/ts/L0Entity/clsGCPara';
+import { AutoGeneCode_GeneCodeAsync } from '@/ts/L3ForWApiEx/GeneCode/AutoGeneCodeWApi';
+import { clsDateTime } from '@/ts/PubFun/clsDateTime';
+import { clsPubSessionStorage } from '@/ts/PubFun/clsPubSessionStorage';
+import { getMachineNameFromLocalAgent } from '@/ts/LocalFileAccess/LocalFileAccess';
 
 // import { divVarSet } from '@/views/RegionManage/QryRegionFldsCRUD.vue';
 
@@ -99,6 +117,8 @@ export default class QryRegionFldsCRUDEx extends QryRegionFldsCRUD implements IS
   public static divVisualEffects: HTMLDivElement; //  = GetUniDivInDoc('divVisualEffects');
   public static ActiveTabName = enumActiveTabName.VisualEffects_01;
   public static SelectedKeyIds = '';
+  public static strViewId4Region = '';
+  public static bolIsGeneCodeRegion = false;
   /*
    * 每页记录数，在扩展类可以修改
    */
@@ -160,6 +180,9 @@ export default class QryRegionFldsCRUDEx extends QryRegionFldsCRUD implements IS
     switch (strCommandName) {
       case 'AddVar': //提交
         // objPage.btnAddVar_Click(strKeyId);
+        break;
+      case 'CodeGene': //自定义功能
+        objPage.btnCodeGene_Click();
         break;
       case 'SetColSpan': //自定义功能
         objPage.btnSetColSpan_Click();
@@ -391,6 +414,7 @@ export default class QryRegionFldsCRUDEx extends QryRegionFldsCRUD implements IS
       Position_SetDiv_Bottom('divEdit_Loc');
 
       const strViewId = (await clsPubVar4Web.GetViewId(this.qsViewId)) || viewId_Main.value;
+      QryRegionFldsCRUDEx.strViewId4Region = strViewId;
       if (IsNullOrEmpty(strViewId) == true) {
         const strMsg = `查询区缺少界面Id，页面启动不成功.(in ${this.constructor.name}.${strThisFuncName})`;
         console.error(strMsg);
@@ -1226,6 +1250,326 @@ export default class QryRegionFldsCRUDEx extends QryRegionFldsCRUD implements IS
       alert(strMsg);
     }
   }
+
+  public async btnCodeGene_Click() {
+    try {
+      if (QryRegionFldsCRUDEx.bolIsGeneCodeRegion == true) return;
+      const strViewId = QryRegionFldsCRUDEx.strViewId4Region || viewId_Main.value;
+      if (IsNullOrEmpty(strViewId) == true) return;
+      await this.ShowCodeTypeButton(strViewId);
+      QryRegionFldsCRUDEx.bolIsGeneCodeRegion = true;
+    } catch (e: any) {
+      console.log('catch(e)=');
+      console.error(e);
+      const strMsg = `初始化生成代码列表不成功,${e}.(In btnCodeGene_Click())`;
+      alert(strMsg);
+    }
+  }
+
+  public async ShowCodeTypeButton(strViewId: string) {
+    const strThisFuncName = this.ShowCodeTypeButton.name;
+    const viewInfoStore = useviewInfoStore();
+    const objViewInfo = await viewInfoStore.getObj(strViewId);
+    if (objViewInfo == null) {
+      const strMsg = Format(
+        '在项目:[{0}]中，界面Id:[{1}]没有相应界面，请检查！',
+        clsPrivateSessionStorage.currSelPrjName,
+        strViewId,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+      return;
+    }
+
+    const arrViewRegion = await ViewRegionEx_GetObjLstByViewIdCache(
+      strViewId,
+      clsPrivateSessionStorage.cmPrjId,
+    );
+
+    const objApplicationType = await ApplicationType_GetObjByKeyCache({
+      applicationTypeId: objViewInfo.applicationTypeId,
+    });
+    if (objApplicationType == null) {
+      const strMsg = Format(
+        '应用Id:[{0}]，没有相应的类型，请检查！',
+        objViewInfo.applicationTypeId,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+      return;
+    }
+
+    const objLblAppType = document.getElementById('lblCurrAppType_QryRegion');
+    if (objLblAppType != null) {
+      objLblAppType.textContent = `${objApplicationType.applicationTypeName}(${objApplicationType.applicationTypeId})`;
+    }
+
+    const objLblFrontend = document.getElementById('lblCurrFrontend_QryRegion');
+    if (objLblFrontend != null) {
+      objLblFrontend.textContent = clsPrivateSessionStorage.cmPrjId;
+    }
+
+    const objLblRegionType = document.getElementById('lblCurrRegionType_QryRegion');
+    if (objLblRegionType != null) {
+      objLblRegionType.textContent = '查询区(0001)';
+    }
+
+    const objLblMachine = document.getElementById('lblCurrMachine_QryRegion');
+    if (objLblMachine != null) {
+      try {
+        const strMachineName = String(await getMachineNameFromLocalAgent()).trim();
+        objLblMachine.textContent = IsNullOrEmpty(strMachineName) ? '获取失败' : strMachineName;
+      } catch {
+        objLblMachine.textContent = '获取失败';
+      }
+    }
+
+    const arrAppCodeTypeRelaObjLst = await AppCodeTypeRelaEx_GetObjExLstByApplicationTypeIdExCache(
+      objViewInfo.applicationTypeId,
+    );
+    let arrAppCodeTypeRelaExObjLst: Array<clsAppCodeTypeRelaENEx> = arrAppCodeTypeRelaObjLst.map(
+      AppCodeTypeRelaEx_CopyToEx,
+    );
+    const mapCodeTypeRegionType = new Map<string, string>();
+    for (const x of arrAppCodeTypeRelaExObjLst) {
+      const objCodeType = await vCodeType_Sim_GetObjByCodeTypeIdCache(x.codeTypeId);
+      if (objCodeType == null) {
+        const strMsg = Format('代码类型Id:[{0}]，没有相应的类型，请检查！', x.codeTypeId);
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      mapCodeTypeRegionType.set(x.codeTypeId, objCodeType.regionTypeId || '');
+      const strGroupName1 = objCodeType.groupName;
+      const arrGroupName1 = strGroupName1.split(',');
+      x.groupName = arrGroupName1[0];
+    }
+
+    arrAppCodeTypeRelaExObjLst = arrAppCodeTypeRelaExObjLst.sort(
+      AppCodeTypeRelaEx_SortFunByGroupNameAndOrderNum,
+    );
+
+    for (const objInFor of arrAppCodeTypeRelaExObjLst) {
+      await AppCodeTypeRelaEx_FuncMapByFldName(
+        clsAppCodeTypeRelaENEx.con_ApplicationTypeName,
+        objInFor,
+      );
+      await AppCodeTypeRelaEx_FuncMapByFldName(clsAppCodeTypeRelaENEx.con_DependsOn, objInFor);
+      await AppCodeTypeRelaEx_FuncMapByFldName(clsAppCodeTypeRelaENEx.con_GroupName, objInFor);
+      await AppCodeTypeRelaEx_FuncMapByFldName(
+        clsAppCodeTypeRelaENEx.con_ProgLangTypeSimName,
+        objInFor,
+      );
+      await AppCodeTypeRelaEx_FuncMapByFldName(clsAppCodeTypeRelaENEx.con_CodeTypeName, objInFor);
+      await AppCodeTypeRelaEx_FuncMapByFldName(
+        clsAppCodeTypeRelaENEx.con_CodeTypeSimName,
+        objInFor,
+      );
+      await AppCodeTypeRelaEx_FuncMapByFldName(
+        clsAppCodeTypeRelaENEx.con_ProgLangTypeName,
+        objInFor,
+      );
+    }
+
+    const arrObjLst_V2: Array<clsAppCodeTypeRelaENEx> = arrAppCodeTypeRelaExObjLst.filter(
+      (x) =>
+        x.dependsOn == 'View' &&
+        mapCodeTypeRegionType.get(x.codeTypeId) == enumRegionType.QueryRegion_0001,
+    );
+
+    let intCount = 0;
+    const divCodeTypeLst = <HTMLDivElement>document.getElementById('divCodeTypeLst');
+    divCodeTypeLst.innerHTML = '';
+    const arrGroupName0 = arrObjLst_V2.map((x) => x.groupName);
+    const arrGroupName: Array<string> = Array.from(new Set(arrGroupName0));
+
+    for (const strGroupName of arrGroupName) {
+      for (const objInFor of arrObjLst_V2) {
+        if (objInFor.groupName != strGroupName) continue;
+        let bolIsExistRegion = true;
+        let arr;
+        switch (objInFor.codeTypeId) {
+          case enumCodeType.WA_ViewScript_Edit_TS_0243:
+          case enumCodeType.WA_ViewScript_EditCS_TS_0248:
+          case enumCodeType.WA_ViewScript_EditCSEx_TS_0249:
+            arr = arrViewRegion.filter((x) => x.regionTypeId == enumRegionType.EditRegion_0003);
+            if (arr.length == 0) bolIsExistRegion = false;
+            break;
+          case enumCodeType.WA_ViewScript_Detail_TS_0244:
+          case enumCodeType.WA_ViewScript_DetailCS_TS_0251:
+          case enumCodeType.WA_ViewScript_DetailCSEx_TS_0252:
+            arr = arrViewRegion.filter((x) => x.regionTypeId == enumRegionType.DetailRegion_0006);
+            if (arr.length == 0) bolIsExistRegion = false;
+            break;
+        }
+
+        const objHtmlInputButton = <HTMLInputElement>document.createElement('input');
+        objHtmlInputButton.type = 'button';
+        objHtmlInputButton.id = Format('btn{0}1', objInFor.codeTypeId);
+        objHtmlInputButton.name = Format('btn{0}1', objInFor.codeTypeId);
+
+        if (bolIsExistRegion == false) {
+          objHtmlInputButton.setAttribute(
+            'class',
+            'btn btn-outline-secondary btn-sm ml-2 disabled',
+          );
+          objHtmlInputButton.setAttribute('disabled', 'disabled');
+          objHtmlInputButton.title = '该界面无相关区域';
+        } else {
+          objHtmlInputButton.setAttribute('class', 'btn btn-outline-primary btn-sm ml-2');
+        }
+
+        objHtmlInputButton.setAttribute('codeTypeId', objInFor.codeTypeId);
+        objHtmlInputButton.setAttribute('viewId', strViewId);
+        objHtmlInputButton.setAttribute(
+          'applicationTypeId',
+          objViewInfo.applicationTypeId.toString(),
+        );
+        objHtmlInputButton.onclick = async function (this: HTMLInputElement, evt: Event) {
+          await QryRegionFldsCRUDEx.btnCodeType_Click(this, evt);
+        };
+        objHtmlInputButton.value = Format(
+          '{0}({1})',
+          objInFor.codeTypeSimName,
+          objInFor.progLangTypeSimName,
+        );
+
+        divCodeTypeLst.appendChild(objHtmlInputButton);
+        intCount++;
+      }
+    }
+
+    if (intCount == 0) {
+      const strMsg = Format(
+        '应用:{0}({1})没有用于[View]且区域类型为[查询区]的代码类型.(In {2}.{3})',
+        objApplicationType.applicationTypeName,
+        objApplicationType.applicationTypeId,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      alert(strMsg);
+      return;
+    }
+  }
+
+  public static async btnCodeType_Click(thisControl: any, event: any) {
+    console.log(event);
+    const thisA = thisControl as HTMLInputElement;
+    const strCodeTypeId = thisA.getAttribute('codeTypeId') || '';
+    const strViewId = thisA.getAttribute('viewId') || '';
+    const strApplicationTypeId = thisA.getAttribute('applicationTypeId') || '';
+
+    if (
+      IsNullOrEmpty(strCodeTypeId) ||
+      IsNullOrEmpty(strViewId) ||
+      IsNullOrEmpty(strApplicationTypeId)
+    ) {
+      alert('生成代码参数不完整，请检查代码类型、界面Id、应用类型！');
+      return;
+    }
+
+    const objProgress = document.getElementById('lblGeneProgress_QryRegion');
+    if (objProgress != null) {
+      objProgress.textContent = `开始生成(${strCodeTypeId})...`;
+    }
+
+    const bolSuccess = await QryRegionFldsCRUDEx.GeneCode4View(
+      strViewId,
+      strCodeTypeId,
+      Number(strApplicationTypeId),
+    );
+    if (objProgress != null) {
+      objProgress.textContent = bolSuccess
+        ? `已完成(1/1): ${strCodeTypeId}`
+        : `生成失败(1/1): ${strCodeTypeId}`;
+    }
+  }
+
+  public static async GeneCode4View(
+    strViewId: string,
+    strCodeTypeId: string,
+    intApplicationTypeId: number,
+  ): Promise<boolean> {
+    const objViewInfoStore = useviewInfoStore();
+    const objViewInfo = await objViewInfoStore.getObj(strViewId);
+    if (objViewInfo == null) {
+      alert(`界面Id:[${strViewId}]不存在，无法生成代码！`);
+      return false;
+    }
+
+    const objCodeType = await vCodeType_Sim_GetObjByCodeTypeIdCache(strCodeTypeId);
+    if (objCodeType == null) {
+      alert(`代码类型Id:[${strCodeTypeId}]不存在，无法生成代码！`);
+      return false;
+    }
+
+    const objGCPara = new clsGCPara();
+    objGCPara.prjId = clsPrivateSessionStorage.currSelPrjId;
+    objGCPara.cmPrjId = clsPrivateSessionStorage.cmPrjId;
+    objGCPara.prjDataBaseId = clsPrivateSessionStorage.currPrjDataBaseId;
+    objGCPara.gcUserId = clsPubLocalStorage.userId;
+    objGCPara.dataBaseType = clsPubSessionStorage.currDataBaseTypeId;
+    objGCPara.typeParas = '';
+    objGCPara.codeTypeId = strCodeTypeId;
+    objGCPara.applicationTypeId = intApplicationTypeId;
+    objGCPara.viewId = strViewId;
+
+    if (objCodeType.dependsOn == 'Table') {
+      objGCPara.tabId = String(objViewInfo.mainTabId ?? '').trim();
+      if (objGCPara.tabId == '') {
+        alert(
+          `代码类型:[${objCodeType.codeTypeId}](${objCodeType.codeTypeName})依赖Table，当前界面未设置主表Id(mainTabId)，无法生成！`,
+        );
+        return false;
+      }
+    }
+
+    if (
+      IsNullOrEmpty(objGCPara.prjId) ||
+      IsNullOrEmpty(objGCPara.cmPrjId) ||
+      IsNullOrEmpty(objGCPara.prjDataBaseId) ||
+      IsNullOrEmpty(objGCPara.gcUserId) ||
+      IsNullOrEmpty(objGCPara.dataBaseType)
+    ) {
+      alert('生成代码上下文不完整（工程/CM工程/数据库/用户），无法生成！');
+      return false;
+    }
+
+    try {
+      const strCurrDate = clsDateTime.getTodayDateTimeStr(1);
+      const objGCResult = await AutoGeneCode_GeneCodeAsync(objGCPara);
+      const objResult = document.getElementById('lblResult');
+      const objClassName = document.getElementById('lblClassName') as HTMLInputElement | null;
+      const objFileName = document.getElementById('lblFileName') as HTMLInputElement | null;
+      const objCodeText = document.getElementById('txtCodeText') as HTMLTextAreaElement | null;
+
+      if (objGCResult == null) {
+        if (objResult != null) objResult.textContent = `生成代码不成功! 时间:${strCurrDate}`;
+        if (objCodeText != null) objCodeText.value = `生成代码不成功! 时间:${strCurrDate}`;
+        return false;
+      }
+
+      if (objClassName != null) objClassName.value = objGCResult.re_ClsName;
+      if (objFileName != null) objFileName.value = objGCResult.re_FileNameWithModuleName;
+
+      if (objGCResult.errorId == 0) {
+        if (objCodeText != null) objCodeText.value = objGCResult.codeText;
+        if (objResult != null) objResult.textContent = `生成代码成功! 时间:${strCurrDate}`;
+        return true;
+      }
+
+      if (objCodeText != null) objCodeText.value = objGCResult.errorMsg || '';
+      if (objResult != null) objResult.textContent = `生成代码失败! 时间:${strCurrDate}`;
+      return false;
+    } catch (e: any) {
+      const strMsg = `生成代码不成功,${e}.`;
+      alert(strMsg);
+      const objResult = document.getElementById('lblResult');
+      if (objResult != null) objResult.textContent = strMsg;
+      return false;
+    }
+  }
+
   public get qsViewId() {
     const strName = 'viewId';
     const reg = new RegExp(`(^|&)${strName}=([^&]*)(&|$)`, 'i');

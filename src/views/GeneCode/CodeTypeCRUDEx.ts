@@ -1,6 +1,7 @@
 ﻿import { CodeTypeCRUD } from '@/viewsBase/GeneCode/CodeTypeCRUD';
 import {
   GetCheckedKeyIdsInDivObj,
+  GetDivObjInDivObj,
   GetFirstCheckedKeyIdInDivObj,
   GetSelectValueInDivObj,
   SetSelectValueByIdInDivObj,
@@ -17,11 +18,26 @@ import {
 } from '@/ts/L3ForWApi/GeneCode/clsCodeTypeWApi';
 import { vCodeType_Sim_ReFreshThisCache } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
 import { SQLDSType_BindDdl_SqlDsTypeIdInDivCache } from '@/ts/L3ForWApi/PrjInterface/clsSQLDSTypeWApi';
+import { CodeTypeEx_FuncMapByFldName } from '@/ts/L3ForWApiEx/GeneCode/clsCodeTypeExWApi';
 import { vCodeType_SimEx_BindDdl_GroupNameCache } from '@/ts/L3ForWApiEx/GeneCode/clsvCodeType_SimExWApi';
-import { BindDdl_TrueAndFalseInDivObj, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
+import {
+  BindDdl_TrueAndFalseInDivObj,
+  BindTab,
+  ObjectAssign,
+  SortFun,
+} from '@/ts/PubFun/clsCommFunc4Web';
 import { AccessBindGvDefault, AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
-import { divVarSet, refCodeType_Edit, viewVarSet } from '@/views/GeneCode/CodeTypeVueShare';
+import {
+  BindTabByList,
+  dataColumn,
+  divVarSet,
+  refCodeType_Edit,
+  refCodeType_List,
+  viewVarSet,
+} from '@/views/GeneCode/CodeTypeVueShare';
 import CodeType_EditEx from '@/views/GeneCode/CodeType_EditEx';
+import { clsCodeTypeENEx } from '@/ts/L0Entity/GeneCode/clsCodeTypeENEx';
+import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
 
 /** CodeTypeCRUDEx 的摘要说明。其中Q代表查询,U代表修改
  (AutoGCLib.WA_ViewScriptCSEx_TS4TypeScript:GeneCode)
@@ -180,6 +196,9 @@ export default class CodeTypeCRUDEx extends CodeTypeCRUD implements IShowList {
         break;
       case 'SetSqlDsTypeId': //查询记录
         objPage.btnSetSqlDsTypeId_Click();
+        break;
+      case 'SetRegionTypeId': //查询记录
+        objPage.btnSetRegionTypeId_Click();
         break;
 
       case 'CopyRecord': //复制记录
@@ -473,8 +492,475 @@ export default class CodeTypeCRUDEx extends CodeTypeCRUD implements IShowList {
       alert(strMsg);
     }
   }
+
+  /** 设置字段值-RegionTypeId
+   * (Custom)
+   **/
+  public async SetRegionTypeId(arrCodeTypeId: Array<string>, strRegionTypeId: string) {
+    const strThisFuncName = this.SetRegionTypeId.name;
+    if (strRegionTypeId == null || strRegionTypeId == '' || strRegionTypeId == '0') {
+      const strMsg = '请输入区域类型Id(RegionTypeId)!';
+      console.error('Error: ', strMsg);
+      alert(strMsg);
+      return '';
+    }
+    if (arrCodeTypeId.length == 0) {
+      const strMsg = '没有选择记录，不能设置字段值!';
+      console.error('Error: ', strMsg);
+      alert(strMsg);
+      return '';
+    }
+    try {
+      const arrCodeTypeObjLst = await CodeType_GetObjLstByCodeTypeIdLstAsync(arrCodeTypeId);
+      let intCount = 0;
+      for (const objInFor of arrCodeTypeObjLst) {
+        const objCodeTypeEN = new clsCodeTypeEN();
+        ObjectAssign(objCodeTypeEN, objInFor);
+        objCodeTypeEN.SetCodeTypeId(objInFor.codeTypeId);
+        objCodeTypeEN.SetRegionTypeId(strRegionTypeId);
+        let returnBool = false;
+        try {
+          objCodeTypeEN.sfUpdFldSetStr = objCodeTypeEN.updFldString;
+          returnBool = await CodeType_UpdateRecordAsync(objCodeTypeEN);
+        } catch (e) {
+          const strMsg = Format(
+            '设置记录不成功,{0}.(in {1}.{2})',
+            e,
+            this.constructor.name,
+            strThisFuncName,
+          );
+          console.error(strMsg);
+          throw strMsg;
+        }
+        if (returnBool == true) {
+          intCount++;
+        } else {
+          const strInfo = Format('设置记录不成功!');
+          alert(strInfo);
+        }
+      }
+      const strInfo = Format('共设置了{0}条记录的区域类型!', intCount);
+      alert(strInfo);
+      if (intCount > 0) {
+        vCodeType_Sim_ReFreshThisCache();
+      }
+    } catch (e) {
+      const strMsg = Format(
+        '设置记录不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error('Error: ', strMsg);
+      alert(strMsg);
+    }
+  }
+
+  /** 设置字段值-RegionTypeId
+   * (Custom)
+   **/
+  public async btnSetRegionTypeId_Click() {
+    const strThisFuncName = this.btnSetRegionTypeId_Click.name;
+    try {
+      const arrKeyIds = GetCheckedKeyIdsInDivObj(divVarSet.refDivList);
+      if (arrKeyIds.length == 0) {
+        alert('请选择需要设置区域类型的记录！');
+        return '';
+      }
+      const strRegionTypeId = GetSelectValueInDivObj(
+        divVarSet.refDivFunction,
+        'ddlRegionTypeId_SetFldValue',
+      );
+      await this.SetRegionTypeId(arrKeyIds, strRegionTypeId);
+      await this.BindGv_CodeType4Func(divVarSet.refDivList);
+    } catch (e) {
+      const strMsg = Format(
+        '设置记录不成功,{0}.(in {1}.{2})',
+        e,
+        this.constructor.name,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      alert(strMsg);
+    }
+  }
+
+  /**
+   * 扩展字段值的函数映射（扩展层实现，避免依赖可覆盖生成层）
+   */
+  public async ExtendFldFuncMap(
+    arrCodeTypeExObjLst: Array<clsCodeTypeENEx>,
+    arrDataColumn: Array<clsDataColumn>,
+  ) {
+    const arrFldName = clsCodeTypeEN._AttributeName;
+    for (const objDataColumn of arrDataColumn) {
+      if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
+      if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;
+      for (const objInFor of arrCodeTypeExObjLst) {
+        await CodeTypeEx_FuncMapByFldName(objDataColumn.fldName, objInFor);
+      }
+    }
+  }
+
+  /**
+   * 扩展Td字段值的函数映射（扩展层实现，避免依赖可覆盖生成层）
+   */
+  public async ExtendTdFldFuncMap(arrCodeTypeExObjLst: Array<clsCodeTypeENEx>) {
+    const arrFldName = clsCodeTypeEN._AttributeName;
+    const tdFieldNames = refCodeType_List.value?.tdFieldNames;
+    for (const strFldName of tdFieldNames) {
+      if (IsNullOrEmpty(strFldName) == true) continue;
+      if (arrFldName.indexOf(strFldName) > -1) continue;
+      for (const objInFor of arrCodeTypeExObjLst) {
+        await CodeTypeEx_FuncMapByFldName(strFldName, objInFor);
+      }
+    }
+  }
+
+  /**
+   * 显示CodeType对象的所有属性值（扩展层复制，防止生成层覆盖）
+   */
+  public async BindTab_CodeType4Func(
+    divContainer: HTMLDivElement,
+    arrCodeTypeExObjLst: Array<clsCodeTypeENEx>,
+  ) {
+    const strThisFuncName = this.BindTab_CodeType4Func.name;
+    if (divContainer == null) {
+      alert(Format('{0}不存在!', divContainer));
+      return;
+    }
+    const arrDataColumn: Array<clsDataColumn> = [
+      {
+        fldName: '',
+        sortBy: '',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'CheckBox',
+        orderNum: 1,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_OrderNum,
+        sortBy: 'orderNum',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '序号',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 2,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_CodeTypeId,
+        sortBy: 'codeTypeId',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '代码类型Id',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 3,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_CodeTypeName,
+        sortBy: 'codeTypeName',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '代码类型名',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 4,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_GroupName,
+        sortBy: 'groupName',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '组名',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 5,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeENEx.con_RegionTypeSimName,
+        sortBy: 'regionTypeSimName',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '区域类型',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 6,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_CodeTypeENName,
+        sortBy: 'codeTypeENName',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '英文名',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 7,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_DependsOn,
+        sortBy: 'dependsOn',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '依赖于',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 8,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_FrontOrBack,
+        sortBy: 'frontOrBack',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '前台Or后台',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 9,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeENEx.con_SqlDsTypeName,
+        sortBy: 'sqlDsTypeName',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: 'Sql类型',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 10,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_ClassNameFormat,
+        sortBy: 'classNameFormat',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '类名格式',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 11,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_FileNameFormat,
+        sortBy: 'fileNameFormat',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '文件名格式',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 12,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_ClassNamePattern,
+        sortBy: clsCodeTypeEN.con_ClassNamePattern,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '类名模式',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 13,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_IsDefaultOverride,
+        sortBy: 'isDefaultOverride',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '是否默认覆盖',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 14,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_Prefix,
+        sortBy: 'prefix',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '前缀',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 15,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_IsExtend,
+        sortBy: 'isExtend',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '是否扩展类',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 16,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_IsDirByTabName,
+        sortBy: clsCodeTypeEN.con_IsDirByTabName,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '是否用表名作为路径',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 17,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_InUse,
+        sortBy: clsCodeTypeEN.con_InUse,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '是否在用',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 18,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
+        fldName: clsCodeTypeEN.con_IsAutoParseFile,
+        sortBy: clsCodeTypeEN.con_IsAutoParseFile,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '是否自动分析文件',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 19,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+    ];
+    if (refCodeType_List.value != null) {
+      try {
+        await this.ExtendTdFldFuncMap(arrCodeTypeExObjLst);
+      } catch (e) {
+        const strMsg = `扩展Td字段值的映射出错,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      dataColumn.value = arrDataColumn;
+      await BindTabByList(arrCodeTypeExObjLst, this.dispAllErrMsg_q);
+    } else {
+      try {
+        await this.ExtendFldFuncMap(arrCodeTypeExObjLst, arrDataColumn);
+      } catch (e) {
+        const strMsg = `扩展字段值的映射出错,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+        console.error(strMsg);
+        alert(strMsg);
+        return;
+      }
+      const divDataLst = GetDivObjInDivObj(divContainer, 'divDataLst');
+      if (divDataLst == null) {
+        alert('在BindTab_CodeType4Func函数中，divDataLst不存在!');
+        return;
+      }
+      await BindTab(
+        divDataLst,
+        arrCodeTypeExObjLst,
+        arrDataColumn,
+        clsCodeTypeEN.con_CodeTypeId,
+        this,
+      );
+    }
+    if (this.objPager.IsInit(divContainer, this.divName4Pager) == false)
+      this.objPager.InitShow(divContainer, this.divName4Pager);
+    this.objPager.recCount = this.recCount;
+    this.objPager.pageSize = this.pageSize;
+    this.objPager.ShowPagerV2(divContainer, this, this.divName4Pager);
+  }
+
   public async SortColumn(sortColumnKey: string, sortDirection: string) {
     switch (sortColumnKey) {
+      case 'regionTypeName|Ex':
+        viewVarSet.sortCodeTypeBy = `regionTypeName ${sortDirection}|(RegionType)CodeType.RegionTypeId = RegionType.RegionTypeId|`;
+        break;
       case 'sqlDsTypeName|Ex':
         viewVarSet.sortCodeTypeBy = `sqlDsTypeName ${sortDirection}|(SQLDSType)CodeType.SqlDsTypeId = SQLDSType.SqlDsTypeId|`;
         break;
