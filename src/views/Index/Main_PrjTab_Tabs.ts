@@ -7,8 +7,8 @@ import { AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
 
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
 import { SetSpanHtmlByIdInDiv } from '@/ts/PubFun/clsCommFunc4Ctrl';
-import { Redirect } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
+import router from '@/router';
 
 declare let strUrl_Session_SetString: string;
 
@@ -214,7 +214,7 @@ export class Main_PrjTabTabs {
         break;
 
       case 'ReturnToPrjTabCURD':
-        Redirect('./Table_Field/PrjTabCRUD');
+        router.push('/Table_Field/PrjTabCRUD');
         break;
       case 'ExportExcel': //导出Excel
         alert('导出Excel功能还没有开通！');

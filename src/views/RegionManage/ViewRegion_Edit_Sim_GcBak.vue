@@ -236,6 +236,7 @@
   import { Format, Is0EqEmpty, IsNullOrEmpty, IsNullOrEmptyEq0 } from '@/ts/PubFun/clsString';
   import { ViewRegion_Edit_Sim } from '@/viewsBase/RegionManage/ViewRegion_Edit_Sim';
   import { enumPageDispMode } from '@/ts/PubFun/enumPageDispMode';
+  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
   export default defineComponent({
     name: 'ViewRegionEditSim',
     components: {
@@ -274,7 +275,10 @@
         arrInOutType.value = await InOutType_GetArrInOutType(); //编辑区域
         inOutTypeId.value = '0';
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currPrjId,
+        ); //编辑区域
         tabId.value = '0';
 
         arrGCContainerType.value = await GCContainerType_GetArrGCContainerType(); //编辑区域

@@ -278,6 +278,7 @@
   import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
   import { PrjTabRelation_Edit } from '@/viewsBase/Table_Field/PrjTabRelation_Edit';
   import { enumPageDispMode } from '@/ts/PubFun/enumPageDispMode';
+  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
   export default defineComponent({
     name: 'PrjTabRelationEdit',
     components: {
@@ -316,7 +317,10 @@
         arrPrjTabRelationType.value = await PrjTabRelationType_GetArrPrjTabRelationType(); //编辑区域
         prjTabRelaTypeId.value = '0';
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currSelPrjId,
+        ); //编辑区域
         tabId.value = '0';
 
         arrvFieldTab_Sim.value = await vFieldTab_SimEx_GetArrvFieldTab_SimByTabIdCache(strPrjId); //编辑区域

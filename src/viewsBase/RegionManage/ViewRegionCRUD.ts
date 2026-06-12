@@ -553,6 +553,7 @@ export abstract class ViewRegionCRUD implements clsOperateList {
       divVarSet.refDivFunction,
       'ddlTabId',
       strCmPrjId,
+      PrjId_Session.value,
     ); //
   }
 

@@ -604,6 +604,37 @@ export async function ViewIdGCVariableRelaEx_GetViewVar(
   const strThisFuncName = ViewIdGCVariableRelaEx_GetViewVar.name;
   const strAction = 'GetViewVar';
   const strUrl = ViewIdGCVariableRelaEx_GetWebApiUrl(viewIdGCVariableRelaEx_Controller, strAction);
+  if ((import.meta as any)?.env?.DEV === true) {
+    console.info('[GetViewVar][debug] params:', {
+      strViewId,
+      strPrjId,
+      strOpUserId,
+      isViewIdEmpty: IsNullOrEmpty(strViewId),
+      isPrjIdEmpty: IsNullOrEmpty(strPrjId),
+      isOpUserIdEmpty: IsNullOrEmpty(strOpUserId),
+    });
+  }
+  if (IsNullOrEmpty(strViewId) == true) {
+    throw Format(
+      '调用GetViewVar失败: 参数strViewId为空.(in {0}.{1})',
+      viewIdGCVariableRelaEx_ConstructorName,
+      strThisFuncName,
+    );
+  }
+  if (IsNullOrEmpty(strPrjId) == true) {
+    throw Format(
+      '调用GetViewVar失败: 参数strPrjId为空.(in {0}.{1})',
+      viewIdGCVariableRelaEx_ConstructorName,
+      strThisFuncName,
+    );
+  }
+  if (IsNullOrEmpty(strOpUserId) == true) {
+    throw Format(
+      '调用GetViewVar失败: 参数strOpUserId为空.(in {0}.{1})',
+      viewIdGCVariableRelaEx_ConstructorName,
+      strThisFuncName,
+    );
+  }
   const token = Storage.get(ACCESS_TOKEN_KEY);
   //console.error('token:', token);
   const config = {

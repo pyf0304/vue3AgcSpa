@@ -43,6 +43,7 @@ import { clsCheckStyleEN } from '@/ts/L0Entity/ViewControlManage/clsCheckStyleEN
 
 export const checkStyle_Controller = 'CheckStyleApi';
 export const checkStyle_ConstructorName = 'checkStyle';
+const _checkStyleObjLstLocalInFlight = new Map<string, Promise<Array<clsCheckStyleEN>>>();
 
 /**
  * 根据关键字获取相应记录的对象
@@ -883,25 +884,37 @@ export async function CheckStyle_GetObjLstlocalStorage() {
     const arrCheckStyleObjLstT = CheckStyle_GetObjLstByJSONObjLst(arrCheckStyleExObjLstCache);
     return arrCheckStyleObjLstT;
   }
+  const objInFlight = _checkStyleObjLstLocalInFlight.get(strKey);
+  if (objInFlight != null) return objInFlight;
+
+  const objLoadPromise = (async () => {
+    try {
+      const arrCheckStyleExObjLst = await CheckStyle_GetObjLstAsync(strWhereCond);
+      localStorage.setItem(strKey, JSON.stringify(arrCheckStyleExObjLst));
+      const strInfo = Format(
+        '[localStorage]Key:[{0}]的缓存已经建立，对象列表数：{1}!',
+        strKey,
+        arrCheckStyleExObjLst.length,
+      );
+      console.log(strInfo);
+      return arrCheckStyleExObjLst;
+    } catch (e) {
+      const strMsg = Format(
+        '从本地缓存中获取所有对象列表出错. \n服务器错误：{0}.(in {1}.{2})',
+        e,
+        checkStyle_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      throw strMsg;
+    }
+  })();
+
+  _checkStyleObjLstLocalInFlight.set(strKey, objLoadPromise);
   try {
-    const arrCheckStyleExObjLst = await CheckStyle_GetObjLstAsync(strWhereCond);
-    localStorage.setItem(strKey, JSON.stringify(arrCheckStyleExObjLst));
-    const strInfo = Format(
-      '[localStorage]Key:[{0}]的缓存已经建立，对象列表数：{1}!',
-      strKey,
-      arrCheckStyleExObjLst.length,
-    );
-    console.log(strInfo);
-    return arrCheckStyleExObjLst;
-  } catch (e) {
-    const strMsg = Format(
-      '从本地缓存中获取所有对象列表出错. \n服务器错误：{0}.(in {1}.{2})',
-      e,
-      checkStyle_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw strMsg;
+    return await objLoadPromise;
+  } finally {
+    _checkStyleObjLstLocalInFlight.delete(strKey);
   }
 }
 

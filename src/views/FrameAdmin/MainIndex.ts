@@ -38,10 +38,10 @@ import {
   GetUniDivInDoc,
   SetSelectValueByIdInDivObj,
 } from '@/ts/PubFun/clsCommFunc4Ctrl';
-import { Redirect } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
 import { clsPubSessionStorage } from '@/ts/PubFun/clsPubSessionStorage';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
+import router from '@/router';
 // declare const strUrl_Session_SetString: string;
 // declare const strUrl_Session_GetString: string;
 // declare const strWebRoot: string;
@@ -447,7 +447,7 @@ export class MainIndex {
     }
   }
   public static lbLogout_Click() {
-    Redirect('/index/login');
+    router.replace('/login');
   }
 
   public static imgRefresh_Click() {

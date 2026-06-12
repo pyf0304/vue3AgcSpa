@@ -9,9 +9,9 @@ import {
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
 import { clsSysPara4WebApi } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { GetArray, SetSpanHtmlByIdInDivObj } from '@/ts/PubFun/clsCommFunc4Ctrl';
-import { Redirect } from '@/ts/PubFun/clsCommFunc4Web';
 import { AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
+import router from '@/router';
 import { useviewInfoStore } from '@/store/modules/viewInfo';
 
 import { viewId_Main, viewName_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
@@ -259,7 +259,7 @@ export class ViewInfo_AllPropEx {
         break;
 
       case 'ViewInfoCRUD':
-        Redirect('./PrjInterface/ViewInfoCRUD');
+        router.push('/PrjInterface/ViewInfoCRUD');
         break;
       case 'RefreshViewInfo':
         objViewInfo = new ViewInfo_AllPropEx();

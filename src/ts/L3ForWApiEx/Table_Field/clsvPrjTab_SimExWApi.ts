@@ -22,7 +22,7 @@ import { clsvTabFeature_SimEN } from '@/ts/L0Entity/Table_Field/clsvTabFeature_S
 
 import { PrjTabFld_GetObjLstCache } from '@/ts/L3ForWApi/Table_Field/clsPrjTabFldWApi';
 import {
-  vPrjTab_Sim_GetObjByTabIdAsync,
+  vPrjTab_Sim_GetObjByKeyAsync,
   vPrjTab_Sim_GetObjLstByJSONObjLst,
   vPrjTab_Sim_GetObjLstCache,
   vPrjTab_Sim_ReFreshThisCache,
@@ -147,7 +147,7 @@ export function vPrjTab_SimEx_FuncMapByFldName(
   console.log(objvPrjTab_SimEx);
   let strMsg = '';
   //如果是本表中字段，不需要映射
-  const arrFldName = clsvPrjTab_SimEN.AttributeName;
+  const arrFldName = clsvPrjTab_SimEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -263,7 +263,7 @@ export async function vPrjTab_SimEx_GetObjByTabIdCache(
       return objvPrjTab_Sim;
     } else {
       if (bolTryAsyncOnce == true) {
-        objvPrjTab_Sim = await vPrjTab_Sim_GetObjByTabIdAsync(strTabId);
+        objvPrjTab_Sim = await vPrjTab_Sim_GetObjByKeyAsync({ tabId: strTabId });
         if (objvPrjTab_Sim != null) {
           if (objvPrjTab_Sim.tabStateId != '01') {
             await PrjTabEx_SetTabUseStateId(strTabId, '01', strPrjId, clsPubLocalStorage.userId);
@@ -300,8 +300,8 @@ export async function vPrjTab_SimEx_GetObjLst_sessionStorage(strCmPrjId: string)
   strWhereCond = Format('1=1', strCmPrjId);
   const strKey = Format('{0}_{1}', clsvPrjTab_SimEN._CurrTabName, strCmPrjId);
   //clsvPrjTab_SimEN.CacheAddiCondition = GetSessionCacheAdditionCondition(clsvPrjTab_SimEN._CurrTabName);
-  if (IsNullOrEmpty(clsvPrjTab_SimEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsvPrjTab_SimEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsvPrjTab_SimEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsvPrjTab_SimEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空！不正确');
@@ -354,8 +354,8 @@ export async function vPrjTab_SimEx_GetObjLst_localStorage(strCmPrjId: string) {
   strWhereCond = Format('1=1', strCmPrjId);
   const strKey = Format('{0}_{1}', clsvPrjTab_SimEN._CurrTabName, strCmPrjId);
   //clsvPrjTab_SimEN.CacheAddiCondition = GetSessionCacheAdditionCondition(clsvPrjTab_SimEN._CurrTabName);
-  if (IsNullOrEmpty(clsvPrjTab_SimEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsvPrjTab_SimEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsvPrjTab_SimEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsvPrjTab_SimEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空！不正确');
@@ -619,11 +619,11 @@ export async function vPrjTab_SimEx_func(
     console.error(strMsg);
     throw new Error(strMsg);
   }
-  if (clsvPrjTab_SimEN.AttributeName.indexOf(strOutFldName) == -1) {
+  if (clsvPrjTab_SimEN._AttributeName.indexOf(strOutFldName) == -1) {
     const strMsg = Format(
       '输出字段名:[{0}]不正确，不在输出字段范围之内!({1})',
       strInFldName,
-      clsvPrjTab_SimEN.AttributeName.join(','),
+      clsvPrjTab_SimEN._AttributeName.join(','),
     );
     console.error(strMsg);
     throw new Error(strMsg);

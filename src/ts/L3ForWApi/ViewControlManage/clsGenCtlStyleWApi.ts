@@ -43,6 +43,7 @@ import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 
 export const genCtlStyle_Controller = 'GenCtlStyleApi';
 export const genCtlStyle_ConstructorName = 'genCtlStyle';
+const _genCtlStyleObjLstLocalInFlight = new Map<string, Promise<Array<clsGenCtlStyleEN>>>();
 
 /**
  * 根据关键字获取相应记录的对象
@@ -935,25 +936,37 @@ export async function GenCtlStyle_GetObjLstlocalStorage() {
     const arrGenCtlStyleObjLstT = GenCtlStyle_GetObjLstByJSONObjLst(arrGenCtlStyleExObjLstCache);
     return arrGenCtlStyleObjLstT;
   }
+  const objInFlight = _genCtlStyleObjLstLocalInFlight.get(strKey);
+  if (objInFlight != null) return objInFlight;
+
+  const objLoadPromise = (async () => {
+    try {
+      const arrGenCtlStyleExObjLst = await GenCtlStyle_GetObjLstAsync(strWhereCond);
+      localStorage.setItem(strKey, JSON.stringify(arrGenCtlStyleExObjLst));
+      const strInfo = Format(
+        '[localStorage]Key:[{0}]的缓存已经建立,对象列表数：{1}!',
+        strKey,
+        arrGenCtlStyleExObjLst.length,
+      );
+      console.log(strInfo);
+      return arrGenCtlStyleExObjLst;
+    } catch (e) {
+      const strMsg = Format(
+        '从本地缓存中获取所有对象列表出错. \n服务器错误：{0}.(in {1}.{2})',
+        e,
+        genCtlStyle_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      throw strMsg;
+    }
+  })();
+
+  _genCtlStyleObjLstLocalInFlight.set(strKey, objLoadPromise);
   try {
-    const arrGenCtlStyleExObjLst = await GenCtlStyle_GetObjLstAsync(strWhereCond);
-    localStorage.setItem(strKey, JSON.stringify(arrGenCtlStyleExObjLst));
-    const strInfo = Format(
-      '[localStorage]Key:[{0}]的缓存已经建立,对象列表数：{1}!',
-      strKey,
-      arrGenCtlStyleExObjLst.length,
-    );
-    console.log(strInfo);
-    return arrGenCtlStyleExObjLst;
-  } catch (e) {
-    const strMsg = Format(
-      '从本地缓存中获取所有对象列表出错. \n服务器错误：{0}.(in {1}.{2})',
-      e,
-      genCtlStyle_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw strMsg;
+    return await objLoadPromise;
+  } finally {
+    _genCtlStyleObjLstLocalInFlight.delete(strKey);
   }
 }
 

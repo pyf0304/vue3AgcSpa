@@ -290,7 +290,10 @@
         arrInOutType.value = await InOutType_GetArrInOutType(); //编辑区域
         inOutTypeId.value = '0';
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currPrjId,
+        ); //编辑区域
         tabId.value = '0';
 
         arrGCContainerType.value = await GCContainerType_GetArrGCContainerType(); //编辑区域

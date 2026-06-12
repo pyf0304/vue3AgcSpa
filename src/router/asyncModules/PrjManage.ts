@@ -6,7 +6,6 @@ export default {
   'views/CodeMan/CMProjectCRUD': () => import('@/views/CodeMan/CMProjectCRUD.vue'),
   // 'views/CodeMan/CMProjectAppRelaCRUD': () => import('@/views/CodeMan/CMProjectAppRelaCRUD.vue'),
   'views/PrjManage/FuncModule_AgcCRUD': () => import('@/views/PrjManage/FuncModule_AgcCRUD.vue'),
-  'views/PrjManage/PrjDataBaseCRUD': () => import('@/views/PrjManage/PrjDataBaseCRUD.vue'),
 
   'views/PrjManage/PrjDataBaseCRUDAi': () => import('@/views/PrjManage/PrjDataBaseCRUDAi.vue'),
 } as const;

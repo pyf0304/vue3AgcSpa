@@ -710,7 +710,10 @@
         arrDDLItemsOption.value = await DDLItemsOption_GetArrDDLItemsOption(); //编辑区域
         ddlItemsOptionId.value = '0';
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currPrjId,
+        ); //编辑区域
         dsTabId.value = '0';
 
         arrGCVariable.value = await GCVariable_GetArrGCVariable(); //编辑区域
@@ -883,6 +886,53 @@
         memo.value = pobjQryRegionFldsEN.memo; // 说明
       }
 
+      /**
+       * 清除编辑区所有控件值
+       * (AutoGCLib.Vue_ViewScript_Edit_TS4Html:Gen_Vue_Ts_Clear)
+       **/
+      function Clear() {
+        fldId.value = '0';
+        outFldId.value = '0';
+        labelCaption.value = '';
+        colSpan.value = 0;
+        width.value = 0;
+        seqNum.value = 0;
+        ctlTypeId.value = '0';
+        ddlItemsOptionId.value = '0';
+        dsTabId.value = '0';
+        tabFeatureId4Ddl.value = '0';
+        varTypeIdCond1.value = '0';
+        varIdCond1.value = '0';
+        varTypeIdCond2.value = '0';
+        varIdCond2.value = '0';
+        dsDataTextFieldId.value = '0';
+        dsDataValueFieldId.value = '0';
+        dsCondFieldId.value = '0';
+        dsSortFieldId.value = '0';
+        dsCondStr.value = '';
+        dsSqlStr.value = '';
+        itemsString.value = '';
+        varId.value = '0';
+        queryOptionId.value = '0';
+        changeEvent.value = '';
+        clickEvent.value = '';
+        memo.value = '';
+        dnPathId.value = '';
+
+        if (refPubCombo_Edit.value != null) {
+          refPubCombo_Edit.value.itemsOptionId = '0';
+          refPubCombo_Edit.value.dsTabId = '0';
+          refPubCombo_Edit.value.tabFeatureId4Ddl = '0';
+          refPubCombo_Edit.value.varIdCond1 = '0';
+          refPubCombo_Edit.value.varIdCond2 = '0';
+          refPubCombo_Edit.value.fldIdCond1 = '0';
+          refPubCombo_Edit.value.fldIdCond2 = '0';
+          refPubCombo_Edit.value.dsCondStr = '';
+          refPubCombo_Edit.value.dsSqlStr = '';
+          refPubCombo_Edit.value.itemsString = '';
+        }
+      }
+
       const strTitle = ref('查询区域字段编辑');
       const strSubmitButtonText = ref('添加');
       const strCancelButtonText = ref('取消');
@@ -990,6 +1040,7 @@
 
         ShowDataFromQryRegionFldsObj,
         GetEditDataQryRegionFldsObj,
+        Clear,
         objPubFun4Ddl,
         dnPathId,
         strRegionType,

@@ -13,9 +13,10 @@ import {
   ViewId_Main_Session,
   refViewIdGCVariableRela_Edit,
 } from '@/views/GeneCode/ViewIdGCVariableRelaVueShare';
-import { Format } from '@/ts/PubFun/clsString';
+import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { ViewIdGCVariableRelaEx_GetViewVar } from '@/ts/L3ForWApiEx/GeneCode/clsViewIdGCVariableRelaExWApi';
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
+import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
 import ViewIdGCVariableRela_EditEx from '@/views/GeneCode/ViewIdGCVariableRela_EditEx';
 
 /** ViewIdGCVariableRelaCRUDEx 的摘要说明。其中Q代表查询,U代表修改
@@ -165,10 +166,25 @@ export default class ViewIdGCVariableRelaCRUDEx
   public async btnGetViewVar_Click() {
     const strThisFuncName = this.btnGetViewVar_Click.name;
     try {
+      const strViewId = ViewId_Main_Session.value;
+      const strPrjId = clsPrivateSessionStorage.currSelPrjId;
+      const strOpUserId = clsPrivateSessionStorage.userId || clsPubLocalStorage.userId;
+      if (IsNullOrEmpty(strViewId) == true) {
+        alert('当前界面Id为空，不能导入界面变量！');
+        return;
+      }
+      if (IsNullOrEmpty(strPrjId) == true) {
+        alert('当前工程Id为空，不能导入界面变量！');
+        return;
+      }
+      if (IsNullOrEmpty(strOpUserId) == true) {
+        alert('当前用户Id为空，不能导入界面变量！');
+        return;
+      }
       const bolIsSuccess = await ViewIdGCVariableRelaEx_GetViewVar(
-        ViewId_Main_Session.value,
-        clsPrivateSessionStorage.currSelPrjId,
-        clsPrivateSessionStorage.userId,
+        strViewId,
+        strPrjId,
+        strOpUserId,
       );
       if (bolIsSuccess == false) {
         const strMsg = '导入界面变量出错!';

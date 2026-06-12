@@ -411,7 +411,6 @@ export default class EditRegionFldsCRUDEx extends EditRegionFldsCRUD implements 
 
     // 在此处放置用户代码以初始化页面
     try {
-      console.log('this.qsOp:', this.qsOp);
       switch (this.qsOp) {
         case 'ViewEdit':
           break;

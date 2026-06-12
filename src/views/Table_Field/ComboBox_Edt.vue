@@ -518,7 +518,7 @@
   } from '@/ts/L3ForWApiEx/Table_Field/clsvFieldTab_SimExWApi';
   import { vFieldTab_Sim_GetObjByFldIdCache } from '@/ts/L3ForWApi/Table_Field/clsvFieldTab_SimWApi';
   import { clsvFieldTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvFieldTab_SimEN';
-  import { vPrjTab_Sim_GetObjByTabIdCache } from '@/ts/L3ForWApi/Table_Field/clsvPrjTab_SimWApi';
+  import { vPrjTab_Sim_GetObjByKeyCache } from '@/ts/L3ForWApi/Table_Field/clsvPrjTab_SimWApi';
   import { enumCacheMode } from '@/ts/L0Entity/SystemSet/clsCacheModeEN';
   import { PrjTab_GetObjByTabIdAsync } from '@/ts/L3ForWApi/Table_Field/clsPrjTabWApi';
 
@@ -1087,8 +1087,10 @@
         let strGetDdlDataFuncNameJs = '';
 
         const strTabId = TabId_Static.value;
-        const objPrjTab = await vPrjTab_Sim_GetObjByTabIdCache(
-          strTabId,
+        const objPrjTab = await vPrjTab_Sim_GetObjByKeyCache(
+          {
+            tabId: strTabId,
+          },
           clsPrivateSessionStorage.currSelPrjId,
         );
         if (objPrjTab == null) return;

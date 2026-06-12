@@ -481,7 +481,10 @@
       async function BindDdl4QryRegion() {
         const strCmPrjId = CmPrjId_Local.value; //静态变量;//Session存储、local存储
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //查询区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currSelPrjId,
+        ); //查询区域
         tabId_q.value = '0';
 
         arrPrjTabRelationType.value = await PrjTabRelationType_GetArrPrjTabRelationType(); //查询区域

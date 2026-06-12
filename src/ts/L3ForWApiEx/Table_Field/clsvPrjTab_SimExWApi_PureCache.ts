@@ -21,7 +21,7 @@ export class clsvPrjTab_SimExWApi_PureCache {
   public static async GetObjLst_PureCache(strPrjId: string) {
     //const strThisFuncName = this.GetObjLst_PureCache.name;
     let arrvPrjTab_SimObjLstCache;
-    switch (clsvPrjTab_SimEN.CacheModeId) {
+    switch (clsvPrjTab_SimEN._CacheModeId) {
       case '04': //sessionStorage
         arrvPrjTab_SimObjLstCache =
           await clsvPrjTab_SimExWApi_PureCache.GetObjLst_sessionStorage_PureCache(strPrjId);

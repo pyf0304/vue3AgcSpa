@@ -21,13 +21,13 @@ import {
   SetSpanHtmlByIdInDiv,
   SetSpanHtmlByIdInDivObj,
 } from '@/ts/PubFun/clsCommFunc4Ctrl';
-import { Redirect } from '@/ts/PubFun/clsCommFunc4Web';
 import { AccessBtnClickDefault } from '@/ts/PubFun/clsErrMsgBLEx';
 import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
 import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
 import { ViewInfo_GetObjLstAsync } from '@/ts/L3ForWApi/PrjInterface/clsViewInfoWApi';
 import { clsViewInfoCmPrjIdRelaEN } from '@/ts/L0Entity/PrjInterface/clsViewInfoCmPrjIdRelaEN';
 import { divVarSet } from '@/views/Table_Field/PrjTab_AllPropVueShare';
+import router from '@/router';
 
 declare let strUrl_Session_SetString: string;
 // declare let strUrl_Session_GetString: string;
@@ -268,7 +268,7 @@ export class PrjTab_AllPropEx {
         break;
 
       case 'ReturnToPrjTabCURD':
-        Redirect('./Table_Field/PrjTabCRUD');
+        router.push('/Table_Field/PrjTabCRUD');
         break;
       case 'ExportExcel': //导出Excel
         alert('导出Excel功能还没有开通！');

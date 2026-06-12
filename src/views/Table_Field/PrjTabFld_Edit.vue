@@ -402,7 +402,10 @@
         arrPrimaryType.value = await PrimaryType_GetArrPrimaryType(); //编辑区域
         primaryTypeId.value = '0';
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currSelPrjId,
+        ); //编辑区域
         foreignKeyTabId.value = '0';
 
         arrFldOperationType.value = await FldOperationType_GetArrFldOperationType(); //编辑区域
@@ -777,9 +780,14 @@
         // const divEdit = refPrjTabFld_Edit.value.$refs.refDivEdit;
         const divEdit = refDivEdit.value;
         console.error('divEdit:', divEdit);
-        if (data.fldId == '') {
+        const strFldId = (data?.fldId ?? data?.value ?? '').toString();
+        const strFldName = (data?.fldName ?? data?.text ?? '').toString();
+        const bolIsNewField = IsNullOrEmpty(strFldId);
+
+        if (bolIsNewField) {
           PrjTabFld_Edit_ACEx.IsNewFieldTab = true;
-          PrjTabFld_Edit_ACEx.FldName = data.fldName;
+          PrjTabFld_Edit_ACEx.FldId = '';
+          PrjTabFld_Edit_ACEx.FldName = strFldName;
           this.fieldTypeId = enumFieldType.NormalField_01;
           this.isGeneProp = true;
           this.fldOpTypeId = enumFldOperationType.ReadWrite_0001;
@@ -791,7 +799,8 @@
           ShowTrInDivObj(divEdit, 'trFldPrecision');
           await DataTypeAbbr_BindDdl_DataTypeIdInDivCache(divEdit, 'ddlDataTypeId'); //
         } else {
-          PrjTabFld_Edit_ACEx.FldId = data.fldId;
+          PrjTabFld_Edit_ACEx.FldId = strFldId;
+          PrjTabFld_Edit_ACEx.FldName = strFldName;
           PrjTabFld_Edit_ACEx.IsNewFieldTab = false;
           this.fieldTypeId = enumFieldType.NormalField_01;
           this.isGeneProp = true;

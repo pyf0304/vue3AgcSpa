@@ -34,12 +34,12 @@ import {
 } from '@/ts/L3ForWApiEx/PrjMenus_GP/clsvQxRoleMenusEx2WApi';
 
 import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
-import { Redirect } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
 import { clsPubSessionStorage } from '@/ts/PubFun/clsPubSessionStorage';
 import { Format } from '@/ts/PubFun/clsString';
 import { UserDefaPrjDataBaseEx_GetObjByPrjIdAndUserId } from '@/ts/L3ForWApiEx/SystemSet/clsUserDefaPrjDataBaseExWApi';
 import { usePrjDataBaseStore } from '@/store/modules/PrjDataBase';
+import router from '@/router';
 
 /// <summary>
 /// WApiCollege_UT_TS 的摘要说明。其中Q代表查询,U代表修改
@@ -353,7 +353,7 @@ export class TabMainIndex {
     }
   }
   public static lbLogout_Click() {
-    Redirect('/index/login');
+    router.replace('/login');
   }
   public static async SelectRecord(lngmId: number) {
     try {
@@ -380,7 +380,7 @@ export class TabMainIndex {
 
         //alert("完成SelectRecord!");
         //                    Redirect("/Index/Main");
-        Redirect('/FrameAdmin/TabMainIndex');
+        router.push('/FrameAdmin/TabMainIndex');
         //    resolve(jsonData);
         //});
       }

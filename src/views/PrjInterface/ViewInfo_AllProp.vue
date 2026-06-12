@@ -73,6 +73,11 @@
       const route = useRoute(); // 获取当前路由信息
       const viewId = ref(''); // 声明一个 ref 用于存储参数
       const Op = ref(''); // 声明一个 ref 用于存储参数
+      const strRouteName = String(route.name ?? '');
+      const strRoutePath = String(route.path ?? '');
+      const bolForceEditRegionTab =
+        strRouteName === 'account-editViewRegion' ||
+        strRoutePath.indexOf('/account/editViewRegion') > -1;
 
       const tabs = [
         { label: '界面属性', component: ViewInfo_U, liId: 'liViewProperty' },
@@ -103,9 +108,18 @@
         { label: '详细区', regionTypeId: enumRegionType.DetailRegion_0006 },
         { label: '导出区', regionTypeId: enumRegionType.ExcelExportRegion_0007 },
       ];
-      const arrRegionTypeId = clsPrivateSessionStorage.regionTypeIdLst;
+      const arrRegionTypeIdRaw = clsPrivateSessionStorage.regionTypeIdLst;
+      const arrRegionTypeId = Array.isArray(arrRegionTypeIdRaw) ? arrRegionTypeIdRaw : [];
+      if (!Array.isArray(arrRegionTypeIdRaw)) {
+        console.warn('[EditRegion] regionTypeIdLst is not array, use empty list fallback:', {
+          regionTypeIdLst: arrRegionTypeIdRaw,
+        });
+      }
       if (arrRegionTypeId.length > 0) {
         for (const objInFor of arrViewRegionType) {
+          if (bolForceEditRegionTab && objInFor.regionTypeId === enumRegionType.EditRegion_0003) {
+            continue;
+          }
           const arrIsHas = arrRegionTypeId.filter((x) => x == objInFor.regionTypeId);
           if (arrIsHas.length == 0) {
             const tabIndex = tabs.findIndex((tab) => tab.label === objInFor.label);
@@ -122,8 +136,6 @@
       };
 
       const shouldAutoSwitchToEditRegion = () => {
-        const strRouteName = String(route.name ?? '');
-        const strRoutePath = String(route.path ?? '');
         return (
           strRouteName === 'account-editViewRegion' ||
           strRoutePath.indexOf('/account/editViewRegion') > -1
@@ -131,6 +143,10 @@
       };
 
       const currentTabComponent = computed(() => {
+        if (tabs.length === 0) {
+          console.warn('[EditRegion] tabs is empty, fallback to ViewInfo_U.');
+          return ViewInfo_U;
+        }
         return tabs[activeViewIndex.value].component;
       });
 
@@ -155,6 +171,8 @@
           if (intEditRegionTabIndex > -1) {
             activeViewIndex.value = intEditRegionTabIndex;
             clsPrivateSessionStorage.activeViewIndex = intEditRegionTabIndex;
+          } else {
+            console.warn('[EditRegion] ViewInfo_AllProp cannot find liEditRegion tab.');
           }
         } else {
           const intActiveView = clsPrivateSessionStorage.activeViewIndex;

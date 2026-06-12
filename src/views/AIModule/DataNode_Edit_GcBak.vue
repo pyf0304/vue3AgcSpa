@@ -186,6 +186,7 @@
   import { Format } from '@/ts/PubFun/clsString';
   import { DataNode_Edit } from '@/viewsBase/AIModule/DataNode_Edit';
   import { enumPageDispMode } from '@/ts/PubFun/enumPageDispMode';
+  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
   export default defineComponent({
     name: 'DataNodeEdit',
     components: {
@@ -215,7 +216,10 @@
         const strCmPrjId = CmPrjId_Local.value; //静态变量;//Session存储、local存储
         const strTabId_Static = TabId_Static.value; //静态变量;//静态变量
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currPrjId,
+        ); //编辑区域
         tabId.value = '0';
 
         arrvFieldTab_Sim.value = await vFieldTab_SimEx_GetArrvFieldTab_SimByTabIdCache(

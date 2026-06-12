@@ -1617,12 +1617,26 @@ export default class ViewInfoCRUDEx extends ViewInfoCRUD implements IShowList {
         alert('请选择需要克隆的记录！');
         return '';
       }
+      const strPrjId = clsPrivateSessionStorage.currSelPrjId;
+      const strOpUserId = clsPrivateSessionStorage.userId || clsPubLocalStorage.userId;
+      if (IsNullOrEmpty(strPrjId) == true) {
+        alert('当前工程Id为空，不能导入界面变量！');
+        return '';
+      }
+      if (IsNullOrEmpty(strOpUserId) == true) {
+        alert('当前用户Id为空，不能导入界面变量！');
+        return '';
+      }
       for (const strViewId of arrKeyIds) {
+        if (IsNullOrEmpty(strViewId) == true) {
+          alert('存在空的界面Id，不能导入界面变量！');
+          return '';
+        }
         try {
           const bolIsSuccess = await ViewIdGCVariableRelaEx_GetViewVar(
             strViewId,
-            clsPrivateSessionStorage.currSelPrjId,
-            clsPrivateSessionStorage.userId,
+            strPrjId,
+            strOpUserId,
           );
           if (bolIsSuccess == false) {
             const strMsg = '导入界面变量出错!';

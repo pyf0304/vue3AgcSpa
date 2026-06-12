@@ -42,6 +42,7 @@ import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 
 export const labelStyle_Controller = 'LabelStyleApi';
 export const labelStyle_ConstructorName = 'labelStyle';
+const _labelStyleObjLstLocalInFlight = new Map<string, Promise<Array<clsLabelStyleEN>>>();
 
 /**
  * 根据关键字获取相应记录的对象
@@ -882,25 +883,37 @@ export async function LabelStyle_GetObjLstlocalStorage() {
     const arrLabelStyleObjLstT = LabelStyle_GetObjLstByJSONObjLst(arrLabelStyleExObjLstCache);
     return arrLabelStyleObjLstT;
   }
+  const objInFlight = _labelStyleObjLstLocalInFlight.get(strKey);
+  if (objInFlight != null) return objInFlight;
+
+  const objLoadPromise = (async () => {
+    try {
+      const arrLabelStyleExObjLst = await LabelStyle_GetObjLstAsync(strWhereCond);
+      localStorage.setItem(strKey, JSON.stringify(arrLabelStyleExObjLst));
+      const strInfo = Format(
+        '[localStorage]Key:[{0}]的缓存已经建立，对象列表数：{1}!',
+        strKey,
+        arrLabelStyleExObjLst.length,
+      );
+      console.log(strInfo);
+      return arrLabelStyleExObjLst;
+    } catch (e) {
+      const strMsg = Format(
+        '从本地缓存中获取所有对象列表出错. \n服务器错误：{0}.(in {1}.{2})',
+        e,
+        labelStyle_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      throw strMsg;
+    }
+  })();
+
+  _labelStyleObjLstLocalInFlight.set(strKey, objLoadPromise);
   try {
-    const arrLabelStyleExObjLst = await LabelStyle_GetObjLstAsync(strWhereCond);
-    localStorage.setItem(strKey, JSON.stringify(arrLabelStyleExObjLst));
-    const strInfo = Format(
-      '[localStorage]Key:[{0}]的缓存已经建立，对象列表数：{1}!',
-      strKey,
-      arrLabelStyleExObjLst.length,
-    );
-    console.log(strInfo);
-    return arrLabelStyleExObjLst;
-  } catch (e) {
-    const strMsg = Format(
-      '从本地缓存中获取所有对象列表出错. \n服务器错误：{0}.(in {1}.{2})',
-      e,
-      labelStyle_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw strMsg;
+    return await objLoadPromise;
+  } finally {
+    _labelStyleObjLstLocalInFlight.delete(strKey);
   }
 }
 

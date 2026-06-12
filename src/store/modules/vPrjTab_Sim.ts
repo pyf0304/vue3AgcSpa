@@ -3,8 +3,8 @@
 import { enumComparisonOp } from '@/ts/PubFun/enumComparisonOp';
 import { clsvPrjTab_Sim } from '@/ts/L0Entity/Table_Field/clsvPrjTab_Sim';
 import {
-  vPrjTab_Sim_GetObjByTabIdAsync,
-  vPrjTab_Sim_GetObjByTabIdCache,
+  vPrjTab_Sim_GetObjByKeyAsync,
+  vPrjTab_Sim_GetObjByKeyCache,
   vPrjTab_Sim_GetObjLstAsync,
 } from '@/ts/L3ForWApi/Table_Field/clsvPrjTab_SimWApi';
 import { Format } from '@/ts/PubFun/clsString';
@@ -78,7 +78,7 @@ export const usevPrjTab_SimStore = defineStore({
       if (strTabId == '') return null;
       const objvPrjTab_Sim = this.fieldTabLst.find((x) => x.tabId === strTabId);
       if (objvPrjTab_Sim != null) return objvPrjTab_Sim;
-      const objvPrjTab_SimEN = await vPrjTab_Sim_GetObjByTabIdAsync(strTabId);
+      const objvPrjTab_SimEN = await vPrjTab_Sim_GetObjByKeyAsync({ tabId: strTabId });
       if (objvPrjTab_SimEN == null) return null;
       const objvPrjTab_Sim1 = vPrjTab_SimEx_CopyTo(objvPrjTab_SimEN);
       this.fieldTabLst.push(objvPrjTab_Sim1);
@@ -87,10 +87,11 @@ export const usevPrjTab_SimStore = defineStore({
     async getObjLst(arrTabId: Array<string>): Promise<Array<clsvPrjTab_SimEN>> {
       const arrObjLst = new Array<clsvPrjTab_SimEN>();
       for (const strTabId of arrTabId) {
-        const objvPrjTab_Sim = await vPrjTab_Sim_GetObjByTabIdCache(
-          strTabId,
+        const objvPrjTab_Sim = await vPrjTab_Sim_GetObjByKeyCache(
+          { tabId: strTabId },
           clsPrivateSessionStorage.currSelPrjId,
         );
+
         const objEN = vPrjTab_SimEx_CopyToEN(objvPrjTab_Sim);
         if (objEN != null) arrObjLst.push(objEN);
       }
@@ -99,8 +100,8 @@ export const usevPrjTab_SimStore = defineStore({
     async getTabNameLst(arrTabId: Array<string>): Promise<Array<string>> {
       const arrTabName = new Array<string>();
       for (const strTabId of arrTabId) {
-        const objvPrjTab_Sim = await vPrjTab_Sim_GetObjByTabIdCache(
-          strTabId,
+        const objvPrjTab_Sim = await vPrjTab_Sim_GetObjByKeyCache(
+          { tabId: strTabId },
           clsPrivateSessionStorage.currSelPrjId,
         );
 
@@ -111,8 +112,8 @@ export const usevPrjTab_SimStore = defineStore({
     async getTabNameLstWithId(arrTabId: Array<string>): Promise<Array<string>> {
       const arrTabName = new Array<string>();
       for (const strTabId of arrTabId) {
-        const objvPrjTab_Sim = await vPrjTab_Sim_GetObjByTabIdCache(
-          strTabId,
+        const objvPrjTab_Sim = await vPrjTab_Sim_GetObjByKeyCache(
+          { tabId: strTabId },
           clsPrivateSessionStorage.currSelPrjId,
         );
         if (objvPrjTab_Sim != null) arrTabName.push(`${objvPrjTab_Sim.tabName}(${strTabId})`);
@@ -163,7 +164,7 @@ export const usevPrjTab_SimStore = defineStore({
 
       const objvPrjTab_Sim = this.fieldTabLst.find((x) => x.tabId === strTabId);
       if (objvPrjTab_Sim != null) return objvPrjTab_Sim.tabName;
-      const objvPrjTab_SimEN = await vPrjTab_Sim_GetObjByTabIdAsync(strTabId);
+      const objvPrjTab_SimEN = await vPrjTab_Sim_GetObjByKeyAsync({ tabId: strTabId });
       if (objvPrjTab_SimEN == null) return '';
       const objvPrjTab_Sim1 = vPrjTab_SimEx_CopyTo(objvPrjTab_SimEN);
       this.fieldTabLst.push(objvPrjTab_Sim1);

@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsvPrjTab_SimWApi
  * 表名:vPrjTab_Sim(00050597)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:47:07
+ * 版本:2026.05.30(服务器:WIN-SRV103-116)
+ * 日期:2026/06/11 03:27:59
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:字段、表维护(Table_Field)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * v工程表_Sim(vPrjTab_Sim)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年06月14日.
+ * Created by pyf on 2026年06月11日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -40,13 +40,11 @@ import {
   myShowErrorMsg,
   ObjectAssign,
 } from '@/ts/PubFun/clsCommFunc4Web';
-import { clsvPrjTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvPrjTab_SimEN';
+import { clsvPrjTab_SimEN, vPrjTab_SimKey } from '@/ts/L0Entity/Table_Field/clsvPrjTab_SimEN';
 import { clsSysPara4WebApi, GetWebApiUrl } from '@/ts/PubConfig/clsSysPara4WebApi';
 import { stuTopPara } from '@/ts/PubFun/stuTopPara';
 import { stuRangePara } from '@/ts/PubFun/stuRangePara';
 import { clsDateTime } from '@/ts/PubFun/clsDateTime';
-
-import { CMProjectEx_GetPrjIdByCmPrjIdCache } from '@/ts/L3ForWApiEx/CodeMan/clsCMProjectExWApi';
 
 export const vPrjTab_Sim_Controller = 'vPrjTab_SimApi';
 export const vPrjTab_Sim_ConstructorName = 'vPrjTab_Sim';
@@ -54,26 +52,21 @@ export const vPrjTab_Sim_ConstructorName = 'vPrjTab_Sim';
 /**
  * 根据关键字获取相应记录的对象
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdAsync)
- * @param strTabId:关键字
+ * @param key:包含关键字的对象
  * @returns 对象
  **/
-export async function vPrjTab_Sim_GetObjByTabIdAsync(
-  strTabId: string,
+export async function vPrjTab_Sim_GetObjByKeyAsync(
+  key: vPrjTab_SimKey,
 ): Promise<clsvPrjTab_SimEN | null> {
-  const strThisFuncName = 'GetObjByTabIdAsync';
-
-  if (IsNullOrEmpty(strTabId) == true) {
-    const strMsg = Format('参数:[strTabId]不能为空!(In clsvPrjTab_SimWApi.GetObjByTabIdAsync)');
-    console.error(strMsg);
-    throw strMsg;
-  }
-  if (strTabId.length != 8) {
+  const strThisFuncName = 'GetObjByKeyAsync';
+  if (key.tabId === undefined || key.tabId === null || key.tabId === '') {
     const strMsg = Format(
-      '缓存分类变量:[strTabId]的长度:[{0}]不正确!(clsvPrjTab_SimWApi.GetObjByTabIdAsync)',
-      strTabId.length,
+      '关键字段[TabId]不能为空!(in {0}.{1})',
+      vPrjTab_Sim_ConstructorName,
+      strThisFuncName,
     );
     console.error(strMsg);
-    throw strMsg;
+    throw new Error(strMsg);
   }
   const strAction = 'GetObjByTabId';
   const strUrl = GetWebApiUrl(vPrjTab_Sim_Controller, strAction);
@@ -85,7 +78,7 @@ export async function vPrjTab_Sim_GetObjByTabIdAsync(
       Authorization: `${token}`,
     },
     params: {
-      strTabId,
+      strTabId: key.tabId,
     },
   };
   try {
@@ -133,30 +126,30 @@ export async function vPrjTab_Sim_GetObjByTabIdAsync(
 }
 
 /**
- * 根据关键字获取相关对象, 从localStorage缓存中获取.
+ * 根据关键字获取特定对象, 从 localStorage 中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
- * @param strTabId:所给的关键字
+ * @param key:关键字对象
  * @returns 对象
  */
-export async function vPrjTab_Sim_GetObjByTabIdlocalStorage(strTabId: string) {
+export async function vPrjTab_Sim_GetObjByKeylocalStorage(key: vPrjTab_SimKey) {
   const strThisFuncName = 'GetObjByTabIdlocalStorage';
 
-  if (IsNullOrEmpty(strTabId) == true) {
+  if (IsNullOrEmpty(key.tabId) == true) {
     const strMsg = Format(
-      '参数:[strTabId]不能为空!(In clsvPrjTab_SimWApi.GetObjByTabIdlocalStorage)',
+      '参数:[key.tabId]不能为空!(In clsvPrjTab_SimWApi.GetObjByTabIdlocalStorage)',
     );
     console.error(strMsg);
     throw strMsg;
   }
-  if (strTabId.length != 8) {
+  if (key.tabId.length != 8) {
     const strMsg = Format(
-      '缓存分类变量:[strTabId]的长度:[{0}]不正确!(clsvPrjTab_SimWApi.GetObjByTabIdlocalStorage)',
-      strTabId.length,
+      '缓存分类变量:[key.tabId]的长度:[{0}]不正确!(clsvPrjTab_SimWApi.GetObjByTabIdlocalStorage)',
+      key.tabId.length,
     );
     console.error(strMsg);
     throw strMsg;
   }
-  const strKey = Format('{0}_{1}', clsvPrjTab_SimEN._CurrTabName, strTabId);
+  const strKey = Format('{0}_{1}', clsvPrjTab_SimEN._CurrTabName, key.tabId);
   if (strKey == '') {
     console.error('关键字为空!不正确');
     throw new Error('关键字为空!不正确');
@@ -168,7 +161,7 @@ export async function vPrjTab_Sim_GetObjByTabIdlocalStorage(strTabId: string) {
     return objvPrjTab_SimCache;
   }
   try {
-    const objvPrjTab_Sim = await vPrjTab_Sim_GetObjByTabIdAsync(strTabId);
+    const objvPrjTab_Sim = await vPrjTab_Sim_GetObjByKeyAsync(key);
     if (objvPrjTab_Sim != null) {
       localStorage.setItem(strKey, JSON.stringify(objvPrjTab_Sim));
       const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
@@ -180,7 +173,7 @@ export async function vPrjTab_Sim_GetObjByTabIdlocalStorage(strTabId: string) {
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      strTabId,
+      key.tabId,
       vPrjTab_Sim_ConstructorName,
       strThisFuncName,
     );
@@ -191,41 +184,41 @@ export async function vPrjTab_Sim_GetObjByTabIdlocalStorage(strTabId: string) {
 }
 
 /**
- * 根据关键字获取相关对象, 从缓存中获取.
+ * 根据关键字获取特定对象, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
- * @param strTabId:所给的关键字
+ * @param key:关键字对象
  * @returns 对象
  */
-export async function vPrjTab_Sim_GetObjByTabIdCache(
-  strTabId: string,
+export async function vPrjTab_Sim_GetObjByKeyCache(
+  key: vPrjTab_SimKey,
   strPrjId: string,
   bolTryAsyncOnce = true,
 ) {
   const strThisFuncName = 'GetObjByTabIdCache';
 
-  if (IsNullOrEmpty(strTabId) == true) {
-    const strMsg = Format('参数:[strTabId]不能为空!(In clsvPrjTab_SimWApi.GetObjByTabIdCache)');
+  if (IsNullOrEmpty(key.tabId) == true) {
+    const strMsg = Format('参数:[key.tabId]不能为空!(In clsvPrjTab_SimWApi.GetObjByTabIdCache)');
     console.error(strMsg);
     throw strMsg;
   }
-  if (strTabId.length != 8) {
+  if (key.tabId.length != 8) {
     const strMsg = Format(
-      '缓存分类变量:[strTabId]的长度:[{0}]不正确!(clsvPrjTab_SimWApi.GetObjByTabIdCache)',
-      strTabId.length,
+      '缓存分类变量:[key.tabId]的长度:[{0}]不正确!(clsvPrjTab_SimWApi.GetObjByTabIdCache)',
+      key.tabId.length,
     );
     console.error(strMsg);
     throw strMsg;
   }
   const arrvPrjTab_SimObjLstCache = await vPrjTab_Sim_GetObjLstCache(strPrjId);
   try {
-    const arrvPrjTab_SimSel = arrvPrjTab_SimObjLstCache.filter((x) => x.tabId == strTabId);
+    const arrvPrjTab_SimSel = arrvPrjTab_SimObjLstCache.filter((x) => x.tabId == key.tabId);
     let objvPrjTab_Sim: clsvPrjTab_SimEN;
     if (arrvPrjTab_SimSel.length > 0) {
       objvPrjTab_Sim = arrvPrjTab_SimSel[0];
       return objvPrjTab_Sim;
     } else {
       if (bolTryAsyncOnce == true) {
-        const objvPrjTab_SimConst = await vPrjTab_Sim_GetObjByTabIdAsync(strTabId);
+        const objvPrjTab_SimConst = await vPrjTab_Sim_GetObjByKeyAsync(key);
         if (objvPrjTab_SimConst != null) {
           vPrjTab_Sim_ReFreshThisCache(strPrjId);
           return objvPrjTab_SimConst;
@@ -237,7 +230,7 @@ export async function vPrjTab_Sim_GetObjByTabIdCache(
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      strTabId,
+      key.tabId,
       vPrjTab_Sim_ConstructorName,
       strThisFuncName,
     );
@@ -249,7 +242,7 @@ export async function vPrjTab_Sim_GetObjByTabIdCache(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-11
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -261,7 +254,7 @@ export function vPrjTab_Sim_SortFunDefa(a: clsvPrjTab_SimEN, b: clsvPrjTab_SimEN
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-11
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -275,7 +268,7 @@ export function vPrjTab_Sim_SortFunDefa2Fld(a: clsvPrjTab_SimEN, b: clsvPrjTab_S
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-11
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -414,19 +407,19 @@ export function vPrjTab_Sim_SortFunByKey(strKey: string, AscOrDesc: string) {
 /**
  * 根据关键字获取相关对象的名称属性, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetNameByKeyIdCache)
- * @param strTabId:所给的关键字
- * @returns 对象
+ * @param key:关键字对象
+ * @returns 名称属性值
  */
-export async function vPrjTab_Sim_GetNameByTabIdCache(strTabId: string, strPrjId: string) {
-  if (IsNullOrEmpty(strTabId) == true) {
-    const strMsg = Format('参数:[strTabId]不能为空!(In clsvPrjTab_SimWApi.GetNameByTabIdCache)');
+export async function vPrjTab_Sim_GetNameByKeyCache(key: vPrjTab_SimKey, strPrjId: string) {
+  if (IsNullOrEmpty(key.tabId) == true) {
+    const strMsg = Format('参数:[key.tabId]不能为空!(In clsvPrjTab_SimWApi.GetNameByKeyCache)');
     console.error(strMsg);
     throw strMsg;
   }
-  if (strTabId.length != 8) {
+  if (key.tabId.length != 8) {
     const strMsg = Format(
-      '缓存分类变量:[strTabId]的长度:[{0}]不正确!(clsvPrjTab_SimWApi.GetNameByTabIdCache)',
-      strTabId.length,
+      '缓存分类变量:[key.tabId]的长度:[{0}]不正确!(clsvPrjTab_SimWApi.GetNameByKeyCache)',
+      key.tabId.length,
     );
     console.error(strMsg);
     throw strMsg;
@@ -434,7 +427,7 @@ export async function vPrjTab_Sim_GetNameByTabIdCache(strTabId: string, strPrjId
   const arrvPrjTab_SimObjLstCache = await vPrjTab_Sim_GetObjLstCache(strPrjId);
   if (arrvPrjTab_SimObjLstCache == null) return '';
   try {
-    const arrvPrjTab_SimSel = arrvPrjTab_SimObjLstCache.filter((x) => x.tabId == strTabId);
+    const arrvPrjTab_SimSel = arrvPrjTab_SimObjLstCache.filter((x) => x.tabId == key.tabId);
     let objvPrjTab_Sim: clsvPrjTab_SimEN;
     if (arrvPrjTab_SimSel.length > 0) {
       objvPrjTab_Sim = arrvPrjTab_SimSel[0];
@@ -446,7 +439,7 @@ export async function vPrjTab_Sim_GetNameByTabIdCache(strTabId: string, strPrjId
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象名称属性不成功!',
       e,
-      strTabId,
+      key.tabId,
     );
     console.error(strMsg);
     alert(strMsg);
@@ -457,7 +450,7 @@ export async function vPrjTab_Sim_GetNameByTabIdCache(strTabId: string, strPrjId
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-11
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -525,7 +518,7 @@ export async function vPrjTab_Sim_FilterFunByKey(strKey: string, value: any) {
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-11
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -560,11 +553,11 @@ export async function vPrjTab_Sim_func(
     console.error(strMsg);
     throw new Error(strMsg);
   }
-  if (clsvPrjTab_SimEN.AttributeName.indexOf(strOutFldName) == -1) {
+  if (clsvPrjTab_SimEN._AttributeName.indexOf(strOutFldName) == -1) {
     const strMsg = Format(
       '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
       strOutFldName,
-      clsvPrjTab_SimEN.AttributeName.join(','),
+      clsvPrjTab_SimEN._AttributeName.join(','),
     );
     console.error(strMsg);
     throw new Error(strMsg);
@@ -573,7 +566,7 @@ export async function vPrjTab_Sim_func(
   if (IsNullOrEmpty(strTabId) == true) {
     return '';
   }
-  const objvPrjTab_Sim = await vPrjTab_Sim_GetObjByTabIdCache(strTabId, strPrjIdClassfy);
+  const objvPrjTab_Sim = await vPrjTab_Sim_GetObjByKeyCache({ tabId: strTabId }, strPrjIdClassfy);
   if (objvPrjTab_Sim == null) return '';
   if (objvPrjTab_Sim.GetFldValue(strOutFldName) == null) return '';
   return objvPrjTab_Sim.GetFldValue(strOutFldName).toString();
@@ -582,7 +575,7 @@ export async function vPrjTab_Sim_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-11
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -952,14 +945,14 @@ export async function vPrjTab_Sim_GetObjLstClientCache(strPrjId: string) {
   const strThisFuncName = 'GetObjLstClientCache';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsvPrjTab_SimEN.WhereFormat) == false) {
-    strWhereCond = Format(clsvPrjTab_SimEN.WhereFormat, strPrjId);
+  if (IsNullOrEmpty(clsvPrjTab_SimEN._WhereFormat) == false) {
+    strWhereCond = Format(clsvPrjTab_SimEN._WhereFormat, strPrjId);
   } else {
     strWhereCond = Format("PrjId='{0}'", strPrjId);
   }
   const strKey = Format('{0}_{1}', clsvPrjTab_SimEN._CurrTabName, strPrjId);
-  if (IsNullOrEmpty(clsvPrjTab_SimEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsvPrjTab_SimEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsvPrjTab_SimEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsvPrjTab_SimEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1002,14 +995,14 @@ export async function vPrjTab_Sim_GetObjLstlocalStorage(strPrjId: string) {
   const strThisFuncName = 'GetObjLstlocalStorage';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsvPrjTab_SimEN.WhereFormat) == false) {
-    strWhereCond = Format(clsvPrjTab_SimEN.WhereFormat, strPrjId);
+  if (IsNullOrEmpty(clsvPrjTab_SimEN._WhereFormat) == false) {
+    strWhereCond = Format(clsvPrjTab_SimEN._WhereFormat, strPrjId);
   } else {
     strWhereCond = Format("{0}='{1}'", clsvPrjTab_SimEN.con_PrjId, strPrjId);
   }
   const strKey = Format('{0}_{1}', clsvPrjTab_SimEN._CurrTabName, strPrjId);
-  if (IsNullOrEmpty(clsvPrjTab_SimEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsvPrjTab_SimEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsvPrjTab_SimEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsvPrjTab_SimEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1149,14 +1142,14 @@ export async function vPrjTab_Sim_GetObjLstsessionStorage(strPrjId: string) {
   const strThisFuncName = 'GetObjLstsessionStorage';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsvPrjTab_SimEN.WhereFormat) == false) {
-    strWhereCond = Format(clsvPrjTab_SimEN.WhereFormat, strPrjId);
+  if (IsNullOrEmpty(clsvPrjTab_SimEN._WhereFormat) == false) {
+    strWhereCond = Format(clsvPrjTab_SimEN._WhereFormat, strPrjId);
   } else {
     strWhereCond = Format("{0}='{1}'", clsvPrjTab_SimEN.con_PrjId, strPrjId);
   }
   const strKey = Format('{0}_{1}', clsvPrjTab_SimEN._CurrTabName, strPrjId);
-  if (IsNullOrEmpty(clsvPrjTab_SimEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsvPrjTab_SimEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsvPrjTab_SimEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsvPrjTab_SimEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1240,7 +1233,7 @@ export async function vPrjTab_Sim_GetObjLstCache(
     throw strMsg;
   }
   let arrvPrjTab_SimObjLstCache;
-  switch (clsvPrjTab_SimEN.CacheModeId) {
+  switch (clsvPrjTab_SimEN._CacheModeId) {
     case '04': //sessionStorage
       arrvPrjTab_SimObjLstCache = await vPrjTab_Sim_GetObjLstsessionStorage(strPrjId);
       break;
@@ -1265,7 +1258,7 @@ export async function vPrjTab_Sim_GetObjLstCache(
 export async function vPrjTab_Sim_GetObjLstPureCache(strPrjId: string) {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrvPrjTab_SimObjLstCache;
-  switch (clsvPrjTab_SimEN.CacheModeId) {
+  switch (clsvPrjTab_SimEN._CacheModeId) {
     case '04': //sessionStorage
       arrvPrjTab_SimObjLstCache = await vPrjTab_Sim_GetObjLstsessionStoragePureCache(strPrjId);
       break;
@@ -1782,15 +1775,18 @@ export async function vPrjTab_Sim_IsExistRecordAsync(strWhereCond: string): Prom
 /**
  * 根据关键字判断是否存在记录, 从本地缓存中判断.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistCache)
- * @param strTabId:所给的关键字
- * @returns 对象
+ * @param key:关键字对象
+ * @returns 是否存在
  */
-export async function vPrjTab_Sim_IsExistCache(strTabId: string, strPrjId: string) {
+export async function vPrjTab_Sim_IsExistCache(
+  key: vPrjTab_SimKey,
+  strPrjId: string,
+): Promise<boolean> {
   const strThisFuncName = 'IsExistCache';
   const arrvPrjTab_SimObjLstCache = await vPrjTab_Sim_GetObjLstCache(strPrjId);
   if (arrvPrjTab_SimObjLstCache == null) return false;
   try {
-    const arrvPrjTab_SimSel = arrvPrjTab_SimObjLstCache.filter((x) => x.tabId == strTabId);
+    const arrvPrjTab_SimSel = arrvPrjTab_SimObjLstCache.filter((x) => x.tabId == key.tabId);
     if (arrvPrjTab_SimSel.length > 0) {
       return true;
     } else {
@@ -1799,7 +1795,7 @@ export async function vPrjTab_Sim_IsExistCache(strTabId: string, strPrjId: strin
   } catch (e) {
     const strMsg = Format(
       '根据关键字:[{0}]判断是否存在不成功!(in {1}.{2})',
-      strTabId,
+      key.tabId,
       vPrjTab_Sim_ConstructorName,
       strThisFuncName,
     );
@@ -1812,10 +1808,10 @@ export async function vPrjTab_Sim_IsExistCache(strTabId: string, strPrjId: strin
 /**
  * 根据关键字判断是否存在记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistAsync)
- * @param strTabId:关键字
+ * @param key:包含关键字的对象
  * @returns 是否存在?存在返回True
  **/
-export async function vPrjTab_Sim_IsExistAsync(strTabId: string): Promise<boolean> {
+export async function vPrjTab_Sim_IsExistAsync(key: vPrjTab_SimKey): Promise<boolean> {
   const strThisFuncName = 'IsExistAsync';
   //检测记录是否存在
   const strAction = 'IsExist';
@@ -1828,7 +1824,7 @@ export async function vPrjTab_Sim_IsExistAsync(strTabId: string): Promise<boolea
       Authorization: `${token}`,
     },
     params: {
-      strTabId,
+      strTabId: key.tabId,
     },
   };
   try {
@@ -2061,14 +2057,14 @@ export function vPrjTab_Sim_GetWebApiUrl(strController: string, strAction: strin
 export function vPrjTab_Sim_ReFreshThisCache(strPrjId: string): void {
   if (IsNullOrEmpty(strPrjId) == true) {
     const strMsg = Format(
-      '参数:[strPrjId]不能为空!(In clsvPrjTab_SimWApi.vPrjTab_Sim_ReFreshThisCache)',
+      '参数:[strPrjId]不能为空！(In clsvPrjTab_SimWApi.vPrjTab_Sim_ReFreshThisCache)',
     );
     console.error(strMsg);
     throw strMsg;
   }
   if (strPrjId.length != 4) {
     const strMsg = Format(
-      '缓存分类变量:[strPrjId]的长度:[{0}]不正确!(clsvPrjTab_SimWApi.vPrjTab_Sim_ReFreshThisCache)',
+      '缓存分类变量:[strPrjId]的长度:[{0}]不正确！(clsvPrjTab_SimWApi.vPrjTab_Sim_ReFreshThisCache)',
       strPrjId.length,
     );
     console.error(strMsg);
@@ -2076,7 +2072,7 @@ export function vPrjTab_Sim_ReFreshThisCache(strPrjId: string): void {
   }
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = Format('{0}_{1}', clsvPrjTab_SimEN._CurrTabName, strPrjId);
-    switch (clsvPrjTab_SimEN.CacheModeId) {
+    switch (clsvPrjTab_SimEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -2108,7 +2104,7 @@ export function vPrjTab_Sim_GetLastRefreshTime(): string {
 }
 
 /**
- * 绑定基于Web的下拉框,在某一层下的下拉框
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050447)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_DdlBindFunctionInDiv)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
@@ -2119,6 +2115,7 @@ export async function vPrjTab_Sim_BindDdl_TabIdByCmPrjIdInDivCache(
   objDiv: HTMLDivElement,
   strDdlName: string,
   strCmPrjId: string,
+  strPrjId: string,
 ) {
   if (IsNullOrEmpty(strCmPrjId) == true) {
     const strMsg = Format(
@@ -2135,7 +2132,7 @@ export async function vPrjTab_Sim_BindDdl_TabIdByCmPrjIdInDivCache(
     console.error(strMsg);
     throw strMsg;
   }
-  const strPrjId = await CMProjectEx_GetPrjIdByCmPrjIdCache(strCmPrjId);
+
   if (IsNullOrEmpty(strPrjId) == true) {
     const strMsg = Format(
       '参数:[strPrjId]不能为空！(In clsvPrjTab_SimWApi.BindDdl_TabIdByCmPrjIdInDiv)',
@@ -2173,17 +2170,16 @@ export async function vPrjTab_Sim_BindDdl_TabIdByCmPrjIdInDivCache(
     'v工程表_Sim...',
   );
 }
-//(IsNeedGC == false)该表下拉框功能不需要生成;
 
 /**
- * 绑定基于Web的下拉框,在某一层下的下拉框
+ * 绑定基于Web的下拉框,在某一层下的下拉框(TabFeatureId:00050447)
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_TabFeature_GetDdlData)-pyf
  * @param objDDL:需要绑定当前表的下拉框
 
  * @param strCmPrjId:
  * @param strPrjId:
 */
-export async function vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId: string) {
+export async function vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId: string, strPrjId: string) {
   if (IsNullOrEmpty(strCmPrjId) == true) {
     const strMsg = Format(
       '参数:[strCmPrjId]不能为空！(In clsvPrjTab_SimWApi.BindDdl_TabIdByCmPrjIdInDiv)',
@@ -2199,7 +2195,7 @@ export async function vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId: string)
     console.error(strMsg);
     throw strMsg;
   }
-  const strPrjId = await CMProjectEx_GetPrjIdByCmPrjIdCache(strCmPrjId);
+
   if (IsNullOrEmpty(strPrjId) == true) {
     const strMsg = Format(
       '参数:[strPrjId]不能为空！(In clsvPrjTab_SimWApi.BindDdl_TabIdByCmPrjIdInDiv)',
@@ -2231,12 +2227,11 @@ export async function vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId: string)
   arrObjLstSel.forEach((x) => arrvPrjTab_Sim.push(x));
   return arrvPrjTab_Sim;
 }
-//(IsNeedGC == false)该表下拉框功能不需要生成;
 
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-11
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -2256,7 +2251,7 @@ export function vPrjTab_Sim_GetJSONStrByObj(pobjvPrjTab_SimEN: clsvPrjTab_SimEN)
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-11
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -2277,7 +2272,7 @@ export function vPrjTab_Sim_GetObjLstByJSONStr(strJSON: string): Array<clsvPrjTa
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-11
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrvPrjTab_SimObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -2297,7 +2292,7 @@ export function vPrjTab_Sim_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-11
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象

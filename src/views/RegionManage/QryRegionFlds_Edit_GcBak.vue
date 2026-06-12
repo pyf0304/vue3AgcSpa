@@ -390,6 +390,7 @@
     RegionId_Static,
     TabId_Static,
   } from '@/views/RegionManage/QryRegionFldsVueShare';
+  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
   import { useUserStore } from '@/store/modulesShare/user';
   import { Format, IsNullOrEmptyEq0, Is0EqEmpty } from '@/ts/PubFun/clsString';
   import { QryRegionFlds_Edit } from '@/viewsBase/RegionManage/QryRegionFlds_Edit';
@@ -447,7 +448,10 @@
         arrDDLItemsOption.value = await DDLItemsOption_GetArrDDLItemsOption(); //编辑区域
         ddlItemsOptionId.value = '0';
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currPrjId,
+        ); //编辑区域
         dsTabId.value = '0';
 
         arrGCVariable.value = await GCVariable_GetArrGCVariable(); //编辑区域

@@ -480,6 +480,7 @@
   import { PrjTab_Edit } from '@/viewsBase/Table_Field/PrjTab_Edit';
   import { enumPageDispMode } from '@/ts/PubFun/enumPageDispMode';
   import { GCVariableEx_GetArrGCVariableByPrjIdCache } from '@/ts/L3ForWApiEx/GeneCode/clsGCVariableExWApi';
+  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
   export default defineComponent({
     name: 'PrjTabEdit',
     components: {
@@ -536,7 +537,10 @@
         const bolBool_True_Default = true; //在switch中未找到相关类型: tsDefaultValue(in AGC.BusinessLogicEx.FuncParaType:GetTsTypeStr)
         // const strTabId_Static = TabId_Static.value; //静态变量;//静态变量
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currSelPrjId,
+        ); //编辑区域
         relaTabId4View.value = '0';
 
         arrSQLDSType.value = await SQLDSType_GetArrSQLDSType(); //编辑区域
@@ -723,7 +727,7 @@
             case '确认添加':
               //这是一个单表的插入的代码,由于逻辑层太简单,
               //就把逻辑层合并到控制层,
-              if (['02', '03', '06'].indexOf(clsPrjTabEN.PrimaryTypeId) > -1) {
+              if (['02', '03', '06'].indexOf(clsPrjTabEN._PrimaryTypeId) > -1) {
                 returnKeyId = await objPage_Edit.value.AddNewRecordWithMaxIdSave();
                 if (IsNullOrEmpty(returnKeyId) == false) {
                   if (PrjTab_Edit.strPageDispModeId == enumPageDispMode.PopupBox_01) hideDialog();

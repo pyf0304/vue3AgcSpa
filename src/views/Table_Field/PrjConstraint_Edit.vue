@@ -221,7 +221,10 @@
       async function BindDdl4EditRegionInDiv() {
         const strCmPrjId = CmPrjId_Local.value; //静态变量;//Session存储、local存储
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currSelPrjId,
+        ); //编辑区域
         tabId.value = '0';
 
         arrConstraintType.value = await ConstraintType_GetArrConstraintType(); //编辑区域

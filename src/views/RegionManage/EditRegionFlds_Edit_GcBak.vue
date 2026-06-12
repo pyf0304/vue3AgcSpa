@@ -402,7 +402,7 @@
   import { CtlType_GetArrCtlType } from '@/ts/L3ForWApi/PrjInterface/clsCtlTypeWApi';
   import { DDLItemsOption_GetArrDDLItemsOption } from '@/ts/L3ForWApi/PrjInterface/clsDDLItemsOptionWApi';
   import { vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId } from '@/ts/L3ForWApi/Table_Field/clsvPrjTab_SimWApi';
-  import { GCVariableEx_GetArrGCVariable } from '@/ts/L3ForWApi/GeneCode/clsGCVariableWApi';
+  import { GCVariable_GetArrGCVariable } from '@/ts/L3ForWApi/GeneCode/clsGCVariableWApi';
   import {
     CmPrjId_Local,
     refDivEdit,
@@ -413,6 +413,7 @@
   import { Format } from '@/ts/PubFun/clsString';
   import { EditRegionFlds_Edit } from '@/viewsBase/RegionManage/EditRegionFlds_Edit';
   import { enumPageDispMode } from '@/ts/PubFun/enumPageDispMode';
+  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
   export default defineComponent({
     name: 'EditRegionFldsEdit',
     components: {
@@ -470,10 +471,13 @@
         arrDDLItemsOption.value = await DDLItemsOption_GetArrDDLItemsOption(); //编辑区域
         ddlItemsOptionId.value = '0';
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currPrjId,
+        ); //编辑区域
         dsTabId.value = '0';
 
-        arrGCVariable.value = await GCVariableEx_GetArrGCVariable(); //编辑区域
+        arrGCVariable.value = await GCVariable_GetArrGCVariable(); //编辑区域
         varId.value = '0';
       }
 

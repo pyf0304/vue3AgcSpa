@@ -747,7 +747,10 @@
         arrDDLItemsOption.value = await DDLItemsOption_GetArrDDLItemsOption(); //编辑区域
         if (IsNullOrEmpty(ddlItemsOptionId.value) == true) ddlItemsOptionId.value = '0';
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currPrjId,
+        ); //编辑区域
         if (IsNullOrEmpty(dsTabId.value) == true) dsTabId.value = '0';
 
         //  await this.SetDdl_VarIdInDiv(strPrjId); //编辑区域

@@ -338,6 +338,21 @@ export default class CMProjectCRUDEx extends CMProjectCRUD implements IShowList 
         },
       },
       {
+        fldName: clsCMProjectEN.con_UserCodeRoot,
+        sortBy: clsCMProjectEN.con_UserCodeRoot,
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '用户代码根',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 6,
+        funcName: (strKey: string, strText: string) => {
+          strKey = strText;
+          return new HTMLElement();
+        },
+      },
+      {
         fldName: 'isFstLcase',
         sortBy: 'isFstLcase',
         sortFun: clsPubVar4Web.SortFun,

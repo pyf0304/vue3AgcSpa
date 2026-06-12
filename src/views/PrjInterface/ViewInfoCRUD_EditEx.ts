@@ -43,7 +43,8 @@ import {
   GetUniDivInDoc,
   SetSelectValueByIdInDivObj,
 } from '@/ts/PubFun/clsCommFunc4Ctrl';
-import { BindTab, confirm_del, Redirect } from '@/ts/PubFun/clsCommFunc4Web';
+import { BindTab, confirm_del } from '@/ts/PubFun/clsCommFunc4Web';
+import router from '@/router';
 
 import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
 import { clsPubSessionStorage } from '@/ts/PubFun/clsPubSessionStorage';
@@ -724,7 +725,10 @@ export default class ViewInfoCRUD_EditEx extends ViewInfoCRUD implements IShowLi
 
       //alert("完成SelectViewId!");
       viewId_Main.value = objViewInfo.viewId;
-      Redirect('/Index/Main_ViewInfo.js');
+      router.push({
+        name: 'account-editViewRegion',
+        query: { viewId: objViewInfo.viewId },
+      });
     } catch (e: any) {
       console.error(e);
       const strMsg = `选择界面:[${strViewId}]不成功,${e}.`;

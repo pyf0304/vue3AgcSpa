@@ -396,7 +396,10 @@
       async function BindDdl4QryRegion() {
         const strCmPrjId = CmPrjId_Local.value; //静态变量;//Session存储、local存储
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //查询区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currPrjId,
+        ); //查询区域
         codeTabId_q.value = '0';
       }
 

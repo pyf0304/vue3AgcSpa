@@ -25,6 +25,7 @@ import {
   dataColumn,
   BindTabByList,
   refPrjTabFld_List,
+  PrjId_Session,
 } from '@/views/Table_Field/PrjTabFldVueShare';
 import {
   PrjTabFld_GetRecCountByCondCache,
@@ -509,6 +510,7 @@ export abstract class PrjTabFldCRUD implements clsOperateList {
       divVarSet.refDivFunction,
       'ddlTabId',
       strCmPrjId,
+      PrjId_Session.value,
     ); //
   }
 

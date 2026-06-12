@@ -400,6 +400,7 @@
   import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
   import { ViewInfo_Edit } from '@/viewsBase/PrjInterface/ViewInfo_Edit';
   import { enumPageDispMode } from '@/ts/PubFun/enumPageDispMode';
+  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
   export default defineComponent({
     name: 'ViewInfoEdit',
     components: {
@@ -444,7 +445,10 @@
         const intApplicationTypeId_Static = ApplicationTypeId_Static.value; //静态变量;//静态变量
         const strPrjId = PrjId_Session.value; //静态变量;//Session存储、local存储
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currPrjId,
+        ); //编辑区域
         mainTabId.value = '0';
 
         arrSQLDSType.value = await SQLDSType_GetArrSQLDSType(); //编辑区域

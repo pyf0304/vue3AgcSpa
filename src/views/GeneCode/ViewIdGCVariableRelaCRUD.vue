@@ -143,6 +143,7 @@
     viewId_q,
     retrievalMethodId_f,
     refViewIdGCVariableRela_List,
+    ViewId_Main_Session,
   } from '@/views/GeneCode/ViewIdGCVariableRelaVueShare';
   import ViewIdGCVariableRelaCRUDEx from '@/views/GeneCode/ViewIdGCVariableRelaCRUDEx';
 
@@ -158,6 +159,7 @@
     FuncPurposeId_Static,
     ProgLangTypeId_Static,
   } from '@/views/PrjFunction/Function4GeneCodeVueShare';
+  import { viewId_Main } from '@/views/PrjInterface/ViewInfo_AllPropVueShare';
   export default defineComponent({
     name: 'ViewIdGCVariableRelaCRUD',
     components: {
@@ -171,7 +173,7 @@
       FeatureTypeId_Static.value = '02';
       ProgLangTypeId_Static.value = '09';
       FuncPurposeId_Static.value = '02';
-
+      ViewId_Main_Session.value = viewId_Main.value;
       PrjId_Session.value = clsPrivateSessionStorage.currSelPrjId;
       const route = useRoute(); // 获取当前路由信息
       if (typeof route.query.TabId === 'string') {

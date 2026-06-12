@@ -51,13 +51,8 @@ import {
   GetSelectValue4BoolInDivObj,
   SetCheckBoxValueByIdInDivObj,
 } from '@/ts/PubFun/clsCommFunc4Ctrl';
-import {
-  BindDdl_TrueAndFalse,
-  BindTab,
-  confirm_del,
-  Redirect,
-  SortFun,
-} from '@/ts/PubFun/clsCommFunc4Web';
+import { BindDdl_TrueAndFalse, BindTab, confirm_del, SortFun } from '@/ts/PubFun/clsCommFunc4Web';
+import router from '@/router';
 import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
 import { GetCurrPageIndex, GetSortBy } from '@/ts/PubFun/clsOperateList';
 import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
@@ -1092,7 +1087,7 @@ export default class PrjTabCRUDEx extends PrjTabCRUD implements IShowList {
       //alert("完成SelectTabId!");
       clsPubVar4Web.SetTabId(objvPrjTabEN.tabId);
       //Redirect("/Table_Field/PrjTabFldCRUD");
-      Redirect('/Table_Field/PrjTab_AllProp');
+      router.push('/Table_Field/PrjTab_AllProp');
     } catch (e: any) {
       console.error(e);
       const strMsg = `选择界面:[${strTabId}]不成功,${e}.`;

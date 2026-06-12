@@ -116,7 +116,8 @@ import {
   SetLabelHtmlByIdInDivObj,
   ShowButtonInDivObj,
 } from '@/ts/PubFun/clsCommFunc4Ctrl';
-import { ObjectAssign, Redirect } from '@/ts/PubFun/clsCommFunc4Web';
+import { ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
+import router from '@/router';
 
 import { DnPath_GetObjByDnPathIdAsync } from '@/ts/L3ForWApi/AIModule/clsDnPathWApi';
 import { vDnPath_Sim_GetObjLstCache } from '@/ts/L3ForWApi/AIModule/clsvDnPath_SimWApi';
@@ -599,9 +600,6 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
 
       viewVarSet.sortPrjTabFldBy = Format('{0} Asc', clsPrjTabFldEN.con_SequenceNumber);
 
-      //const objPrjTab = await vPrjTab_Sim_GetObjByTabIdCache(TabId_Static.value, clsPrivateSessionStorage.currSelPrjId);
-      //if (objPrjTab == null) return;
-      //SetLabelHtmlByIdInDivObj(PrjTabFldCRUD.divFunction, "lblPrjTabFldList", Format("项目表:{0}({1})-表字段维护", objPrjTab.tabName, objPrjTab.tabId));
       //2、显示无条件的表内容在GridView中
       let strMsg;
 
@@ -2922,7 +2920,7 @@ export default class PrjTabFldCRUDEx extends PrjTabFldCRUD implements IShowList 
   public async btnReturnToPrjTabLst_Click() {
     //alert("CheckConsistency");
     // const strThisFuncName = this.btnReturnToPrjTabLst_Click.name;
-    Redirect('/Table_Field/PrjTabCRUD');
+    router.push('/Table_Field/PrjTabCRUD');
   }
 
   public async btnReturnToMainTab_Click() {

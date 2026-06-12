@@ -430,7 +430,10 @@
           );
         }
         //  await this.SetDdl_MainTabIdInDiv(); //编辑区域
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currPrjId,
+        ); //编辑区域
         mainTabId.value = '0';
 
         arrSQLDSType.value = await SQLDSType_GetArrSQLDSType(); //编辑区域

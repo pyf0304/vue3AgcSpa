@@ -691,6 +691,21 @@ export default class CodeTypeCRUDEx extends CodeTypeCRUD implements IShowList {
         },
       },
       {
+        fldName: clsCodeTypeEN.con_CodeTypeSimName,
+        sortBy: 'codeTypeSimName',
+        sortFun: SortFun,
+        getDataSource: '',
+        colHeader: '代码类型简称',
+        text: '',
+        tdClass: 'text-left',
+        columnType: 'Label',
+        orderNum: 4,
+        funcName: (strKey: string, strText: string) => {
+          console.log(strKey, strText);
+          return new HTMLElement();
+        },
+      },
+      {
         fldName: clsCodeTypeEN.con_GroupName,
         sortBy: 'groupName',
         sortFun: SortFun,

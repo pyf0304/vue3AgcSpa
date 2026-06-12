@@ -54,7 +54,8 @@ import {
   GetSelectValueInDivObj,
   SetCheckBoxValueByIdInDivObj,
 } from '@/ts/PubFun/clsCommFunc4Ctrl';
-import { BindTab, ObjectAssign, Redirect } from '@/ts/PubFun/clsCommFunc4Web';
+import { BindTab, ObjectAssign } from '@/ts/PubFun/clsCommFunc4Web';
+import router from '@/router';
 import { clsDataColumn } from '@/ts/PubFun/clsDataColumn';
 import { clsPubFun } from '@/ts/PubConfig/clsPubFun';
 import { clsPubSessionStorage } from '@/ts/PubFun/clsPubSessionStorage';
@@ -707,7 +708,7 @@ export class ViewInfoCRUDExBak20230626 extends ViewInfoCRUD implements IShowList
 
       //alert("完成SelectViewId!");
       viewId_Main.value = objvViewInfoEN.viewId;
-      Redirect('/PrjInterface/ViewInfo_AllProp');
+      router.push('/PrjInterface/ViewInfo_AllProp');
     } catch (e: any) {
       console.error(e);
       const strMsg = `选择界面:[${strViewId}]不成功,${e}.`;

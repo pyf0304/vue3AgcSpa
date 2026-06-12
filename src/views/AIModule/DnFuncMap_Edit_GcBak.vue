@@ -232,6 +232,7 @@
   import { Format, Is0EqEmpty, IsNullOrEmpty, IsNullOrEmptyEq0 } from '@/ts/PubFun/clsString';
   import { DnFuncMap_Edit } from '@/viewsBase/AIModule/DnFuncMap_Edit';
   import { enumPageDispMode } from '@/ts/PubFun/enumPageDispMode';
+  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
   export default defineComponent({
     name: 'DnFuncMapEdit',
     components: {
@@ -277,7 +278,10 @@
         arrFuncMapMode.value = await FuncMapMode_GetArrFuncMapMode(); //编辑区域
         funcMapModeId.value = '0';
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currPrjId,
+        ); //编辑区域
         tabId.value = '0';
 
         arrDnFunction.value = await DnFunction_GetArrDnFunctionByPrjId(strPrjId); //编辑区域

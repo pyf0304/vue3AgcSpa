@@ -118,6 +118,25 @@
               >
             </td>
           </tr>
+          <tr id="trUserCodeRoot">
+            <td class="text-right">
+              <label
+                id="lblUserCodeRoot"
+                name="lblUserCodeRoot"
+                class="col-form-label text-right"
+                style="width: 90px"
+                >用户代码根
+              </label>
+            </td>
+            <td class="text-left">
+              <input
+                id="txtUserCodeRoot"
+                v-model="userCodeRoot"
+                class="form-control form-control-sm"
+                style="width: 400px"
+              />
+            </td>
+          </tr>
           <tr id="trIsFstLcase">
             <td class="text-left" ColSpan="2">
               <span class="form-control form-control-sm" style="width: 400px">
@@ -250,6 +269,7 @@
       const applicationTypeId = ref(0);
       const vueDesignSysId = ref('');
       const functionTemplateId = ref('');
+      const userCodeRoot = ref('');
       const isFstLcase = ref(true);
       const projectFileName = ref('');
       const useStateId = ref('');
@@ -292,6 +312,7 @@
         pobjCMProjectEN.SetApplicationTypeId(applicationTypeId.value); // 应用类型
         pobjCMProjectEN.SetVueDesignSysId(Is0EqEmpty(vueDesignSysId.value)); // Vue控件设计体系
         pobjCMProjectEN.SetFunctionTemplateId(Is0EqEmpty(functionTemplateId.value)); // 函数模板
+        pobjCMProjectEN.SetUserCodeRoot(userCodeRoot.value); // 用户代码根
         pobjCMProjectEN.SetIsFstLcase(isFstLcase.value); // 是否首字母小写
         pobjCMProjectEN.SetProjectFileName(projectFileName.value); // 工程文件名
         pobjCMProjectEN.SetUseStateId(Is0EqEmpty(useStateId.value)); // 使用状态
@@ -314,6 +335,7 @@
         applicationTypeId.value = pobjCMProjectEN.applicationTypeId; // 应用类型
         vueDesignSysId.value = IsNullOrEmptyEq0(pobjCMProjectEN.vueDesignSysId); // Vue控件设计体系
         functionTemplateId.value = IsNullOrEmptyEq0(pobjCMProjectEN.functionTemplateId); // 函数模板
+        userCodeRoot.value = pobjCMProjectEN.userCodeRoot; // 用户代码根
         isFstLcase.value = pobjCMProjectEN.isFstLcase; // 是否首字母小写
         projectFileName.value = pobjCMProjectEN.projectFileName; // 工程文件名
         useStateId.value = IsNullOrEmptyEq0(pobjCMProjectEN.useStateId); // 使用状态
@@ -331,6 +353,7 @@
         applicationTypeId.value = 0;
         vueDesignSysId.value = '0';
         functionTemplateId.value = '0';
+        userCodeRoot.value = '';
         isFstLcase.value = false;
         projectFileName.value = '';
         useStateId.value = '0';
@@ -363,7 +386,7 @@
             case '确认添加':
               //这是一个单表的插入的代码,由于逻辑层太简单,
               //就把逻辑层合并到控制层,
-              if (['02', '03', '06'].indexOf(clsCMProjectEN.PrimaryTypeId) > -1) {
+              if (['02', '03', '06'].indexOf(clsCMProjectEN._PrimaryTypeId) > -1) {
                 returnKeyId = await objPage_Edit.value.AddNewRecordWithMaxIdSave();
                 if (IsNullOrEmpty(returnKeyId) == false) {
                   if (CMProject_Edit.strPageDispModeId == enumPageDispMode.PopupBox_01)
@@ -468,6 +491,7 @@
         applicationTypeId,
         vueDesignSysId,
         functionTemplateId,
+        userCodeRoot,
         isFstLcase,
         projectFileName,
         useStateId,

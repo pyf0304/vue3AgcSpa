@@ -223,7 +223,10 @@
         const strCmPrjId = CmPrjId_Local.value; //静态变量;//Session存储、local存储
         // const strTabId_Static = TabId_Static.value; //静态变量;//静态变量
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currPrjId,
+        ); //编辑区域
         // await this.SetDdl_TabIdInDivEx(strPrjId, strCmPrjId); //编辑区域
         // vPrjTab_SimEx_GetArrvPrjTab_SimByCmPrjIdCacheB
 

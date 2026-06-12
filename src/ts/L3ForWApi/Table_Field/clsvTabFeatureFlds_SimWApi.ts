@@ -46,6 +46,10 @@ import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 
 export const vTabFeatureFlds_Sim_Controller = 'vTabFeatureFlds_SimApi';
 export const vTabFeatureFlds_Sim_ConstructorName = 'vTabFeatureFlds_Sim';
+const _vTabFeatureFldsSimObjLstSessionInFlight = new Map<
+  string,
+  Promise<Array<clsvTabFeatureFlds_SimEN>>
+>();
 
 /**
  * 根据关键字获取相应记录的对象
@@ -1030,28 +1034,40 @@ export async function vTabFeatureFlds_Sim_GetObjLstsessionStorage(strPrjId: stri
     );
     return arrvTabFeatureFlds_SimObjLstT;
   }
+  const objInFlight = _vTabFeatureFldsSimObjLstSessionInFlight.get(strKey);
+  if (objInFlight != null) return objInFlight;
+
+  const objLoadPromise = (async () => {
+    try {
+      const arrvTabFeatureFlds_SimExObjLst = await vTabFeatureFlds_Sim_GetObjLstAsync(strWhereCond);
+      const strPrefix = Format('{0}_', clsvTabFeatureFlds_SimEN._CurrTabName);
+      const arrCacheKeyLst = SessionStorage_GetKeyByPrefix(strPrefix);
+      arrCacheKeyLst.forEach((x) => sessionStorage.removeItem(x));
+      sessionStorage.setItem(strKey, JSON.stringify(arrvTabFeatureFlds_SimExObjLst));
+      const strInfo = Format(
+        '[sessionStorage]Key:[{0}]的缓存已经建立,对象列表数：{1}!',
+        strKey,
+        arrvTabFeatureFlds_SimExObjLst.length,
+      );
+      console.log(strInfo);
+      return arrvTabFeatureFlds_SimExObjLst;
+    } catch (e) {
+      const strMsg = Format(
+        '从缓存中获取所有对象列表出错. \n服务器错误：{0}.(in {1}.{2})',
+        e,
+        vTabFeatureFlds_Sim_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      throw strMsg;
+    }
+  })();
+
+  _vTabFeatureFldsSimObjLstSessionInFlight.set(strKey, objLoadPromise);
   try {
-    const arrvTabFeatureFlds_SimExObjLst = await vTabFeatureFlds_Sim_GetObjLstAsync(strWhereCond);
-    const strPrefix = Format('{0}_', clsvTabFeatureFlds_SimEN._CurrTabName);
-    const arrCacheKeyLst = SessionStorage_GetKeyByPrefix(strPrefix);
-    arrCacheKeyLst.forEach((x) => sessionStorage.removeItem(x));
-    sessionStorage.setItem(strKey, JSON.stringify(arrvTabFeatureFlds_SimExObjLst));
-    const strInfo = Format(
-      '[sessionStorage]Key:[{0}]的缓存已经建立,对象列表数：{1}!',
-      strKey,
-      arrvTabFeatureFlds_SimExObjLst.length,
-    );
-    console.log(strInfo);
-    return arrvTabFeatureFlds_SimExObjLst;
-  } catch (e) {
-    const strMsg = Format(
-      '从缓存中获取所有对象列表出错. \n服务器错误：{0}.(in {1}.{2})',
-      e,
-      vTabFeatureFlds_Sim_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw strMsg;
+    return await objLoadPromise;
+  } finally {
+    _vTabFeatureFldsSimObjLstSessionInFlight.delete(strKey);
   }
 }
 

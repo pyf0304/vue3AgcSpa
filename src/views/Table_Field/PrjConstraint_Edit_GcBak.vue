@@ -197,6 +197,7 @@
     PrjId_Session,
     CmPrjId_Local,
   } from '@/views/Table_Field/PrjConstraintVueShare';
+  import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
   import { useUserStore } from '@/store/modulesShare/user';
   import { Format, IsNullOrEmpty } from '@/ts/PubFun/clsString';
   import { PrjConstraint_Edit } from '@/viewsBase/Table_Field/PrjConstraint_Edit';
@@ -229,7 +230,10 @@
       async function BindDdl4EditRegionInDiv() {
         const strCmPrjId = CmPrjId_Local.value; //静态变量;//Session存储、local存储
 
-        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(strCmPrjId); //编辑区域
+        arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
+          strCmPrjId,
+          clsPrivateSessionStorage.currPrjId,
+        ); //编辑区域
         tabId.value = '0';
 
         arrConstraintType.value = await ConstraintType_GetArrConstraintType(); //编辑区域

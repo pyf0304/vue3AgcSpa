@@ -42,12 +42,21 @@
       const activeIndex = ref(-1);
       const suggestionsText = props.suggestions.map((x) => x.text);
       const filteredSuggestions = computed(() => {
-        IsInput = true;
         const term = searchTerm.value.toLowerCase();
         return suggestionsText.filter((suggestion) => suggestion.toLowerCase().includes(term));
       });
 
+      const emitFinishInput = () => {
+        const returnValue = getSelectedValue();
+        emit('on-finish-input', {
+          fldId: returnValue.value,
+          fldName: returnValue.text,
+          content: '这是自动完成输入框的返回字段值',
+        });
+      };
+
       const filterSuggestions = () => {
+        IsInput = true;
         showSuggestions.value = true;
         activeIndex.value = -1;
       };
@@ -56,12 +65,8 @@
         searchTerm.value = suggestion;
         showSuggestions.value = false;
         console.error('准备弹出事件(in selectSuggestion)');
-        const returnValue = getSelectedValue();
-        emit('on-finish-input', {
-          fldId: returnValue.value,
-          fldName: returnValue.text,
-          content: '这是自动完成输入框的返回字段值',
-        });
+        emitFinishInput();
+        IsInput = false;
       };
 
       const setActiveIndex = (index: number) => {
@@ -87,13 +92,6 @@
           case 'Enter':
             if (activeIndex.value >= 0 && activeIndex.value < filteredSuggestions.value.length) {
               selectSuggestion(filteredSuggestions.value[activeIndex.value]);
-              console.error('准备弹出事件(in handleKeyDown Enter)');
-              const returnValue = getSelectedValue();
-              emit('on-finish-input', {
-                fldId: returnValue.value,
-                fldName: returnValue.text,
-                content: '这是自动完成输入框的返回字段值',
-              });
             }
             break;
           case 'Escape':
@@ -122,12 +120,7 @@
           if (IsInput == false) return;
 
           console.error('光标离开事件(in hideSuggestions)');
-          const returnValue = getSelectedValue();
-          emit('on-finish-input', {
-            fldId: returnValue.value,
-            fldName: returnValue.text,
-            content: '这是自动完成输入框的返回字段值',
-          });
+          emitFinishInput();
           IsInput = false;
         }, 200);
       };

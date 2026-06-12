@@ -43,6 +43,7 @@ import { stuPagerPara } from '@/ts/PubFun/stuPagerPara';
 
 export const buttonStyle_Controller = 'ButtonStyleApi';
 export const buttonStyle_ConstructorName = 'buttonStyle';
+const _buttonStyleObjLstLocalInFlight = new Map<string, Promise<Array<clsButtonStyleEN>>>();
 
 /**
  * 根据关键字获取相应记录的对象
@@ -951,25 +952,37 @@ export async function ButtonStyle_GetObjLstlocalStorage() {
     const arrButtonStyleObjLstT = ButtonStyle_GetObjLstByJSONObjLst(arrButtonStyleExObjLstCache);
     return arrButtonStyleObjLstT;
   }
+  const objInFlight = _buttonStyleObjLstLocalInFlight.get(strKey);
+  if (objInFlight != null) return objInFlight;
+
+  const objLoadPromise = (async () => {
+    try {
+      const arrButtonStyleExObjLst = await ButtonStyle_GetObjLstAsync(strWhereCond);
+      localStorage.setItem(strKey, JSON.stringify(arrButtonStyleExObjLst));
+      const strInfo = Format(
+        '[localStorage]Key:[{0}]的缓存已经建立,对象列表数：{1}!',
+        strKey,
+        arrButtonStyleExObjLst.length,
+      );
+      console.log(strInfo);
+      return arrButtonStyleExObjLst;
+    } catch (e) {
+      const strMsg = Format(
+        '从本地缓存中获取所有对象列表出错. \n服务器错误：{0}.(in {1}.{2})',
+        e,
+        buttonStyle_ConstructorName,
+        strThisFuncName,
+      );
+      console.error(strMsg);
+      throw strMsg;
+    }
+  })();
+
+  _buttonStyleObjLstLocalInFlight.set(strKey, objLoadPromise);
   try {
-    const arrButtonStyleExObjLst = await ButtonStyle_GetObjLstAsync(strWhereCond);
-    localStorage.setItem(strKey, JSON.stringify(arrButtonStyleExObjLst));
-    const strInfo = Format(
-      '[localStorage]Key:[{0}]的缓存已经建立,对象列表数：{1}!',
-      strKey,
-      arrButtonStyleExObjLst.length,
-    );
-    console.log(strInfo);
-    return arrButtonStyleExObjLst;
-  } catch (e) {
-    const strMsg = Format(
-      '从本地缓存中获取所有对象列表出错. \n服务器错误：{0}.(in {1}.{2})',
-      e,
-      buttonStyle_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    throw strMsg;
+    return await objLoadPromise;
+  } finally {
+    _buttonStyleObjLstLocalInFlight.delete(strKey);
   }
 }
 

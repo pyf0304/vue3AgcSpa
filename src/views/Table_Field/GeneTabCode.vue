@@ -177,13 +177,14 @@
   import { TreeNode } from '@/ts/components/TreeNode';
   import { enumTabMainType } from '@/ts/L0Entity/Table_Field/clsTabMainTypeEN';
   import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
-  import { vPrjTab_Sim_GetObjByTabIdCache } from '@/ts/L3ForWApi/Table_Field/clsvPrjTab_SimWApi';
+
   import tree from '@/ts/components/myTree.vue';
   import { divVarSet, refDivLayout } from '@/views/Table_Field/GeneTabCodeVueShare';
   import {
     refViewMaster_Detail,
     refViewMaster_Edit,
   } from '@/views/PrjInterface/ViewMasterVueShare';
+  import { vPrjTab_Sim_GetObjByKeyCache } from '@/ts/L3ForWApi/Table_Field/clsvPrjTab_SimWApi';
   export default defineComponent({
     name: 'GeneViewCode',
     components: {
@@ -254,7 +255,12 @@
         // const strFunctionTemplateId = '0001';
         const strTabId = clsPrivateSessionStorage.tabId_Main;
         const strPrjId = clsPrivateSessionStorage.currSelPrjId;
-        const objPrjTab = await vPrjTab_Sim_GetObjByTabIdCache(strTabId, strPrjId);
+        const objPrjTab = await vPrjTab_Sim_GetObjByKeyCache(
+          {
+            tabId: strTabId,
+          },
+          strPrjId,
+        );
         if (objPrjTab == null) return;
         treeData.value = await GeneTabCodeEx.BindTr_TabGeneCode(
           strTabMainTypeId,
@@ -270,7 +276,12 @@
         // const strFunctionTemplateId = '0001';
         const strTabId = clsPrivateSessionStorage.tabId_Main;
         const strPrjId = clsPrivateSessionStorage.currSelPrjId;
-        const objPrjTab = await vPrjTab_Sim_GetObjByTabIdCache(strTabId, strPrjId);
+        const objPrjTab = await vPrjTab_Sim_GetObjByKeyCache(
+          {
+            tabId: strTabId,
+          },
+          strPrjId,
+        );
         if (objPrjTab == null) return;
         treeData.value = await GeneTabCodeEx.BindTr_TabGeneCode(
           strTabMainTypeId,

@@ -6,8 +6,8 @@ import {
   GetUniDivInDoc,
   SetSpanHtmlByIdInDivObj,
 } from '@/ts/PubFun/clsCommFunc4Ctrl';
-import { Redirect } from '@/ts/PubFun/clsCommFunc4Web';
 import { clsPubLocalStorage } from '@/ts/PubFun/clsPubLocalStorage';
+import router from '@/router';
 /// <summary>
 /// WApiCollege_UT_TS 的摘要说明。其中Q代表查询,U代表修改
 /// (AutoGCLib.WA_ViewUTScriptCS_TS4TypeScript:GeneCode)
@@ -42,7 +42,7 @@ export class Login {
         // var strInfo = `用户:[${strUserId}]登录成功!`;
         //SetSpanHtmlByIdInDiv(this.divName4Login, 'lblResult1', strInfo);
         clsPubLocalStorage.userId = strUserId;
-        Redirect('/AuthorityManage/SelectProject');
+        router.push({ name: 'account-selectPrj' });
       }
     } catch (e: any) {
       const strMsg = `根据条件获取相应的记录对象的列表不成功,${e}.`;
