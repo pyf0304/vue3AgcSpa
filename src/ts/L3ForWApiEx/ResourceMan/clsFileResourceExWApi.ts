@@ -43,8 +43,8 @@ import { vCodeType_Sim_func } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi
 import { clsvCodeType_SimEN } from '@/ts/L0Entity/GeneCode/clsvCodeType_SimEN';
 import { vPrjTab_Sim_func } from '@/ts/L3ForWApi/Table_Field/clsvPrjTab_SimWApi';
 import { clsvPrjTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvPrjTab_SimEN';
-import { clsPrjFileTypeEN } from '@/ts/L0Entity/GeneCode/clsPrjFileTypeEN';
-import { PrjFileType_func } from '@/ts/L3ForWApi/GeneCode/clsPrjFileTypeWApi';
+import { clsPrjFileTypeEN } from '@/ts/L0Entity/ResourceMan/clsPrjFileTypeEN';
+import { PrjFileType_func } from '@/ts/L3ForWApi/ResourceMan/clsPrjFileTypeWApi';
 export const fileResourceEx_Controller = 'FileResourceExApi';
 export const fileResourceEx_ConstructorName = 'fileResourceEx';
 

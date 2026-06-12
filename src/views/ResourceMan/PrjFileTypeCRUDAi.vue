@@ -90,8 +90,8 @@
     <div id="divFunction" ref="refDivFunction" class="table table-bordered table-hover">
       <ul class="nav">
         <li class="nav-item">
-          <label id="lblFileResourceList" class="col-form-label text-info" style="width: 250px"
-            >文件资源列表</label
+          <label id="lblPrjFileTypeList" class="col-form-label text-info" style="width: 250px"
+            >工程文件类型列表</label
           >
         </li>
         <li v-for="cmd in featureCommands" :key="cmd.id" class="nav-item ml-3">
@@ -138,9 +138,9 @@
     </div>
 
     <div id="divList" ref="refDivList" class="div_List">
-      <FileResource_ListCom
-        ref="refFileResource_List"
-        :items="dataListFileResource"
+      <PrjFileType_ListCom
+        ref="refPrjFileType_List"
+        :items="dataListPrjFileType"
         :show-error-message="showErrorMessage"
         :empty-rec-num-info="emptyRecNumInfo"
         :data-column="dataColumn"
@@ -148,11 +148,11 @@
         @on-sort-column="SortColumn"
       />
       <div id="divPager" class="pager"></div>
-      <input id="hidSortFileResourceBy" type="hidden" />
+      <input id="hidSortPrjFileTypeBy" type="hidden" />
     </div>
 
-    <FileResource_EditCom ref="refFileResource_Edit" />
-    <FileResource_DetailCom ref="refFileResource_DetailAi" />
+    <PrjFileType_EditCom ref="refPrjFileType_Edit" />
+    <PrjFileType_DetailCom ref="refPrjFileType_DetailAi" />
   </div>
 </template>
 
@@ -168,86 +168,62 @@
     refDivQuery,
     refDivFunction,
     refDivList,
-    refFileResource_Edit,
-    refFileResource_DetailAi,
-    refFileResource_List,
+    refPrjFileType_Edit,
+    refPrjFileType_DetailAi,
+    refPrjFileType_List,
     showErrorMessage,
-    dataListFileResource,
+    dataListPrjFileType,
     emptyRecNumInfo,
     dataColumn,
-    codeTypeId_q,
     prjFileTypeId_q,
-    fileDirName_q,
-    fileName_q,
-    extension_q,
-    tabId_q,
-    isBelongsCurrCMPrj_q,
-    isGeneCode_q,
-    isCanDel_q,
-    inUse_q,
-    isExistFile_q,
-    prjId_q,
-    cmPrjId_q,
-    prjFileTypeId_f,
-    PrjId_Session,
-    ProgLangTypeId_Static,
-    CmPrjId_Local,
-  } from '@/views/ResourceMan/FileResourceVueShare';
+    prjFileTypeName_q,
+  } from '@/views/ResourceMan/PrjFileTypeVueShare';
 
-  import FileResource_EditCom from '@/views/ResourceMan/FileResource_EditAi.vue';
+  import PrjFileType_EditCom from '@/views/ResourceMan/PrjFileType_EditAi.vue';
 
-  import FileResource_DetailCom from '@/views/ResourceMan/FileResource_DetailAi.vue';
-  import FileResource_ListCom from '@/views/ResourceMan/FileResource_ListAi.vue';
-  import { clsvCodeType_SimEN } from '@/ts/L0Entity/GeneCode/clsvCodeType_SimEN';
-  import { clsPrjFileTypeEN } from '@/ts/L0Entity/ResourceMan/clsPrjFileTypeEN';
-  import { clsvPrjTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvPrjTab_SimEN';
+  import PrjFileType_DetailCom from '@/views/ResourceMan/PrjFileType_DetailAi.vue';
+  import PrjFileType_ListCom from '@/views/ResourceMan/PrjFileType_ListAi.vue';
   import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
-  import FileResourceCRUDAiEx from '@/views/ResourceMan/FileResourceCRUDAiEx';
-  import { FileResourceKey } from '@/ts/L0Entity/ResourceMan/clsFileResourceEN';
+  import PrjFileTypeCRUDAiEx from '@/views/ResourceMan/PrjFileTypeCRUDAiEx';
+  import { PrjFileTypeKey } from '@/ts/L0Entity/ResourceMan/clsPrjFileTypeEN';
   import {
     getQueryRowsAi,
     initQueryDefaultsAi,
     loadQueryOptionsAi,
-    FileResourceQueryFieldSpecAi,
-  } from '@/viewsBase/ResourceMan/FileResourceCRUDAiQuery';
+    PrjFileTypeQueryFieldSpecAi,
+  } from '@/viewsBase/ResourceMan/PrjFileTypeCRUDAiQuery';
   import {
-    loadFeatureOptionsAi,
     getFeatureCommandsAi,
     getQueryCommandsAi,
-    FileResourceCommandIdAi,
-    FileResourceCommandSpecAi,
-  } from '@/viewsBase/ResourceMan/FileResourceCRUDAiCommands';
+    PrjFileTypeCommandIdAi,
+    PrjFileTypeCommandSpecAi,
+  } from '@/viewsBase/ResourceMan/PrjFileTypeCRUDAiCommands';
 
   export default defineComponent({
-    name: 'FileResourceCRUDAi',
+    name: 'PrjFileTypeCRUDAi',
     components: {
-      FileResource_EditCom,
+      PrjFileType_EditCom,
 
-      FileResource_DetailCom,
-      FileResource_ListCom,
+      PrjFileType_DetailCom,
+      PrjFileType_ListCom,
     },
 
     setup() {
-      PrjId_Session.value = '';
-      ProgLangTypeId_Static.value = '09';
-      CmPrjId_Local.value = '';
+      /*__VIEW_VARIABLES_INIT_CODE__*/
 
-      const strTitle = ref('文件资源维护(Ai版-命令Schema)');
-      const objPage = ref<FileResourceCRUDAiEx>();
-      const arrvCodeType_Sim = ref<clsvCodeType_SimEN[] | null>([]);
-      const arrPrjFileType = ref<clsPrjFileTypeEN[] | null>([]);
-      const arrvPrjTab_Sim = ref<clsvPrjTab_SimEN[] | null>([]);
+      const strTitle = ref('工程文件类型维护(Ai版-命令Schema)');
+      const objPage = ref<PrjFileTypeCRUDAiEx>();
 
       const { row1, row2 } = getQueryRowsAi();
-      const queryRow1 = ref<Array<FileResourceQueryFieldSpecAi>>(row1);
-      const queryRow2 = ref<Array<FileResourceQueryFieldSpecAi>>(row2);
+      const queryRow1 = ref<Array<PrjFileTypeQueryFieldSpecAi>>(row1);
+      const queryRow2 = ref<Array<PrjFileTypeQueryFieldSpecAi>>(row2);
 
-      const queryCommands = ref<Array<FileResourceCommandSpecAi>>(getQueryCommandsAi());
-      const featureCommands = ref<Array<FileResourceCommandSpecAi>>(getFeatureCommandsAi());
+      const queryCommands = ref<Array<PrjFileTypeCommandSpecAi>>(getQueryCommandsAi());
+      const featureCommands = ref<Array<PrjFileTypeCommandSpecAi>>(getFeatureCommandsAi());
 
       const auxControlValues = reactive<Record<string, string>>({});
 
-      const ensurePage = (): FileResourceCRUDAiEx | null => {
+      const ensurePage = (): PrjFileTypeCRUDAiEx | null => {
         if (objPage.value == null) {
           alert('页面初始化不成功,请联系管理员!');
           return null;
@@ -255,172 +231,62 @@
         return objPage.value;
       };
 
-      const getQueryValue = (key: FileResourceQueryFieldSpecAi['key']): string => {
+      const getQueryValue = (key: PrjFileTypeQueryFieldSpecAi['key']): string => {
         switch (key) {
-          case 'codeTypeId_q':
-            return codeTypeId_q.value;
           case 'prjFileTypeId_q':
             return prjFileTypeId_q.value;
-          case 'fileDirName_q':
-            return fileDirName_q.value;
-          case 'fileName_q':
-            return fileName_q.value;
-          case 'extension_q':
-            return extension_q.value;
-          case 'tabId_q':
-            return tabId_q.value;
-          case 'isBelongsCurrCMPrj_q':
-            return isBelongsCurrCMPrj_q.value;
-          case 'isGeneCode_q':
-            return isGeneCode_q.value;
-          case 'isCanDel_q':
-            return isCanDel_q.value;
-          case 'inUse_q':
-            return inUse_q.value;
-          case 'isExistFile_q':
-            return isExistFile_q.value;
-          case 'prjId_q':
-            return prjId_q.value;
-          case 'cmPrjId_q':
-            return cmPrjId_q.value;
+          case 'prjFileTypeName_q':
+            return prjFileTypeName_q.value;
           default:
             return '';
         }
       };
 
-      const setQueryValue = (key: FileResourceQueryFieldSpecAi['key'], value: string) => {
+      const setQueryValue = (key: PrjFileTypeQueryFieldSpecAi['key'], value: string) => {
         switch (key) {
-          case 'codeTypeId_q':
-            codeTypeId_q.value = value;
-            break;
           case 'prjFileTypeId_q':
             prjFileTypeId_q.value = value;
             break;
-          case 'fileDirName_q':
-            fileDirName_q.value = value;
-            break;
-          case 'fileName_q':
-            fileName_q.value = value;
-            break;
-          case 'extension_q':
-            extension_q.value = value;
-            break;
-          case 'tabId_q':
-            tabId_q.value = value;
-            break;
-          case 'isBelongsCurrCMPrj_q':
-            isBelongsCurrCMPrj_q.value = value;
-            break;
-          case 'isGeneCode_q':
-            isGeneCode_q.value = value;
-            break;
-          case 'isCanDel_q':
-            isCanDel_q.value = value;
-            break;
-          case 'inUse_q':
-            inUse_q.value = value;
-            break;
-          case 'isExistFile_q':
-            isExistFile_q.value = value;
-            break;
-          case 'prjId_q':
-            prjId_q.value = value;
-            break;
-          case 'cmPrjId_q':
-            cmPrjId_q.value = value;
+          case 'prjFileTypeName_q':
+            prjFileTypeName_q.value = value;
             break;
           default:
             break;
         }
       };
 
-      const getSelectOptions = (
-        optionsKey?: 'codeTypeId_q' | 'prjFileTypeId_q' | 'tabId_q' | string,
-      ) => {
-        switch (optionsKey) {
-          case 'codeTypeId_q':
-            return arrvCodeType_Sim.value ?? [];
-          case 'prjFileTypeId_q':
-            return arrPrjFileType.value ?? [];
-          case 'tabId_q':
-            return arrvPrjTab_Sim.value ?? [];
-          default:
-            return [];
-        }
+      const getSelectOptions = (optionsKey?: string) => {
+        console.log('getSelectOptions optionsKey:', optionsKey);
+        return [];
       };
 
-      const getSelectValue = (
-        item: any,
-        optionsKey?: 'codeTypeId_q' | 'prjFileTypeId_q' | 'tabId_q' | string,
-      ) => {
-        switch (optionsKey) {
-          case 'codeTypeId_q':
-            return item.codeTypeId;
-          case 'prjFileTypeId_q':
-            return item.prjFileTypeId;
-          case 'tabId_q':
-            return item.tabId;
-          default:
-            return '';
-        }
+      const getSelectValue = (item: any, optionsKey?: string) => {
+        console.log('getSelectValue optionsKey:', optionsKey, 'item:', item);
+        return '';
       };
 
-      const getSelectText = (
-        item: any,
-        optionsKey?: 'codeTypeId_q' | 'prjFileTypeId_q' | 'tabId_q' | string,
-      ) => {
-        switch (optionsKey) {
-          case 'codeTypeId_q':
-            return item.codeTypeName;
-          case 'prjFileTypeId_q':
-            return item.prjFileTypeName;
-          case 'tabId_q':
-            return item.tabName;
-          default:
-            return '';
-        }
+      const getSelectText = (item: any, optionsKey?: string) => {
+        console.log('getSelectValue optionsKey:', optionsKey, 'item:', item);
+        return '';
       };
 
-      const getSelectOptionsInFeature = (optionsKey?: 'prjFileTypeId_f' | string) => {
-        switch (optionsKey) {
-          case 'prjFileTypeId_f':
-            return arrPrjFileType.value ?? [];
-          default:
-            return [];
-        }
+      const getSelectOptionsInFeature = (optionsKey?: string) => {
+        console.log('getSelectOptionsInFeature optionsKey:', optionsKey);
+        return [];
       };
 
-      const getSelectValueInFeature = (item: any, optionsKey?: 'prjFileTypeId_f' | string) => {
-        switch (optionsKey) {
-          case 'prjFileTypeId_f':
-            return item.prjFileTypeId;
-          default:
-            return '';
-        }
+      const getSelectValueInFeature = (item: any, optionsKey?: string) => {
+        console.log('getSelectValueInFeature optionsKey:', optionsKey, 'item:', item);
+        return '';
       };
 
-      const getSelectTextInFeature = (item: any, optionsKey?: 'prjFileTypeId_f' | string) => {
-        switch (optionsKey) {
-          case 'prjFileTypeId_f':
-            return item.prjFileTypeName;
-          default:
-            return '';
-        }
+      const getSelectTextInFeature = (item: any, optionsKey?: string) => {
+        console.log('getSelectValueInFeature optionsKey:', optionsKey, 'item:', item);
+        return '';
       };
 
-      const updateAuxControlValue = (commandId: FileResourceCommandIdAi, value: string) => {
+      const updateAuxControlValue = (commandId: PrjFileTypeCommandIdAi, value: string) => {
         auxControlValues[commandId] = value;
-
-        const command = featureCommands.value.find((x) => x.id === commandId);
-        if (command && command.fieldNameCamel) {
-          switch (command.fieldNameCamel) {
-            case 'prjFileTypeId':
-              prjFileTypeId_f.value = value;
-              break;
-            default:
-              break;
-          }
-        }
       };
 
       const exportToExcel = (
@@ -439,7 +305,7 @@
           alert('导出失败，请检查控制台日志！');
         }
       };
-      const runCommand = async (commandId: FileResourceCommandIdAi) => {
+      const runCommand = async (commandId: PrjFileTypeCommandIdAi) => {
         const page = ensurePage();
         if (page == null) return;
 
@@ -463,46 +329,21 @@
         }
       }
 
-      function btn_Click(strCommandName: string, key: FileResourceKey | null) {
-        FileResourceCRUDAiEx.btn_Click(strCommandName, key);
+      function btn_Click(strCommandName: string, key: PrjFileTypeKey | null) {
+        PrjFileTypeCRUDAiEx.btn_Click(strCommandName, key);
       }
 
       onMounted(async () => {
         initQueryDefaultsAi({
-          codeTypeId_q,
           prjFileTypeId_q,
-          fileDirName_q,
-          fileName_q,
-          extension_q,
-          tabId_q,
-          isBelongsCurrCMPrj_q,
-          isGeneCode_q,
-          isCanDel_q,
-          inUse_q,
-          isExistFile_q,
-          prjId_q,
-          cmPrjId_q,
+          prjFileTypeName_q,
         });
 
         const queryOptions = await loadQueryOptionsAi();
-        arrvCodeType_Sim.value = queryOptions.arrvCodeType_Sim;
-        arrPrjFileType.value = queryOptions.arrPrjFileType;
-        arrvPrjTab_Sim.value = queryOptions.arrvPrjTab_Sim;
 
-        const featureOptions = await loadFeatureOptionsAi();
-        console.log('featureOptions:', featureOptions);
-        arrPrjFileType.value = featureOptions.arrPrjFileType;
-        prjFileTypeId_f.value = '0';
-
-        featureCommands.value.forEach((cmd) => {
-          if (cmd.needAuxControl) {
-            auxControlValues[cmd.id] = '0';
-          }
-        });
-
-        FileResourceCRUDAiEx.vuebtn_Click = btn_Click;
-        FileResourceCRUDAiEx.GetPropValue = GetPropValue;
-        objPage.value = new FileResourceCRUDAiEx();
+        PrjFileTypeCRUDAiEx.vuebtn_Click = btn_Click;
+        PrjFileTypeCRUDAiEx.GetPropValue = GetPropValue;
+        objPage.value = new PrjFileTypeCRUDAiEx();
         await objPage.value.PageLoadCache();
       });
 
@@ -514,7 +355,7 @@
 
       const EditTabRelaInfo = async (data: any) => {
         console.log('data:', data);
-        router.push({ name: 'editFileResource', params: { fileResourceId: data.fileResourceId } });
+        router.push({ name: 'editPrjFileType', params: { prjFileTypeId: data.prjFileTypeId } });
       };
 
       return {
@@ -523,12 +364,12 @@
         refDivQuery,
         refDivFunction,
         refDivList,
-        refFileResource_Edit,
+        refPrjFileType_Edit,
 
-        refFileResource_DetailAi,
-        refFileResource_List,
+        refPrjFileType_DetailAi,
+        refPrjFileType_List,
         showErrorMessage,
-        dataListFileResource,
+        dataListPrjFileType,
         emptyRecNumInfo,
         dataColumn,
         queryRow1,

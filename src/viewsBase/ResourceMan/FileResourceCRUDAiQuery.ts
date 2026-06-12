@@ -1,12 +1,12 @@
 ﻿import { Ref } from 'vue';
 
 import { vCodeType_Sim_GetArrvCodeType_SimByProgLangTypeId } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
-import { PrjFileType_GetArrPrjFileType } from '@/ts/L3ForWApi/GeneCode/clsPrjFileTypeWApi';
+import { PrjFileType_GetArrPrjFileType } from '@/ts/L3ForWApi/ResourceMan/clsPrjFileTypeWApi';
 import { vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId } from '@/ts/L3ForWApi/Table_Field/clsvPrjTab_SimWApi';
 import {
   ProgLangTypeId_Static,
   CmPrjId_Local,
-  PrjId_Session
+  PrjId_Session,
 } from '@/views/ResourceMan/FileResourceVueShare';
 
 import { QueryControlType } from '@/viewsBase/common/TableSpecQuery';
@@ -25,8 +25,7 @@ export type FileResourceQueryFieldKeyAi =
   | 'inUse_q'
   | 'isExistFile_q'
   | 'prjId_q'
-  | 'cmPrjId_q'
-;
+  | 'cmPrjId_q';
 
 export interface FileResourceQueryFieldSpecAi {
   key: FileResourceQueryFieldKeyAi;
@@ -36,8 +35,16 @@ export interface FileResourceQueryFieldSpecAi {
   width: number;
   row: number;
   order: number;
-  visibleInQuery?: boolean;  
-    optionsKey?:'codeTypeId_q' | 'prjFileTypeId_q' | 'tabId_q' | 'isBelongsCurrCMPrj_q' | 'isGeneCode_q' | 'isCanDel_q' | 'inUse_q' | 'isExistFile_q';
+  visibleInQuery?: boolean;
+  optionsKey?:
+    | 'codeTypeId_q'
+    | 'prjFileTypeId_q'
+    | 'tabId_q'
+    | 'isBelongsCurrCMPrj_q'
+    | 'isGeneCode_q'
+    | 'isCanDel_q'
+    | 'inUse_q'
+    | 'isExistFile_q';
 }
 
 export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = [
@@ -49,8 +56,7 @@ export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = 
     width: 120,
     row: 1,
     order: 1,
-        optionsKey: 'codeTypeId_q',
-
+    optionsKey: 'codeTypeId_q',
   },
   {
     key: 'prjFileTypeId_q',
@@ -60,8 +66,7 @@ export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = 
     width: 120,
     row: 1,
     order: 2,
-        optionsKey: 'prjFileTypeId_q',
-
+    optionsKey: 'prjFileTypeId_q',
   },
   {
     key: 'fileDirName_q',
@@ -71,7 +76,6 @@ export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = 
     width: 120,
     row: 1,
     order: 3,
-
   },
   {
     key: 'fileName_q',
@@ -81,7 +85,6 @@ export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = 
     width: 120,
     row: 1,
     order: 4,
-
   },
   {
     key: 'extension_q',
@@ -91,7 +94,6 @@ export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = 
     width: 120,
     row: 2,
     order: 1,
-
   },
   {
     key: 'tabId_q',
@@ -101,8 +103,7 @@ export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = 
     width: 120,
     row: 2,
     order: 2,
-        optionsKey: 'tabId_q',
-
+    optionsKey: 'tabId_q',
   },
   {
     key: 'isBelongsCurrCMPrj_q',
@@ -112,8 +113,7 @@ export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = 
     width: 120,
     row: 2,
     order: 3,
-        optionsKey: 'isBelongsCurrCMPrj_q',
-
+    optionsKey: 'isBelongsCurrCMPrj_q',
   },
   {
     key: 'isGeneCode_q',
@@ -123,8 +123,7 @@ export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = 
     width: 120,
     row: 2,
     order: 4,
-        optionsKey: 'isGeneCode_q',
-
+    optionsKey: 'isGeneCode_q',
   },
   {
     key: 'isCanDel_q',
@@ -134,8 +133,7 @@ export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = 
     width: 120,
     row: 3,
     order: 1,
-        optionsKey: 'isCanDel_q',
-
+    optionsKey: 'isCanDel_q',
   },
   {
     key: 'inUse_q',
@@ -145,8 +143,7 @@ export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = 
     width: 120,
     row: 3,
     order: 2,
-        optionsKey: 'inUse_q',
-
+    optionsKey: 'inUse_q',
   },
   {
     key: 'isExistFile_q',
@@ -156,8 +153,7 @@ export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = 
     width: 120,
     row: 3,
     order: 3,
-        optionsKey: 'isExistFile_q',
-
+    optionsKey: 'isExistFile_q',
   },
   {
     key: 'prjId_q',
@@ -167,7 +163,6 @@ export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = 
     width: 120,
     row: 3,
     order: 4,
-
   },
   {
     key: 'cmPrjId_q',
@@ -177,47 +172,46 @@ export const FILERESOURCE_QUERY_SPECS_AI: Array<FileResourceQueryFieldSpecAi> = 
     width: 120,
     row: 4,
     order: 1,
-
-  }
+  },
 ];
 
 export function initQueryDefaultsAi(queryRefs: {
-    codeTypeId_q: Ref<string>;
-    prjFileTypeId_q: Ref<string>;
-    fileDirName_q: Ref<string>;
-    fileName_q: Ref<string>;
-    extension_q: Ref<string>;
-    tabId_q: Ref<string>;
-    isBelongsCurrCMPrj_q: Ref<string>;
-    isGeneCode_q: Ref<string>;
-    isCanDel_q: Ref<string>;
-    inUse_q: Ref<string>;
-    isExistFile_q: Ref<string>;
-    prjId_q: Ref<string>;
-    cmPrjId_q: Ref<string>;
+  codeTypeId_q: Ref<string>;
+  prjFileTypeId_q: Ref<string>;
+  fileDirName_q: Ref<string>;
+  fileName_q: Ref<string>;
+  extension_q: Ref<string>;
+  tabId_q: Ref<string>;
+  isBelongsCurrCMPrj_q: Ref<string>;
+  isGeneCode_q: Ref<string>;
+  isCanDel_q: Ref<string>;
+  inUse_q: Ref<string>;
+  isExistFile_q: Ref<string>;
+  prjId_q: Ref<string>;
+  cmPrjId_q: Ref<string>;
 }) {
-        queryRefs.codeTypeId_q.value = '0';
-        queryRefs.prjFileTypeId_q.value = '0';
-        queryRefs.fileDirName_q.value = '';
-        queryRefs.fileName_q.value = '';
-        queryRefs.extension_q.value = '';
-        queryRefs.tabId_q.value = '0';
-        queryRefs.isBelongsCurrCMPrj_q.value = '0';
-        queryRefs.isGeneCode_q.value = '0';
-        queryRefs.isCanDel_q.value = '0';
-        queryRefs.inUse_q.value = '0';
-        queryRefs.isExistFile_q.value = '0';
-        queryRefs.prjId_q.value = '';
-        queryRefs.cmPrjId_q.value = '';
+  queryRefs.codeTypeId_q.value = '0';
+  queryRefs.prjFileTypeId_q.value = '0';
+  queryRefs.fileDirName_q.value = '';
+  queryRefs.fileName_q.value = '';
+  queryRefs.extension_q.value = '';
+  queryRefs.tabId_q.value = '0';
+  queryRefs.isBelongsCurrCMPrj_q.value = '0';
+  queryRefs.isGeneCode_q.value = '0';
+  queryRefs.isCanDel_q.value = '0';
+  queryRefs.inUse_q.value = '0';
+  queryRefs.isExistFile_q.value = '0';
+  queryRefs.prjId_q.value = '';
+  queryRefs.cmPrjId_q.value = '';
 }
 
 export async function loadQueryOptionsAi() {
   const [arrvCodeType_Sim, arrPrjFileType, arrvPrjTab_Sim] = await Promise.all([
     vCodeType_Sim_GetArrvCodeType_SimByProgLangTypeId(ProgLangTypeId_Static.value),
     PrjFileType_GetArrPrjFileType(),
-    vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(CmPrjId_Local.value,PrjId_Session.value)
+    vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(CmPrjId_Local.value, PrjId_Session.value),
   ]);
-  return {arrvCodeType_Sim, arrPrjFileType, arrvPrjTab_Sim};
+  return { arrvCodeType_Sim, arrPrjFileType, arrvPrjTab_Sim };
 }
 
 export async function loadFeatureOptionsAi() {

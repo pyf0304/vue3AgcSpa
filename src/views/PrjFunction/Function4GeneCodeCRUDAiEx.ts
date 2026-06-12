@@ -12,6 +12,11 @@ import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
 import { Function4GeneCodeCommandIdAi } from '@/viewsBase/PrjFunction/Function4GeneCodeCRUDAiCommands';
 import { Function4GeneCodeKey } from '@/ts/L0Entity/PrjFunction/clsFunction4GeneCodeEN';
 import Function4GeneCode_DetailEx from '@/views/PrjFunction/Function4GeneCode_DetailAiEx';
+import {
+  Function4GeneCode_AddNewRecordAsync,
+  Function4GeneCode_GetMaxStrIdAsync,
+  Function4GeneCode_GetObjLstByFuncId4GCLstAsync,
+} from '@/ts/L3ForWApi/PrjFunction/clsFunction4GeneCodeWApi';
 /**
  * Function4GeneCodeCRUDAiEx 扩展类
  * 继承自 Function4GeneCodeCRUDAi 基类
@@ -178,7 +183,38 @@ export default class Function4GeneCodeCRUDAiEx
   public async onCopy() {
     await this.btnCopyRecord_Click();
   }
-
+  /**
+   * 复制记录的具体实现
+   * @param arrFuncId4GC 要复制的记录主键列表
+   * (AutoGCLib.WA_ViewScriptCS_TS4TypeScript:Gen_WApi_Ts_CopyRecord)
+   */
+  public async CopyRecord(arrFuncId4GC: Array<string>) {
+    const strThisFuncName = this.CopyRecord.name;
+    try {
+      const arrFunction4GeneCodeObjLst = await Function4GeneCode_GetObjLstByFuncId4GCLstAsync(
+        arrFuncId4GC,
+      );
+      let intCount = 0;
+      for (const objInFor of arrFunction4GeneCodeObjLst) {
+        const strMaxStrId = await Function4GeneCode_GetMaxStrIdAsync();
+        objInFor.funcId4GC = strMaxStrId;
+        objInFor.funcName = `${objInFor.funcName}_Copy`;
+        const returnBool = await Function4GeneCode_AddNewRecordAsync(objInFor);
+        if (returnBool == true) {
+          intCount++;
+        } else {
+          const strInfo = Format('克隆记录不成功!');
+          alert(strInfo);
+        }
+      }
+      const strInfo = Format('共克隆了{0}条记录!', intCount);
+      alert(strInfo);
+    } catch (e) {
+      const strMsg = `复制记录不成功,${e}.(in ${this.constructor.name}.${strThisFuncName}`;
+      console.error('Error: ', strMsg);
+      alert(strMsg);
+    }
+  }
   /**
    * 静态按钮点击处理（兼容旧版本）
    */

@@ -263,7 +263,7 @@
   import { useCMProjectAppRelaStore } from '@/store/modules/CMProjectAppRela';
   import { useApplicationTypeStore } from '@/store/modules/ApplicationType';
   import { IsNullOrEmpty } from '@/ts/PubFun/clsString';
-  import { clsPrjFileTypeEN } from '@/ts/L0Entity/GeneCode/clsPrjFileTypeEN';
+  import { clsPrjFileTypeEN } from '@/ts/L0Entity/ResourceMan/clsPrjFileTypeEN';
 
   export default defineComponent({
     name: 'FileResourceCRUDAi',
