@@ -475,13 +475,14 @@
           </template>
         </a-modal>
 
-        <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
-          <div class="h6 mb-0">生成代码</div>
-          <button class="btn btn-outline-secondary btn-sm" @click="toggleCodeGenTab">隐藏</button>
-        </div>
-
         <transition name="panel-stretch">
           <div v-show="showCodeGenTab" class="panel-body panel-body-code">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="h6 mb-0">生成代码</div>
+              <button class="btn btn-outline-secondary btn-sm" @click="toggleCodeGenTab">
+                隐藏
+              </button>
+            </div>
             <!-- <keep-alive> -->
 
             <div>
@@ -611,7 +612,7 @@
   import {
     ViewFeatureFlds_AddNewRecordAsync,
     ViewFeatureFlds_DelRecordAsync,
-    ViewFeatureFlds_GetObjBymIdAsync,
+    ViewFeatureFlds_GetObjByKeyAsync,
     ViewFeatureFlds_GetObjLstAsync,
     ViewFeatureFlds_ReFreshCache,
     ViewFeatureFlds_UpdateRecordAsync,
@@ -687,7 +688,7 @@
 
       const showMainFeatureEditor = ref(true);
 
-      const showCodeGenTab = ref(true);
+      const showCodeGenTab = ref(false);
 
       const childDialogMode = ref<'create' | 'update'>('create');
 
@@ -941,7 +942,7 @@
           alert('当前子字段缺少主键，无法回填编辑数据。');
           return;
         }
-        const fullObj = await ViewFeatureFlds_GetObjBymIdAsync(mId);
+        const fullObj = await ViewFeatureFlds_GetObjByKeyAsync({ mId });
         if (fullObj == null) {
           alert('未获取到最新子字段数据，请刷新后重试。');
           return;
@@ -1043,7 +1044,7 @@
         if (!confirm(`确定删除子字段【${item.labelCaption || item.fieldTypeId}】吗？`)) return;
 
         try {
-          const count = await ViewFeatureFlds_DelRecordAsync(mId);
+          const count = await ViewFeatureFlds_DelRecordAsync({ mId });
 
           if (count <= 0) {
             alert('删除子字段失败。');

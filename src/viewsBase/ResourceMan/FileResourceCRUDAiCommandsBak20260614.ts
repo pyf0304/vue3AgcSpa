@@ -1,4 +1,5 @@
 ﻿import { TableCommandSpec } from '@/viewsBase/common/TableSpecCommand';
+import { PrjFileType_GetArrPrjFileType } from '@/ts/L3ForWApi/ResourceMan/clsPrjFileTypeWApi';
 
 /** Ai 场景下可用的命令标识。 */
 export type FileResourceCommandIdAi =
@@ -6,13 +7,13 @@ export type FileResourceCommandIdAi =
   | 'create'
   | 'update'
   | 'delete'
-  | 'identifyFileType'
-  | 'export';
+  | 'export'
+  | 'export'
+  | 'setPrjFileType'
+  | 'identifyFileType';
 
 /** Ai 命令配置：复用通用表命令结构并扩展辅助控件信息。 */
 export type FileResourceCommandSpecAi = TableCommandSpec<FileResourceCommandIdAi> & {
-  /** 辅助控件标签文本 */
-  auxControlLabel?: string;
   /** 辅助控件ID（如下拉框ID） */
   auxControlId?: string;
   /** 辅助控件类型 */
@@ -21,8 +22,7 @@ export type FileResourceCommandSpecAi = TableCommandSpec<FileResourceCommandIdAi
   auxControlOptionsKey?: string;
   /** 字段名 */
   fieldName?: string;
-  /** 辅助控件标签文本 */
-
+  auxControlLabel?: string;
   /** 驼峰式字段名 */
   fieldNameCamel?: string;
 };
@@ -75,6 +75,20 @@ export const FILE_RESOURCE_COMMAND_SPECS_AI: Array<FileResourceCommandSpecAi> = 
     elementId: 'btnExportExcel_Ai',
     btnClass: 'btn btn-outline-info btn-sm text-nowrap',
   },
+
+  {
+    id: 'setPrjFileType',
+    region: 'feature',
+    text: '设置项目文件类型',
+    elementId: 'btnSetPrjFileType_Ai',
+    btnClass: 'btn btn-outline-info btn-sm text-nowrap',
+    needAuxControl: true,
+    auxControlId: 'ddlPrjFileTypeId_SetFldValue',
+    auxControlType: 'select',
+    auxControlOptionsKey: 'prjFileTypeId_f',
+    fieldName: 'PrjFileTypeId',
+    fieldNameCamel: 'prjFileTypeId',
+  },
 ];
 
 /** 获取查询区命令。 */
@@ -90,5 +104,6 @@ export function getFeatureCommandsAi(): Array<FileResourceCommandSpecAi> {
 }
 
 export async function loadFeatureOptionsAi() {
-  return {};
+  const [arrPrjFileType] = await Promise.all([PrjFileType_GetArrPrjFileType()]);
+  return { arrPrjFileType };
 }

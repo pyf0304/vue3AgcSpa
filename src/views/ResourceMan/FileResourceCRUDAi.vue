@@ -255,6 +255,7 @@
     getQueryCommandsAi,
     FileResourceCommandIdAi,
     FileResourceCommandSpecAi,
+    loadFeatureOptionsAi,
   } from '@/viewsBase/ResourceMan/FileResourceCRUDAiCommands';
   import { FileResourceEx_GetCodeTypeIdList } from '@/ts/L3ForWApiEx/ResourceMan/clsFileResourceExWApi';
   import { clsPrivateSessionStorage } from '@/ts/PubConfig/clsPrivateSessionStorage';
@@ -798,7 +799,20 @@
 
         const queryOptions = await loadQueryOptionsAi();
         arrvCodeType_Sim.value = queryOptions.arrvCodeType_Sim;
+        arrPrjFileType.value = queryOptions.arrPrjFileType;
         arrvPrjTab_Sim.value = queryOptions.arrvPrjTab_Sim;
+
+        const featureOptions = await loadFeatureOptionsAi();
+        console.log('featureOptions:', featureOptions);
+        arrPrjFileType.value = featureOptions.arrPrjFileType;
+        prjFileTypeId_f.value = '0';
+
+        featureCommands.value.forEach((cmd) => {
+          if (cmd.needAuxControl) {
+            auxControlValues[cmd.id] = '0';
+          }
+        });
+
         await appendMissingCodeTypeOptions();
         await loadApplicationTypeOptions();
 
@@ -819,7 +833,15 @@
 
       const EditTabRelaInfo = async (data: any) => {
         console.log('data:', data);
-        router.push({ name: 'editFileResource', params: { fileResourceID: data.fileResourceID } });
+        const fileResourceKey =
+          data?.fileResourceId ?? data?.fileResourceID ?? data?.FileResourceId ?? '';
+        router.push({
+          name: 'editFileResource',
+          params: {
+            fileResourceId: fileResourceKey,
+            fileResourceID: fileResourceKey,
+          },
+        });
       };
 
       return {

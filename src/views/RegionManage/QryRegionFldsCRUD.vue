@@ -364,7 +364,7 @@
       CmPrjId_Local.value = clsPrivateSessionStorage.cmPrjId;
 
       const showMainEditor = ref(true);
-      const showCodeGen = ref(true);
+      const showCodeGen = ref(false);
 
       const toggleMainEditor = () => {
         showMainEditor.value = !showMainEditor.value;

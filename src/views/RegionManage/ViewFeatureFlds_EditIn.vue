@@ -1,6 +1,6 @@
 ﻿<template>
   <!-- 编辑层 -->
-  <div id="divEditLayout_ViewFeature" ref="refDivEdit" class="tab_layout">
+  <div id="divEditLayout_ViewFeature" ref="refDivEdit" class="tab_layout" style="display: none">
     <table id="tabEdit" style="width: 333px" class="border border-info table-bordered">
       <!-- <tr id="trLabelCaption">
             <td class="text-right">
@@ -89,6 +89,21 @@
               {{ option.ctlTypeName }}({{ option.ctlTypeId }})
             </option>
           </select>
+        </td>
+      </tr>
+      <tr v-show="isShowCtrl === true" id="trIsNeedAuxControlLabel">
+        <td class="text-right">
+          <label
+            id="lblIsNeedAuxControlLabel"
+            class="col-form-label-sm text-right"
+            style="width: 70px"
+          >
+            附件标签
+          </label>
+        </td>
+        <td class="text-left">
+          <input id="chkIsNeedAuxControlLabel" v-model="isNeedAuxControlLabel" type="checkbox" />
+          <label for="chkIsNeedAuxControlLabel">是否需要附件标签</label>
         </td>
       </tr>
     </table>
@@ -241,7 +256,7 @@
     setup(_, { emit }) {
       const mId_Key = ref(0);
       const btnDelViewFeatureFld_Click = async () => {
-        await ViewFeatureFlds_DelRecordAsync(mId_Key.value);
+        await ViewFeatureFlds_DelRecordAsync({ mId: mId_Key.value });
         emit('del-view-feature-fld');
         console.log('btnDelViewFeatureFld_Click');
       };
@@ -270,6 +285,7 @@
 
       const ctrlId = ref('');
       const defaultValue = ref('');
+      const isNeedAuxControlLabel = ref(false);
       const orderNum = ref(0);
       const varId = ref('');
 
@@ -591,6 +607,7 @@
         // varIdCond2.value = objData.varIdCond2;
         ctrlId.value = objData.ctrlId;
         defaultValue.value = objData.defaultValue;
+        isNeedAuxControlLabel.value = objData.isNeedAuxControlLabel;
         orderNum.value = objData.orderNum;
 
         let strMsg = '';
@@ -675,6 +692,7 @@
         pobjViewFeatureFldsEN.SetPrjId(clsPrivateSessionStorage.currSelPrjId); // 工程ID
         pobjViewFeatureFldsEN.SetCtrlId(ctrlId.value); // 控件Id
         pobjViewFeatureFldsEN.SetDefaultValue(defaultValue.value); // 缺省值
+        pobjViewFeatureFldsEN.SetIsNeedAuxControlLabel(isNeedAuxControlLabel.value); // 是否需要附件标签
         pobjViewFeatureFldsEN.SetOrderNum(orderNum.value); // 序号
         // pobjViewFeatureFldsEN.SetVarId(varId.v); // 变量Id
         pobjViewFeatureFldsEN.SetUpdUser(clsPrivateSessionStorage.userId); // 修改者
@@ -732,6 +750,7 @@
         pobjViewFeatureFldsEN.SetPrjId(clsPrivateSessionStorage.currSelPrjId); // 工程ID
         pobjViewFeatureFldsEN.SetCtrlId(ctrlId.value); // 控件Id
         pobjViewFeatureFldsEN.SetDefaultValue(defaultValue.value); // 缺省值
+        pobjViewFeatureFldsEN.SetIsNeedAuxControlLabel(isNeedAuxControlLabel.value); // 是否需要附件标签
         pobjViewFeatureFldsEN.SetOrderNum(orderNum.value); // 序号
         pobjViewFeatureFldsEN.SetVarId(varId.value); // 变量Id
         pobjViewFeatureFldsEN.SetUpdUser(clsPubLocalStorage.userId); // 修改者
@@ -817,6 +836,7 @@
 
         ctrlId,
         defaultValue,
+        isNeedAuxControlLabel,
         varId,
         orderNum,
         getObjData,

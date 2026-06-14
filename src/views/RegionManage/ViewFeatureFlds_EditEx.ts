@@ -9,7 +9,7 @@ import {
   ViewFeatureFlds_CheckProperty4Update,
   ViewFeatureFlds_CheckPropertyNew,
   ViewFeatureFlds_GetFirstIDAsync,
-  ViewFeatureFlds_GetObjBymIdAsync,
+  ViewFeatureFlds_GetObjByKeyAsync,
   ViewFeatureFlds_GetObjLstAsync,
   ViewFeatureFlds_GetUniCondStr4Update,
   ViewFeatureFlds_IsExistRecordAsync,
@@ -569,7 +569,7 @@ export default class ViewFeatureFlds_EditEx extends ViewFeatureFlds_Edit {
     //this.btnCancel_ViewFeatureFlds = "取消修改";
     this.keyId = lngmId;
     try {
-      const objViewFeatureFldsEN = await ViewFeatureFlds_GetObjBymIdAsync(lngmId);
+      const objViewFeatureFldsEN = await ViewFeatureFlds_GetObjByKeyAsync({ mId: lngmId });
       if (objViewFeatureFldsEN == null) return false;
       // const objViewFeatureFldsENEx = ViewFeatureFldsEx_CopyToEx(objViewFeatureFldsEN);
 

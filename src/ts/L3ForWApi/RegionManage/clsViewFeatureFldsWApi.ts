@@ -1,14 +1,14 @@
 ﻿/**
  * 类名:clsViewFeatureFldsWApi
  * 表名:ViewFeatureFlds(00050453)
- * 版本:2025.06.13.1(服务器:WIN-SRV103-116)
- * 日期:2025/06/14 11:51:07
+ * 版本:2026.05.30(服务器:WIN-SRV103-116)
+ * 日期:2026/06/14 08:51:21
  * 生成者:pyf
  * 生成服务器IP:
  工程名称:AGC(0005)
  应用类型:Vue应用InCore-TS(30)
  CM工程:AgcSpa前端(000046, 变量首字母小写)-WebApi函数集
- * 相关数据库:103.116.76.183,8433AGC_CS12
+ * 相关数据库:109.244.40.104,8433AGC_CS12
  * PrjDataBaseId:0005
  模块中文名:区域管理(RegionManage)
  * 框架-层名:WA_访问层(TS)(WA_Access,0155)
@@ -20,7 +20,7 @@
 /**
  * 界面功能字段(ViewFeatureFlds)
  * (AutoGCLib.WA_Access4TypeScript:GeneCode)
- * Created by pyf on 2025年06月14日.
+ * Created by pyf on 2026年06月14日.
  * 注意:该类必须与调用界面处于同一个包,否则调用不成功!
  **/
 import axios from 'axios';
@@ -39,7 +39,10 @@ import {
 } from '@/ts/PubFun/clsCommFunc4Web';
 import { viewFeatureFldsCache, isFuncMapCache } from '@/views/RegionManage/ViewFeatureFldsVueShare';
 import { clsViewFeatureFldsENEx } from '@/ts/L0Entity/RegionManage/clsViewFeatureFldsENEx';
-import { clsViewFeatureFldsEN } from '@/ts/L0Entity/RegionManage/clsViewFeatureFldsEN';
+import {
+  clsViewFeatureFldsEN,
+  ViewFeatureFldsKey,
+} from '@/ts/L0Entity/RegionManage/clsViewFeatureFldsEN';
 import { FeatureRegionFlds_func } from '@/ts/L3ForWApi/RegionManage/clsFeatureRegionFldsWApi';
 import { clsFeatureRegionFldsEN } from '@/ts/L0Entity/RegionManage/clsFeatureRegionFldsEN';
 import { PrjFeature_func } from '@/ts/L3ForWApi/PrjFunction/clsPrjFeatureWApi';
@@ -63,18 +66,21 @@ export const viewFeatureFlds_ConstructorName = 'viewFeatureFlds';
 /**
  * 根据关键字获取相应记录的对象
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdAsync)
- * @param lngmId:关键字
+ * @param key:包含关键字的对象
  * @returns 对象
  **/
-export async function ViewFeatureFlds_GetObjBymIdAsync(
-  lngmId: number,
+export async function ViewFeatureFlds_GetObjByKeyAsync(
+  key: ViewFeatureFldsKey,
 ): Promise<clsViewFeatureFldsEN | null> {
-  const strThisFuncName = 'GetObjBymIdAsync';
-
-  if (lngmId == 0) {
-    const strMsg = Format('参数:[lngmId]不能为空!(In clsViewFeatureFldsWApi.GetObjBymIdAsync)');
+  const strThisFuncName = 'GetObjByKeyAsync';
+  if (key.mId === undefined || key.mId === null || key.mId === 0) {
+    const strMsg = Format(
+      '关键字段[mId]不能为空!(in {0}.{1})',
+      viewFeatureFlds_ConstructorName,
+      strThisFuncName,
+    );
     console.error(strMsg);
-    throw strMsg;
+    throw new Error(strMsg);
   }
   const strAction = 'GetObjBymId';
   const strUrl = GetWebApiUrl(viewFeatureFlds_Controller, strAction);
@@ -86,7 +92,7 @@ export async function ViewFeatureFlds_GetObjBymIdAsync(
       Authorization: `${token}`,
     },
     params: {
-      lngmId,
+      lngmId: key.mId,
     },
   };
   try {
@@ -132,85 +138,36 @@ export async function ViewFeatureFlds_GetObjBymIdAsync(
     }
   }
 }
+//该表没有使用localStorage,不需要生成[GetObjByKeylocalStorage]函数;(in AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage )
 
 /**
- * 根据关键字获取相关对象, 从localStorage缓存中获取.
- * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyId_localStorage)
- * @param lngmId:所给的关键字
- * @returns 对象
- */
-export async function ViewFeatureFlds_GetObjBymIdlocalStorage(lngmId: number) {
-  const strThisFuncName = 'GetObjBymIdlocalStorage';
-
-  if (lngmId == 0) {
-    const strMsg = Format(
-      '参数:[lngmId]不能为空!(In clsViewFeatureFldsWApi.GetObjBymIdlocalStorage)',
-    );
-    console.error(strMsg);
-    throw strMsg;
-  }
-  const strKey = Format('{0}_{1}', clsViewFeatureFldsEN._CurrTabName, lngmId);
-  if (strKey == '') {
-    console.error('关键字为空!不正确');
-    throw new Error('关键字为空!不正确');
-  }
-  if (Object.prototype.hasOwnProperty.call(localStorage, strKey)) {
-    //缓存存在,直接返回
-    const strTempObj = localStorage.getItem(strKey) as string;
-    const objViewFeatureFldsCache: clsViewFeatureFldsEN = JSON.parse(strTempObj);
-    return objViewFeatureFldsCache;
-  }
-  try {
-    const objViewFeatureFlds = await ViewFeatureFlds_GetObjBymIdAsync(lngmId);
-    if (objViewFeatureFlds != null) {
-      localStorage.setItem(strKey, JSON.stringify(objViewFeatureFlds));
-      const strInfo = Format('Key:[${ strKey}]的缓存已经建立!');
-      console.log(strInfo);
-      return objViewFeatureFlds;
-    }
-    return objViewFeatureFlds;
-  } catch (e) {
-    const strMsg = Format(
-      '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
-      e,
-      lngmId,
-      viewFeatureFlds_ConstructorName,
-      strThisFuncName,
-    );
-    console.error(strMsg);
-    alert(strMsg);
-    return;
-  }
-}
-
-/**
- * 根据关键字获取相关对象, 从缓存中获取.
+ * 根据关键字获取特定对象, 从缓存中获取.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_GetObjByKeyIdCache)
- * @param lngmId:所给的关键字
+ * @param key:关键字对象
  * @returns 对象
  */
-export async function ViewFeatureFlds_GetObjBymIdCache(
-  lngmId: number,
+export async function ViewFeatureFlds_GetObjByKeyCache(
+  key: ViewFeatureFldsKey,
   strViewFeatureId: string,
   bolTryAsyncOnce = true,
 ) {
   const strThisFuncName = 'GetObjBymIdCache';
 
-  if (lngmId == 0) {
-    const strMsg = Format('参数:[lngmId]不能为空!(In clsViewFeatureFldsWApi.GetObjBymIdCache)');
+  if (key.mId == 0) {
+    const strMsg = Format('参数:[key.mId]不能为空!(In clsViewFeatureFldsWApi.GetObjBymIdCache)');
     console.error(strMsg);
     throw strMsg;
   }
   const arrViewFeatureFldsObjLstCache = await ViewFeatureFlds_GetObjLstCache(strViewFeatureId);
   try {
-    const arrViewFeatureFldsSel = arrViewFeatureFldsObjLstCache.filter((x) => x.mId == lngmId);
+    const arrViewFeatureFldsSel = arrViewFeatureFldsObjLstCache.filter((x) => x.mId == key.mId);
     let objViewFeatureFlds: clsViewFeatureFldsEN;
     if (arrViewFeatureFldsSel.length > 0) {
       objViewFeatureFlds = arrViewFeatureFldsSel[0];
       return objViewFeatureFlds;
     } else {
       if (bolTryAsyncOnce == true) {
-        const objViewFeatureFldsConst = await ViewFeatureFlds_GetObjBymIdAsync(lngmId);
+        const objViewFeatureFldsConst = await ViewFeatureFlds_GetObjByKeyAsync(key);
         if (objViewFeatureFldsConst != null) {
           ViewFeatureFlds_ReFreshThisCache(strViewFeatureId);
           return objViewFeatureFldsConst;
@@ -222,7 +179,7 @@ export async function ViewFeatureFlds_GetObjBymIdCache(
     const strMsg = Format(
       '错误:[{0}]. \n根据关键字:[{1}]获取相应的对象不成功!(in {2}.{3})',
       e,
-      lngmId,
+      key.mId,
       viewFeatureFlds_ConstructorName,
       strThisFuncName,
     );
@@ -270,7 +227,7 @@ export async function ViewFeatureFlds_UpdateObjInLstCache(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-14
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -285,7 +242,7 @@ export function ViewFeatureFlds_SortFunDefa(
 /**
  * 排序函数。根据表对象中随机两个字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-14
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFun)
  * @param  a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -302,7 +259,7 @@ export function ViewFeatureFlds_SortFunDefa2Fld(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-14
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -342,6 +299,11 @@ export function ViewFeatureFlds_SortFunByKey(strKey: string, AscOrDesc: string) 
           if (a.labelCaption == null) return -1;
           if (b.labelCaption == null) return 1;
           return a.labelCaption.localeCompare(b.labelCaption);
+        };
+      case clsViewFeatureFldsEN.con_IsNeedAuxControlLabel:
+        return (a: clsViewFeatureFldsEN) => {
+          if (a.isNeedAuxControlLabel == true) return 1;
+          else return -1;
         };
       case clsViewFeatureFldsEN.con_CtlTypeId:
         return (a: clsViewFeatureFldsEN, b: clsViewFeatureFldsEN) => {
@@ -511,6 +473,11 @@ export function ViewFeatureFlds_SortFunByKey(strKey: string, AscOrDesc: string) 
           if (a.labelCaption == null) return 1;
           return b.labelCaption.localeCompare(a.labelCaption);
         };
+      case clsViewFeatureFldsEN.con_IsNeedAuxControlLabel:
+        return (b: clsViewFeatureFldsEN) => {
+          if (b.isNeedAuxControlLabel == true) return 1;
+          else return -1;
+        };
       case clsViewFeatureFldsEN.con_CtlTypeId:
         return (a: clsViewFeatureFldsEN, b: clsViewFeatureFldsEN) => {
           if (b.ctlTypeId == null) return -1;
@@ -654,7 +621,7 @@ export function ViewFeatureFlds_SortFunByKey(strKey: string, AscOrDesc: string) 
 /**
  * 过滤函数。根据关键字字段的值与给定值进行比较,返回是否相等
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-14
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FilterFunByKey)
  * @param strKey:比较的关键字段名称
  * @param value:给定值
@@ -687,6 +654,10 @@ export async function ViewFeatureFlds_FilterFunByKey(strKey: string, value: any)
     case clsViewFeatureFldsEN.con_LabelCaption:
       return (obj: clsViewFeatureFldsEN) => {
         return obj.labelCaption === value;
+      };
+    case clsViewFeatureFldsEN.con_IsNeedAuxControlLabel:
+      return (obj: clsViewFeatureFldsEN) => {
+        return obj.isNeedAuxControlLabel === value;
       };
     case clsViewFeatureFldsEN.con_CtlTypeId:
       return (obj: clsViewFeatureFldsEN) => {
@@ -790,7 +761,7 @@ export async function ViewFeatureFlds_FilterFunByKey(strKey: string, value: any)
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-14
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_func)
  * @param strInFldName:输入字段名
  * @param strOutFldName:输出字段名
@@ -827,11 +798,11 @@ export async function ViewFeatureFlds_func(
     console.error(strMsg);
     throw new Error(strMsg);
   }
-  if (clsViewFeatureFldsEN.AttributeName.indexOf(strOutFldName) == -1) {
+  if (clsViewFeatureFldsEN._AttributeName.indexOf(strOutFldName) == -1) {
     const strMsg = Format(
       '输出字段名:[{0}]不正确,不在输出字段范围之内!({1})',
       strOutFldName,
-      clsViewFeatureFldsEN.AttributeName.join(','),
+      clsViewFeatureFldsEN._AttributeName.join(','),
     );
     console.error(strMsg);
     throw new Error(strMsg);
@@ -840,8 +811,8 @@ export async function ViewFeatureFlds_func(
   if (lngmId == 0) {
     return '';
   }
-  const objViewFeatureFlds = await ViewFeatureFlds_GetObjBymIdCache(
-    lngmId,
+  const objViewFeatureFlds = await ViewFeatureFlds_GetObjByKeyCache(
+    { mId: lngmId },
     strViewFeatureIdClassfy,
   );
   if (objViewFeatureFlds == null) return '';
@@ -852,7 +823,7 @@ export async function ViewFeatureFlds_func(
 /**
  * 映射函数。根据表映射把输入字段值,映射成输出字段值
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-14
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_funcKey)
  * @param strInFldName:输入字段名
  * @param strInValue:输入字段值
@@ -1224,14 +1195,14 @@ export async function ViewFeatureFlds_GetObjLstClientCache(strViewFeatureId: str
   const strThisFuncName = 'GetObjLstClientCache';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsViewFeatureFldsEN.WhereFormat) == false) {
-    strWhereCond = Format(clsViewFeatureFldsEN.WhereFormat, strViewFeatureId);
+  if (IsNullOrEmpty(clsViewFeatureFldsEN._WhereFormat) == false) {
+    strWhereCond = Format(clsViewFeatureFldsEN._WhereFormat, strViewFeatureId);
   } else {
     strWhereCond = Format("ViewFeatureId='{0}'", strViewFeatureId);
   }
   const strKey = Format('{0}_{1}', clsViewFeatureFldsEN._CurrTabName, strViewFeatureId);
-  if (IsNullOrEmpty(clsViewFeatureFldsEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsViewFeatureFldsEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsViewFeatureFldsEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsViewFeatureFldsEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1276,14 +1247,14 @@ export async function ViewFeatureFlds_GetObjLstlocalStorage(strViewFeatureId: st
   const strThisFuncName = 'GetObjLstlocalStorage';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsViewFeatureFldsEN.WhereFormat) == false) {
-    strWhereCond = Format(clsViewFeatureFldsEN.WhereFormat, strViewFeatureId);
+  if (IsNullOrEmpty(clsViewFeatureFldsEN._WhereFormat) == false) {
+    strWhereCond = Format(clsViewFeatureFldsEN._WhereFormat, strViewFeatureId);
   } else {
     strWhereCond = Format("{0}='{1}'", clsViewFeatureFldsEN.con_ViewFeatureId, strViewFeatureId);
   }
   const strKey = Format('{0}_{1}', clsViewFeatureFldsEN._CurrTabName, strViewFeatureId);
-  if (IsNullOrEmpty(clsViewFeatureFldsEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsViewFeatureFldsEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsViewFeatureFldsEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsViewFeatureFldsEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1422,14 +1393,14 @@ export async function ViewFeatureFlds_GetObjLstsessionStorage(strViewFeatureId: 
   const strThisFuncName = 'GetObjLstsessionStorage';
   //初始化列表缓存
   let strWhereCond = '1=1';
-  if (IsNullOrEmpty(clsViewFeatureFldsEN.WhereFormat) == false) {
-    strWhereCond = Format(clsViewFeatureFldsEN.WhereFormat, strViewFeatureId);
+  if (IsNullOrEmpty(clsViewFeatureFldsEN._WhereFormat) == false) {
+    strWhereCond = Format(clsViewFeatureFldsEN._WhereFormat, strViewFeatureId);
   } else {
     strWhereCond = Format("{0}='{1}'", clsViewFeatureFldsEN.con_ViewFeatureId, strViewFeatureId);
   }
   const strKey = Format('{0}_{1}', clsViewFeatureFldsEN._CurrTabName, strViewFeatureId);
-  if (IsNullOrEmpty(clsViewFeatureFldsEN.CacheAddiCondition) == false) {
-    strWhereCond += Format(' and {0}', clsViewFeatureFldsEN.CacheAddiCondition);
+  if (IsNullOrEmpty(clsViewFeatureFldsEN._CacheAddiCondition) == false) {
+    strWhereCond += Format(' and {0}', clsViewFeatureFldsEN._CacheAddiCondition);
   }
   if (strKey == '') {
     console.error('关键字为空!不正确');
@@ -1512,7 +1483,7 @@ export async function ViewFeatureFlds_GetObjLstCache(
     throw strMsg;
   }
   let arrViewFeatureFldsObjLstCache;
-  switch (clsViewFeatureFldsEN.CacheModeId) {
+  switch (clsViewFeatureFldsEN._CacheModeId) {
     case '04': //sessionStorage
       arrViewFeatureFldsObjLstCache = await ViewFeatureFlds_GetObjLstsessionStorage(
         strViewFeatureId,
@@ -1539,7 +1510,7 @@ export async function ViewFeatureFlds_GetObjLstCache(
 export async function ViewFeatureFlds_GetObjLstPureCache(strViewFeatureId: string) {
   //const strThisFuncName = "GetObjLstPureCache";
   let arrViewFeatureFldsObjLstCache;
-  switch (clsViewFeatureFldsEN.CacheModeId) {
+  switch (clsViewFeatureFldsEN._CacheModeId) {
     case '04': //sessionStorage
       arrViewFeatureFldsObjLstCache = await ViewFeatureFlds_GetObjLstsessionStoragePureCache(
         strViewFeatureId,
@@ -2117,14 +2088,14 @@ export async function ViewFeatureFlds_GetObjLstByPagerAsync(
 /**
  * 调用WebApi来删除记录,根据关键字来删除记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_DelRecordAsync)
- * @param lngmId:关键字
+ * @param key:关键字对象
  * @returns 获取删除的结果
  **/
-export async function ViewFeatureFlds_DelRecordAsync(lngmId: number): Promise<number> {
+export async function ViewFeatureFlds_DelRecordAsync(key: ViewFeatureFldsKey): Promise<number> {
   const strThisFuncName = 'DelRecordAsync';
   const strAction = 'DelRecord';
   let strUrl = GetWebApiUrl(viewFeatureFlds_Controller, strAction);
-  strUrl = Format('{0}?Id={1}', strUrl, lngmId);
+  strUrl = Format('{0}?Id={1}', strUrl, key.mId);
 
   const token = Storage.get(ACCESS_TOKEN_KEY);
   //console.error('token:', token);
@@ -2177,11 +2148,9 @@ export async function ViewFeatureFlds_DelRecordAsync(lngmId: number): Promise<nu
  * @param arrmId:关键字列表
  * @returns 实际删除记录的个数
  **/
-export async function ViewFeatureFlds_DelViewFeatureFldssAsync(
-  arrmId: Array<string>,
-): Promise<number> {
-  const strThisFuncName = 'DelViewFeatureFldssAsync';
-  const strAction = 'DelViewFeatureFldss';
+export async function ViewFeatureFlds_DelKeysAsync(arrmId: Array<string>): Promise<number> {
+  const strThisFuncName = 'DelKeysAsync';
+  const strAction = 'DelKeys';
   const strUrl = GetWebApiUrl(viewFeatureFlds_Controller, strAction);
 
   const token = Storage.get(ACCESS_TOKEN_KEY);
@@ -2266,7 +2235,7 @@ export async function ViewFeatureFlds_GetObjExLstByPagerCache(
   const bolIsFuncMap = isFuncMapCache[isFuncMapKey];
   if (
     IsNullOrEmpty(objSortInfo.SortFld) == false &&
-    clsViewFeatureFldsEN.AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
+    clsViewFeatureFldsEN._AttributeName.indexOf(objSortInfo.SortFld) == -1 &&
     (bolIsFuncMap == false || bolIsFuncMap == undefined)
   ) {
     for (const newObj of arrViewFeatureFldsExObjLst) {
@@ -2424,7 +2393,7 @@ export function ViewFeatureFlds_CopyToEx(
 /**
  * 根据扩展字段名去调用相应的映射函数
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-14
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_FuncMapByFldName)
  * @param strFldName:扩展字段名
  * @param  obj{0}Ex:需要转换的对象
@@ -2438,7 +2407,7 @@ export function ViewFeatureFlds_FuncMapByFldName(
   strFldName = strFldName.replace('|Ex', '');
   let strMsg = '';
   //如果是本表中字段,不需要映射
-  const arrFldName = clsViewFeatureFldsEN.AttributeName;
+  const arrFldName = clsViewFeatureFldsEN._AttributeName;
   if (arrFldName.indexOf(strFldName) > -1) return;
   //针对扩展字段进行映射
   switch (strFldName) {
@@ -2475,7 +2444,7 @@ export function ViewFeatureFlds_FuncMapByFldName(
 /**
  * 排序函数。根据关键字字段的值进行比较
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-14
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_SortFunByExKey)
  * @param a:比较的第1个对象
  * @param  b:比较的第1个对象
@@ -3947,15 +3916,18 @@ export async function ViewFeatureFlds_IsExistRecordAsync(strWhereCond: string): 
 /**
  * 根据关键字判断是否存在记录, 从本地缓存中判断.
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistCache)
- * @param lngmId:所给的关键字
- * @returns 对象
+ * @param key:关键字对象
+ * @returns 是否存在
  */
-export async function ViewFeatureFlds_IsExistCache(lngmId: number, strViewFeatureId: string) {
+export async function ViewFeatureFlds_IsExistCache(
+  key: ViewFeatureFldsKey,
+  strViewFeatureId: string,
+): Promise<boolean> {
   const strThisFuncName = 'IsExistCache';
   const arrViewFeatureFldsObjLstCache = await ViewFeatureFlds_GetObjLstCache(strViewFeatureId);
   if (arrViewFeatureFldsObjLstCache == null) return false;
   try {
-    const arrViewFeatureFldsSel = arrViewFeatureFldsObjLstCache.filter((x) => x.mId == lngmId);
+    const arrViewFeatureFldsSel = arrViewFeatureFldsObjLstCache.filter((x) => x.mId == key.mId);
     if (arrViewFeatureFldsSel.length > 0) {
       return true;
     } else {
@@ -3964,7 +3936,7 @@ export async function ViewFeatureFlds_IsExistCache(lngmId: number, strViewFeatur
   } catch (e) {
     const strMsg = Format(
       '根据关键字:[{0}]判断是否存在不成功!(in {1}.{2})',
-      lngmId,
+      key.mId,
       viewFeatureFlds_ConstructorName,
       strThisFuncName,
     );
@@ -3977,10 +3949,10 @@ export async function ViewFeatureFlds_IsExistCache(lngmId: number, strViewFeatur
 /**
  * 根据关键字判断是否存在记录
  * (AutoGCLib.WA_Access4TypeScript:Gen_4WA_Ts_IsExistAsync)
- * @param lngmId:关键字
+ * @param key:包含关键字的对象
  * @returns 是否存在?存在返回True
  **/
-export async function ViewFeatureFlds_IsExistAsync(lngmId: number): Promise<boolean> {
+export async function ViewFeatureFlds_IsExistAsync(key: ViewFeatureFldsKey): Promise<boolean> {
   const strThisFuncName = 'IsExistAsync';
   //检测记录是否存在
   const strAction = 'IsExist';
@@ -3993,7 +3965,7 @@ export async function ViewFeatureFlds_IsExistAsync(lngmId: number): Promise<bool
       Authorization: `${token}`,
     },
     params: {
-      lngmId,
+      lngmId: key.mId,
     },
   };
   try {
@@ -4301,14 +4273,14 @@ export function ViewFeatureFlds_GetWebApiUrl(strController: string, strAction: s
 export function ViewFeatureFlds_ReFreshCache(strViewFeatureId: string): void {
   if (IsNullOrEmpty(strViewFeatureId) == true) {
     const strMsg = Format(
-      '参数:[strViewFeatureId]不能为空!(In clsViewFeatureFldsWApi.clsViewFeatureFldsWApi.ReFreshCache)',
+      '参数:[strViewFeatureId]不能为空！(In clsViewFeatureFldsWApi.clsViewFeatureFldsWApi.ReFreshCache)',
     );
     console.error(strMsg);
     throw strMsg;
   }
   if (strViewFeatureId.length != 8) {
     const strMsg = Format(
-      '缓存分类变量:[strViewFeatureId]的长度:[{0}]不正确!(clsViewFeatureFldsWApi.clsViewFeatureFldsWApi.ReFreshCache)',
+      '缓存分类变量:[strViewFeatureId]的长度:[{0}]不正确！(clsViewFeatureFldsWApi.clsViewFeatureFldsWApi.ReFreshCache)',
       strViewFeatureId.length,
     );
     console.error(strMsg);
@@ -4319,7 +4291,7 @@ export function ViewFeatureFlds_ReFreshCache(strViewFeatureId: string): void {
   console.trace(strMsg);
   // 静态的对象列表,用于清空相关缓存,针对记录较少,作为参数表可以使用
   const strKey = Format('{0}_{1}', clsViewFeatureFldsEN._CurrTabName, strViewFeatureId);
-  switch (clsViewFeatureFldsEN.CacheModeId) {
+  switch (clsViewFeatureFldsEN._CacheModeId) {
     case '04': //sessionStorage
       sessionStorage.removeItem(strKey);
       break;
@@ -4343,14 +4315,14 @@ export function ViewFeatureFlds_ReFreshCache(strViewFeatureId: string): void {
 export function ViewFeatureFlds_ReFreshThisCache(strViewFeatureId: string): void {
   if (IsNullOrEmpty(strViewFeatureId) == true) {
     const strMsg = Format(
-      '参数:[strViewFeatureId]不能为空!(In clsViewFeatureFldsWApi.ViewFeatureFlds_ReFreshThisCache)',
+      '参数:[strViewFeatureId]不能为空！(In clsViewFeatureFldsWApi.ViewFeatureFlds_ReFreshThisCache)',
     );
     console.error(strMsg);
     throw strMsg;
   }
   if (strViewFeatureId.length != 8) {
     const strMsg = Format(
-      '缓存分类变量:[strViewFeatureId]的长度:[{0}]不正确!(clsViewFeatureFldsWApi.ViewFeatureFlds_ReFreshThisCache)',
+      '缓存分类变量:[strViewFeatureId]的长度:[{0}]不正确！(clsViewFeatureFldsWApi.ViewFeatureFlds_ReFreshThisCache)',
       strViewFeatureId.length,
     );
     console.error(strMsg);
@@ -4358,7 +4330,7 @@ export function ViewFeatureFlds_ReFreshThisCache(strViewFeatureId: string): void
   }
   if (clsSysPara4WebApi.spSetRefreshCacheOn == true) {
     const strKey = Format('{0}_{1}', clsViewFeatureFldsEN._CurrTabName, strViewFeatureId);
-    switch (clsViewFeatureFldsEN.CacheModeId) {
+    switch (clsViewFeatureFldsEN._CacheModeId) {
       case '04': //sessionStorage
         sessionStorage.removeItem(strKey);
         break;
@@ -4685,6 +4657,15 @@ export function ViewFeatureFlds_CheckPropertyNew(pobjViewFeatureFldsEN: clsViewF
   ) {
     throw new Error(
       `(errid:Watl000414)字段[标签标题(labelCaption)]的值:[${pobjViewFeatureFldsEN.labelCaption}], 非法,应该为字符型(In 界面功能字段(ViewFeatureFlds))!(clsViewFeatureFldsBL:CheckPropertyNew0)`,
+    );
+  }
+  if (
+    null != pobjViewFeatureFldsEN.isNeedAuxControlLabel &&
+    undefined !== pobjViewFeatureFldsEN.isNeedAuxControlLabel &&
+    tzDataType.isBoolean(pobjViewFeatureFldsEN.isNeedAuxControlLabel) === false
+  ) {
+    throw new Error(
+      `(errid:Watl000414)字段[是否需要附件标签(isNeedAuxControlLabel)]的值:[${pobjViewFeatureFldsEN.isNeedAuxControlLabel}], 非法,应该为布尔型(In 界面功能字段(ViewFeatureFlds))!(clsViewFeatureFldsBL:CheckPropertyNew0)`,
     );
   }
   if (
@@ -5189,6 +5170,15 @@ export function ViewFeatureFlds_CheckProperty4Update(pobjViewFeatureFldsEN: clsV
     );
   }
   if (
+    null != pobjViewFeatureFldsEN.isNeedAuxControlLabel &&
+    undefined !== pobjViewFeatureFldsEN.isNeedAuxControlLabel &&
+    tzDataType.isBoolean(pobjViewFeatureFldsEN.isNeedAuxControlLabel) === false
+  ) {
+    throw new Error(
+      `(errid:Watl000417)字段[是否需要附件标签(isNeedAuxControlLabel)]的值:[${pobjViewFeatureFldsEN.isNeedAuxControlLabel}], 非法,应该为布尔型(In 界面功能字段(ViewFeatureFlds))!(clsViewFeatureFldsBL:CheckProperty4Update)`,
+    );
+  }
+  if (
     IsNullOrEmpty(pobjViewFeatureFldsEN.ctlTypeId) == false &&
     undefined !== pobjViewFeatureFldsEN.ctlTypeId &&
     tzDataType.isString(pobjViewFeatureFldsEN.ctlTypeId) === false
@@ -5431,7 +5421,7 @@ export function ViewFeatureFlds_CheckProperty4Update(pobjViewFeatureFldsEN: clsV
 /**
  * 把一个对象转化为一个JSON串
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-14
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getJSONStrByRecObj)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -5454,7 +5444,7 @@ export function ViewFeatureFlds_GetJSONStrByObj(
 /**
  * 把一个JSON串转化为一个对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-14
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象列表
@@ -5475,7 +5465,7 @@ export function ViewFeatureFlds_GetObjLstByJSONStr(strJSON: string): Array<clsVi
 /**
  * 把一个JSON对象列表转化为一个实体对象列表
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-14
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getObjLstByJSONObjLst)
  * @param arrViewFeatureFldsObjLstS:需要转化的JSON对象列表
  * @returns 返回一个生成的对象列表
@@ -5495,7 +5485,7 @@ export function ViewFeatureFlds_GetObjLstByJSONObjLst(
 /**
  * 把一个JSON串转化为一个对象
  * 作者:pyf
- * 日期:2025-06-14
+ * 日期:2026-06-14
  * (AutoGCLib.WA_Access4TypeScript:Gen_4BL_Ts_getRecObjByJSONStr)
  * @param strJSON:需要转化的JSON串
  * @returns 返回一个生成的对象
@@ -5614,6 +5604,18 @@ export function ViewFeatureFlds_GetCombineCondition(
       objViewFeatureFldsCond.labelCaption,
       strComparisonOpLabelCaption,
     );
+  }
+  if (
+    Object.prototype.hasOwnProperty.call(
+      objViewFeatureFldsCond.dicFldComparisonOp,
+      clsViewFeatureFldsEN.con_IsNeedAuxControlLabel,
+    ) == true
+  ) {
+    if (objViewFeatureFldsCond.isNeedAuxControlLabel == true) {
+      strWhereCond += Format(" And {0} = '1'", clsViewFeatureFldsEN.con_IsNeedAuxControlLabel);
+    } else {
+      strWhereCond += Format(" And {0} = '0'", clsViewFeatureFldsEN.con_IsNeedAuxControlLabel);
+    }
   }
   if (
     Object.prototype.hasOwnProperty.call(

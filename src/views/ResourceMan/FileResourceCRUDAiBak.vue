@@ -241,7 +241,7 @@
   import { vCodeType_Sim_GetObjByCodeTypeIdCache } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
   import { clsvPrjTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvPrjTab_SimEN';
   import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
-  import FileResourceCRUDAiEx from '@/views/ResourceMan/FileResourceCRUDAiExBak';
+  import FileResourceCRUDAiEx from '@/views/ResourceMan/FileResourceCRUDAiEx';
   import { FileResourceKey } from '@/ts/L0Entity/ResourceMan/clsFileResourceEN';
   import {
     getQueryRowsAi,

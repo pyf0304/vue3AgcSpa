@@ -18,7 +18,7 @@
         class="table table-bordered table-hover table td table-sm"
       >
         <tbody>
-          <tr id="trFileName">
+          <tr id="trFileDirName">
             <td class="text-right">
               <label
                 id="lblFileDirName"
@@ -33,9 +33,11 @@
                 id="txtFileDirName"
                 v-model="fileDirName"
                 class="form-control form-control-sm"
-                style="width: 150px"
+                style="width: 400px"
               />
             </td>
+          </tr>
+          <tr id="trFileName">
             <td class="text-right">
               <label
                 id="lblFileName"
@@ -50,11 +52,11 @@
                 id="txtFileName"
                 v-model="fileName"
                 class="form-control form-control-sm"
-                style="width: 150px"
+                style="width: 400px"
               />
             </td>
           </tr>
-          <tr id="trTabId">
+          <tr id="trExtension">
             <td class="text-right">
               <label
                 id="lblExtension"
@@ -69,9 +71,11 @@
                 id="txtExtension"
                 v-model="extension"
                 class="form-control form-control-sm"
-                style="width: 150px"
+                style="width: 400px"
               />
             </td>
+          </tr>
+          <tr id="trTabId">
             <td class="text-right">
               <label
                 id="lblTabId"
@@ -86,7 +90,7 @@
                 id="ddlTabId"
                 v-model="tabId"
                 class="form-control form-control-sm"
-                style="width: 150px"
+                style="width: 400px"
               >
                 <option v-for="(item, index) in arrvPrjTab_Sim" :key="index" :value="item.tabId">
                   {{ item.tabName }}
@@ -94,9 +98,9 @@
               >
             </td>
           </tr>
-          <tr id="trIsGeneCode">
+          <tr id="trIsBelongsCurrCMPrj">
             <td class="text-left" ColSpan="2">
-              <span class="form-control form-control-sm" style="width: 150px">
+              <span class="form-control form-control-sm" style="width: 400px">
                 <input
                   id="chkIsBelongsCurrCMPrj"
                   v-model="isBelongsCurrCMPrj"
@@ -105,8 +109,10 @@
                 /><label for="chkIsBelongsCurrCMPrj">是否属于当前项目</label></span
               >
             </td>
+          </tr>
+          <tr id="trIsGeneCode">
             <td class="text-left" ColSpan="2">
-              <span class="form-control form-control-sm" style="width: 150px">
+              <span class="form-control form-control-sm" style="width: 400px">
                 <input
                   id="chkIsGeneCode"
                   v-model="isGeneCode"
@@ -116,9 +122,9 @@
               >
             </td>
           </tr>
-          <tr id="trFileLength">
+          <tr id="trIsCanDel">
             <td class="text-left" ColSpan="2">
-              <span class="form-control form-control-sm" style="width: 150px">
+              <span class="form-control form-control-sm" style="width: 400px">
                 <input
                   id="chkIsCanDel"
                   v-model="isCanDel"
@@ -127,6 +133,8 @@
                 /><label for="chkIsCanDel">是否可删除</label></span
               >
             </td>
+          </tr>
+          <tr id="trFileLength">
             <td class="text-right">
               <label
                 id="lblFileLength"
@@ -141,11 +149,11 @@
                 id="txtFileLength"
                 v-model.number="fileLength"
                 class="form-control form-control-sm"
-                style="width: 150px"
+                style="width: 400px"
               />
             </td>
           </tr>
-          <tr id="trCreationTime">
+          <tr id="trFileType">
             <td class="text-right">
               <label
                 id="lblFileType"
@@ -160,9 +168,11 @@
                 id="txtFileType"
                 v-model="fileType"
                 class="form-control form-control-sm"
-                style="width: 150px"
+                style="width: 400px"
               />
             </td>
+          </tr>
+          <tr id="trCreationTime">
             <td class="text-right">
               <label
                 id="lblCreationTime"
@@ -177,11 +187,11 @@
                 id="txtCreationTime"
                 v-model="creationTime"
                 class="form-control form-control-sm"
-                style="width: 150px"
+                style="width: 400px"
               />
             </td>
           </tr>
-          <tr id="trCheckDateTime">
+          <tr id="trLastWriteTime">
             <td class="text-right">
               <label
                 id="lblLastWriteTime"
@@ -196,9 +206,11 @@
                 id="txtLastWriteTime"
                 v-model="lastWriteTime"
                 class="form-control form-control-sm"
-                style="width: 150px"
+                style="width: 400px"
               />
             </td>
+          </tr>
+          <tr id="trCheckDateTime">
             <td class="text-right">
               <label
                 id="lblCheckDateTime"
@@ -213,21 +225,23 @@
                 id="txtCheckDateTime"
                 v-model="checkDateTime"
                 class="form-control form-control-sm"
-                style="width: 150px"
+                style="width: 400px"
               />
             </td>
           </tr>
-          <tr id="trIsExistFile">
+          <tr id="trInUse">
             <td class="text-left" ColSpan="2">
-              <span class="form-control form-control-sm" style="width: 150px">
+              <span class="form-control form-control-sm" style="width: 400px">
                 <input id="chkInUse" v-model="inUse" type="checkbox" Text="是否在用" /><label
                   for="chkInUse"
                   >是否在用</label
                 ></span
               >
             </td>
+          </tr>
+          <tr id="trIsExistFile">
             <td class="text-left" ColSpan="2">
-              <span class="form-control form-control-sm" style="width: 150px">
+              <span class="form-control form-control-sm" style="width: 400px">
                 <input
                   id="chkIsExistFile"
                   v-model="isExistFile"
@@ -238,27 +252,6 @@
             </td>
           </tr>
           <tr id="trIpAddress">
-            <td class="text-right">
-              <label
-                id="lblPrjId"
-                name="lblPrjId"
-                class="col-form-label text-right"
-                style="width: 90px"
-                >工程Id
-              </label>
-            </td>
-            <td class="text-left">
-              <select
-                id="ddlPrjId"
-                v-model="prjId"
-                class="form-control form-control-sm"
-                style="width: 150px"
-              >
-                <option v-for="(item, index) in arrProjects" :key="index" :value="item.prjId">
-                  {{ item.prjName }}
-                </option></select
-              >
-            </td>
             <td class="text-right">
               <label
                 id="lblIpAddress"
@@ -273,11 +266,11 @@
                 id="txtIpAddress"
                 v-model="ipAddress"
                 class="form-control form-control-sm"
-                style="width: 150px"
+                style="width: 400px"
               />
             </td>
           </tr>
-          <tr id="trMemo">
+          <tr id="trIdFtpResource">
             <td class="text-right">
               <label
                 id="lblIdFtpResource"
@@ -292,9 +285,11 @@
                 id="txtIdFtpResource"
                 v-model="idFtpResource"
                 class="form-control form-control-sm"
-                style="width: 150px"
+                style="width: 400px"
               />
             </td>
+          </tr>
+          <tr id="trMemo">
             <td class="text-right">
               <label
                 id="lblMemo"
@@ -309,8 +304,62 @@
                 id="txtMemo"
                 v-model="memo"
                 class="form-control form-control-sm"
-                style="width: 150px"
+                style="width: 400px"
               />
+            </td>
+          </tr>
+          <tr id="trCodeTypeId">
+            <td class="text-right">
+              <label
+                id="lblCodeTypeId"
+                name="lblCodeTypeId"
+                class="col-form-label text-right"
+                style="width: 90px"
+                >代码类型Id
+              </label>
+            </td>
+            <td class="text-left">
+              <select
+                id="ddlCodeTypeId"
+                v-model="codeTypeId"
+                class="form-control form-control-sm"
+                style="width: 400px"
+              >
+                <option
+                  v-for="(item, index) in arrvCodeType_Sim"
+                  :key="index"
+                  :value="item.codeTypeId"
+                >
+                  {{ item.codeTypeName }}
+                </option></select
+              >
+            </td>
+          </tr>
+          <tr id="trPrjFileTypeId">
+            <td class="text-right">
+              <label
+                id="lblPrjFileTypeId"
+                name="lblPrjFileTypeId"
+                class="col-form-label text-right"
+                style="width: 90px"
+                >项目文件类型Id
+              </label>
+            </td>
+            <td class="text-left">
+              <select
+                id="ddlPrjFileTypeId"
+                v-model="prjFileTypeId"
+                class="form-control form-control-sm"
+                style="width: 400px"
+              >
+                <option
+                  v-for="(item, index) in arrPrjFileType"
+                  :key="index"
+                  :value="item.prjFileTypeId"
+                >
+                  {{ item.prjFileTypeName }}
+                </option></select
+              >
             </td>
           </tr>
         </tbody>
@@ -337,13 +386,16 @@
   import { clsFileResourceEN, FileResourceKey } from '@/ts/L0Entity/ResourceMan/clsFileResourceEN';
   import { Is0EqEmpty, IsNullOrEmptyEq0, Format } from '@/ts/PubFun/clsString';
   import { clsvPrjTab_SimEN } from '@/ts/L0Entity/Table_Field/clsvPrjTab_SimEN';
-  import { clsProjectsEN } from '@/ts/L0Entity/PrjManage/clsProjectsEN';
-  import { Projects_GetArrProjects } from '@/ts/L3ForWApi/PrjManage/clsProjectsWApi';
+  import { clsvCodeType_SimEN } from '@/ts/L0Entity/GeneCode/clsvCodeType_SimEN';
+  import { clsPrjFileTypeEN } from '@/ts/L0Entity/ResourceMan/clsPrjFileTypeEN';
   import { vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId } from '@/ts/L3ForWApi/Table_Field/clsvPrjTab_SimWApi';
+  import { vCodeType_Sim_GetArrvCodeType_SimByProgLangTypeId } from '@/ts/L3ForWApi/GeneCode/clsvCodeType_SimWApi';
+  import { PrjFileType_GetArrPrjFileType } from '@/ts/L3ForWApi/ResourceMan/clsPrjFileTypeWApi';
   import {
     refDivEdit,
-    CmPrjId_Local,
     PrjId_Session,
+    CmPrjId_Local,
+    ProgLangTypeId_Static,
   } from '@/views/ResourceMan/FileResourceVueShare';
   import { useUserStore } from '@/store/modulesShare/user';
 
@@ -387,21 +439,28 @@
       const updDate = ref('');
       const updUser = ref('');
       const memo = ref('');
+      const codeTypeId = ref('');
+      const prjFileTypeId = ref('');
 
       const arrvPrjTab_Sim = ref<clsvPrjTab_SimEN[] | null>([]);
-      const arrProjects = ref<clsProjectsEN[] | null>([]);
+      const arrvCodeType_Sim = ref<clsvCodeType_SimEN[] | null>([]);
+      const arrPrjFileType = ref<clsPrjFileTypeEN[] | null>([]);
 
       /** 函数功能:为编辑区绑定下拉框
        * (AutoGCLib.Vue_ViewScript_EditAi4Html:Gen_Edit_Setup_BindDdl4EditRegionInDiv)
        **/
       async function BindDdl4EditRegionInDiv() {
-        arrProjects.value = await Projects_GetArrProjects();
-        prjId.value = '0';
         arrvPrjTab_Sim.value = await vPrjTab_Sim_GetArrvPrjTab_SimByCmPrjId(
           CmPrjId_Local.value,
           PrjId_Session.value,
         );
         tabId.value = '0';
+        arrvCodeType_Sim.value = await vCodeType_Sim_GetArrvCodeType_SimByProgLangTypeId(
+          ProgLangTypeId_Static.value,
+        );
+        codeTypeId.value = '0';
+        arrPrjFileType.value = await PrjFileType_GetArrPrjFileType();
+        prjFileTypeId.value = '0';
       }
 
       /** 函数功能:把界面上的属性数据传到类对象中
@@ -424,13 +483,15 @@
         pobjFileResourceEN.SetCheckDateTime(checkDateTime.value); // CheckDateTime
         pobjFileResourceEN.SetInUse(inUse.value); // 是否在用
         pobjFileResourceEN.SetIsExistFile(isExistFile.value); // 是否存在文件
-        pobjFileResourceEN.SetPrjId(Is0EqEmpty(prjId.value)); // 工程Id
+        pobjFileResourceEN.SetPrjId(PrjId_Session.value); // 工程Id
         pobjFileResourceEN.SetCmPrjId(CmPrjId_Local.value); // Cm工程Id
         pobjFileResourceEN.SetIpAddress(ipAddress.value); // 服务器
         pobjFileResourceEN.SetIdFtpResource(idFtpResource.value); // FTP资源流水号
         pobjFileResourceEN.SetUpdDate(clsDateTime.getTodayDateTimeStr(1)); // 修改日期
         pobjFileResourceEN.SetUpdUser(userStore.getUserId); // 修改者
         pobjFileResourceEN.SetMemo(memo.value); // 说明
+        pobjFileResourceEN.SetCodeTypeId(Is0EqEmpty(codeTypeId.value)); // 代码类型Id
+        pobjFileResourceEN.SetPrjFileTypeId(Is0EqEmpty(prjFileTypeId.value)); // 项目文件类型Id
         return pobjFileResourceEN;
       }
 
@@ -455,10 +516,11 @@
         checkDateTime.value = pobjFileResourceEN.checkDateTime; // CheckDateTime
         inUse.value = pobjFileResourceEN.inUse; // 是否在用
         isExistFile.value = pobjFileResourceEN.isExistFile; // 是否存在文件
-        prjId.value = IsNullOrEmptyEq0(pobjFileResourceEN.prjId); // 工程Id
         ipAddress.value = pobjFileResourceEN.ipAddress; // 服务器
         idFtpResource.value = pobjFileResourceEN.idFtpResource; // FTP资源流水号
         memo.value = pobjFileResourceEN.memo; // 说明
+        codeTypeId.value = IsNullOrEmptyEq0(pobjFileResourceEN.codeTypeId); // 代码类型Id
+        prjFileTypeId.value = IsNullOrEmptyEq0(pobjFileResourceEN.prjFileTypeId); // 项目文件类型Id
       }
 
       /**
@@ -480,10 +542,11 @@
         checkDateTime.value = '';
         inUse.value = false;
         isExistFile.value = false;
-        prjId.value = '0';
         ipAddress.value = '';
         idFtpResource.value = '';
         memo.value = '';
+        codeTypeId.value = '0';
+        prjFileTypeId.value = '0';
       }
 
       /** 函数功能:事件函数,当单击<确定修改>时发生的事件函数,
@@ -636,8 +699,11 @@
         updDate,
         updUser,
         memo,
+        codeTypeId,
+        prjFileTypeId,
         arrvPrjTab_Sim,
-        arrProjects,
+        arrvCodeType_Sim,
+        arrPrjFileType,
       };
     },
     watch: {
@@ -662,7 +728,7 @@
           alert(strMsg);
           return;
         }
-        if (key == null || key.fileResourceID == 0) {
+        if (key == null || key.fileResourceId == 0) {
           objPageEdit.btnEdit_Click(strCommandName, null);
         } else {
           objPageEdit.btnEdit_Click(strCommandName, key);

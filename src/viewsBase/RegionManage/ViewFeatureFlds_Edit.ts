@@ -22,7 +22,7 @@ import {
   ViewFeatureFlds_GetUniCondStr4Update,
   ViewFeatureFlds_AddNewRecordWithReturnKeyAsync,
   ViewFeatureFlds_IsExistAsync,
-  ViewFeatureFlds_GetObjBymIdAsync,
+  ViewFeatureFlds_GetObjByKeyAsync,
   ViewFeatureFlds_CheckProperty4Update,
   ViewFeatureFlds_UpdateRecordAsync,
   ViewFeatureFlds_EditRecordExAsync,
@@ -185,7 +185,7 @@ export abstract class ViewFeatureFlds_Edit {
       this.opType = 'Add';
       const bolIsSuccess = await this.ShowDialog_ViewFeatureFlds(this.opType);
       if (bolIsSuccess == false) return;
-      if (['02', '03', '06'].indexOf(clsViewFeatureFldsEN.PrimaryTypeId) > -1) {
+      if (['02', '03', '06'].indexOf(clsViewFeatureFldsEN._PrimaryTypeId) > -1) {
         await this.AddNewRecordWithMaxId();
       } else {
         await this.AddNewRecord();
@@ -285,7 +285,7 @@ export abstract class ViewFeatureFlds_Edit {
         case '确认添加':
           //这是一个单表的插入的代码,由于逻辑层太简单,
           //就把逻辑层合并到控制层,
-          if (['02', '03', '06'].indexOf(clsViewFeatureFldsEN.PrimaryTypeId) > -1) {
+          if (['02', '03', '06'].indexOf(clsViewFeatureFldsEN._PrimaryTypeId) > -1) {
             const returnKeyId = await this.AddNewRecordWithReturnKeySave();
             if (returnKeyId != 0) {
               refViewFeatureFlds_Edit.value.hideDialog();
@@ -547,7 +547,7 @@ export abstract class ViewFeatureFlds_Edit {
     //2、检查该关键字的记录是否存在,如果不存在就返回不显示；
     let objViewFeatureFldsEN = new clsViewFeatureFldsEN();
     try {
-      const returnBool = await ViewFeatureFlds_IsExistAsync(lngmId);
+      const returnBool = await ViewFeatureFlds_IsExistAsync({ mId: lngmId });
       if (returnBool == false) {
         const strInfo = Format('关键字:[{0}] 的记录不存在!', lngmId);
         //显示信息框
@@ -564,7 +564,7 @@ export abstract class ViewFeatureFlds_Edit {
       alert(strMsg);
     }
     try {
-      const objViewFeatureFldsENConst = await ViewFeatureFlds_GetObjBymIdAsync(lngmId);
+      const objViewFeatureFldsENConst = await ViewFeatureFlds_GetObjByKeyAsync({ mId: lngmId });
       if (objViewFeatureFldsENConst == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -598,7 +598,7 @@ export abstract class ViewFeatureFlds_Edit {
     const strThisFuncName = this.UpdateRecord.name;
     this.keyId = lngmId;
     try {
-      const objViewFeatureFldsEN = await ViewFeatureFlds_GetObjBymIdAsync(lngmId);
+      const objViewFeatureFldsEN = await ViewFeatureFlds_GetObjByKeyAsync({ mId: lngmId });
       if (objViewFeatureFldsEN == null) {
         const strMsg = Format(
           '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

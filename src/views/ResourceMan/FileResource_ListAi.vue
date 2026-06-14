@@ -71,7 +71,7 @@
             <!-- 第一列：checkbox -->
             <td>
               <input
-                :id="'chk' + item.fileResourceId"
+                :id="'chk' + getItemKey(item)"
                 v-model="item.checked"
                 type="checkbox"
                 name="chkInTab"
@@ -157,9 +157,11 @@
         const strPath = normalizePath(path);
         const strRootDir = normalizePath(props.currentRootDir);
         if (strPath == '' || strRootDir == '') return path ?? '';
-        if (strPath === strRootDir) return '';
-        const strPrefix = `${strRootDir}/`;
-        if (strPath.startsWith(strPrefix) == true) {
+        const strPathLower = strPath.toLowerCase();
+        const strRootDirLower = strRootDir.toLowerCase();
+        if (strPathLower === strRootDirLower) return '';
+        const strPrefix = `${strRootDirLower}/`;
+        if (strPathLower.startsWith(strPrefix) == true) {
           return strPath.substring(strPrefix.length);
         }
         return path ?? '';
@@ -269,13 +271,18 @@
         return item[fieldName] || '';
       };
 
+      const getItemKey = (item: any): string => {
+        const key = item?.fileResourceId ?? item?.fileResourceID ?? item?.FileResourceId ?? '';
+        return String(key);
+      };
+
       /**
        * 提交编辑
        *(AutoGCLib.Vue_ViewScript_List_TS4Html:Gen_List_Setup_Fun_btnClickInRow)
        **/
       const btnClickInRow = (item: any) => {
         emit('on-edit-tab-relainfo', {
-          fileResourceId: item.fileResourceId,
+          fileResourceId: getItemKey(item),
           content: '这是当前表的关键字',
         });
       };
@@ -286,7 +293,7 @@
        **/
       const btnSubmitSel = (item: any) => {
         emit('on-submit-sel', {
-          fileResourceId: item.fileResourceId,
+          fileResourceId: getItemKey(item),
           content: '这是当前表的关键字',
         });
       };
@@ -325,6 +332,7 @@
         btnSubmitSel,
         showSelectColumn,
         getCellValue,
+        getItemKey,
         getColumnKey,
         isColumnVisible,
         toggleColumn,

@@ -150,10 +150,6 @@
       const COLUMN_STORAGE_KEY = 'FileResourceListAi.hiddenColumns';
       const hiddenColumnKeys = ref<string[]>([]);
 
-      const normalizePath = (path: string): string => {
-        return (path ?? '').replace(/\\/g, '/').replace(/\/+$/, '');
-      };
-
       watchEffect(() => {
         showSelectColumn.value = props.dataColumn.some((column) => column.colHeader === '选择');
       });

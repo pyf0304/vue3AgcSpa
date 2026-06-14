@@ -1,7 +1,7 @@
 ﻿import { CtlType_GetObjByCtlTypeIdCache } from '@/ts/L3ForWApi/PrjInterface/clsCtlTypeWApi';
 import { FeatureRegionFlds_GetObjLstCache } from '@/ts/L3ForWApi/RegionManage/clsFeatureRegionFldsWApi';
 import {
-  ViewFeatureFlds_GetObjBymIdAsync,
+  ViewFeatureFlds_GetObjByKeyAsync,
   ViewFeatureFlds_GetObjLstAsync,
   ViewFeatureFlds_GetObjLstCache,
 } from '@/ts/L3ForWApi/RegionManage/clsViewFeatureFldsWApi';
@@ -36,7 +36,9 @@ export class clsvViewFeatureFldsBLEx {
   /// <returns>表扩展对象</returns>
   public static async GetObjExBymId(lngmId: number) {
     const strThisFuncName = this.GetObjExBymId.name;
-    const objViewFeatureFldsEN = await ViewFeatureFlds_GetObjBymIdAsync(lngmId);
+    const objViewFeatureFldsEN = await ViewFeatureFlds_GetObjByKeyAsync({
+      mId: lngmId,
+    });
     if (objViewFeatureFldsEN == null) {
       const strMsg = Format(
         '根据关键字获取相应的记录的对象为空.(in {0}.{1})',

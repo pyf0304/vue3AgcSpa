@@ -7,15 +7,12 @@ export type FileResourceCommandIdAi =
   | 'create'
   | 'update'
   | 'delete'
-  | 'identifyFileType'
   | 'export'
   | 'export'
-  | 'setPrjFileType';
-
+  | 'setPrjFileType'
+  | 'identifyFileType';
 /** Ai 命令配置：复用通用表命令结构并扩展辅助控件信息。 */
 export type FileResourceCommandSpecAi = TableCommandSpec<FileResourceCommandIdAi> & {
-  /** 辅助控件标签文本 */
-  auxControlLabel?: string;
   /** 辅助控件ID（如下拉框ID） */
   auxControlId?: string;
   /** 辅助控件类型 */
@@ -24,6 +21,7 @@ export type FileResourceCommandSpecAi = TableCommandSpec<FileResourceCommandIdAi
   auxControlOptionsKey?: string;
   /** 字段名 */
   fieldName?: string;
+  auxControlLabel?: string;
   /** 驼峰式字段名 */
   fieldNameCamel?: string;
 };
@@ -69,13 +67,6 @@ export const FILE_RESOURCE_COMMAND_SPECS_AI: Array<FileResourceCommandSpecAi> = 
     elementId: 'btnDelete_Ai',
     btnClass: 'btn btn-outline-info btn-sm text-nowrap',
   },
-  // {
-  //   id: 'identifyFileType',
-  //   region: 'feature',
-  //   text: '识别类型并回写',
-  //   elementId: 'btnIdentifyFileType_Ai',
-  //   btnClass: 'btn btn-outline-info btn-sm text-nowrap',
-  // },
   {
     id: 'export',
     region: 'feature',
@@ -93,13 +84,13 @@ export const FILE_RESOURCE_COMMAND_SPECS_AI: Array<FileResourceCommandSpecAi> = 
   {
     id: 'setPrjFileType',
     region: 'feature',
-    text: 'btnSetPrjFileTypeId',
+    text: '设置项目文件类型',
     elementId: 'btnSetPrjFileType_Ai',
     btnClass: 'btn btn-outline-info btn-sm text-nowrap',
     needAuxControl: true,
-    auxControlId: 'ddlPrjFileType_SetFldValue',
+    auxControlId: 'ddlPrjFileTypeId_SetFldValue',
     auxControlType: 'select',
-    auxControlOptionsKey: 'prjFileType',
+    auxControlOptionsKey: 'prjFileTypeId_f',
     fieldName: 'PrjFileTypeId',
     fieldNameCamel: 'prjFileTypeId',
   },

@@ -374,7 +374,9 @@ export abstract class FileResourceCRUDAi extends AIOperateListBase implements cl
       }
       const divDataLst = GetDivObjInDivObj(divContainer, 'divDataLst');
       if (divDataLst == null) {
-        alert('在BindTab_FileResource4Func函数中，divDataLst不存在!');
+        // Vue list component mode: no legacy divDataLst container is required.
+        dataColumn.value = arrDataColumn;
+        await BindTabByList(arrFileResourceExObjLst, this.dispAllErrMsg_q);
         return;
       }
       await BindTab(

@@ -182,7 +182,7 @@
   import PrjFileType_EditCom from '@/views/ResourceMan/PrjFileType_EditAi.vue';
 
   import PrjFileType_DetailCom from '@/views/ResourceMan/PrjFileType_DetailAi.vue';
-  import PrjFileType_ListCom from '@/views/ResourceMan/PrjFileType_ListAi.vue';
+  import PrjFileType_ListCom from '@/views/ResourceMan/PrjFileType_ListAiBak.vue';
   import { ExportExcelData } from '@/ts/PubFun/ExportExcelData';
   import PrjFileTypeCRUDAiEx from '@/views/ResourceMan/PrjFileTypeCRUDAiEx';
   import { PrjFileTypeKey } from '@/ts/L0Entity/ResourceMan/clsPrjFileTypeEN';

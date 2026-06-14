@@ -168,7 +168,7 @@ export const FILERESOURCE_COLUMN_SPECS_AI: Array<FileResourceColumnSpecAi> = [
     orderNum: 16,
     includeInList: true,
     includeInExport: true,
-  }
+  },
 ];
 
 /** 把规格对象转换为前端表格列对象。 */

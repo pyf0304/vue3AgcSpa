@@ -29,6 +29,11 @@ export default class FileResourceCRUDAiEx extends FileResourceCRUDAi implements 
   public static vuebtn_Click: (strCommandName: string, key: FileResourceKey) => void;
   public static GetPropValue: (strPropName: string) => string;
 
+  private getItemKeyValue(item: any): number {
+    const value = item?.fileResourceId ?? item?.fileResourceID ?? item?.FileResourceId ?? 0;
+    return Number(value || 0);
+  }
+
   public get pageSize(): number {
     return this._pageSize ?? 10;
   }
@@ -110,7 +115,9 @@ export default class FileResourceCRUDAiEx extends FileResourceCRUDAi implements 
 
     const arrSelectedFileResource = arrSelectedKeyIds
       .map((strKeyId) =>
-        dataListFileResource.value.find((item) => item.fileResourceId.toString() === strKeyId),
+        dataListFileResource.value.find(
+          (item) => this.getItemKeyValue(item as any).toString() === strKeyId,
+        ),
       )
       .filter((item): item is clsFileResourceENEx => item != null);
 
@@ -168,7 +175,7 @@ export default class FileResourceCRUDAiEx extends FileResourceCRUDAi implements 
       if (bolNoChange === true) continue;
 
       const objUpdate = new clsFileResourceEN();
-      objUpdate.SetFileResourceId(objFileResource.fileResourceId);
+      objUpdate.SetFileResourceId(this.getItemKeyValue(objFileResource));
       objUpdate.SetCodeTypeId(objFileTypeInfo.codeTypeId);
       objUpdate.SetTabId(objFileTypeInfo.tabId);
 

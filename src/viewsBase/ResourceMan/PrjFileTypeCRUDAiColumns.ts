@@ -77,7 +77,7 @@ export const PRJFILETYPE_COLUMN_SPECS_AI: Array<PrjFileTypeColumnSpecAi> = [
     orderNum: 8,
     includeInList: true,
     includeInExport: true,
-  }
+  },
 ];
 
 /** 把规格对象转换为前端表格列对象。 */

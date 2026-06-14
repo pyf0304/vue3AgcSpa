@@ -29,11 +29,11 @@ import {
   ViewFeatureFlds_GetSubObjLstCache,
   ViewFeatureFlds_DelRecordAsync,
   ViewFeatureFlds_ReFreshCache,
-  ViewFeatureFlds_GetObjBymIdAsync,
+  ViewFeatureFlds_GetObjByKeyAsync,
   ViewFeatureFlds_GetObjExLstByPagerCache,
-  ViewFeatureFlds_GetObjLstBymIdLstAsync,
   ViewFeatureFlds_AddNewRecordAsync,
-  ViewFeatureFlds_DelViewFeatureFldssAsync,
+  ViewFeatureFlds_DelKeysAsync,
+  ViewFeatureFlds_GetObjLstBymIdLstAsync,
 } from '@/ts/L3ForWApi/RegionManage/clsViewFeatureFldsWApi';
 import {
   GetCheckedKeyIdsInDivObj,
@@ -595,7 +595,7 @@ export abstract class ViewFeatureFldsCRUD implements clsOperateList {
   public async DelRecord(lngmId: number) {
     const strThisFuncName = this.DelRecord.name;
     try {
-      const returnInt = await ViewFeatureFlds_DelRecordAsync(lngmId);
+      const returnInt = await ViewFeatureFlds_DelRecordAsync({ mId: lngmId });
       if (returnInt > 0) {
         ViewFeatureFlds_ReFreshCache(ViewFeatureId_Static.value);
         const strInfo = `删除${this.thisTabName}记录成功,共删除${returnInt}条记录!`;
@@ -622,7 +622,7 @@ export abstract class ViewFeatureFldsCRUD implements clsOperateList {
   public async SelectRecord(lngmId: number) {
     const strThisFuncName = this.SelectRecord.name;
     try {
-      const objViewFeatureFldsEN = await ViewFeatureFlds_GetObjBymIdAsync(lngmId);
+      const objViewFeatureFldsEN = await ViewFeatureFlds_GetObjByKeyAsync({ mId: lngmId });
       console.log('完成SelectRecord!', objViewFeatureFldsEN);
       Redirect('/Index/Main_ViewFeatureFlds');
     } catch (e) {
@@ -1017,7 +1017,7 @@ export abstract class ViewFeatureFldsCRUD implements clsOperateList {
     arrViewFeatureFldsExObjLst: Array<clsViewFeatureFldsENEx>,
     arrDataColumn: Array<clsDataColumn>,
   ) {
-    const arrFldName = clsViewFeatureFldsEN.AttributeName;
+    const arrFldName = clsViewFeatureFldsEN._AttributeName;
     for (const objDataColumn of arrDataColumn) {
       if (IsNullOrEmpty(objDataColumn.fldName) == true) continue;
       if (arrFldName.indexOf(objDataColumn.fldName) > -1) continue;
@@ -1266,7 +1266,7 @@ export abstract class ViewFeatureFldsCRUD implements clsOperateList {
   public async DelMultiRecord(arrmId: Array<string>) {
     const strThisFuncName = this.DelMultiRecord.name;
     try {
-      const returnInt = await ViewFeatureFlds_DelViewFeatureFldssAsync(arrmId);
+      const returnInt = await ViewFeatureFlds_DelKeysAsync(arrmId);
       if (returnInt > 0) {
         ViewFeatureFlds_ReFreshCache(ViewFeatureId_Static.value);
         const strInfo = `删除${this.thisTabName}记录成功,共删除${returnInt}条记录!`;

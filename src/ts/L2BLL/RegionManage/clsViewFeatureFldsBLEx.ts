@@ -1,8 +1,8 @@
 ﻿import { clsCtlTypeBLEx } from '../GeneCSharp/clsCtlTypeBLEx';
 import { clsvViewFeatureFldsBLEx } from './clsvViewFeatureFldsBLEx';
 import {
-  ViewFeatureFlds_GetObjBymIdAsync,
-  ViewFeatureFlds_GetObjBymIdCache,
+  ViewFeatureFlds_GetObjByKeyAsync,
+  ViewFeatureFlds_GetObjByKeyCache,
   ViewFeatureFlds_GetObjLstAsync,
   ViewFeatureFlds_GetObjLstCache,
   ViewFeatureFlds_UpdateRecordAsync,
@@ -179,8 +179,13 @@ export class clsViewFeatureFldsBLEx {
   /// </summary>
   /// <param name = "lngmId">表关键字</param>
   /// <returns>表扩展对象</returns>
-  public static async GetObjExBymId(lngmId: number, strViewFeatureId: string) {
-    const objViewFeatureFlds = await ViewFeatureFlds_GetObjBymIdCache(lngmId, strViewFeatureId);
+  public static async GetObjExByKey(lngmId: number, strViewFeatureId: string) {
+    const objViewFeatureFlds = await ViewFeatureFlds_GetObjByKeyCache(
+      {
+        mId: lngmId,
+      },
+      strViewFeatureId,
+    );
     if (objViewFeatureFlds == null) {
       const strMsg = Format(
         '在项目:[{0}]中，mId:[{1}]没有相应的界面功能字段，请检查！',
@@ -207,7 +212,9 @@ export class clsViewFeatureFldsBLEx {
     try {
       let intRecNum = 0;
       for (const strMid of arrmIdLst) {
-        const objViewFeatureFlds = await ViewFeatureFlds_GetObjBymIdAsync(strMid);
+        const objViewFeatureFlds = await ViewFeatureFlds_GetObjByKeyAsync({
+          mId: strMid,
+        });
         if (objViewFeatureFlds == null) {
           const strMsg = Format(
             '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
@@ -246,7 +253,9 @@ export class clsViewFeatureFldsBLEx {
     try {
       let intRecNum = 0;
       for (const strMid of arrmIdLst) {
-        const objViewFeatureFlds = await ViewFeatureFlds_GetObjBymIdAsync(strMid);
+        const objViewFeatureFlds = await ViewFeatureFlds_GetObjByKeyAsync({
+          mId: strMid,
+        });
         if (objViewFeatureFlds == null) {
           const strMsg = Format(
             '根据关键字获取相应的记录的对象为空.(in {0}.{1})',
